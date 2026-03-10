@@ -42,7 +42,7 @@ const callRealAI = async (userPrompt, language, history = []) => {
             `${msg.role === 'user' ? 'User' : 'AI Assistant'}: ${msg.text}`
         ).join('\n');
 
-        const response = await fetch('https://mydesign-backend.onrender.com/chat', {
+        const response = await fetch('https://my-affinity-backend.onrender.com/chat', {
             method: 'POST',
             headers: { 
                 'Content-Type': 'application/json',
