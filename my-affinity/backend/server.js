@@ -33,7 +33,7 @@ app.post('/chat', async (req, res) => {
                 { role: 'system', content: systemPrompt },
                 { role: 'user', content: prompt }
             ],
-            model: 'llama3-70b-8192', // Using Llama 3 70B for incredibly smart answers
+            model: 'llama-3.3-70b-versatile', // 🌟 The brand new, active Llama 3.3 model!
             temperature: 0.7,
             max_tokens: 1024,
         });
