@@ -17,21 +17,12 @@ export default defineConfig({
         display: 'standalone', // This hides the browser URL bar!
         orientation: 'portrait',
         icons: [
+          // 🌟 THE SECRET: Tells Android to use your SVG and allows it to be cut into the system container shape!
           {
-            src: '/icon-192.png',
-            sizes: '192x192',
-            type: 'image/png'
-          },
-          {
-            src: '/icon-512.png',
-            sizes: '512x512',
-            type: 'image/png'
-          },
-          {
-            src: '/icon-512.png',
-            sizes: '512x512',
-            type: 'image/png',
-            purpose: 'maskable' // Makes it look good on Android
+            src: '/logo.svg',
+            sizes: 'any',
+            type: 'image/svg+xml',
+            purpose: 'any maskable' 
           }
         ]
       }
