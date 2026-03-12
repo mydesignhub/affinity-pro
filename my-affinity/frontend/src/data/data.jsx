@@ -2,18 +2,18 @@ import React from 'react';
 import { Layout, BookOpen, Star, Award, Briefcase, Palette, Type, Printer, PenTool } from 'lucide-react';
 
 export const TIPS_LIST = [
-    "ការទុកចន្លោះទំនេរ (White Space) មិនមែនមានន័យថាទទេស្អាតនោះទេ វាជួយឱ្យការរចនារបស់អ្នកមានខ្យល់ដកដង្ហើម និងងាយស្រួលមើល។", 
-    "កុំប្រើប្រាស់ហ្វុនអក្សរ (Fonts) លើសពី ២ ទៅ ៣ ប្រភេទក្នុងផ្ទាំងការងារតែមួយ ដើម្បីជៀសវាងភាពរញ៉េរញ៉ៃ។",
-    "ទ្រឹស្តីពណ៌ (Color Theory) គឺសំខាន់ណាស់! ការប្រើប្រាស់ពណ៌ផ្ទុយគ្នា (Complementary) ជួយឱ្យចំណុចសំខាន់លេចធ្លោ។", 
-    "មុននឹងចាប់ផ្តើមប្រើកម្មវិធី (Software) គួរតែគូសវាសគំនិតនៅលើក្រដាសជាមុនសិន។", 
-    "ការតម្រឹម (Alignment) គឺជាគន្លឹះដែលធ្វើឱ្យការរចនាមើលទៅមានរបៀបរៀបរយ និងមានស្តង់ដារ។", 
-    "បង្កើតឋានានុក្រម (Hierarchy) ដោយប្រើទំហំ កម្រាស់ និងពណ៌ ដើម្បីដឹកនាំភ្នែកអ្នកមើលពីចំណុចមួយទៅចំណុចមួយទៀត។",
-    "យល់ដឹងពីភាពខុសគ្នារវាង RGB (សម្រាប់អេក្រង់) និង CMYK (សម្រាប់ការបោះពុម្ព) ដើម្បីកុំឱ្យខុសពណ៌ពេលព្រីន។",
-    "ជានិច្ចកាល ត្រូវរចនាឡូហ្គោជាទម្រង់ Vector (.ai, .svg) ដើម្បីងាយស្រួលពង្រីកមិនបែកគុណភាព។",
-    "ជៀសវាងការប្រើពណ៌ខ្មៅសុទ្ធ (#000000) លើអត្ថបទវែងៗ គួរប្រើពណ៌ប្រផេះចាស់ដើម្បីកុំឱ្យចាំងភ្នែកអ្នកអានពេក។",
-    "កុំពត់ ឬទាញអក្សរឱ្យខូចទ្រង់ទ្រាយ (Distort) ត្រូវសង្កត់ Shift ជានិច្ចពេលពង្រីកទំហំរូបភាព ឬអក្សរ។",
-    "ប្រើប្រាស់ Grid System ដើម្បីធានាថាការរៀបចំប្លង់របស់អ្នកមានតុល្យភាព និងមានមូលដ្ឋានច្បាស់លាស់។",
-    "ធ្វើការសង្កេត និងរៀនសូត្រពីស្នាដៃអ្នកដទៃ (Reference) ប៉ុន្តែកុំចម្លង (Copy) ទាំងស្រុង។",
+    "ការទុកចន្លោះទំនេរ (White Space) មិនមែនមានន័យថាទទេស្អាតនោះទេ វាជួយឱ្យការរចនារបស់អ្នកមានខ្យល់ដកដង្ហើម និងងាយស្រួលមើល。", 
+    "កុំប្រើប្រាស់ហ្វុនអក្សរ (Fonts) លើសពី ២ ទៅ ៣ ប្រភេទក្នុងផ្ទាំងការងារតែមួយ ដើម្បីជៀសវាងភាពរញ៉េរញ៉ៃ。",
+    "ទ្រឹស្តីពណ៌ (Color Theory) គឺសំខាន់ណាស់! ការប្រើប្រាស់ពណ៌ផ្ទុយគ្នា (Complementary) ជួយឱ្យចំណុចសំខាន់លេចធ្លោ。", 
+    "មុននឹងចាប់ផ្តើមប្រើកម្មវិធី (Software) គួរតែគូសវាសគំនិតនៅលើក្រដាសជាមុនសិន。", 
+    "ការតម្រឹម (Alignment) គឺជាគន្លឹះដែលធ្វើឱ្យការរចនាមើលទៅមានរបៀបរៀបរយ និងមានស្តង់ដារ。", 
+    "បង្កើតឋានានុក្រម (Hierarchy) ដោយប្រើទំហំ កម្រាស់ និងពណ៌ ដើម្បីដឹកនាំភ្នែកអ្នកមើលពីចំណុចមួយទៅចំណុចមួយទៀត。",
+    "យល់ដឹងពីភាពខុសគ្នារវាង RGB (សម្រាប់អេក្រង់) និង CMYK (សម្រាប់ការបោះពុម្ព) ដើម្បីកុំឱ្យខុសពណ៌ពេលព្រីន。",
+    "ជានិច្ចកាល ត្រូវរចនាឡូហ្គោជាទម្រង់ Vector (.ai, .svg) ដើម្បីងាយស្រួលពង្រីកមិនបែកគុណភាព。",
+    "ជៀសវាងការប្រើពណ៌ខ្មៅសុទ្ធ (#000000) លើអត្ថបទវែងៗ គួរប្រើពណ៌ប្រផេះចាស់ដើម្បីកុំឱ្យចាំងភ្នែកអ្នកអានពេក。",
+    "កុំពត់ ឬទាញអក្សរឱ្យខូចទ្រង់ទ្រាយ (Distort) ត្រូវសង្កត់ Shift ជានិច្ចពេលពង្រីកទំហំរូបភាព ឬអក្សរ。",
+    "ប្រើប្រាស់ Grid System ដើម្បីធានាថាការរៀបចំប្លង់របស់អ្នកមានតុល្យភាព និងមានមូលដ្ឋានច្បាស់លាស់。",
+    "ធ្វើការសង្កេត និងរៀនសូត្រពីស្នាដៃអ្នកដទៃ (Reference) ប៉ុន្តែកុំចម្លង (Copy) ទាំងស្រុង。",
     "💡 កុំភ្លេច Save ការងាររបស់អ្នកឱ្យបានញឹកញាប់ ដើម្បីជៀសវាងការបាត់បង់ទិន្នន័យ! 🚀"
 ];
 
@@ -33,396 +33,45 @@ export const TIPS_LIST_EN = [
     "💡 Don't forget to Save your work frequently to avoid data loss! 🚀"
 ];
 
-export const lessonsData = [
-  { 
-    id: 'foundational_design', 
-    title: '1. គោលការណ៍រចនាមូលដ្ឋាន', 
-    title_en: '1. Design Foundations',
-    icon: <Layout className="w-6 h-6 text-blue-400" />, 
-    description: 'ធាតុផ្សំ ប្លង់ ឋានានុក្រម និងទ្រឹស្តីពណ៌', 
-    description_en: 'Elements of Design, Composition, Hierarchy & Color Theory', 
-    content: [
-      {
-          tool: 'What is Graphic Design?',
-          khmer: 'តើអ្វីទៅជាការរចនាក្រាហ្វិក?',
-          khmer_en: 'Definition & Purpose',
-          shortDesc: 'ការស្វែងយល់ពីនិយមន័យ និងគោលបំណងពិតប្រាកដនៃការរចនា។',
-          shortDesc_en: 'Understanding the true definition and purpose of design.',
-          advancedUI: 'graphic_what_is_design',
-          desc: 'ការរចនាក្រាហ្វិក (Graphic Design) គឺជាសិល្បៈនៃការទំនាក់ទំនងជាទស្សនីយភាព (Visual Communication) ដែលរួមបញ្ចូលគ្នារវាង អក្សរ (Typography) រូបភាព (Imagery) និងពណ៌ (Color) ដើម្បីបញ្ជូនសារ ឬដោះស្រាយបញ្ហាអ្វីមួយ។\n\n• មិនមែនគ្រាន់តែឱ្យស្អាតទេ៖ គោលបំណងចម្បងគឺ "ការទំនាក់ទំនង"។ បើស្អាតតែគេមើលមិនយល់ នោះមិនមែនជា Design ល្អទេ។\n• អ្នកដោះស្រាយបញ្ហា៖ អ្នករចនាគឺជាអ្នកដោះស្រាយបញ្ហា (Problem Solver) ដោយប្រើប្រាស់រូបភាព។\n• គ្រប់ទីកន្លែង៖ ពីឡូហ្គោលើកែវកាហ្វេ ផ្លាកសញ្ញាតាមដងផ្លូវ រហូតដល់អេក្រង់ទូរស័ព្ទដែលអ្នកកំពុងមើល សុទ្ធតែជាស្នាដៃ Graphic Design។',
-          desc_en: 'Graphic Design is the art of visual communication that combines typography, imagery, and color to convey a message or solve a problem.\n\n• Not just making things pretty: The primary goal is "communication." If it is beautiful but confusing, it is bad design.\n• Problem Solvers: Designers are visual problem solvers.\n• Everywhere: From the logo on your coffee cup to the street signs and the app interface you are looking at right now, graphic design is everywhere.',
-          tip: '💡 គន្លឹះ៖ ការរចនាដ៏ល្អ គឺជាការរចនាដែលអ្នកមើលមិនដឹងថាវាត្រូវបានរចនាឡើងនោះទេ (Good design is invisible) ព្រោះវាជួយឱ្យគេទទួលបានព័ត៌មានដោយរលូនដោយគ្មានការរំខាន។',
-          tip_en: '💡 Tip: Good design is invisible. It helps the viewer absorb information smoothly without being distracted by the design itself.'
-      },
-      {
-          tool: 'Elements of Design',
-          khmer: 'ធាតុផ្សំនៃការរចនា (Elements)',
-          khmer_en: 'The 7 Elements',
-          shortDesc: 'ធាតុផ្សំមូលដ្ឋានទាំង ៧ ដែលបង្កើតបានជារូបភាព ឬ Design មួយ។',
-          shortDesc_en: 'The 7 core ingredients that make up any visual design.',
-          advancedUI: 'graphic_elements',
-          desc: 'ធាតុផ្សំប្រៀបដូចជា "គ្រឿងផ្សំម្ហូប" អញ្ចឹង។ គ្រឿងផ្សំកាន់តែល្អ ម្ហូបកាន់តែឆ្ងាញ់៖\n\n១. បន្ទាត់ (Line)៖ ជាចំនុចតភ្ជាប់គ្នា។ គេប្រើវាសម្រាប់បែងចែកផ្ទៃ, បង្កើតទិសដៅ, ឬគូសបញ្ជាក់ (ឧ. បន្ទាត់កោង=ទន់ភ្លន់, បន្ទាត់ឆ្មេញរណារ=គ្រោះថ្នាក់)។\n២. រូបរាង (Shape)៖ រាង 2D ដែលបិទជិត។ មានរាងធរណីមាត្រ (Geometric ដូចជាការ៉េ រង្វង់) និងរាងសេរី (Organic ដូចជាស្លឹកឈើ)។\n៣. ទម្រង់ (Form)៖ ជារូបរាងដែលមានជម្រៅ 3D (មានពន្លឺ និងស្រមោល) ដូចជាគូប ឬស្វ៊ែរ។\n៤. ពណ៌ (Color)៖ ធាតុដែលទាក់ទាញភ្នែកបំផុត ប្រើសម្រាប់បញ្ជូនអារម្មណ៍។\n៥. លំហ (Space)៖ ចន្លោះ Positive (វត្ថុ) និង Negative Space (ចន្លោះទទេ)។\n៦. វាយនភាព (Texture)៖ ផ្ទៃរូបភាពដែលមើលទៅហាក់ដូចជាអាចស្ទាបបាន (រលោង, គ្រើម, ឈើ, លោហៈ)។\n៧. តម្លៃពន្លឺ (Value)៖ កម្រិតភាពភ្លឺ ឬងងឹតនៃផ្ទៃណាមួយ ដែលជួយបង្កើតជម្រៅ (Depth)។',
-          desc_en: 'Design elements are like "cooking ingredients." Better ingredients make better food:\n\n1. Line: A connected point. Used to divide space, direct the eye, or outline (e.g., curved = soft, jagged = dangerous).\n2. Shape: A closed 2D area. Can be Geometric (squares, circles) or Organic (leaves, freeform).\n3. Form: A shape with 3D depth (having light and shadow), like a cube or sphere.\n4. Color: The most eye-catching element, used to evoke emotions.\n5. Space: The area around or between objects (Positive vs. Negative space).\n6. Texture: The surface quality that looks like it could be felt (smooth, rough, wood, metal).\n7. Value: The lightness or darkness of an area, which helps create depth.',
-          tip: '💡 អ្នករចនាពូកែ មិនចាំបាច់ប្រើធាតុផ្សំទាំង ៧ ចូលគ្នាក្នុងពេលតែមួយទេ គឺគេរើសប្រើតែអ្វីដែលបម្រើដល់ "សារ" ដែលគេចង់ប្រាប់ប៉ុណ្ណោះ។',
-          tip_en: '💡 Great designers don\'t use all 7 elements at once. They only select the ones that serve the specific "message" they want to tell.'
-      },
-      {
-          tool: 'Principles of Composition',
-          khmer: 'គោលការណ៍នៃការរៀបចំប្លង់',
-          khmer_en: 'Composition Rules',
-          shortDesc: 'ក្បួនទាំង ៧ សម្រាប់ចម្អិន "ធាតុផ្សំ" ខាងលើឱ្យចេញជា Design ដ៏ទាក់ទាញ។',
-          shortDesc_en: 'The 7 rules for cooking the "ingredients" into an attractive layout.',
-          advancedUI: 'graphic_composition',
-          practiceTool: { tab: 'tools', subTab: 'layout', label: 'អនុវត្តការរៀបចំប្លង់ (Layout Tool)', label_en: 'Practice with Layout Tool' },
-          desc: 'បើយើងមានធាតុផ្សំហើយ យើងត្រូវការក្បួនរៀបចំវា៖\n\n១. តុល្យភាព (Balance)៖ ការបែងចែកទម្ងន់ឱ្យស្មើគ្នា (Symmetrical=ស្មើឆ្វេងស្តាំ, Asymmetrical=មិនស្មើតែមានលំនឹង)។\n២. ភាពផ្ទុយគ្នា (Contrast)៖ ការប្រើភាពខុសគ្នាដាច់ស្រឡះ (ធំvsតូច, សvsខ្មៅ, ក្រាស់vsស្តើង) ដើម្បីបង្កើតភាពលេចធ្លោ។\n៣. ការសង្កត់ធ្ងន់ (Emphasis)៖ ការបង្កើតចំណុចកណ្តាលចំណាប់អារម្មណ៍ (Focal point) ឱ្យគេដឹងថាត្រូវមើលត្រង់ណាមុនគេ។\n៤. ការធ្វើឡើងវិញ (Repetition)៖ ការប្រើពណ៌ ហ្វុនអក្សរ ឬរាង ដដែលៗ ដើម្បីបង្កើតភាពស៊ីសង្វាក់ និងអត្តសញ្ញាណ (Branding)។\n៥. សមាមាត្រ (Proportion)៖ ទំនាក់ទំនងរវាងទំហំនៃធាតុមួយធៀបនឹងធាតុមួយទៀត។\n៦. ចង្វាក់ (Rhythm)៖ ការរៀបចំធាតុដដែលៗដោយមានគម្លាតខុសៗគ្នា ដើម្បីបង្កើតចលនាដូចចង្វាក់ភ្លេង។\n៧. ចន្លោះទំនេរ (White Space)៖ ការទុកចន្លោះប្រហោងដើម្បីឱ្យ Design ដកដង្ហើមបាន និងមើលទៅមានតម្លៃថ្លៃ (Premium)។',
-          desc_en: 'If elements are ingredients, principles are the recipe:\n\n1. Balance: Distributing visual weight evenly (Symmetrical = mirrored, Asymmetrical = unequal but stable).\n2. Contrast: Using stark differences (Big vs Small, Black vs White, Thick vs Thin) to make things pop.\n3. Emphasis: Creating a focal point so viewers know where to look first.\n4. Repetition: Reusing colors, fonts, or shapes to build consistency and brand identity.\n5. Proportion: The relationship between the size of one element to another.\n6. Rhythm: Arranging repeating elements with varying gaps to create a sense of movement.\n7. White Space: Leaving empty areas to let the design breathe and look premium.',
-          tip: '💡 ភាពផ្ទុយគ្នា (Contrast) គឺជាសត្រូវនៃភាពធុញទ្រាន់! បើចង់ឱ្យ Design រស់រវើក ត្រូវហ៊ានប្រើ Contrast ឱ្យដាច់ស្រឡះ។',
-          tip_en: '💡 Contrast is the enemy of boredom! If you want a lively design, dare to use stark contrast.'
-      },
-      {
-          tool: 'Visual Hierarchy',
-          khmer: 'ឋានានុក្រមទស្សនីយភាព',
-          khmer_en: 'Visual Flow',
-          shortDesc: 'បច្ចេកទេសផ្លូវចិត្ត ដើម្បីដឹកនាំខ្សែភ្នែកអ្នកមើលតាំងពីដើមដល់ចប់។',
-          shortDesc_en: 'Psychological techniques to guide the viewer\'s eyes from start to finish.',
-          advancedUI: 'graphic_hierarchy',
-          practiceTool: { tab: 'tools', subTab: 'layout', label: 'មើលគំរូប្លង់ជាក់ស្តែង (Layout Tool)', label_en: 'View Interactive Layouts' },
-          desc: 'ភ្នែករបស់មនុស្សខ្ជិលណាស់! ឋានានុក្រម (Hierarchy) គឺជាការរៀបចំលំដាប់លំដោយ ដើម្បីប្រាប់ភ្នែកអ្នកមើលថា តើត្រូវអានមួយណាទី១ ទី២ និងទី៣។\n\nបច្ចេកទេសដឹកនាំភ្នែកមានដូចជា៖\n• ទំហំ (Scale)៖ របស់ធំទាញភ្នែកមុនគេ។\n• ពណ៌ (Color)៖ ពណ៌ឆើតលេចចេញមកមុខ ពណ៌ស្រអាប់រុញទៅក្រោយ។\n• ការតម្រឹម (Alignment)៖ ក្បួនអានរបស់មនុស្សគឺពីឆ្វេងទៅស្តាំ លើចុះក្រោម (F-Pattern ឬ Z-Pattern)។\n• ទម្ងន់ (Weight)៖ អក្សរ Bold ទាញភ្នែកលឿនជាងអក្សរ Light។\n\nបើអ្នករៀបចំទំហំអក្សរប៉ុនៗគ្នាទាំងអស់ អ្នកមើលនឹងវង្វេង ហើយរំលងមិនអានតែម្តង។',
-          desc_en: 'Human eyes are lazy! Hierarchy is the organization of elements to tell the viewer exactly what to read 1st, 2nd, and 3rd.\n\nEye-guiding techniques include:\n• Scale: Large objects grab attention first.\n• Color: Bright colors step forward, muted colors fade back.\n• Alignment: We naturally read left-to-right, top-to-bottom (F-Pattern or Z-Pattern).\n• Weight: Bold text catches the eye much faster than Light text.\n\nIf you make all text the exact same size, the viewer will get lost and skip reading entirely.',
-          tip: '💡 ច្បាប់មាស៖ ប្រសិនបើគ្រប់យ៉ាងសុទ្ធតែ "លេចធ្លោ" នោះមានន័យថា គ្មានអ្វីលេចធ្លោទាល់តែសោះ! (If everything stands out, nothing stands out).',
-          tip_en: '💡 Golden Rule: If everything stands out, nothing stands out.'
-      },
-      {
-          tool: 'Color Theory',
-          khmer: 'ទ្រឹស្តីពណ៌',
-          khmer_en: 'Psychology & Systems',
-          shortDesc: 'ចិត្តវិទ្យាពណ៌, ការផ្គូផ្គង និងប្រព័ន្ធពណ៌ RGB vs CMYK។',
-          shortDesc_en: 'Color psychology, harmonies, and RGB vs CMYK systems.',
-          advancedUI: 'graphic_color_theory',
-          practiceTool: { tab: 'tools', subTab: 'color', label: 'អនុវត្តការលាយពណ៌ (Color Tool)', label_en: 'Generate Color Palette' },
-          desc: 'ពណ៌មានឥទ្ធិពលផ្ទាល់ទៅលើខួរក្បាល និងអារម្មណ៍៖\n\n• Color Psychology៖ ក្រហម=ចំណង់/ប្រញាប់, ខៀវ=ជឿជាក់/សុវត្ថិភាព, បៃតង=ធម្មជាតិ/លុយ, លឿង=សប្បាយ/យុវវ័យ។\n• Color Harmonies (ក្បួនផ្គូផ្គងពណ៌)៖ \n  - Monochromatic (ឯកពណ៌)៖ ប្រើពណ៌តែ១ តែលេងស្រមោល (ភ្លឺ/ងងឹត)។\n  - Complementary (ផ្ទុយគ្នា)៖ ពណ៌២ឈមគ្នា (ឧ. ក្រហម & ខៀវបៃតង) បង្កើត Contrast ខ្ពស់។\n  - Analogous (ក្បែរគ្នា)៖ ពណ៌៣នៅជាប់គ្នា បង្កើតភាពសុខដុម។\n  - Triadic (ត្រីកោណសម័ង្ស)៖ ពណ៌៣ឃ្លាតស្មើគ្នា បង្កើតភាពលេចធ្លោទោះបីពណ៌ស្រាលក៏ដោយ។\n  - Split-Complementary (ផ្ទុយបំបែក)៖ ពណ៌១ ចាប់គូជាមួយពណ៌២នៅសងខាងពណ៌ផ្ទុយរបស់វា។ ល្អជាង Complementary ព្រោះមិនសូវចាំងភ្នែកពេក។\n  - Tetradic (ចតុកោណ)៖ ពណ៌៤ (គូផ្ទុយ២គូ) ជាក្បួនស្មុគស្មាញបំផុត ត្រូវរើសពណ៌១ជាគោលកុំឱ្យរញ៉េរញ៉ៃ។\n• Color Systems៖ RGB សម្រាប់អេក្រង់, CMYK សម្រាប់បោះពុម្ព។',
-          desc_en: 'Colors have a direct psychological impact on the brain:\n\n• Psychology: Red = Urgency/Passion, Blue = Trust/Security, Green = Nature/Money, Yellow = Joy/Youth.\n• Harmonies: \n  - Monochromatic: 1 single color, playing with tints/shades.\n  - Complementary: 2 opposite colors (e.g., Red & Cyan) creating high contrast.\n  - Analogous: 3 colors next to each other creating harmony.\n  - Triadic: 3 equally spaced colors, popping even in lighter tones.\n  - Split-Complementary: 1 base color paired with the 2 colors adjacent to its opposite.\n  - Tetradic: 4 colors (2 complementary pairs); very complex to balance.\n• Systems: RGB for digital screens, CMYK for physical printing.',
-          tip: '💡 កុំទុកចិត្តអេក្រង់កុំព្យូទ័ររបស់អ្នក ១០០% ពេលធ្វើការបោះពុម្ព។ ពណ៌ RGB មើលទៅស្រស់ ប៉ុន្តែវាអាចនឹងស្រអាប់ពេលព្រីនចេញមកជា CMYK។',
-          tip_en: '💡 Don\'t trust your computer screen 100% for printing. RGB colors look vibrant, but they might look dull when printed in CMYK.'
-      },
-      {
-          tool: 'History of Graphic Design',
-          khmer: 'ប្រវត្តិសាស្ត្រនៃការរចនាក្រាហ្វិក',
-          khmer_en: 'Movements & Eras',
-          shortDesc: 'ការស្វែងយល់ពីចលនាសិល្បៈសំខាន់ៗដែលជះឥទ្ធិពលដល់ការរចនាបច្ចុប្បន្ន។',
-          shortDesc_en: 'Understanding major art movements that shape modern design.',
-          advancedUI: 'graphic_history',
-          desc: 'ការរចនាទំនើបបច្ចុប្បន្ន ត្រូវបានកសាងឡើងលើស្មារបស់អ្នកប្រាជ្ញជំនាន់មុន៖\n\n• Arts & Crafts (១៨៨០s)៖ ប្រឆាំងនឹងការផលិតតាមរោងចក្រ ងាកមករកការធ្វើដោយដៃ និងទម្រង់ធម្មជាតិ។\n• Bauhaus (១៩១៩-១៩៣៣)៖ សាលាសិល្បៈអាល្លឺម៉ង់ ដែលបង្កើតទ្រឹស្តី "Form Follows Function" (រូបរាងត្រូវតែបម្រើដល់មុខងារ)។\n• Art Deco (១៩២០s)៖ ប្រើប្រាស់រាងធរណីមាត្រមុតស្រួច និងពណ៌មាស តំណាងឱ្យភាពស៊ីវិល័យ។\n• Swiss Design (១៩៥០s)៖ ឬ International Typographic Style ផ្តើមប្រើប្រាស់ Grid System និងហ្វុនគ្មានកន្ទុយ (Sans-serif) ឱ្យមានសណ្តាប់ធ្នាប់។\n• Post-modernism (១៩៧០s+)៖ ចលនា "បំបែកច្បាប់" ដែលរចនាបែបស្មុគស្មាញ និងលេងពណ៌ឆើតៗ។\n• Digital Era (១៩៩០s+)៖ ការមកដល់របស់កុំព្យូទ័រ និងអ៊ីនធឺណិត ដែលផ្លាស់ប្តូរមុខមាត់ការរចនាទាំងស្រុង។',
-          desc_en: 'Modern design is built on the shoulders of these past movements:\n\n• Arts & Crafts (1880s): Rebelled against industrialization, focusing on hand-crafting and natural forms.\n• Bauhaus (1919-1933): German school establishing "Form Follows Function" and minimal geometric shapes.\n• Art Deco (1920s): Sharp geometry, gold colors, representing luxury and modernization.\n• Swiss Design (1950s): Introduced the strict Grid System and clean Sans-serif typography for pure order.\n• Post-modernism (1970s+): The "rule-breaking" era with chaotic layouts and vivid colors.\n• Digital Era (1990s+): The rise of personal computers and the internet, changing the face of design completely.',
-          tip: '💡 "អ្នកមិនអាចបំបែកច្បាប់បានទេ ប្រសិនបើអ្នកមិនទាន់ស្គាល់ច្បាប់នោះច្បាស់"។ ស្វែងយល់ពីអតីតកាល ដើម្បីរចនាអនាគត។',
-          tip_en: '💡 "You cannot break the rules until you master them." Learn the past to design the future.'
-      }
-    ] 
-  },
-  { 
-    id: 'typography', 
-    title: '2. សិល្បៈអក្សរ', 
-    title_en: '2. Typography',
-    icon: <BookOpen className="w-6 h-6 text-purple-400" />, 
-    description: 'កាយវិភាគវិទ្យាអក្សរ និងការរៀបចំ Typography', 
-    description_en: 'Type Anatomy, Typesetting, Expressive Type & Variable Fonts', 
-    content: [
-      { 
-          tool: 'Type Anatomy & Classification', 
-          khmer: 'កាយវិភាគវិទ្យា និងចំណាត់ថ្នាក់អក្សរ', 
-          khmer_en: 'Anatomy & Classes',
-          shortDesc: 'ស្វែងយល់ពីរចនាសម្ព័ន្ធអក្សរ និងប្រភេទហ្វុនទាំង ៤ ធំៗ។',
-          shortDesc_en: 'Understand letter structures and the 4 main font categories.',
-          advancedUI: 'graphic_typo_anatomy',
-          desc: 'អក្សរនីមួយៗមានកាយវិភាគវិទ្យាដូចមនុស្សដែរ (Anatomy of letterforms)៖\n• Baseline: បន្ទាត់គោលដែលអក្សរឈរពីលើ។\n• X-height: កម្ពស់តួអក្សរតូច (lowercase) ដូចជាអក្សរ "x"។\n• Ascender/Descender: ផ្នែកអក្សរដែលលូតឡើងលើ (ឧ. b, h) ឬធ្លាក់ចុះក្រោម (ឧ. p, y)។\n\nចំណាត់ថ្នាក់ហ្វុនធំៗ (Classification)៖\n១. Serif (មានកន្ទុយ): ឧ. Times New Roman។ ផ្តល់អារម្មណ៍ផ្លូវការ បុរាណ និងគួរឱ្យទុកចិត្ត។ ល្អសម្រាប់សៀវភៅ ឬកាសែត។\n២. Sans-Serif (គ្មានកន្ទុយ): ឧ. Helvetica, Arial។ ផ្តល់អារម្មណ៍ទំនើប ស្រឡះ និងស្អាត។ ល្អបំផុតសម្រាប់អេក្រង់ឌីជីថល (UI/UX)។\n៣. Script (អក្សរផ្ចង់/សរសេរដៃ): ឧ. Pacifico។ ផ្តល់អារម្មណ៍ឡូយឆាយ កក់ក្តៅ ស័ក្តិសមសម្រាប់ធៀបការ ឬឡូហ្គោ។\n៤. Display: អក្សររចនាម៉ូដប្លែកៗ ទាក់ទាញខ្លាំង។ ប្រើសម្រាប់តែចំណងជើងធំៗប៉ុណ្ណោះ ហាមប្រើសរសេរអត្ថបទវែងៗ។', 
-          desc_en: 'Letters have anatomy just like humans:\n• Baseline: The invisible line where letters sit.\n• X-height: The height of lowercase letters like "x".\n• Ascender/Descender: Parts that go above the x-height (b, h) or below the baseline (p, y).\n\nMain Font Classifications:\n1. Serif (with feet): e.g., Times New Roman. Feels formal, classic, trustworthy. Great for books.\n2. Sans-Serif (no feet): e.g., Helvetica. Feels modern, clean. Perfect for digital screens (UI/UX).\n3. Script (cursive): e.g., Pacifico. Feels elegant, warm. Good for invitations or logos.\n4. Display: Highly stylized fonts. Used ONLY for large headlines, never for body text.',
-          tip: '💡 គន្លឹះ៖ កុំប្រើហ្វុន Script ទាំងអស់ (All Caps) ព្រោះវានឹងធ្វើឱ្យមើលមិនដាច់សោះតែម្តង! លាយហ្វុន Sans-Serif (ជាចំណងជើង) ជាមួយ Serif (ជាអត្ថបទរាងកាយ) គឺជាការផ្គូផ្គង (Pairing) ដ៏ល្អឥតខ្ចោះ។',
-          tip_en: '💡 Tip: Never use Script fonts in ALL CAPS—it becomes unreadable! Pairing a Sans-Serif (for headers) with a Serif (for body) is a perfect combo.'
-      },
-      { 
-          tool: 'Typesetting & Hierarchy', 
-          khmer: 'ការរៀបចំ និងឋានានុក្រមអក្សរ', 
-          khmer_en: 'Spacing & Weights',
-          shortDesc: 'បច្ចេកទេសសារ៉េចន្លោះអក្សរ (Kerning, Tracking, Leading) ឱ្យងាយអាន។',
-          shortDesc_en: 'Techniques for text spacing (Kerning, Tracking, Leading).',
-          advancedUI: 'graphic_typo_hierarchy',
-          desc: 'ការដាក់អក្សរឱ្យត្រូវក្បួន (Typesetting) គឺជាភាពខុសគ្នារវាងអ្នករចនាធម្មតា និងអ្នករចនាអាជីព៖\n\n• Kerning (គម្លាតតួអក្សរ២): ការសារ៉េចន្លោះរវាងអក្សរ "២តួ" (ឧ. A និង V) ឱ្យមើលទៅសមាមាត្រភ្នែក កុំឱ្យឃ្លាតពេក ឬត្រួតគ្នាពេក។\n• Tracking (គម្លាតពេញ១ពាក្យ): ការទាញគម្លាតអក្សរទាំងមូលក្នុងពាក្យ ឬឃ្លាឱ្យឃ្លាតស្មើៗគ្នា។ ល្អសម្រាប់អក្សរធំ (UPPERCASE) ក្នុងចំណងជើង។\n• Leading (គម្លាតបន្ទាត់): ចន្លោះពីបន្ទាត់មួយទៅបន្ទាត់មួយ (Line-height)។ កម្រិតស្តង់ដារគឺ 120% ទៅ 150% នៃទំហំអក្សរ។ បើកៀកពេកអានមិនដាច់ បើឆ្ងាយពេកភ្នែករវង្វេង។\n• Hierarchy (ឋានានុក្រម): ប្រើទំហំ (Size), កម្រាស់ (Weight: Bold/Light), និងពណ៌ ដើម្បប្រាប់អ្នកមើលថា "អានចំណងជើងធំមុន បន្ទាប់មកទើបអានអត្ថបទខាងក្រោម"។', 
-          desc_en: 'Proper typesetting separates amateurs from professionals:\n\n• Kerning: Adjusting the space between exactly "2 individual letters" (like A and V) so they look visually balanced.\n• Tracking: Adjusting the overall spacing across an entire word or phrase. Great for UPPERCASE headlines.\n• Leading: The vertical space between baselines (Line-height). Standard is 120% to 150% of the font size.\n• Hierarchy: Using Size, Weight (Bold/Light), and Color to explicitly tell the reader where to look first, second, and third.',
-          tip: '💡 គន្លឹះ៖ ជៀសវាងការតម្រឹមអក្សរចំកណ្តាល (Center Alignment) សម្រាប់អត្ថបទដែលមានលើសពី ៣ បន្ទាត់ ព្រោះវាពិបាកអាន។ គួរប្រើការតម្រឹមឆ្វេង (Left Align) ជានិច្ចសម្រាប់អត្ថបទវែងៗ។',
-          tip_en: '💡 Tip: Avoid Center Alignment for paragraphs longer than 3 lines; it\'s hard to read. Always use Left Alignment for body text.'
-      },
-      { 
-          tool: 'Expressive Typography', 
-          khmer: 'អក្សរបញ្ចេញមតិ និងតំណាងរូបភាព', 
-          khmer_en: 'Type as Image',
-          shortDesc: 'ការប្រើប្រាស់អក្សរជំនួសឱ្យរូបភាព ដើម្បីប្រាប់រឿងរ៉ាវ (Storytelling)។',
-          shortDesc_en: 'Using text itself as imagery for visual storytelling.',
-          advancedUI: 'graphic_typo_expressive',
-          desc: 'Expressive Type គឺជាសិល្បៈធ្វើឱ្យអក្សរមាន "ជីវិត" ពោលគឺអក្សរមិនមែនគ្រាន់តែសម្រាប់អានទេ តែវាគឺជារូបភាពប្រាប់សាច់រឿងតែម្តង (Typography as an image)។\n\n• ការបង្កើតរូបភាព (Image-Making)៖ គេអាចកាត់ តម្រឹម បង្វិល ឬប្តូររូបរាងអក្សរ ដើម្បីបង្ហាញពីអត្ថន័យនៃពាក្យនោះ។ ឧទាហរណ៍៖ ពាក្យថា "FALL" (ធ្លាក់) គេអាចរចនាអក្សរ L ឱ្យមើលទៅដូចកំពុងធ្លាក់ចុះមកក្រោម។\n• អារម្មណ៍ (Mood & Tone)៖ ហ្វុនអក្សរក្រាស់ៗរឹងៗ បង្ហាញពីភាពខ្លាំងក្លា ឬកំហឹង ខណៈហ្វុនកោងៗស្តើងៗ បង្ហាញពីភាពទន់ភ្លន់ ឬរ៉ូមែនទិក។ ការរៀបចំវាជួយបន្ថែមអត្ថន័យ (Storytelling) ទៅកាន់សារដែលចង់ប្រាប់។', 
-          desc_en: 'Expressive Type brings words to "life". It treats typography not just as something to read, but as an image itself.\n\n• Image-Making: Cutting, aligning, rotating, or morphing letters to visually represent their meaning. (e.g., making the "L" in "FALL" literally drop downward).\n• Mood & Tone: Heavy, rigid fonts express power or anger, while thin, cursive curves convey romance or fragility. The visual style tells half the story before a word is even read.',
-          tip: '💡 គន្លឹះ៖ សាកល្បងលុបផ្នែកខ្លះនៃតួអក្សរចេញ ប៉ុន្តែនៅតែអាចឱ្យគេអានដាច់ នោះវានឹងបង្កើតបានជារចនាបថមួយដែលឆ្លាតវៃ និងទាក់ទាញបំផុត។',
-          tip_en: '💡 Tip: Try erasing small parts of a letterform while still keeping it legible. It creates a very clever and engaging visual puzzle.'
-      },
-      { 
-          tool: 'Variable Fonts', 
-          khmer: 'បច្ចេកវិទ្យាហ្វុនប្រែប្រួល', 
-          khmer_en: 'Modern Font Tech',
-          shortDesc: 'ការយល់ដឹងពីហ្វុនទំនើបដែលបត់បែនបានខ្ពស់ សម្រាប់ Web និង UI។',
-          shortDesc_en: 'Understanding highly flexible modern fonts for Web and UI.',
-          advancedUI: 'graphic_typo_variable',
-          desc: 'Variable Fonts គឺជាបដិវត្តន៍ថ្មីបំផុតក្នុងវិស័យ Typography ទំនើប (Modern Responsive Typography)។\n\nកាលពីមុន បើអ្នកចង់បានហ្វុន Regular, Bold, និង Italic អ្នកត្រូវ Install ហ្វុននោះជា ៣ Files ផ្សេងគ្នា។ ប៉ុន្តែ Variable Font វេចខ្ចប់ទម្ងន់ និងទម្រង់ទាំងអស់ចូលទៅក្នុង File តែ ១ គត់!\n• ការគ្រប់គ្រងគ្មានដែនកំណត់៖ អ្នកអាចសារ៉េកម្រាស់ (Weight) ពីរលោងស្តើង (100) ទៅក្រាស់ឃ្មឹក (900) បានដោយរលូន មិនកំណត់ត្រឹមតែ Regular ឬ Bold ឡើយ។ វាអាចសារ៉េភាពទ្រេត (Slant) ឬទទឹង (Width) បានយ៉ាងងាយស្រួល។\n• Responsive Web៖ ល្អឥតខ្ចោះសម្រាប់ Website ព្រោះវាជួយឱ្យ Web ដើរលឿន (โหลด File តែមួយ) និងអាចប្រែប្រួលទំហំទៅតាមអេក្រង់ទូរស័ព្ទ ឬកុំព្យូទ័រដោយស្វ័យប្រវត្តិ។', 
-          desc_en: 'Variable Fonts are the latest revolution in Modern Typography.\n\nIn the past, if you wanted Regular, Bold, and Italic styles, you had to install 3 separate font files. A Variable Font packs infinite weights and styles into 1 single file!\n• Limitless Control: You can seamlessly slide the font weight from ultra-thin (100) to heavy black (900) rather than being stuck with just "Regular" or "Bold". You can also tweak width or slant.\n• Responsive Web: They are perfect for websites because they load incredibly fast (only 1 file) and can automatically scale their thickness to fit mobile or desktop screens flawlessly.',
-          tip: '💡 គន្លឹះ៖ នៅពេលរចនា UI/UX ក្នុងកម្មវិធីដូចជា Figma ឬ Illustrator សូមសាកល្បងស្វែងរកហ្វុនដែលមានអក្សរ "VF" ពីក្រោយ (ឧ. Montserrat VF, Inter VF) ដើម្បីអាចទាញសារ៉េកម្រាស់បានតាមចិត្ត។',
-          tip_en: '💡 Tip: When designing UI in Figma or Illustrator, search for fonts with "VF" in their name (like Inter VF) to unlock custom slider adjustments.'
-      }
-    ] 
-  },
-  { 
-    id: 'software', 
-    title: '3. កម្មវិធីស្តង់ដារឧស្សាហកម្ម', 
-    title_en: '3. Industry Software',
-    icon: <Layout className="w-6 h-6 text-pink-500" />, 
-    description: 'ការស្វែងយល់ពីកម្មវិធី Adobe និងឧបករណ៍ AI', 
-    description_en: 'Illustrator, Photoshop, InDesign, Affinity, Figma & AI Tools', 
-    content: [
-      { 
-          tool: 'Creative Cloud & UI Tools', 
-          khmer: 'កម្មវិធីរចនា និងឧបករណ៍ UI', 
-          khmer_en: 'Standard Toolkits',
-          shortDesc: 'ការស្ទាត់ជំនាញលើកម្មវិធីស្តង់ដារដែលក្រុមហ៊ុនអន្តរជាតិប្រើប្រាស់។',
-          shortDesc_en: 'Mastering the industry-standard software used globally.',
-          advancedUI: 'graphic_software_tools',
-          desc: 'ឧបករណ៍បច្ចេកទេស (Technical Tools) សំខាន់ៗ៖\n\n• Adobe Illustrator៖ សម្រាប់ការរចនា Vector ដូចជា Logo, Icon និងគំនូរ (Illustrations)។\n• Adobe Photoshop៖ សម្រាប់ការកាត់តរូបភាព (Manipulation), ការកែពណ៌ (Retouching) និងការផ្គុំរូប (Compositing)។\n• Affinity Suite៖ កម្មវិធីជំនួស Adobe (Designer, Photo, Publisher) ដែលមានតម្លៃសមរម្យ ទិញដាច់ម្តង ដំណើរការលឿន និងមានសមត្ថភាពខ្ពស់កម្រិតអាជីព។\n• Figma / Adobe XD៖ សម្រាប់ការរចនាបទពិសោធន៍អ្នកប្រើប្រាស់ (UI/UX) និង Prototyping សម្រាប់ App/Web។', 
-          desc_en: 'Core Technical Tools in the industry:\n\n• Adobe Illustrator: For Vector design like Logos, Icons, and infinite-scaling illustrations.\n• Adobe Photoshop: For Raster pixel editing, Photo Manipulation, Retouching, and Compositing.\n• Affinity Suite: The best affordable alternative to Adobe (Designer, Photo, Publisher). It’s a one-time purchase with lightning-fast professional capabilities.\n• Figma: The absolute industry standard for designing User Interfaces (UI/UX) and prototyping Apps/Websites collaboratively.',
-          tip: '💡 អ្នករចនាពូកែ ប្រើកម្មវិធីត្រូវតាមមុខងាររបស់វា (កុំគូរ Logo ក្នុង Photoshop!)។',
-          tip_en: '💡 Great designers use the right tool for the job. Never design a Logo in Photoshop!'
-      },
-      { 
-          tool: 'AI-Assisted Design Tools', 
-          khmer: 'ឧបករណ៍រចនាជំនួយដោយ AI', 
-          khmer_en: 'Generative AI',
-          shortDesc: 'ការប្រើប្រាស់បច្ចេកវិទ្យា AI ដើម្បីបង្កើនល្បឿននៃការងារ។',
-          shortDesc_en: 'Utilizing AI technology to 10x your workflow speed.',
-          advancedUI: 'graphic_software_ai',
-          desc: 'ការដើរឱ្យទាន់បច្ចេកវិទ្យាថ្មីៗ៖\n\n• ការប្រើប្រាស់ឧបករណ៍ AI ដូចជា Adobe Firefly ឬ Midjourney ដើម្បីស្វែងរកគំនិត (Ideation) យ៉ាងរហ័ស។\n• ការបង្កើតធនធានរូបភាព (Asset Creation) ដើម្បីកាត់បន្ថយពេលវេលាផលិត។', 
-          desc_en: 'Staying ahead with next-gen technology:\n\n• Using AI tools like Adobe Firefly or Midjourney for rapid Ideation and mood-boarding.\n• Generating base assets (backgrounds, textures) to drastically cut down production time while still maintaining creative control over the final composition.',
-          tip: '💡 AI មិនមកដណ្តើមការងារអ្នកទេ តែអ្នកដែលចេះប្រើ AI នឹងយកការងារអ្នក។',
-          tip_en: '💡 AI won\'t replace designers. Designers who know how to use AI will replace those who don\'t.'
-      }
-    ] 
-  },
-  { 
-    id: 'specialized_disciplines', 
-    title: '4. ឯកទេសរចនា', 
-    title_en: '4. Specialized Disciplines',
-    icon: <Star className="w-6 h-6 text-yellow-500" />, 
-    description: 'ការរចនា Brand, Print, Web និង Packaging', 
-    description_en: 'Branding, Print, Web, Motion, Packaging & Info Design', 
-    content: [
-      { 
-          tool: 'Branding & Identity', 
-          khmer: 'ម៉ាកយីហោ និងអត្តសញ្ញាណ', 
-          khmer_en: 'Brand Creation',
-          shortDesc: 'ការបង្កើតព្រលឹង និងរូបរាងតំណាងឱ្យក្រុមហ៊ុនមួយ។',
-          shortDesc_en: 'Crafting the visual soul and identity of a company.',
-          advancedUI: 'graphic_spec_branding',
-          desc: 'ការរចនាម៉ាកយីហោ (Branding) មិនមែនគ្រាន់តែជាការគូរឡូហ្គោនោះទេ វាគឺជាការបង្កើតអត្តសញ្ញាណទាំងមូល៖\n\n• Logo Design (ការរចនាឡូហ្គោ)៖ ជានិមិត្តសញ្ញាដែលគេងាយចាំបំផុត។ ឧ. សញ្ញាធីករបស់ Nike។\n• Brand Strategy (យុទ្ធសាស្ត្រម៉ាក)៖ ការកំណត់គោលដៅ គុណតម្លៃ និងអតិថិជនគោលដៅ។\n• Brand Voice (សំឡេងម៉ាក)៖ របៀបដែលម៉ាកនោះប្រាស្រ័យទាក់ទង។ តើវាជាម៉ាកបែបកំប្លែង ម៉ឺងម៉ាត់ ឬប្រណិត?\n• Style Guides (សៀវភៅណែនាំម៉ាក)៖ ឯកសារចងក្រងក្បួនប្រើប្រាស់ ឡូហ្គោ, ពណ៌ (Color Palette), និងហ្វុនអក្សរ (Typography) ដើម្បីឱ្យការរចនាគ្រប់កន្លែងមានភាពស៊ីសង្វាក់គ្នា (Consistency)។', 
-          desc_en: 'Branding is much more than just drawing a logo; it’s building an entire visual ecosystem:\n\n• Logo Design: The most recognizable symbol of the brand (e.g., the Nike Swoosh).\n• Brand Strategy: Defining goals, core values, and target audiences.\n• Brand Voice: How the brand speaks. Is it humorous, corporate, or luxury?\n• Style Guides: A strict rulebook compiling how to properly use the Logo, Color Palette, and Typography so the brand looks 100% consistent everywhere it appears.',
-          tip: '💡 គន្លឹះ៖ ឡូហ្គោដ៏ល្អបំផុត គឺជាឡូហ្គោដែលសាមញ្ញ ងាយស្រួលចំណាំ និងអាចគូរដោយដៃទទេបាន។',
-          tip_en: '💡 Tip: The best logos are simple, highly memorable, and can be drawn easily by hand from memory.'
-      },
-      { 
-          tool: 'Print Design & Production', 
-          khmer: 'ការរចនាសម្រាប់បោះពុម្ព', 
-          khmer_en: 'Prepress Rules',
-          shortDesc: 'បច្ចេកទេសរៀបចំឯកសារ (Prepress) សម្រាប់បញ្ជូនទៅរោងពុម្ព។',
-          shortDesc_en: 'Prepress techniques for sending files to physical printers.',
-          advancedUI: 'graphic_spec_print',
-          practiceTool: { tab: 'tools', subTab: 'ratio', label: 'ពិនិត្យខ្នាតស្តង់ដារ (Size Tool)', label_en: 'Check Standard Sizes' },
-          desc: 'ការរចនាលើអេក្រង់ និងការបោះពុម្ពចេញមកក្រៅគឺខុសគ្នាស្រឡះ៖\n\n• Prepress (ត្រៀមបោះពុម្ព)៖ ការបំប្លែងឯកសារទៅជា CMYK, ការកំណត់ Resolution អោយបាន 300 PPI និងបំប្លែងហ្វុនទៅជា Outline/Curves។\n• Bleeds (គែមបម្រុង)៖ ការពង្រីកផ្ទៃ Background ពណ៌ឱ្យហៀរចេញក្រៅទំហំកាត់ស្តង់ដារ (ជាទូទៅ 3mm) ដើម្បីការពារកុំឱ្យកាត់ទៅសល់គែមស។\n• Margins (គែមសុវត្ថិភាព)៖ ចន្លោះខាងក្នុងដែលហាមដាក់អក្សរឬព័ត៌មានសំខាន់ ការពារកុំឱ្យកាត់ដាច់ចូល។\n• Paper Stock & Process៖ ការជ្រើសរើសប្រភេទក្រដាស (រលោង, គ្រើម, ក្រាស់) និងបច្ចេកទេសព្រីន (Offset, Digital, ផុសក្រឡោត Emboss) ជួយបន្ថែមតម្លៃដល់ការរចនា។', 
-          desc_en: 'Designing for screens vs physical printing are two completely different worlds:\n\n• Prepress: Converting files to CMYK mode, ensuring exactly 300 PPI resolution, and outlining all fonts to prevent missing font errors.\n• Bleeds: Extending background colors past the actual cut-size (usually by 3mm) so there are no accidental white borders when the paper is sliced.\n• Safe Margins: An inner invisible boundary where crucial text must stay so it doesn\'t get cut off.\n• Production: Choosing the right Paper Stock (matte, glossy) and printing techniques (Foil stamping, Embossing) to elevate the final product.',
-          tip: '💡 គន្លឹះ៖ កុំទុកចិត្តពណ៌លើអេក្រង់កុំព្យូទ័ររបស់អ្នក ១០០%! ពណ៌នៅលើក្រដាសពិតតែងតែស្រអាប់ជាងលើអេក្រង់ជានិច្ច។',
-          tip_en: '💡 Tip: Printed ink absorbs light, while screens emit light. Your physical prints will almost always look slightly darker and less saturated than your monitor.'
-      },
-      { 
-          tool: 'Digital & Web Design', 
-          khmer: 'ការរចនាឌីជីថល និងវេបសាយ', 
-          khmer_en: 'Web Layouts',
-          shortDesc: 'ការរៀបចំប្លង់សម្រាប់អេក្រង់ទូរស័ព្ទ និងកុំព្យូទ័រ។',
-          shortDesc_en: 'Structuring responsive layouts for mobile and desktop.',
-          advancedUI: 'graphic_spec_web',
-          practiceTool: { tab: 'tools', subTab: 'ratio', label: 'ពិនិត្យខ្នាតស្តង់ដារ (Size Tool)', label_en: 'Check Standard Sizes' },
-          desc: 'ទិដ្ឋភាពនៃការរចនាសម្រាប់ពិភពឌីជីថល៖\n\n• Responsive Layout៖ ការរចនាដែលបត់បែនទំហំដោយស្វ័យប្រវត្តិ។ អ្វីដែលមើលទៅស្អាតលើ Desktop (កុំព្យូទ័រ) ត្រូវតែរៀបចំសារថ្មីដើម្បីឱ្យអានបានច្បាស់លើ Mobile (ទូរស័ព្ទ)។\n• Web Graphics៖ ការ Export រូបភាពឱ្យស្រាល (ដូចជាប្រើទម្រង់ .WebP ឬ .SVG) ដើម្បីឱ្យវេបសាយដើរលឿន (Fast Loading)។\n• UI/UX Principles៖ UI (ចំណុចប្រទាក់) គឺភាពស្រស់ស្អាតនៃប៊ូតុង និងពណ៌។ ចំណែក UX (បទពិសោធន៍អ្នកប្រើប្រាស់) គឺការរៀបចំឱ្យអ្នកប្រើប្រាស់ងាយស្រួលចុច និងមិនវង្វេងផ្លូវ។', 
-          desc_en: 'Designing for the digital realm requires flexibility:\n\n• Responsive Layouts: A design must adapt automatically. A wide 4-column layout on Desktop must elegantly stack into a single vertical column on Mobile.\n• Web Graphics: Exporting images in hyper-compressed formats (like .WebP or .SVG) to guarantee fast website loading speeds.\n• UI/UX Principles: UI (User Interface) handles the aesthetic visuals, while UX (User Experience) ensures the psychological flow and ease-of-use are flawless.',
-          tip: '💡 គន្លឹះ៖ ក្នុងការរចនា Web គេតែងអនុវត្តគោលការណ៍ "Mobile-First" គឺរចនាទំហំលើទូរស័ព្ទមុនគេ ព្រោះមនុស្សជាង ៧០% ចូលមើលវេបសាយតាមទូរស័ព្ទ។',
-          tip_en: '💡 Tip: Always use the "Mobile-First" approach. Over 70% of global traffic is on mobile devices, so design the small screen experience before the desktop one.'
-      },
-      { 
-          tool: 'Motion Graphics', 
-          khmer: 'ក្រាហ្វិកមានចលនា', 
-          khmer_en: 'Animation basics',
-          shortDesc: 'ការធ្វើឱ្យការរចនាស្ងៀមស្ងាត់ (Static) ក្លាយជារស់រវើក។',
-          shortDesc_en: 'Bringing static graphic designs to life through animation.',
-          advancedUI: 'graphic_spec_motion',
-          desc: 'Motion Graphic គឺជាការរួមបញ្ចូលគ្នារវាងការរចនាក្រាហ្វិក និងចលនា (Animation)៖\n\n• Storyboarding (គូសវាសសាច់រឿង)៖ ការគូរគម្រោងជាផ្ទាំងៗ (Frame by Frame) មុននឹងចាប់ផ្តើមធ្វើចលនា ដើម្បីកំណត់លំហូរនៃសាច់រឿង។\n• Animating Static Design៖ ការយកឡូហ្គោ អក្សរ ឬរូបគំនូរ (Vector) មកធ្វើឱ្យមានចលនាលោត វិល ឬរលាយចូលគ្នា។ កម្មវិធីពេញនិយមបំផុតគឺ Adobe After Effects។\n• Timing & Easing៖ ការគ្រប់គ្រងល្បឿននៃចលនា។ ចលនាដែលរលូន (Smooth) តែងតែមាន Easing (ចាប់ផ្តើមយឺត កណ្តាលលឿន បញ្ចប់យឺត) មិនមែនរត់ស្មើៗគ្នាដូចមនុស្សយន្តនោះទេ។', 
-          desc_en: 'Motion Graphics merge traditional graphic design with timeline animation:\n\n• Storyboarding: Sketching out key frames on paper before touching animation software to plan the visual flow.\n• Animating: Taking static elements (Logos, Vectors, Text) and giving them kinetic life using tools like Adobe After Effects.\n• Timing & Easing: Linear motion looks robotic. Using "Easing" (starting slow, speeding up in the middle, and slowing down at the end) mimics real-world physics and makes animations feel premium and smooth.',
-          tip: '💡 គន្លឹះ៖ ការបន្ថែមចលនាបន្តិចបន្តួច (Micro-interactions) ទៅលើប៉ូតុង ឬឡូហ្គោ អាចធ្វើឱ្យស្នាដៃអ្នកមើលទៅឡូយ និងមានតម្លៃថ្លៃជាងមុនទ្វេដង។',
-          tip_en: '💡 Tip: Adding tiny "Micro-interactions" (like a button bouncing slightly when hovered) instantly doubles the perceived value of your design.'
-      },
-      { 
-          tool: 'Packaging Design', 
-          khmer: 'ការរចនាសំបកវេចខ្ចប់', 
-          khmer_en: '3D Box Mapping',
-          shortDesc: 'ការរួមបញ្ចូលការរចនា 2D ទៅលើរចនាសម្ព័ន្ធ 3D។',
-          shortDesc_en: 'Applying 2D graphics onto 3D physical structures.',
-          advancedUI: 'graphic_spec_packaging',
-          desc: 'សំបកវេចខ្ចប់គឺជាអ្នកលក់ដ៏ស្ងៀមស្ងាត់ (Silent Salesman) នៅលើធ្នើរទំនិញ៖\n\n• Templates (ពុម្ពកាត់/Die-Lines)៖ ការរចនាត្រូវធ្វើឡើងលើផ្ទៃរាបស្មើ (Flat Template) ដែលមានបន្ទាត់សម្រាប់កាត់ (Cut lines) និងបន្ទាត់សម្រាប់បត់ (Fold lines)។ អ្នករចនាត្រូវចេះគណនាវិមាត្រ (ប្រវែង ទទឹង កម្ពស់) យ៉ាងច្បាស់លាស់។\n• 3D Mock-ups៖ ការយកការរចនា 2D ទៅបិទលើរូបរាង 3D ដប ប្រអប់ ឬកំប៉ុង ដើម្បីបង្ហាញអតិថិជនឱ្យឃើញពីរូបរាងពិតប្រាកដមុននឹងផលិត។\n• ការទាក់ទាញ (Shelf Impact)៖ សំបកត្រូវតែមានភាពលេចធ្លោជាងគូប្រកួតពេលតម្រៀបគ្នានៅលើធ្នើរ។', 
-          desc_en: 'Packaging is the "Silent Salesman" resting on the retail shelf:\n\n• Die-Lines: Packaging starts completely flat. Designers must place art accurately across complex templates mapping out cut-lines, fold-lines, and glue-tabs based on exact math.\n• 3D Mock-ups: Wrapping that flat 2D design onto a digital 3D model (like a bottle or box) so the client can visualize the final product before printing.\n• Shelf Impact: The design must be striking enough to capture attention from 5 feet away while surrounded by competitors.',
-          tip: '💡 គន្លឹះ៖ កុំភ្លេចទុកកន្លែងទំនេរសម្រាប់ដាក់ Barcode, ថ្ងៃខែផលិត និងព័ត៌មានអាហារូបត្ថម្ភ (Nutrition Facts) ទៅតាមច្បាប់កំណត់ផង។',
-          tip_en: '💡 Tip: Always reserve mandatory space for legal requirements like Barcodes, Expiration Dates, and FDA Nutrition Facts early in your layout process.'
-      },
-      { 
-          tool: 'Information Design', 
-          khmer: 'ការរចនាព័ត៌មាន (Infographics)', 
-          khmer_en: 'Data Visualization',
-          shortDesc: 'សិល្បៈនៃការបំប្លែងទិន្នន័យស្មុគស្មាញ ឱ្យងាយស្រួលយល់។',
-          shortDesc_en: 'The art of making complex data easy to digest quickly.',
-          advancedUI: 'graphic_spec_info',
-          desc: 'Information Design គឺជាការធ្វើឱ្យតួលេខ និងអត្ថបទដ៏គួរឱ្យធុញ ក្លាយជារូបភាពដែលគួរឱ្យចង់មើល៖\n\n• Data Visualization៖ ការប្រែក្លាយទិន្នន័យ (Data) ទៅជាតារាង (Charts), ក្រាហ្វ (Graphs) ឬផែនទី (Maps) ដើម្បីឱ្យគេអាចមើលឃើញនិន្នាការ (Trends) ភ្លាមៗដោយមិនបាច់អានច្រើន។\n• Infographics៖ ការប្រើប្រាស់រូបតំណាង (Icons), គំនូសបំព្រួញ និងពណ៌ ដើម្បីតម្រៀបព័ត៌មានជាលំដាប់លំដោយ (Step-by-step) ដូចជាការណែនាំពីរបៀបលាងដៃជាដើម។\n• ភាពច្បាស់លាស់ (Clarity)៖ គោលបំណងចម្បងបំផុតគឺ "ភាពងាយយល់"។ ប្រសិនបើ Infographic របស់អ្នកមើលទៅកាន់តែស្មុគស្មាញ នោះមានន័យថាវាបរាជ័យហើយ។', 
-          desc_en: 'Information Design turns boring numbers and heavy text into engaging, scannable visuals:\n\n• Data Visualization: Converting raw data into charts, graphs, or maps so viewers can spot trends instantly without reading paragraphs.\n• Infographics: Using unified icon sets, timelines, and color coding to explain step-by-step processes (e.g., how a car engine works).\n• Clarity First: The absolute primary goal is "simplicity." If your infographic makes the data look more confusing, it has failed.',
-          tip: '💡 គន្លឹះ៖ លុបចោលនូវការតុបតែងណាដែលមិនចាំបាច់ (Chartjunk)។ ប្រើប្រាស់ពណ៌ដើម្បីបែងចែកទិន្នន័យ មិនមែនដើម្បីតែស្អាតនោះទេ។',
-          tip_en: '💡 Tip: Remove unnecessary decorations ("Chartjunk"). Use colors specifically to categorize data, not just to make it look pretty.'
-      }
-    ] 
-  },
-  { 
-    id: 'professional_practice', 
-    title: '5. ការអនុវត្ត និងអភិវឌ្ឍន៍វិជ្ជាជីវៈ', 
-    title_en: '5. Professional Practice',
-    icon: <Award className="w-6 h-6 text-green-500" />, 
-    description: 'ដំណើរការការងារ Portfolio និង Freelance', 
-    description_en: 'Creative Process, Portfolio, Freelance & Ethics', 
-    content: [
-      { 
-          tool: 'The Creative Process', 
-          khmer: 'ដំណើរការនៃការច្នៃប្រឌិត', 
-          khmer_en: 'Standard Workflow',
-          shortDesc: 'ជំហានស្តង់ដារពីការទទួលការងារ រហូតដល់ចេញជាស្នាដៃ។',
-          shortDesc_en: 'The standard steps from receiving a brief to final delivery.',
-          advancedUI: 'graphic_prof_process',
-          desc: 'អ្នករចនាអាជីពតែងតែមានដំណើរការការងារ (Workflow) ច្បាស់លាស់៖\n\n១. Research (ការស្រាវជ្រាវ)៖ សិក្សាពីក្រុមហ៊ុនអតិថិជន គូប្រកួតរបស់គេ និងតម្រូវការទីផ្សារ។\n២. Brainstorming & Mind Mapping៖ ការគិតរកគំនិត និងពង្រីកគំនិតទាំងនោះដោយសរសេរជាផែនទី (Mind Map) ដើម្បីរកចំណុចផ្សារភ្ជាប់។\n៣. Sketching (គូសវាស)៖ ការយកខ្មៅដៃគូសវាសគំនិតរដុបៗជាច្រើនលើក្រដាសយ៉ាងលឿន (Thumbnails) មុននឹងប៉ះកុំព្យូទ័រ។\n៤. Execution (ការប្រតិបត្តិ)៖ ជ្រើសរើសគំនូរព្រាងល្អជាងគេ យកមករចនាឱ្យស្អាតក្នុងកម្មវិធី (Software)។', 
-          desc_en: 'Professional designers do not rely purely on inspiration; they follow a strict workflow:\n\n1. Research: Analyzing the client\'s brand, their competitors, and market expectations.\n2. Brainstorming: Creating word-associations and mind maps to find unique conceptual connections.\n3. Sketching: Rapidly drawing dozens of rough thumbnail concepts on paper before ever touching a computer mouse.\n4. Execution: Selecting the strongest concept and bringing it to life flawlessly using design software.',
-          tip: '💡 គន្លឹះ៖ ការគូសវាសលើក្រដាសមុន ជួយសន្សំពេលវេលាអ្នកបានច្រើនណាស់។ បើអ្នកចូលកុំព្យូទ័រភ្លាមៗ អ្នកនឹងជាប់គាំងត្រឹមការរើសហ្វុន និងពណ៌។',
-          tip_en: '💡 Tip: Sketching on paper first saves massive amounts of time. If you jump straight into software, you will get stuck wasting hours just picking fonts and colors.'
-      },
-      { 
-          tool: 'Critique & Feedback', 
-          khmer: 'ការរិះគន់ និងការកែលម្អ', 
-          khmer_en: 'Handling Revisions',
-          shortDesc: 'របៀបទទួលយកមតិកែលម្អ ដើម្បីធ្វើឱ្យស្នាដៃកាន់តែល្អឥតខ្ចោះ។',
-          shortDesc_en: 'How to accept and utilize feedback to perfect your work.',
-          advancedUI: 'graphic_prof_feedback',
-          desc: 'ការរចនាគឺធ្វើឡើងសម្រាប់ដោះស្រាយបញ្ហា មិនមែនសម្រាប់តែតាំងបង្ហាញទេ៖\n\n• Critical Judgment (ការវិនិច្ឆ័យប្រកបដោយការគិត)៖ រៀនមើលស្នាដៃខ្លួនឯង និងអ្នកដទៃ ហើយសួរថា "ហេតុអ្វីបានជាគេប្រើពណ៌នេះ? តើវាងាយអានទេ?"\n• Constructive Evaluation (ការវាយតម្លៃស្ថាបនា)៖ ការផ្តល់មតិយោបល់ដើម្បីកែលម្អ មិនមែនជាន់ពន្លិច។ ជំនួសឱ្យការនិយាយថា "ឡូហ្គោនេះអាក្រក់មើលណាស់" គួរនិយាយថា "ឡូហ្គោនេះហាក់ដូចជាពិបាកអាននៅពេលបង្រួមតូច"។\n• ការទទួលយកមតិ៖ អតិថិជនអាចនឹងសុំឱ្យអ្នកកែប្រែច្រើនដង។ អ្នកត្រូវចេះបំបែក "អារម្មណ៍ផ្ទាល់ខ្លួន" ចេញពី "ការងារ"។', 
-          desc_en: 'Design is about solving business problems, not just personal artistic expression:\n\n• Critical Judgment: Learn to analyze your work and others objectively by asking "Why was this color chosen? Is this actually legible?"\n• Constructive Evaluation: Giving feedback to improve, not destroy. Instead of saying "This logo is ugly," say "This logo loses its readability when scaled down."\n• Accepting Revisions: Clients will ask for changes. You must separate your "personal ego" from the "commercial work".',
-          tip: '💡 គន្លឹះ៖ កុំខឹងពេលអតិថិជនរិះគន់ស្នាដៃអ្នក។ ចូរចាត់ទុក Feedback គឺជាស្ពានឆ្ពោះទៅរកស្នាដៃដែលល្អឥតខ្ចោះ។',
-          tip_en: '💡 Tip: Never get angry when a client critiques your work. Treat feedback as the necessary bridge to reaching perfection.'
-      },
-      { 
-          tool: 'Portfolio Development', 
-          khmer: 'ការអភិវឌ្ឍប្រវត្តិរូបស្នាដៃ', 
-          khmer_en: 'Showcasing Work',
-          shortDesc: 'ការរៀបចំកម្រងស្នាដៃដើម្បីទាក់ទាញការងារ និងអតិថិជនថ្មីៗ។',
-          shortDesc_en: 'Curating a portfolio that attracts high-paying clients.',
-          advancedUI: 'graphic_prof_portfolio',
-          desc: 'Portfolio គឺជាអាវុធដ៏មុតស្រួចបំផុតរបស់អ្នករចនា (សំខាន់ជាងសញ្ញាបត្រទៅទៀត)៖\n\n• ការរៀបចំស្នាដៃ៖ កុំដាក់គ្រប់យ៉ាងដែលអ្នកធ្លាប់ធ្វើ! ជ្រើសរើសតែគម្រោងដែលល្អបំផុត ៣ ទៅ ៥ គម្រោង (Quality over Quantity)។\n• Case Studies (ការបង្ហាញដំណើរការ)៖ កុំគ្រាន់តែបង្ហោះរូបភាពសម្រេច។ ត្រូវបង្ហាញពី "បញ្ហា", "ដំណើរការដោះស្រាយ (គំនូរព្រាង)", និង "លទ្ធផល"។ គេចង់ឃើញរបៀបដែលអ្នកគិត មិនមែនត្រឹមតែដៃដែលអ្នកគូរនោះទេ។\n• Platform (ទីតាំងបង្ហោះ)៖ ការដាក់ស្នាដៃលើ Behance, Dribbble ឬបង្កើត Website ផ្ទាល់ខ្លួន (Personal Web) គឺជាភាពចាំបាច់ក្នុងយុគសម័យនេះ។', 
-          desc_en: 'A Portfolio is a designer’s sharpest weapon (far more important than a degree):\n\n• Curation: Do not include everything you have ever made! Select only your absolute best 3 to 5 projects. Quality over quantity.\n• Case Studies: Don\'t just upload the final image. Show the "Problem", the "Process (Sketches)", and the "Solution". Employers want to see *how* you think, not just what you draw.\n• Platforms: Hosting your work on Behance, Dribbble, or a Custom Personal Website is mandatory in the modern era.',
-          tip: '💡 គន្លឹះ៖ បើអ្នកចង់បានការងាររចនាឡូហ្គោ ចូរដាក់តែស្នាដៃរចនាឡូហ្គោក្នុង Portfolio របស់អ្នក។ គេមិនជួលអ្នកឱ្យធ្វើឡូហ្គោទេ បើក្នុង Portfolio អ្នកមានតែរូបកាត់ត។',
-          tip_en: '💡 Tip: If you want to be hired to design logos, only put logos in your portfolio. You won\'t get hired for logos if your portfolio is full of photo manipulations.'
-      },
-      { 
-          tool: 'Business Skills & Freelance', 
-          khmer: 'ជំនាញអាជីវកម្ម និងការធ្វើការឯករាជ្យ', 
-          khmer_en: 'Contracts & Invoices',
-          shortDesc: 'ការគ្រប់គ្រងការងារជា Freelancer និងការការពារខ្លួនឯង។',
-          shortDesc_en: 'Managing freelance work, pricing, and protecting yourself.',
-          advancedUI: 'graphic_prof_business',
-          desc: 'អ្នករចនាដ៏ពូកែ ក៏ត្រូវតែពូកែខាងរកស៊ីដែរ (Design is a Business)៖\n\n• Contracts (កិច្ចសន្យា)៖ ហាមធ្វើការដោយគ្មានកិច្ចសន្យា ឬវិក្កយបត្រ (Invoice) ច្បាស់លាស់។ ត្រូវបញ្ជាក់ពីតម្លៃ, ចំនួនដងដែលអនុញ្ញាតឱ្យកែ (Revisions) និងថ្ងៃប្រគល់ការងារ។\n• Deposit (ប្រាក់កក់)៖ ត្រូវទាមទារប្រាក់កក់មុន (ជាទូទៅ 30% ទៅ 50%) មុនពេលចាប់ផ្តើមគូសវាសគំនិតដំបូង ដើម្បីការពារហានិភ័យ។\n• Client Communication៖ ការទំនាក់ទំនងល្អ ស្មោះត្រង់ និងទាន់ពេលវេលា (Time Management) នឹងធ្វើឱ្យអតិថិជនចង់ធ្វើការជាមួយអ្នកម្តងហើយម្តងទៀត។', 
-          desc_en: 'Great designers must also be great business people:\n\n• Contracts: Never work without a signed contract or a clear Invoice. It must explicitly state the price, the exact number of revisions allowed, and the final deadline.\n• Deposits: Always demand a non-refundable deposit (usually 30% to 50%) before you start sketching any ideas to protect yourself against ghosting.\n• Client Communication: Honest, highly responsive, and professional communication will make clients want to hire you again, even more than your art will.',
-          tip: '💡 គន្លឹះ៖ អ្នកអាចនឹងមានស្នាដៃរចនាមធ្យម ប៉ុន្តែបើសេវាកម្ម (ការនិយាយស្តី ភាពរហ័ស និងទំនួលខុសត្រូវ) របស់អ្នកល្អ គេនៅតែជួលអ្នក! តែបើអ្នកពូកែរចនាកប់ពពក តែធ្វើការយឺតយ៉ាវ គេនឹងរត់ចោលអ្នក។',
-          tip_en: '💡 Tip: A designer with average skills but excellent communication and speed will always be hired over an artistic genius who replies late and misses deadlines.'
-      },
-      { 
-          tool: 'Ethics, Copyright & Sustainability', 
-          khmer: 'ក្រមសីលធម៌ កម្មសិទ្ធិបញ្ញា និងចីរភាព', 
-          khmer_en: 'Legal & Eco-Design',
-          shortDesc: 'ការស្វែងយល់ពីច្បាប់ និងការរចនាប្រកបដោយការទទួលខុសត្រូវ។',
-          shortDesc_en: 'Understanding design laws and environmentally responsible practices.',
-          advancedUI: 'graphic_prof_ethics',
-          desc: 'ការធ្វើជាអ្នករចនាដែលមានទំនួលខុសត្រូវក្នុងសង្គម៖\n\n• Copyright (កម្មសិទ្ធិបញ្ញា)៖ ការលួចចម្លងស្នាដៃអ្នកដទៃ (Plagiarism) ជាកំហុសធ្ងន់ធ្ងរ។ រៀនយកគំនិត (Inspiration) គឺខុសពីការលួចផ្តិតយកទាំងស្រុង (Copying)។ រាល់រូបភាព និងហ្វុនដែលយកមកប្រើ ត្រូវប្រាកដថាមានអាជ្ញាប័ណ្ណ (License) ត្រឹមត្រូវ។\n• Eco-friendly Design៖ ការរចនាដែលគិតគូរដល់បរិស្ថាន ដូចជាការប្រើប្រាស់ទំហំក្រដាសដែលមិនសល់កាកសំណល់ច្រើន ការកាត់បន្ថយការព្រីនពណ៌ដិតៗពេញផ្ទៃមុខ និងការរចនាសំបកវេចខ្ចប់ដែលអាចកែច្នៃប្រើប្រាស់ឡើងវិញបាន (Recyclable)។\n• ក្រមសីលធម៌៖ ជៀសវាងការរចនាដែលបោកប្រាស់អ្នកប្រើប្រាស់ (Dark Patterns) ឬផ្សព្វផ្សាយព័ត៌មានមិនពិត។', 
-          desc_en: 'Being a socially responsible designer:\n\n• Copyright & Plagiarism: Stealing others\' work is a fatal career mistake. Gathering "inspiration" is fundamentally different from blatant "copying." Ensure every stock photo and font you use has a proper Commercial License.\n• Eco-friendly Design: Designing with the environment in mind. This means choosing paper sizes that minimize trim waste, avoiding heavy edge-to-edge ink coverage to save toner, and using recyclable packaging.\n• Ethics: Avoiding "Dark UX Patterns" designed to trick users into clicking things they didn\'t mean to, and refusing to create misleading marketing material.',
-          tip: '💡 គន្លឹះ៖ មុននឹងប្រើប្រាស់រូបភាពពី Google ត្រូវស្វែងរកមើលរូបភាពដែលមានអាជ្ញាប័ណ្ណ "Free for Commercial Use" ជាមុនសិន ដើម្បីកុំឱ្យមានបញ្ហាច្បាប់នៅថ្ងៃក្រោយ។',
-          tip_en: '💡 Tip: Before downloading an image from Google, always filter for "Free for Commercial Use" licenses to avoid devastating lawsuits down the road.'
-      }
-    ] 
-  },
-  { 
-    id: 'advanced_psychology', 
-    title: '6. ចិត្តសាស្ត្ររចនាកម្រិតខ្ពស់', 
-    title_en: '6. Advanced Design Psychology',
-    icon: <Star className="w-6 h-6 text-purple-500" />, 
-    description: 'របៀបដែលខួរក្បាលមនុស្សដំណើរការរូបភាព និងការកាត់បន្ថយភាពស្មុគស្មាញ។', 
-    description_en: 'How the human brain processes visual data and the mastery of minimalism.', 
-    content: [
-      {
-          tool: 'Gestalt Principles',
-          khmer: 'ទ្រឹស្តី Gestalt (ចិត្តសាស្ត្រផ្គុំ)',
-          khmer_en: 'Visual Grouping',
-          shortDesc: 'អាថ៌កំបាំងដែលធ្វើឱ្យខួរក្បាលមើលឃើញរូបរាងរួម មុននឹងមើលចំណុចលម្អិត។',
-          shortDesc_en: 'The secret of how the human brain groups visual objects automatically.',
-          advancedUI: 'graphic_composition',
-          practiceTool: { tab: 'tools', subTab: 'layout', label: 'មើលការរៀបចំប្លង់ (Layout Tool)', label_en: 'Explore Layout Grouping' },
-          desc: 'ទ្រឹស្តី Gestalt បង្រៀនពីរបៀបដែលខួរក្បាលចងក្រងព័ត៌មានដោយស្វ័យប្រវត្តិ៖\n\n• Proximity (ភាពកៀកគ្នា)៖ បើអ្នកដាក់វត្ថុពីរនៅក្បែរគ្នា ខួរក្បាលនឹងសន្និដ្ឋានថាវាមានរឿងទាក់ទងគ្នា។\n• Similarity (ភាពស្រដៀងគ្នា)៖ វត្ថុដែលមានពណ៌ ឬរូបរាងដូចគ្នា នឹងត្រូវចាត់ទុកជាក្រុមតែមួយ ទោះនៅឆ្ងាយគ្នាក៏ដោយ។\n• Closure (ការបិទជិត)៖ ខួរក្បាលអាចបំពេញចន្លោះប្រហោងដោយខ្លួនឯង ទោះបីជាគំនូរនោះគូរមិនជិតក៏ដោយ (ឧ. ឡូហ្គោ WWF)។',
-          desc_en: 'The human brain recognizes global patterns before individual pieces. The Gestalt Principles dictate how we perceive visual groups:\n\n• Proximity: If you place two text boxes close together, the brain inherently assumes they are related. Use this to structure UI data without drawing actual border lines.\n• Similarity: Objects of the same color or shape are perceived as a group, no matter the distance.\n• Closure: The brain will automatically fill in missing gaps to complete a familiar shape.',
-          tip: '💡 គន្លឹះ៖ មិនបាច់គូសបន្ទាត់ប្រអប់ដើម្បីខណ្ឌចែកទិន្នន័យរហូតទេ។ គ្រាន់តែរុញវាឱ្យនៅឆ្ងាយពីគ្នាបន្តិច (Proximity) ភ្នែកនឹងបែងចែកវាដោយខ្លួនឯង។',
-          tip_en: '💡 Tip: You do not need to draw physical boxes around elements to separate them. Simply increasing the White Space between them achieves the exact same visual grouping.'
-      },
-      {
-          tool: 'Cognitive Load & Minimalism',
-          khmer: 'ការកាត់បន្ថយបន្ទុកខួរក្បាល',
-          khmer_en: 'Hick\'s Law',
-          shortDesc: 'សិល្បៈនៃការលុបចោលភាពរញ៉េរញ៉ៃ ដើម្បីឱ្យការរចនាមើលទៅថ្លៃថ្នូរ។',
-          shortDesc_en: 'The art of removing clutter so your design feels effortless and premium.',
-          advancedUI: 'graphic_hierarchy',
-          desc: 'Cognitive Load គឺជា "ទំហំនៃការគិត" ដែលអ្នកមើលត្រូវចំណាយដើម្បីយល់ពី Design របស់អ្នក។ \n\n• Hick’s Law៖ កាលណាជម្រើសកាន់តែច្រើន ពេលវេលាដែលអតិថិជនត្រូវសម្រេចចិត្តកាន់តែយូរ។\n• ភាពសាមញ្ញ (Minimalism)៖ មិនមែនមានន័យថាទទេស្អាតទេ តែមានន័យថា "គ្មានអ្វីដែលឥតប្រយោជន៍"។ លុបចោលពណ៌ដែលមិនចាំបាច់ លុបចោលស្រមោលក្រាស់ៗ។\n• ភាពថ្លៃថ្នូរ (Premium Feel)៖ ប្រេនថ្លៃៗ (ដូចជា Apple ឬ Chanel) ប្រើប្រាស់ផ្ទៃស (White Space) យ៉ាងធំល្វឹងល្វើយ ដើម្បីប្រាប់ខួរក្បាលថា "ផលិតផលយើងគឺគ្រប់គ្រាន់ហើយ មិនបាច់ស្រែកប្រាប់ខ្លាំងៗទេ"។',
-          desc_en: 'Cognitive Load is the amount of mental effort required to decode your design. Premium design feels "easy" because it minimizes choices.\n\n• Hick\'s Law: The time it takes to make a decision dramatically increases with every new option presented. Reduce buttons. Reduce clutter.\n• Minimalism: This does not mean "empty". It means "intentional". Remove every gradient, shadow, or line that does not serve a specific functional purpose.\n• Premium Aesthetics: Luxury brands use massive amounts of negative space. It confidently tells the brain: "Our product speaks for itself."',
-          tip: '💡 គន្លឹះ៖ មុននឹង Save ឯកសារចុងក្រោយ សួរខ្លួនឯងថា "តើខ្ញុំអាចលុបអ្វីចេញបានមួយទៀត ដោយមិនខូចអត្ថន័យដើម?" លុបវាចោលទៅ។',
-          tip_en: '💡 Tip: Before exporting your final file, ask yourself: "What is one element I can delete without ruining the message?" Find it, and delete it.'
-      }
-    ]
-  },
-  { 
-    id: 'business_strategy', 
-    title: '7. ជំនួញ និងការគិតលុយ (Pricing)', 
-    title_en: '7. The Business of Design',
-    icon: <Briefcase className="w-6 h-6 text-yellow-600" />, 
-    description: 'ក្បួនគិតតម្លៃការងារ និងការលក់តម្លៃស្នាដៃទៅឱ្យអតិថិជនធំៗ។', 
-    description_en: 'How to transition from hourly rates to value-based premium pricing.', 
-    content: [
-      {
-          tool: 'Value-Based Pricing',
-          khmer: 'ការគិតលុយតាមតម្លៃអាជីវកម្ម',
-          khmer_en: 'Pricing Strategies',
-          shortDesc: 'ឈប់គិតលុយតាមម៉ោងធ្វើការ។ រៀនគិតលុយតាមទំហំក្រុមហ៊ុនអតិថិជន។',
-          shortDesc_en: 'Stop charging by the hour. Learn to price based on the client\'s ROI.',
-          advancedUI: 'graphic_prof_business',
-          desc: 'មូលហេតុដែលអ្នករចនាខ្លះបានត្រឹម ១០ ដុល្លារ ឯខ្លះទៀតបាន ៥០០០ ដុល្លារ សម្រាប់ឡូហ្គោមួយ៖\n\n• ការគិតតាមម៉ោង (Hourly Rate)៖ ធ្វើឱ្យអ្នកខាតប្រាក់ ព្រោះកាលណាអ្នកកាន់តែពូកែ អ្នកធ្វើកាន់តែលឿន។\n• ការគិតតាមតម្លៃ (Value-Based Pricing)៖ បើឡូហ្គោរបស់អ្នកជួយឱ្យភោជនីយដ្ឋានគេចំណេញលុយបាន ៥ ម៉ឺនដុល្លារក្នុងមួយឆ្នាំ ការទាមទារកម្រៃ ១០០០ ដុល្លារ គឺជារឿងសមហេតុផលបំផុត ទោះបីអ្នកចំណាយពេលធ្វើតែ ២ ម៉ោងក៏ដោយ។\n• ការលក់លទ្ធផល៖ ត្រូវសួរអតិថិជនថា "តើ Design នេះនឹងជួយអ្វីដល់ក្រុមហ៊ុនបង?" បន្ទាប់មកគិតលុយទៅតាមទំហំនៃបញ្ហាដែលអ្នកបានជួយដោះស្រាយ។',
-          desc_en: 'Why one designer charges $50 for a logo, and another charges $5,000 for the exact same deliverable:\n\n• The Hourly Trap: Charging by the hour punishes you for being efficient. The more skilled you become, the faster you work, meaning you earn less money.\n• Value-Based Pricing: You are selling a business solution. If your re-brand helps a restaurant generate $100,000 in new revenue, charging $3,000 is an incredibly cheap investment for them, even if it only took you 4 hours to design.\n• Sell the Outcome: Ask the client "What financial goal is this design supposed to achieve?" Price the project based on the size of the problem you are solving.',
-          tip: '💡 គន្លឹះ៖ កុំលក់ឡូហ្គោ ឬរូបភាព។ ត្រូវលក់ "ទំនុកចិត្ត" "ការកើនឡើងការលក់" និង "ភាពលេចធ្លោពីគូប្រកួត"។',
-          tip_en: '💡 Tip: Clients do not want to buy "Adobe Illustrator files." They want to buy trust, higher conversion rates, and industry authority. Sell them the result.'
-      }
-    ]
-  }
-];
+// 🌟 NEW 3-PILLAR IPAD MASTERCLASS CURRICULUM 🌟
+export const courseData = {
+  photo: [
+    { id: 'ph1', title: 'Phase 1: Getting Started & Workspace', desc: 'Master the iPad Home Screen, touch gestures, and the Command Controller.', content: '• The Home Screen: Learn to manage "Live Docs" and organize work.\n• Touch Gestures: Master two-finger undo, three-finger redo, and pinching.\n• Interface Layout: Navigate Tools, Studios, and the Contextual Toolbar.\n• iPad-Specific Tools: Use the Command Controller and Quick Menu.', videoUrl: '' },
+    { id: 'ph2', title: 'Phase 2: Fundamental Photo Editing', desc: 'Import RAW files, crop, and master the non-destructive Develop Persona.', content: '• Importing & Placement: Drag and drop images or use the Place menu.\n• Crop & Straighten: Use the Crop tool and straighten horizons.\n• The Develop Persona: Non-destructive adjustments to RAW files.\n• Basic Retouching: Use Inpainting and Spot Healing for blemishes.', videoUrl: '' },
+    { id: 'ph3', title: 'Phase 3: Layers, Masks & Adjustments', desc: 'Control pixel and vector layers, smart selections, and live filters.', content: '• Layer Management: Understand pixel, vector, and text layers.\n• Selections: Use the Smart Selection Brush and Refine Edge.\n• Non-Destructive Adjustments: Apply Curves, Levels, and HSL layers.\n• Masking: Use Mask Layers to hide parts of an image.', videoUrl: '' },
+    { id: 'ph4', title: 'Phase 4: Creative Projects & Exporting', desc: 'Add text effects, blend modes, and export slices for final delivery.', content: '• Adding Text & FX: Use the Text tool and FX Studio for outlines.\n• Compositing: Combine assets using Blend Modes (Multiply, Screen).\n• Export Persona: Export in JPEG, PNG, or TIFF with slice control.', videoUrl: '' },
+    { id: 'ph5', title: 'Phase 5: Professional Portrait Retouch', desc: 'Master Frequency Separation and non-destructive dodging and burning.', content: '• Frequency Separation: Split image into High/Low frequency for skin smoothing.\n• Dodge and Burn: Selectively lighten and darken areas to add contouring.\n• Eyes and Teeth: Enhance iris clarity and whiten teeth naturally.\n• Detail Refinement: Use Inpainting on the high-frequency layer.', videoUrl: '' },
+    { id: 'ph6', title: 'Phase 6: Advanced Digital Compositing', desc: 'Create seamless multi-asset scenes with realistic atmospheric effects.', content: '• Asset Integration: Import and place multiple images.\n• Complex Masking: Refine hair or fine edges accurately.\n• Global Lighting & Shading: Create shadows using Live Gaussian Blur.\n• Atmospheric Effects: Apply Mesh Warp and LUTs to unify colors.', videoUrl: '' },
+    { id: 'ph7', title: 'Project 7: Commercial Product Mockup', desc: 'Place a custom pattern onto a 3D-looking object using Blend Modes.', content: '• Goal: Place a custom pattern onto a 3D-looking object.\n• Key Skill: Master Clipping Masks and Blend Modes to preserve shadows.', videoUrl: '' },
+    { id: 'ph8', title: 'Project 8: Fantasy Dark Angel', desc: 'Create a cinematic scene combining at least 5 different image assets.', content: '• Goal: Create a dramatic scene using multiple assets.\n• Key Skill: Use Adjustment Layers and Brush Tools to paint highlights manually.', videoUrl: '' },
+    { id: 'ph9', title: 'Project 9: Digital Comic Page', desc: 'Transform a standard photo into a stylized comic book illustration.', content: '• Goal: Transform a photo into a comic illustration.\n• Key Skill: Use the Pen Tool, Text Studio, and Live Filters (Halftone).', videoUrl: '' },
+    { id: 'ph10', title: 'Project 10: Social Media Thumbnail', desc: 'Design a high-impact YouTube thumbnail with bold typography and Layer FX.', content: '• Goal: Design a high-impact YouTube thumbnail.\n• Key Skill: Combine Smart Selections, Fill Layers, and bold Layer FX.', videoUrl: '' }
+  ],
+  designer: [
+    { id: 'ds1', title: 'Phase 1: The Vector Mindset & UI', desc: 'Switch between Personas, set up Artboards, and master vector gestures.', content: '• The Three Personas: Designer (Vector), Pixel (Raster), and Export.\n• The Canvas: Setting up Artboards for multi-page projects.\n• Gesture Mastery: Two-finger undo, Quick Menu, and Command Controller.', videoUrl: '' },
+    { id: 'ds2', title: 'Phase 2: Geometry & Shape Builder', desc: 'Create complex forms intuitively using Boolean operations and the Shape Builder.', content: '• Parametric Shapes: Using the Cog, Star, and Donut tools.\n• Boolean Operations: Joining, subtracting, and intersecting shapes.\n• The Shape Builder Tool: "Painting" across overlapping shapes.', videoUrl: '' },
+    { id: 'ds3', title: 'Phase 3: The Pen & Node Tools', desc: 'Master Bézier curves, node conversion, and the vector Knife Tool.', content: '• Pen Tool Precision: "Click-drag" for curves and Alt/Option modifiers.\n• Node Tool: Converting nodes (Sharp, Smooth, Smart).\n• Knife Tool: Slicing through objects to create organic breaks.', videoUrl: '' },
+    { id: 'ds4', title: 'Phase 4: Color, Gradients & Appearance', desc: 'Stack multiple strokes and fills using the powerful Appearance Studio.', content: '• Fill & Stroke: Managing line weights and pressure profiles.\n• The Gradient Tool: Applying linear, radial, and conical fills.\n• Appearance Studio: Adding Multiple Strokes to a single object.', videoUrl: '' },
+    { id: 'ds5', title: 'Phase 5: Typography & Vector Assets', desc: 'Flow text along curved paths and build a reusable Asset library.', content: '• Artistic vs. Frame Text: Scaling headlines vs. wrapping body copy.\n• Path Text: Flowing words along a curved vector line.\n• The Assets Studio: Creating a library of reusable icons.', videoUrl: '' },
+    { id: 'ds6', title: 'Phase 6: The Pixel Persona Integration', desc: 'Add raster textures, grain, and gritty brushes to clean vector shapes.', content: '• Hybrid Workflow: Switch to Pixel Persona to add texture and grain.\n• Vector Masking: Using vector shapes to "clip" raster images inside.', videoUrl: '' },
+    { id: 'ds7', title: 'Project 7: Minimalist Flat Icon Set', desc: 'Design 5 cohesive icons using only basic geometric shapes.', content: '• Goal: Design 5 icons using basic shapes and the Shape Builder.\n• Key Skill: Mastering symmetry and the Transform Studio.', videoUrl: '' },
+    { id: 'ds8', title: 'Project 8: Professional Logo & Branding', desc: 'Vectorize a logo using the Pen Tool based on a hand-drawn sketch import.', content: '• Goal: Create a vectorized logo from a sketch.\n• Key Skill: Node management, path simplification, and SVG export.', videoUrl: '' },
+    { id: 'ds9', title: 'Project 9: Isometric Room Illustration', desc: 'Build a 3D-looking room using the Isometric Grid and Axonometric Panel.', content: '• Goal: Build a 3D-looking room using the Isometric Grid.\n• Key Skill: Using the Axonometric Panel to snap shapes to 3D.', videoUrl: '' },
+    { id: 'ds10', title: 'Project 10: High-Impact Vector Poster', desc: 'Design a print-ready poster combining Path Text and Stock Image masking.', content: '• Goal: Design a poster combining Path Text and Stock masking.\n• Key Skill: Advanced layering and Export Persona for PDFs.', videoUrl: '' }
+  ],
+  publisher: [
+    { id: 'pb1', title: 'Phase 1: Interface & Architecture', desc: 'Configure spreads, bleeds, margins, and utilize StudioLink directly inside Publisher.', content: '• The Home Screen: Create presets for Print, Web, or Devices.\n• Document Setup: Configure Facing Pages, Bleed, and Margins.\n• The Publisher Icon Menu: Switch Personas and use StudioLink.', videoUrl: '' },
+    { id: 'pb2', title: 'Phase 2: Master Pages & Layout', desc: 'Automate backgrounds and headers using the Pages Studio and Master linking.', content: '• Master Page Basics: Create reusable backgrounds and headers.\n• Applying Masters: Apply a master page to specific content pages.\n• Edit Detached: Modify a master element without breaking its link.', videoUrl: '' },
+    { id: 'pb3', title: 'Phase 3: Text Frames & Typography', desc: 'Link text frames to pour body copy across multiple spreads.', content: '• Frame vs. Artistic Text: Use Frame Text for large body copy.\n• Text Flow & Linking: Link frames so text "pours" across pages.\n• Typography Controls: Master tracking, kerning, and baseline shift.', videoUrl: '' },
+    { id: 'pb4', title: 'Phase 4: Styles & Formatting', desc: 'Create global Paragraph Styles to automate bullet lists and chapter formatting.', content: '• Paragraph & Character Styles: Ensure consistent fonts globally.\n• Bullet & Numbered Lists: Automate lists using Paragraph Studio.\n• Find & Replace: Quickly update text or formatting document-wide.', videoUrl: '' },
+    { id: 'pb5', title: 'Phase 5: Images, Assets & Tables', desc: 'Build formatted data tables and drop images perfectly into Picture Frames.', content: '• Picture Frames: Create placeholders and "Place" images inside.\n• The Assets Studio: Store logos and design elements for quick use.\n• Table Tool: Build data tables with custom cell borders and fills.', videoUrl: '' },
+    { id: 'pb6', title: 'Phase 6: Advanced Publishing Tools', desc: 'Generate a Table of Contents automatically and use the Preflight Studio.', content: '• Section Manager: Organize a large document into chapters.\n• TOC & Indexing: Automatically generate a Table of Contents.\n• Preflight Studio: Monitor for errors like low-resolution images.', videoUrl: '' },
+    { id: 'pb7', title: 'Project 7: Magazine Feature Article', desc: 'Create a feature article with a hero image, headline, and three text columns.', content: '• Goal: Create an article layout with hero image and columns.\n• Key Skill: Mastering Text Wrap around images and Drop Caps.', videoUrl: '' },
+    { id: 'pb8', title: 'Project 8: Corporate Brochure', desc: 'Design an 8-page brochure utilizing Global Colors and multiple Master Pages.', content: '• Goal: Design an 8-page brochure using two Master Pages.\n• Key Skill: Managing consistent branding with Global Colors.', videoUrl: '' },
+    { id: 'pb9', title: 'Project 9: Digital Interactive Planner', desc: 'Create a monthly PDF planner with functional hyperlinks and complex tabs.', content: '• Goal: Create a monthly planner with functional hyperlinks.\n• Key Skill: Using the Hyperlinks Studio and Master Page Stacking.', videoUrl: '' },
+    { id: 'pb10', title: 'Project 10: Professional Book Layout', desc: 'Layout a short chapter book with automated page numbers and Print PDF/X-4 export.', content: '• Goal: Layout a book including cover, TOC, and page numbers.\n• Key Skill: Using the Books Panel and Exporting for Print (PDF/X-4).', videoUrl: '' }
+  ]
+};
 
 export const initialQuestionBank = [
     // Foundations & Basics (1-20)

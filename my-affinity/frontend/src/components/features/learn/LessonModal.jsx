@@ -1,110 +1,94 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { XCircle } from 'lucide-react';
-import LessonItem from './LessonItem';
-import { useLanguage } from '../../../contexts/LanguageContext';
+import React, { useEffect, useState } from 'react';
+import { X, PlayCircle, BookOpen } from 'lucide-react';
 
-const triggerHaptic = () => {
-    if (typeof navigator !== 'undefined' && navigator.vibrate) {
-        navigator.vibrate(10);
-    }
+const LessonModal = ({ lesson, onClose, isDarkMode }) => {
+  const [isVisible, setIsVisible] = useState(false);
+
+  useEffect(() => {
+    setIsVisible(true);
+    document.body.style.overflow = 'hidden'; // Prevent background scrolling
+    return () => { document.body.style.overflow = 'auto'; };
+  }, []);
+
+  const handleClose = () => {
+    setIsVisible(false);
+    setTimeout(onClose, 300); // Wait for fade-out animation
+  };
+
+  if (!lesson) return null;
+
+  return (
+    <div className={`fixed inset-0 z-[100] flex items-end md:items-center justify-center p-0 md:p-6 transition-opacity duration-300 ${isVisible ? 'opacity-100' : 'opacity-0'}`}>
+      
+      {/* Background Dimmer */}
+      <div 
+        className="absolute inset-0 bg-black/60 backdrop-blur-md" 
+        onClick={handleClose} 
+      />
+
+      {/* Modal Container */}
+      <div className={`relative w-full max-w-3xl max-h-[90vh] md:max-h-[85vh] flex flex-col shadow-2xl transition-transform duration-300 ease-out rounded-t-[32px] md:rounded-[32px]
+        ${isVisible ? 'translate-y-0 scale-100' : 'translate-y-full md:translate-y-8 md:scale-95'}
+        ${isDarkMode ? 'bg-[#121212] border border-[#2C2C2C]' : 'bg-[#FFFFFF] border border-[#E5E7EB]'}
+      `}>
+        
+        {/* Header Bar */}
+        <div className={`flex items-center justify-between p-5 border-b shrink-0 ${isDarkMode ? 'border-[#2C2C2C]' : 'border-[#E5E7EB]'}`}>
+            <h3 className={`font-bold font-khmer text-lg truncate pr-4 ${isDarkMode ? 'text-[#F1F1F1]' : 'text-[#1A1A1A]'}`}>
+                {lesson.title}
+            </h3>
+            <button 
+              onClick={handleClose} 
+              className={`p-2 rounded-full transition-colors active:scale-90 ${isDarkMode ? 'bg-[#1E1E1E] text-[#A0A0A0] hover:text-[#F1F1F1]' : 'bg-[#F8F9FA] text-[#6B7280] hover:text-[#1A1A1A]'}`}
+            >
+              <X size={20} />
+            </button>
+        </div>
+
+        {/* Scrollable Content Area */}
+        <div className="flex-1 overflow-y-auto p-5 md:p-8 no-scrollbar">
+            
+            {/* 🌟 VIDEO PLAYER CONTAINER 🌟 */}
+            <div className={`w-full aspect-video rounded-2xl relative overflow-hidden flex items-center justify-center group mb-8 shadow-lg border ${isDarkMode ? 'bg-[#0A0A0A] border-[#2C2C2C]' : 'bg-[#1A1A1A] border-black'}`}>
+                {lesson.videoUrl ? (
+                    <iframe 
+                        src={lesson.videoUrl} 
+                        className="w-full h-full absolute inset-0"
+                        allowFullScreen 
+                        title="Lesson Video"
+                    />
+                ) : (
+                    <div className="text-center text-white/50 p-4">
+                        <PlayCircle size={48} className="mx-auto mb-3 opacity-50 group-hover:opacity-100 transition-opacity text-[#41B6E6]" />
+                        <p className="font-khmer font-bold tracking-wide">VIDEO TUTORIAL COMING SOON</p>
+                        <p className="text-xs mt-2 opacity-70">The video link for this phase has not been added yet.</p>
+                    </div>
+                )}
+            </div>
+
+            {/* Lesson Text Content */}
+            <div className="space-y-6">
+                <div className={`flex items-start gap-3 p-4 rounded-2xl border ${isDarkMode ? 'bg-[#1E1E1E] border-[#2C2C2C]' : 'bg-[#F8F9FA] border-[#E5E7EB]'}`}>
+                    <BookOpen className={`shrink-0 mt-0.5 ${isDarkMode ? 'text-[#41B6E6]' : 'text-[#0277C5]'}`} size={20} />
+                    <p className={`text-[15px] font-khmer leading-relaxed ${isDarkMode ? 'text-[#F1F1F1]' : 'text-[#1A1A1A]'}`}>
+                        {lesson.desc}
+                    </p>
+                </div>
+                
+                <div className="pl-2">
+                    <h4 className={`text-sm font-bold uppercase tracking-widest mb-4 opacity-50 ${isDarkMode ? 'text-[#A0A0A0]' : 'text-[#6B7280]'}`}>
+                        Key Takeaways
+                    </h4>
+                    <p className={`text-[15px] font-khmer leading-loose whitespace-pre-wrap ${isDarkMode ? 'text-[#A0A0A0]' : 'text-[#6B7280]'}`}>
+                        {lesson.content}
+                    </p>
+                </div>
+            </div>
+
+        </div>
+      </div>
+    </div>
+  );
 };
 
-export default function LessonModal({ lesson, onClose, isDarkMode }) {
-    const { lang } = useLanguage();
-    const [closing, setClosing] = useState(false);
-    const [dragOffset, setDragOffset] = useState(0);
-    const [expandedItem, setExpandedItem] = useState(null);
-    const modalRef = useRef(null);
-    const dragStartY = useRef(null);
-  
-    const displayTitle = lang === 'en' && lesson.title_en ? lesson.title_en : lesson.title;
-
-    useEffect(() => { 
-        document.body.style.overflow = 'hidden'; 
-        return () => { document.body.style.overflow = ''; }; 
-    }, []);
-
-    const handleClose = () => { 
-        triggerHaptic();
-        setClosing(true); 
-        setTimeout(onClose, 400); 
-    };
-  
-    useEffect(() => {
-        if (expandedItem !== null) {
-            setTimeout(() => {
-                const el = document.getElementById(`lesson-item-${expandedItem}`);
-                if (el) { el.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
-            }, 250); // Smooth scroll timing
-        }
-    }, [expandedItem]);
-  
-    const onTouchStart = (e) => {
-      const scrollTop = modalRef.current?.querySelector('.scroll-content')?.scrollTop || 0;
-      if (scrollTop <= 0) { dragStartY.current = e.touches[0].clientY; }
-    };
-    const onTouchMove = (e) => {
-      if (dragStartY.current === null) return;
-      const deltaY = e.touches[0].clientY - dragStartY.current;
-      if (deltaY > 0) { setDragOffset(deltaY); if (e.cancelable && deltaY > 10) e.preventDefault(); }
-    };
-    const onTouchEnd = () => { 
-        if (dragOffset > 150) { handleClose(); } 
-        else { setDragOffset(0); } 
-        dragStartY.current = null; 
-    };
-    const opacity = 1 - (dragOffset / 500); 
-  
-    return (
-        <div className="fixed inset-0 z-[200] flex items-end sm:items-center justify-center p-0 sm:p-6">
-            {/* 🌟 Premium Blurred Backdrop 🌟 */}
-            <div 
-                className={`absolute inset-0 backdrop-blur-md transition-opacity duration-500 ease-out ${closing ? 'opacity-0' : 'opacity-100'} ${isDarkMode ? 'bg-black/70' : 'bg-black/30'}`} 
-                style={{ opacity: Math.max(0, opacity) }} 
-                onClick={handleClose} 
-            />
-            
-            {/* 🌟 Glassmorphism Modal Container (Touching Status Bar) 🌟 */}
-            <div 
-                ref={modalRef} 
-                className={`relative w-full max-w-3xl rounded-t-[28px] sm:rounded-[32px] shadow-2xl flex flex-col h-[calc(100dvh-env(safe-area-inset-top,0px))] sm:h-auto sm:max-h-[90vh] transition-transform duration-500 ease-spring border-t sm:border ${isDarkMode ? 'bg-[#1A1A1A]/95 border-white/10 backdrop-blur-3xl' : 'bg-[#FFFFFF]/95 border-black/5 backdrop-blur-3xl'} ${closing ? 'translate-y-full' : 'translate-y-0'}`} 
-                style={{ transform: `translateY(${closing ? '100%' : `${dragOffset}px`})`, transition: dragOffset > 0 ? 'none' : 'transform 0.5s cubic-bezier(0.19, 1, 0.22, 1)' }} 
-                onTouchStart={onTouchStart} 
-                onTouchMove={onTouchMove} 
-                onTouchEnd={onTouchEnd}
-            >
-               {/* Pull Handle for Mobile (Reduced Padding) */}
-               <div className="w-full flex justify-center pt-2.5 pb-1.5 shrink-0 cursor-grab active:cursor-grabbing sm:hidden" onClick={handleClose}>
-                   <div className={`w-10 h-1.5 rounded-full ${isDarkMode ? 'bg-white/20' : 'bg-black/20'}`}></div>
-               </div>
-               
-               {/* 🌟 Modal Header (Reduced Height) 🌟 */}
-               <div className={`border-b px-4 sm:px-6 pb-3 pt-1 sm:py-4 flex items-center justify-between shrink-0 ${isDarkMode ? 'border-white/10' : 'border-black/5'}`}>
-                  <div className="flex items-center gap-3">
-                      <div className={`w-10 h-10 rounded-[12px] flex items-center justify-center shadow-inner [&>svg]:w-5 [&>svg]:h-5 ${isDarkMode ? 'bg-[#41B6E6]/10 text-[#41B6E6]' : 'bg-[#0277C5]/10 text-[#0277C5]'}`}>
-                          {lesson.icon}
-                      </div>
-                      <h2 className={`text-[18px] sm:text-[20px] font-black font-khmer tracking-tight ${isDarkMode ? 'text-[#F1F1F1]' : 'text-[#1A1A1A]'}`}>{displayTitle}</h2>
-                  </div>
-                  <button onClick={handleClose} className={`p-2 rounded-full transition-colors ${isDarkMode ? 'bg-[#2C2C2C] hover:bg-[#3A3A3C] text-[#9AA0A6]' : 'bg-[#F8F9FA] hover:bg-[#E5E7EB] text-[#6B7280]'}`}>
-                      <XCircle size={20} />
-                  </button>
-               </div>
-               
-               {/* 🌟 Content Area with iOS Safe Bottom Margin 🌟 */}
-               <div className="scroll-content flex-1 overflow-y-auto p-4 sm:p-6 space-y-4 overscroll-contain custom-scrollbar pb-[calc(env(safe-area-inset-bottom,20px)+20px)]">
-                  {lesson.content.map((item, idx) => (
-                      <LessonItem 
-                          key={idx} 
-                          id={`lesson-item-${idx}`}
-                          item={item} 
-                          isExpanded={expandedItem === idx} 
-                          onToggle={() => { setExpandedItem(expandedItem === idx ? null : idx); triggerHaptic(); }} 
-                          isDarkMode={isDarkMode} 
-                      />
-                  ))}
-               </div>
-            </div>
-        </div>
-    )
-}
+export default LessonModal;
