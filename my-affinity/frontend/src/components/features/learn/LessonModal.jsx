@@ -1,12 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { X, PlayCircle, CheckCircle2 } from 'lucide-react';
+import { X, PlayCircle, DownloadCloud } from 'lucide-react';
 import { useLanguage } from '../../../contexts/LanguageContext';
 
 const LessonModal = ({ lesson, onClose, isDarkMode }) => {
   const { lang } = useLanguage();
   const [isVisible, setIsVisible] = useState(false);
-  
-  // 🌟 NEW: Track which micro-lesson step they are watching
   const [activeStep, setActiveStep] = useState(0);
 
   useEffect(() => {
@@ -22,7 +20,6 @@ const LessonModal = ({ lesson, onClose, isDarkMode }) => {
 
   if (!lesson) return null;
 
-  // Get the current step object
   const currentStepData = lesson.steps && lesson.steps.length > 0 ? lesson.steps[activeStep] : null;
 
   return (
@@ -56,7 +53,7 @@ const LessonModal = ({ lesson, onClose, isDarkMode }) => {
 
             {/* 🌟 DYNAMIC VIDEO PLAYER 🌟 */}
             {currentStepData && (
-                <div className={`w-full aspect-video rounded-2xl relative overflow-hidden flex flex-col items-center justify-center group mb-8 shadow-lg border shrink-0 ${isDarkMode ? 'bg-[#0A0A0A] border-[#2C2C2C]' : 'bg-[#1A1A1A] border-black'}`}>
+                <div className={`w-full aspect-video rounded-2xl relative overflow-hidden flex flex-col items-center justify-center group mb-6 shadow-lg border shrink-0 ${isDarkMode ? 'bg-[#0A0A0A] border-[#2C2C2C]' : 'bg-[#1A1A1A] border-black'}`}>
                     {currentStepData.videoUrl ? (
                         <iframe 
                             src={currentStepData.videoUrl} 
@@ -71,6 +68,33 @@ const LessonModal = ({ lesson, onClose, isDarkMode }) => {
                                 {lang === 'en' ? `STEP ${currentStepData.id} COMING SOON` : `វីដេអូទី ${currentStepData.id} កំពុងរៀបចំ`}
                             </p>
                         </div>
+                    )}
+                </div>
+            )}
+
+            {/* 🌟 PRACTICE RESOURCES BOX 🌟 */}
+            {(lesson.instruction || lesson.downloadUrl) && (
+                <div className={`mb-8 p-5 rounded-2xl border flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between ${isDarkMode ? 'bg-[#1E1E1E]/50 border-[#2C2C2C]' : 'bg-[#F8F9FA] border-[#E5E7EB]'}`}>
+                    <div className="flex-1">
+                        <h4 className={`text-xs font-bold uppercase tracking-widest mb-2 flex items-center gap-2 ${isDarkMode ? 'text-[#41B6E6]' : 'text-[#0277C5]'}`}>
+                            <DownloadCloud size={16} />
+                            {lang === 'en' ? 'Practice Resources' : 'ឯកសារអនុវត្ត'}
+                        </h4>
+                        <p className={`text-[13px] font-khmer leading-relaxed ${isDarkMode ? 'text-[#A0A0A0]' : 'text-[#6B7280]'}`}>
+                            {lang === 'en' ? lesson.instruction_en : lesson.instruction}
+                        </p>
+                    </div>
+                    {lesson.downloadUrl && (
+                        <a 
+                            href={lesson.downloadUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className={`shrink-0 w-full sm:w-auto text-center px-5 py-2.5 rounded-xl font-khmer font-bold text-[13px] transition-transform active:scale-95 shadow-sm
+                                ${isDarkMode ? 'bg-[#41B6E6] text-[#0A0A0A] hover:bg-[#2CA0D0]' : 'bg-[#0277C5] text-white hover:bg-[#01579B]'}
+                            `}
+                        >
+                            {lang === 'en' ? 'Download Assets (.zip)' : 'ទាញយកឯកសារ (.zip)'}
+                        </a>
                     )}
                 </div>
             )}
@@ -94,7 +118,6 @@ const LessonModal = ({ lesson, onClose, isDarkMode }) => {
                                 }
                             `}
                         >
-                            {/* Number / Status Icon */}
                             <div className={`mt-0.5 w-7 h-7 shrink-0 rounded-full flex items-center justify-center font-bold text-xs
                                 ${isActive 
                                     ? (isDarkMode ? 'bg-[#41B6E6] text-[#0A0A0A]' : 'bg-[#0277C5] text-white') 
@@ -104,7 +127,6 @@ const LessonModal = ({ lesson, onClose, isDarkMode }) => {
                                 {isActive ? <PlayCircle size={14} className="ml-0.5" /> : step.id}
                             </div>
 
-                            {/* Step Text */}
                             <p className={`text-[15px] font-khmer leading-relaxed flex-1
                                 ${isActive 
                                     ? (isDarkMode ? 'text-[#F1F1F1] font-medium' : 'text-[#1A1A1A] font-medium') 

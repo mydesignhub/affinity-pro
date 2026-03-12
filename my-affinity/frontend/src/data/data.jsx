@@ -33,15 +33,18 @@ export const TIPS_LIST_EN = [
     "💡 Don't forget to Save your work frequently to avoid data loss! 🚀"
 ];
 
-// 🌟 MICRO-LEARNING COURSE DATA 🌟
+// 🌟 REUSABLE DEFAULT INSTRUCTIONS 🌟
+const defaultInstruction = "សូមទាញយកឯកសារ (Assets) ខាងក្រោម រួចបើកវានៅក្នុងកម្មវិធីដើម្បីអនុវត្តតាមវីដេអូមួយជំហានម្តងៗ។";
+const defaultInstructionEn = "Please download the provided assets below and open them in the app to follow along with the video step-by-step.";
+const defaultDownloadUrl = "https://myaffinity.gumroad.com/";
+
+// 🌟 MICRO-LEARNING COURSE DATA WITH PRACTICE FILES 🌟
 export const courseData = {
   photo: [
     { 
-      id: 'ph1', 
-      title: 'មេរៀនទី ១៖ ការចាប់ផ្តើម និងផ្ទៃការងារ', 
-      title_en: 'Lesson 1: Getting Started & Workspace', 
-      desc: 'ស្ទាត់ជំនាញលើ Home Screen, កាយវិការបញ្ជា (Touch Gestures) និង Command Controller។', 
-      desc_en: 'Master the iPad Home Screen, touch gestures, and the Command Controller.', 
+      id: 'ph1', title: 'មេរៀនទី ១៖ ការចាប់ផ្តើម និងផ្ទៃការងារ', title_en: 'Lesson 1: Getting Started & Workspace', 
+      desc: 'ស្ទាត់ជំនាញលើ Home Screen, កាយវិការបញ្ជា (Touch Gestures) និង Command Controller។', desc_en: 'Master the iPad Home Screen, touch gestures, and the Command Controller.', 
+      instruction: 'មុននឹងចាប់ផ្តើម សូមទាញយកឯកសារ UI Guide ខាងក្រោមដើម្បីងាយស្រួលមើលចំណាំកន្លែង Tools ផ្សេងៗ។', instruction_en: 'Before starting, download the UI Guide PDF below to easily memorize where the tools are located.', downloadUrl: defaultDownloadUrl,
       steps: [
         { id: 1, khmer: 'Home Screen៖ រៀនពីការគ្រប់គ្រង "Live Docs" និងការរៀបចំគម្រោងការងារ។', english: 'The Home Screen: Learn to manage "Live Docs" and organize work.', videoUrl: 'https://www.youtube.com/embed/KjL759jG9m4' },
         { id: 2, khmer: 'កាយវិការបញ្ជា (Touch Gestures)៖ ប្រើម្រាមពីរដើម្បី Undo, ម្រាមបីដើម្បី Redo និងការចាប់ពង្រីក។', english: 'Touch Gestures: Master two-finger undo, three-finger redo, and pinching.', videoUrl: '' },
@@ -50,11 +53,9 @@ export const courseData = {
       ]
     },
     { 
-      id: 'ph2', 
-      title: 'មេរៀនទី ២៖ មូលដ្ឋាននៃការកែរូបថត', 
-      title_en: 'Lesson 2: Fundamental Photo Editing', 
-      desc: 'ការនាំចូលឯកសារ RAW, ការកាត់តម្រឹម និងការប្រើប្រាស់ Develop Persona។', 
-      desc_en: 'Import RAW files, crop, and master the non-destructive Develop Persona.', 
+      id: 'ph2', title: 'មេរៀនទី ២៖ មូលដ្ឋាននៃការកែរូបថត', title_en: 'Lesson 2: Fundamental Photo Editing', 
+      desc: 'ការនាំចូលឯកសារ RAW, ការកាត់តម្រឹម និងការប្រើប្រាស់ Develop Persona។', desc_en: 'Import RAW files, crop, and master the non-destructive Develop Persona.', 
+      instruction: defaultInstruction, instruction_en: defaultInstructionEn, downloadUrl: defaultDownloadUrl,
       steps: [
         { id: 1, khmer: 'ការនាំចូល និងការដាក់រូបភាព៖ អូសទាញរូបភាព ឬប្រើម៉ឺនុយ Place។', english: 'Importing & Placement: Drag and drop images or use the Place menu.', videoUrl: '' },
         { id: 2, khmer: 'កាត់ និងតម្រឹម៖ ប្រើ Crop tool និងតម្រង់ប្លង់ផ្តេក (Horizon) ឱ្យត្រង់។', english: 'Crop & Straighten: Use the Crop tool and straighten horizons.', videoUrl: '' },
@@ -63,11 +64,9 @@ export const courseData = {
       ]
     },
     { 
-      id: 'ph3', 
-      title: 'មេរៀនទី ៣៖ Layers, Masks និងការកែពណ៌', 
-      title_en: 'Lesson 3: Layers, Masks & Adjustments', 
-      desc: 'គ្រប់គ្រង Pixel និង Vector Layers, ការស៊ិចឡិច (Selections) និង Live Filters។', 
-      desc_en: 'Control pixel and vector layers, smart selections, and live filters.', 
+      id: 'ph3', title: 'មេរៀនទី ៣៖ Layers, Masks និងការកែពណ៌', title_en: 'Lesson 3: Layers, Masks & Adjustments', 
+      desc: 'គ្រប់គ្រង Pixel និង Vector Layers, ការស៊ិចឡិច (Selections) និង Live Filters។', desc_en: 'Control pixel and vector layers, smart selections, and live filters.', 
+      instruction: defaultInstruction, instruction_en: defaultInstructionEn, downloadUrl: defaultDownloadUrl,
       steps: [
         { id: 1, khmer: 'ការគ្រប់គ្រង Layer៖ ស្វែងយល់ពី Pixel, Vector និង Text layers។', english: 'Layer Management: Understand pixel, vector, and text layers.', videoUrl: '' },
         { id: 2, khmer: 'Selections៖ ប្រើ Smart Selection Brush និង Refine Edge ដើម្បីកាត់សក់។', english: 'Selections: Use the Smart Selection Brush and Refine Edge.', videoUrl: '' },
@@ -76,11 +75,9 @@ export const courseData = {
       ]
     },
     { 
-      id: 'ph4', 
-      title: 'មេរៀនទី ៤៖ ការផ្គុំរូប និង Export ឯកសារ', 
-      title_en: 'Lesson 4: Creative Projects & Exporting', 
-      desc: 'បន្ថែម Effect អក្សរ, Blend Modes និងការ Export ឯកសារចុងក្រោយ។', 
-      desc_en: 'Add text effects, blend modes, and export slices for final delivery.', 
+      id: 'ph4', title: 'មេរៀនទី ៤៖ ការផ្គុំរូប និង Export ឯកសារ', title_en: 'Lesson 4: Creative Projects & Exporting', 
+      desc: 'បន្ថែម Effect អក្សរ, Blend Modes និងការ Export ឯកសារចុងក្រោយ។', desc_en: 'Add text effects, blend modes, and export slices for final delivery.', 
+      instruction: defaultInstruction, instruction_en: defaultInstructionEn, downloadUrl: defaultDownloadUrl,
       steps: [
         { id: 1, khmer: 'ការបន្ថែមអក្សរ និង FX៖ ប្រើ Text tool និង FX Studio សម្រាប់ដាក់ស្រមោល និងគែម។', english: 'Adding Text & FX: Use the Text tool and FX Studio for outlines.', videoUrl: '' },
         { id: 2, khmer: 'Compositing៖ ផ្គុំរូបភាពដោយប្រើ Blend Modes (Multiply, Screen) ឱ្យស៊ីសង្វាក់គ្នា។', english: 'Compositing: Combine assets using Blend Modes (Multiply, Screen).', videoUrl: '' },
@@ -88,11 +85,9 @@ export const courseData = {
       ]
     },
     { 
-      id: 'ph5', 
-      title: 'មេរៀនទី ៥៖ ក្បួនកែស្បែក Portrait អាជីព', 
-      title_en: 'Lesson 5: Professional Portrait Retouch', 
-      desc: 'ស្ទាត់ជំនាញបច្ចេកទេស Frequency Separation និង Dodge & Burn សម្រាប់ការកែរូប Portrait។', 
-      desc_en: 'Master Frequency Separation and non-destructive dodging and burning.', 
+      id: 'ph5', title: 'មេរៀនទី ៥៖ ក្បួនកែស្បែក Portrait អាជីព', title_en: 'Lesson 5: Professional Portrait Retouch', 
+      desc: 'ស្ទាត់ជំនាញបច្ចេកទេស Frequency Separation និង Dodge & Burn សម្រាប់ការកែរូប Portrait។', desc_en: 'Master Frequency Separation and non-destructive dodging and burning.', 
+      instruction: defaultInstruction, instruction_en: defaultInstructionEn, downloadUrl: defaultDownloadUrl,
       steps: [
         { id: 1, khmer: 'Frequency Separation៖ បំបែករូបភាពជា High/Low frequency ដើម្បីកែស្បែកឱ្យម៉ដ្ឋ។', english: 'Frequency Separation: Split image into High/Low frequency for skin smoothing.', videoUrl: '' },
         { id: 2, khmer: 'Dodge and Burn៖ បន្ថែមពន្លឺ និងស្រមោលដើម្បីបង្កើតទម្រង់មុខឱ្យកាន់តែលេចធ្លោ។', english: 'Dodge and Burn: Selectively lighten and darken areas to add contouring.', videoUrl: '' },
@@ -101,11 +96,9 @@ export const courseData = {
       ]
     },
     { 
-      id: 'ph6', 
-      title: 'មេរៀនទី ៦៖ ក្បួនកាត់តរូបភាពកម្រិតខ្ពស់', 
-      title_en: 'Lesson 6: Advanced Digital Compositing', 
-      desc: 'បង្កើតទស្សនីយភាពដោយការផ្គុំរូបភាពច្រើនផ្ទាំងបញ្ចូលគ្នា (Compositing) ឱ្យមើលទៅដូចពិតៗ។', 
-      desc_en: 'Create seamless multi-asset scenes with realistic atmospheric effects.', 
+      id: 'ph6', title: 'មេរៀនទី ៦៖ ក្បួនកាត់តរូបភាពកម្រិតខ្ពស់', title_en: 'Lesson 6: Advanced Digital Compositing', 
+      desc: 'បង្កើតទស្សនីយភាពដោយការផ្គុំរូបភាពច្រើនផ្ទាំងបញ្ចូលគ្នា (Compositing) ឱ្យមើលទៅដូចពិតៗ។', desc_en: 'Create seamless multi-asset scenes with realistic atmospheric effects.', 
+      instruction: defaultInstruction, instruction_en: defaultInstructionEn, downloadUrl: defaultDownloadUrl,
       steps: [
         { id: 1, khmer: 'ការរួមបញ្ចូលរូបភាព៖ នាំចូល និងចាត់ចែងរូបភាពជាច្រើនផ្ទាំង។', english: 'Asset Integration: Import and place multiple images.', videoUrl: '' },
         { id: 2, khmer: 'Complex Masking៖ កាត់សក់ ឬគែមស្មុគស្មាញឱ្យបានសុក្រិត។', english: 'Complex Masking: Refine hair or fine edges accurately.', videoUrl: '' },
@@ -114,44 +107,36 @@ export const courseData = {
       ]
     },
     { 
-      id: 'ph7', 
-      title: 'គម្រោងទី ១៖ Product Mockup អាជីវកម្ម', 
-      title_en: 'Project 1: Commercial Product Mockup', 
-      desc: 'ដាក់ Pattern ទៅលើវត្ថុ 3D ដោយប្រើប្រាស់ Blend Modes។', 
-      desc_en: 'Place a custom pattern onto a 3D-looking object using Blend Modes.', 
+      id: 'ph7', title: 'គម្រោងទី ១៖ Product Mockup អាជីវកម្ម', title_en: 'Project 1: Commercial Product Mockup', 
+      desc: 'ដាក់ Pattern ទៅលើវត្ថុ 3D ដោយប្រើប្រាស់ Blend Modes។', desc_en: 'Place a custom pattern onto a 3D-looking object using Blend Modes.', 
+      instruction: defaultInstruction, instruction_en: defaultInstructionEn, downloadUrl: defaultDownloadUrl,
       steps: [
         { id: 1, khmer: 'គោលដៅ៖ ដាក់ Pattern រចនាផ្ទាល់ខ្លួនទៅលើវត្ថុ 3D ដូចជាកែវ ឬដប។', english: 'Goal: Place a custom pattern onto a 3D-looking object.', videoUrl: '' },
         { id: 2, khmer: 'ជំនាញគោល៖ ប្រើ Clipping Masks និង Blend Modes ដើម្បីរក្សាស្រមោលដើម។', english: 'Key Skill: Master Clipping Masks and Blend Modes to preserve shadows.', videoUrl: '' }
       ]
     },
     { 
-      id: 'ph8', 
-      title: 'គម្រោងទី ២៖ ទស្សនីយភាព Dark Angel', 
-      title_en: 'Project 2: Fantasy Dark Angel', 
-      desc: 'បង្កើតទស្សនីយភាពបែប Cinematic ដោយផ្គុំរូបភាពយ៉ាងតិច ៥ ផ្ទាំង។', 
-      desc_en: 'Create a cinematic scene combining at least 5 different image assets.', 
+      id: 'ph8', title: 'គម្រោងទី ២៖ ទស្សនីយភាព Dark Angel', title_en: 'Project 2: Fantasy Dark Angel', 
+      desc: 'បង្កើតទស្សនីយភាពបែប Cinematic ដោយផ្គុំរូបភាពយ៉ាងតិច ៥ ផ្ទាំង។', desc_en: 'Create a cinematic scene combining at least 5 different image assets.', 
+      instruction: defaultInstruction, instruction_en: defaultInstructionEn, downloadUrl: defaultDownloadUrl,
       steps: [
         { id: 1, khmer: 'គោលដៅ៖ បង្កើតផ្ទាំងទស្សនីយភាពបែបភាពយន្ត។', english: 'Goal: Create a dramatic scene using multiple assets.', videoUrl: '' },
         { id: 2, khmer: 'ជំនាញគោល៖ ប្រើ Adjustment Layers និង Brush Tools ដើម្បីគូរពន្លឺ។', english: 'Key Skill: Use Adjustment Layers and Brush Tools to paint highlights manually.', videoUrl: '' }
       ]
     },
     { 
-      id: 'ph9', 
-      title: 'គម្រោងទី ៣៖ ប្លង់សៀវភៅ Comic', 
-      title_en: 'Project 3: Digital Comic Page', 
-      desc: 'បំប្លែងរូបថតធម្មតាឱ្យទៅជារូបគំនូរបែបសៀវភៅ Comic។', 
-      desc_en: 'Transform a standard photo into a stylized comic book illustration.', 
+      id: 'ph9', title: 'គម្រោងទី ៣៖ ប្លង់សៀវភៅ Comic', title_en: 'Project 3: Digital Comic Page', 
+      desc: 'បំប្លែងរូបថតធម្មតាឱ្យទៅជារូបគំនូរបែបសៀវភៅ Comic។', desc_en: 'Transform a standard photo into a stylized comic book illustration.', 
+      instruction: defaultInstruction, instruction_en: defaultInstructionEn, downloadUrl: defaultDownloadUrl,
       steps: [
         { id: 1, khmer: 'គោលដៅ៖ ប្រែក្លាយរូបថតទៅជាគំនូរ Comic។', english: 'Goal: Transform a photo into a comic illustration.', videoUrl: '' },
         { id: 2, khmer: 'ជំនាញគោល៖ ប្រើ Pen Tool, Text Studio និង Live Filters (Halftone)។', english: 'Key Skill: Use the Pen Tool, Text Studio, and Live Filters (Halftone).', videoUrl: '' }
       ]
     },
     { 
-      id: 'ph10', 
-      title: 'គម្រោងទី ៤៖ ទាញយកចំណាប់អារម្មណ៍ YouTube', 
-      title_en: 'Project 4: Social Media Thumbnail', 
-      desc: 'រចនា Thumbnail សម្រាប់ YouTube ដែលទាក់ទាញភ្នែកខ្លាំង។', 
-      desc_en: 'Design a high-impact YouTube thumbnail with bold typography and Layer FX.', 
+      id: 'ph10', title: 'គម្រោងទី ៤៖ ទាញយកចំណាប់អារម្មណ៍ YouTube', title_en: 'Project 4: Social Media Thumbnail', 
+      desc: 'រចនា Thumbnail សម្រាប់ YouTube ដែលទាក់ទាញភ្នែកខ្លាំង។', desc_en: 'Design a high-impact YouTube thumbnail with bold typography and Layer FX.', 
+      instruction: defaultInstruction, instruction_en: defaultInstructionEn, downloadUrl: defaultDownloadUrl,
       steps: [
         { id: 1, khmer: 'គោលដៅ៖ រចនា YouTube Thumbnail ដែលទាក់ទាញភ្នែក។', english: 'Goal: Design a high-impact YouTube thumbnail.', videoUrl: '' },
         { id: 2, khmer: 'ជំនាញគោល៖ បញ្ចូលគ្នានូវ Smart Selections, Fill Layers និង Layer FX លើអក្សរ។', english: 'Key Skill: Combine Smart Selections, Fill Layers, and bold Layer FX.', videoUrl: '' }
@@ -160,11 +145,9 @@ export const courseData = {
   ],
   designer: [
     { 
-      id: 'ds1', 
-      title: 'មេរៀនទី ១៖ ទម្លាប់ Vector និងផ្ទៃការងារ', 
-      title_en: 'Lesson 1: The Vector Mindset & UI', 
-      desc: 'ការផ្លាស់ប្តូរ Personas, ការរៀបចំ Artboards និងកាយវិការបញ្ជាសម្រាប់ Vector។', 
-      desc_en: 'Switch between Personas, set up Artboards, and master vector gestures.', 
+      id: 'ds1', title: 'មេរៀនទី ១៖ ទម្លាប់ Vector និងផ្ទៃការងារ', title_en: 'Lesson 1: The Vector Mindset & UI', 
+      desc: 'ការផ្លាស់ប្តូរ Personas, ការរៀបចំ Artboards និងកាយវិការបញ្ជាសម្រាប់ Vector។', desc_en: 'Switch between Personas, set up Artboards, and master vector gestures.', 
+      instruction: defaultInstruction, instruction_en: defaultInstructionEn, downloadUrl: defaultDownloadUrl,
       steps: [
         { id: 1, khmer: 'Personas ទាំងបី៖ Designer (Vector), Pixel (Raster) និង Export។', english: 'The Three Personas: Designer (Vector), Pixel (Raster), and Export.', videoUrl: '' },
         { id: 2, khmer: 'Canvas៖ ការរៀបចំ Artboards សម្រាប់គម្រោងមានទំព័រច្រើន។', english: 'The Canvas: Setting up Artboards for multi-page projects.', videoUrl: '' },
@@ -172,11 +155,9 @@ export const courseData = {
       ]
     },
     { 
-      id: 'ds2', 
-      title: 'មេរៀនទី ២៖ ធរណីមាត្រ និង Shape Builder', 
-      title_en: 'Lesson 2: Geometry & Shape Builder', 
-      desc: 'បង្កើតរូបរាងស្មុគស្មាញដោយប្រើ Boolean operations និង Shape Builder។', 
-      desc_en: 'Create complex forms intuitively using Boolean operations and the Shape Builder.', 
+      id: 'ds2', title: 'មេរៀនទី ២៖ ធរណីមាត្រ និង Shape Builder', title_en: 'Lesson 2: Geometry & Shape Builder', 
+      desc: 'បង្កើតរូបរាងស្មុគស្មាញដោយប្រើ Boolean operations និង Shape Builder។', desc_en: 'Create complex forms intuitively using Boolean operations and the Shape Builder.', 
+      instruction: defaultInstruction, instruction_en: defaultInstructionEn, downloadUrl: defaultDownloadUrl,
       steps: [
         { id: 1, khmer: 'រូបរាងមូលដ្ឋាន (Shapes)៖ ការប្រើប្រាស់ឧបករណ៍ Cog, Star និង Donut។', english: 'Parametric Shapes: Using the Cog, Star, and Donut tools.', videoUrl: '' },
         { id: 2, khmer: 'Boolean Operations៖ ការបូក ដក និងប្រសព្វរូបរាងចូលគ្នា។', english: 'Boolean Operations: Joining, subtracting, and intersecting shapes.', videoUrl: '' },
@@ -184,11 +165,9 @@ export const courseData = {
       ]
     },
     { 
-      id: 'ds3', 
-      title: 'មេរៀនទី ៣៖ Pen Tool និង Node Tool', 
-      title_en: 'Lesson 3: The Pen & Node Tools', 
-      desc: 'ស្ទាត់ជំនាញលើខ្សែបន្ទាត់កោង Bézier, ការកែប្រែ Node និង Knife Tool។', 
-      desc_en: 'Master Bézier curves, node conversion, and the vector Knife Tool.', 
+      id: 'ds3', title: 'មេរៀនទី ៣៖ Pen Tool និង Node Tool', title_en: 'Lesson 3: The Pen & Node Tools', 
+      desc: 'ស្ទាត់ជំនាញលើខ្សែបន្ទាត់កោង Bézier, ការកែប្រែ Node និង Knife Tool។', desc_en: 'Master Bézier curves, node conversion, and the vector Knife Tool.', 
+      instruction: defaultInstruction, instruction_en: defaultInstructionEn, downloadUrl: defaultDownloadUrl,
       steps: [
         { id: 1, khmer: 'ភាពសុក្រិតរបស់ Pen Tool៖ របៀបចុចទាញ (click-drag) សម្រាប់ខ្សែកោង។', english: 'Pen Tool Precision: "Click-drag" for curves and Alt/Option modifiers.', videoUrl: '' },
         { id: 2, khmer: 'Node Tool៖ ការបំប្លែង Nodes (Sharp, Smooth, Smart)។', english: 'Node Tool: Converting nodes (Sharp, Smooth, Smart).', videoUrl: '' },
@@ -196,11 +175,9 @@ export const courseData = {
       ]
     },
     { 
-      id: 'ds4', 
-      title: 'មេរៀនទី ៤៖ ពណ៌, Gradients និង Appearance', 
-      title_en: 'Lesson 4: Color, Gradients & Appearance', 
-      desc: 'ការរៀបចំស្តាយល៍ Stroke និង Fill ច្រើនជាន់ដោយប្រើ Appearance Studio។', 
-      desc_en: 'Stack multiple strokes and fills using the powerful Appearance Studio.', 
+      id: 'ds4', title: 'មេរៀនទី ៤៖ ពណ៌, Gradients និង Appearance', title_en: 'Lesson 4: Color, Gradients & Appearance', 
+      desc: 'ការរៀបចំស្តាយល៍ Stroke និង Fill ច្រើនជាន់ដោយប្រើ Appearance Studio។', desc_en: 'Stack multiple strokes and fills using the powerful Appearance Studio.', 
+      instruction: defaultInstruction, instruction_en: defaultInstructionEn, downloadUrl: defaultDownloadUrl,
       steps: [
         { id: 1, khmer: 'Fill & Stroke៖ ការគ្រប់គ្រងកម្រាស់បន្ទាត់ និងក្បាលព្រួញ។', english: 'Fill & Stroke: Managing line weights and pressure profiles.', videoUrl: '' },
         { id: 2, khmer: 'Gradient Tool៖ ការចាក់ពណ៌រលាយ (Linear, Radial, Conical)។', english: 'The Gradient Tool: Applying linear, radial, and conical fills.', videoUrl: '' },
@@ -208,11 +185,9 @@ export const courseData = {
       ]
     },
     { 
-      id: 'ds5', 
-      title: 'មេរៀនទី ៥៖ អក្សរ និង Vector Assets', 
-      title_en: 'Lesson 5: Typography & Vector Assets', 
-      desc: 'ការសរសេរអក្សរតាមខ្សែបន្ទាត់កោង និងបង្កើត Asset library ដើម្បីប្រើប្រាស់ឡើងវិញ។', 
-      desc_en: 'Flow text along curved paths and build a reusable Asset library.', 
+      id: 'ds5', title: 'មេរៀនទី ៥៖ អក្សរ និង Vector Assets', title_en: 'Lesson 5: Typography & Vector Assets', 
+      desc: 'ការសរសេរអក្សរតាមខ្សែបន្ទាត់កោង និងបង្កើត Asset library ដើម្បីប្រើប្រាស់ឡើងវិញ។', desc_en: 'Flow text along curved paths and build a reusable Asset library.', 
+      instruction: defaultInstruction, instruction_en: defaultInstructionEn, downloadUrl: defaultDownloadUrl,
       steps: [
         { id: 1, khmer: 'Artistic vs Frame Text៖ ការប្រើប្រាស់អក្សរចំណងជើង និងអត្ថបទវែង។', english: 'Artistic vs. Frame Text: Scaling headlines vs. wrapping body copy.', videoUrl: '' },
         { id: 2, khmer: 'Path Text៖ ការសរសេរអក្សរឱ្យរត់តាមខ្សែបន្ទាត់ Vector កោង។', english: 'Path Text: Flowing words along a curved vector line.', videoUrl: '' },
@@ -220,55 +195,45 @@ export const courseData = {
       ]
     },
     { 
-      id: 'ds6', 
-      title: 'មេរៀនទី ៦៖ ការបញ្ជូលគ្នាជាមួយ Pixel Persona', 
-      title_en: 'Lesson 6: The Pixel Persona Integration', 
-      desc: 'ការបន្ថែមភាពគ្រើម (Textures) ទៅលើរូប Vector ដោយប្រើ Pixel Persona។', 
-      desc_en: 'Add raster textures, grain, and gritty brushes to clean vector shapes.', 
+      id: 'ds6', title: 'មេរៀនទី ៦៖ ការបញ្ជូលគ្នាជាមួយ Pixel Persona', title_en: 'Lesson 6: The Pixel Persona Integration', 
+      desc: 'ការបន្ថែមភាពគ្រើម (Textures) ទៅលើរូប Vector ដោយប្រើ Pixel Persona។', desc_en: 'Add raster textures, grain, and gritty brushes to clean vector shapes.', 
+      instruction: defaultInstruction, instruction_en: defaultInstructionEn, downloadUrl: defaultDownloadUrl,
       steps: [
         { id: 1, khmer: 'Hybrid Workflow៖ ផ្លាស់ប្តូរទៅកាន់ Pixel Persona ដើម្បីបន្ថែម Texture និងជក់។', english: 'Hybrid Workflow: Switch to Pixel Persona to add texture and grain.', videoUrl: '' },
         { id: 2, khmer: 'Vector Masking៖ ការប្រើប្រាស់ Vector ដើម្បីកាត់ ឬលាក់ផ្នែកខ្លះនៃរូបភាព Pixel។', english: 'Vector Masking: Using vector shapes to "clip" raster images inside.', videoUrl: '' }
       ]
     },
     { 
-      id: 'ds7', 
-      title: 'គម្រោងទី ១៖ Flat Icon បែប Minimalist', 
-      title_en: 'Project 1: Minimalist Flat Icon Set', 
-      desc: 'រចនា Icon បែប Flat ចំនួន ៥ ដោយប្រើត្រឹមតែរូបរាងមូលដ្ឋាន (Basic Shapes)។', 
-      desc_en: 'Design 5 cohesive icons using only basic geometric shapes.', 
+      id: 'ds7', title: 'គម្រោងទី ១៖ Flat Icon បែប Minimalist', title_en: 'Project 1: Minimalist Flat Icon Set', 
+      desc: 'រចនា Icon បែប Flat ចំនួន ៥ ដោយប្រើត្រឹមតែរូបរាងមូលដ្ឋាន (Basic Shapes)។', desc_en: 'Design 5 cohesive icons using only basic geometric shapes.', 
+      instruction: defaultInstruction, instruction_en: defaultInstructionEn, downloadUrl: defaultDownloadUrl,
       steps: [
         { id: 1, khmer: 'គោលដៅ៖ រចនា Icon ចំនួន ៥ ដោយប្រើ Shape Builder។', english: 'Goal: Design 5 icons using basic shapes and the Shape Builder.', videoUrl: '' },
         { id: 2, khmer: 'ជំនាញគោល៖ ការគ្រប់គ្រងភាពស៊ីមេទ្រី (Symmetry) និង Transform Studio។', english: 'Key Skill: Mastering symmetry and the Transform Studio.', videoUrl: '' }
       ]
     },
     { 
-      id: 'ds8', 
-      title: 'គម្រោងទី ២៖ ការរចនា Logo អាជីព', 
-      title_en: 'Project 2: Professional Logo & Branding', 
-      desc: 'គូរព្រាង និងប្រែក្លាយ Logo ទៅជា Vector ដោយប្រើប្រាស់ Pen Tool។', 
-      desc_en: 'Vectorize a logo using the Pen Tool based on a hand-drawn sketch import.', 
+      id: 'ds8', title: 'គម្រោងទី ២៖ ការរចនា Logo អាជីព', title_en: 'Project 2: Professional Logo & Branding', 
+      desc: 'គូរព្រាង និងប្រែក្លាយ Logo ទៅជា Vector ដោយប្រើប្រាស់ Pen Tool។', desc_en: 'Vectorize a logo using the Pen Tool based on a hand-drawn sketch import.', 
+      instruction: defaultInstruction, instruction_en: defaultInstructionEn, downloadUrl: defaultDownloadUrl,
       steps: [
         { id: 1, khmer: 'គោលដៅ៖ បង្កើត Logo បែប Vector ដោយផ្អែកលើគំនូរព្រាងដោយដៃ។', english: 'Goal: Create a vectorized logo from a sketch.', videoUrl: '' },
         { id: 2, khmer: 'ជំនាញគោល៖ ការគ្រប់គ្រង Node, ការសម្រួលខ្សែបន្ទាត់ និងការ Export ជា SVG។', english: 'Key Skill: Node management, path simplification, and SVG export.', videoUrl: '' }
       ]
     },
     { 
-      id: 'ds9', 
-      title: 'គម្រោងទី ៣៖ ប្លង់បន្ទប់បែប Isometric', 
-      title_en: 'Project 3: Isometric Room Illustration', 
-      desc: 'បង្កើតរូបគំនូរបន្ទប់ 3D ដោយប្រើប្រាស់ Isometric Grid និង Axonometric Panel។', 
-      desc_en: 'Build a 3D-looking room using the Isometric Grid and Axonometric Panel.', 
+      id: 'ds9', title: 'គម្រោងទី ៣៖ ប្លង់បន្ទប់បែប Isometric', title_en: 'Project 3: Isometric Room Illustration', 
+      desc: 'បង្កើតរូបគំនូរបន្ទប់ 3D ដោយប្រើប្រាស់ Isometric Grid និង Axonometric Panel។', desc_en: 'Build a 3D-looking room using the Isometric Grid and Axonometric Panel.', 
+      instruction: defaultInstruction, instruction_en: defaultInstructionEn, downloadUrl: defaultDownloadUrl,
       steps: [
         { id: 1, khmer: 'គោលដៅ៖ បង្កើតទិដ្ឋភាពបន្ទប់ 3D ដោយប្រើ Isometric Grid។', english: 'Goal: Build a 3D-looking room using the Isometric Grid.', videoUrl: '' },
         { id: 2, khmer: 'ជំនាញគោល៖ ការប្រើប្រាស់ Axonometric Panel ដើម្បីចាប់ (Snap) រាងចូលប្លង់ 3D។', english: 'Key Skill: Using the Axonometric Panel to snap shapes to 3D.', videoUrl: '' }
       ]
     },
     { 
-      id: 'ds10', 
-      title: 'គម្រោងទី ៤៖ Poster ទាក់ទាញបែប Vector', 
-      title_en: 'Project 4: High-Impact Vector Poster', 
-      desc: 'រចនា Poster ដោយបញ្ចូលគ្នានូវ Path Text និង Stock Image masking។', 
-      desc_en: 'Design a print-ready poster combining Path Text and Stock Image masking.', 
+      id: 'ds10', title: 'គម្រោងទី ៤៖ Poster ទាក់ទាញបែប Vector', title_en: 'Project 4: High-Impact Vector Poster', 
+      desc: 'រចនា Poster ដោយបញ្ចូលគ្នានូវ Path Text និង Stock Image masking។', desc_en: 'Design a print-ready poster combining Path Text and Stock Image masking.', 
+      instruction: defaultInstruction, instruction_en: defaultInstructionEn, downloadUrl: defaultDownloadUrl,
       steps: [
         { id: 1, khmer: 'គោលដៅ៖ រចនា Poster ដោយបញ្ចូល Path Text និង Masking។', english: 'Goal: Design a poster combining Path Text and Stock masking.', videoUrl: '' },
         { id: 2, khmer: 'ជំនាញគោល៖ ការរៀបចំប្លង់ និងការ Export សម្រាប់បោះពុម្ព (PDF)។', english: 'Key Skill: Advanced layering and Export Persona for PDFs.', videoUrl: '' }
@@ -277,11 +242,9 @@ export const courseData = {
   ],
   publisher: [
     { 
-      id: 'pb1', 
-      title: 'មេរៀនទី ១៖ ផ្ទៃការងារ និងរចនាសម្ព័ន្ធឯកសារ', 
-      title_en: 'Lesson 1: Interface & Architecture', 
-      desc: 'កំណត់ទំព័រ Spreads, Bleed, Margins និងប្រើប្រាស់ StudioLink នៅក្នុង Publisher។', 
-      desc_en: 'Configure spreads, bleeds, margins, and utilize StudioLink directly inside Publisher.', 
+      id: 'pb1', title: 'មេរៀនទី ១៖ ផ្ទៃការងារ និងរចនាសម្ព័ន្ធឯកសារ', title_en: 'Lesson 1: Interface & Architecture', 
+      desc: 'កំណត់ទំព័រ Spreads, Bleed, Margins និងប្រើប្រាស់ StudioLink នៅក្នុង Publisher។', desc_en: 'Configure spreads, bleeds, margins, and utilize StudioLink directly inside Publisher.', 
+      instruction: defaultInstruction, instruction_en: defaultInstructionEn, downloadUrl: defaultDownloadUrl,
       steps: [
         { id: 1, khmer: 'Home Screen៖ ការបង្កើតឯកសារសម្រាប់ Print, Web, ឬ Devices។', english: 'The Home Screen: Create presets for Print, Web, or Devices.', videoUrl: '' },
         { id: 2, khmer: 'Document Setup៖ កំណត់ Facing Pages, Bleed និង Margins។', english: 'Document Setup: Configure Facing Pages, Bleed, and Margins.', videoUrl: '' },
@@ -289,11 +252,9 @@ export const courseData = {
       ]
     },
     { 
-      id: 'pb2', 
-      title: 'មេរៀនទី ២៖ Master Pages និងការរៀបចំប្លង់', 
-      title_en: 'Lesson 2: Master Pages & Layout', 
-      desc: 'ធ្វើស្វ័យប្រវត្តិកម្មលើ Background និង Header ដោយប្រើ Pages Studio។', 
-      desc_en: 'Automate backgrounds and headers using the Pages Studio and Master linking.', 
+      id: 'pb2', title: 'មេរៀនទី ២៖ Master Pages និងការរៀបចំប្លង់', title_en: 'Lesson 2: Master Pages & Layout', 
+      desc: 'ធ្វើស្វ័យប្រវត្តិកម្មលើ Background និង Header ដោយប្រើ Pages Studio។', desc_en: 'Automate backgrounds and headers using the Pages Studio and Master linking.', 
+      instruction: defaultInstruction, instruction_en: defaultInstructionEn, downloadUrl: defaultDownloadUrl,
       steps: [
         { id: 1, khmer: 'មូលដ្ឋាន Master Page៖ បង្កើតទំព័រគំរូសម្រាប់ផ្ទៃខាងក្រោយ និង Header។', english: 'Master Page Basics: Create reusable backgrounds and headers.', videoUrl: '' },
         { id: 2, khmer: 'ការប្រើប្រាស់ Masters៖ ទាញ Master page ដាក់ចូលទៅក្នុងទំព័រការងារ។', english: 'Applying Masters: Apply a master page to specific content pages.', videoUrl: '' },
@@ -301,11 +262,9 @@ export const courseData = {
       ]
     },
     { 
-      id: 'pb3', 
-      title: 'មេរៀនទី ៣៖ ប្រអប់អក្សរ និង Typography', 
-      title_en: 'Lesson 3: Text Frames & Typography', 
-      desc: 'ភ្ជាប់ប្រអប់អក្សរដើម្បីឱ្យអត្ថបទហូរឆ្លងកាត់ទំព័រជាច្រើនដោយស្វ័យប្រវត្តិ។', 
-      desc_en: 'Link text frames to pour body copy across multiple spreads.', 
+      id: 'pb3', title: 'មេរៀនទី ៣៖ ប្រអប់អក្សរ និង Typography', title_en: 'Lesson 3: Text Frames & Typography', 
+      desc: 'ភ្ជាប់ប្រអប់អក្សរដើម្បីឱ្យអត្ថបទហូរឆ្លងកាត់ទំព័រជាច្រើនដោយស្វ័យប្រវត្តិ។', desc_en: 'Link text frames to pour body copy across multiple spreads.', 
+      instruction: defaultInstruction, instruction_en: defaultInstructionEn, downloadUrl: defaultDownloadUrl,
       steps: [
         { id: 1, khmer: 'Frame vs Artistic Text៖ ប្រើ Frame Text សម្រាប់អត្ថបទវែងៗ។', english: 'Frame vs. Artistic Text: Use Frame Text for large body copy.', videoUrl: '' },
         { id: 2, khmer: 'Text Flow & Linking៖ ភ្ជាប់ប្រអប់អក្សរដើម្បីឱ្យអត្ថបទហូរពីទំព័រមួយទៅទំព័រមួយទៀត។', english: 'Text Flow & Linking: Link frames so text "pours" across pages.', videoUrl: '' },
@@ -313,11 +272,9 @@ export const courseData = {
       ]
     },
     { 
-      id: 'pb4', 
-      title: 'មេរៀនទី ៤៖ Styles និងការកំណត់ទម្រង់', 
-      title_en: 'Lesson 4: Styles & Formatting', 
-      desc: 'បង្កើត Paragraph Styles រួម ដើម្បីធ្វើស្វ័យប្រវត្តិកម្មលើការរៀបចំ Formatting។', 
-      desc_en: 'Create global Paragraph Styles to automate bullet lists and chapter formatting.', 
+      id: 'pb4', title: 'មេរៀនទី ៤៖ Styles និងការកំណត់ទម្រង់', title_en: 'Lesson 4: Styles & Formatting', 
+      desc: 'បង្កើត Paragraph Styles រួម ដើម្បីធ្វើស្វ័យប្រវត្តិកម្មលើការរៀបចំ Formatting។', desc_en: 'Create global Paragraph Styles to automate bullet lists and chapter formatting.', 
+      instruction: defaultInstruction, instruction_en: defaultInstructionEn, downloadUrl: defaultDownloadUrl,
       steps: [
         { id: 1, khmer: 'Paragraph & Character Styles៖ ធានាភាពស៊ីសង្វាក់គ្នានៃហ្វុនអក្សរ។', english: 'Paragraph & Character Styles: Ensure consistent fonts globally.', videoUrl: '' },
         { id: 2, khmer: 'បញ្ជី (Lists)៖ ធ្វើស្វ័យប្រវត្តិកម្មលើ Bullet និងលេខរៀង។', english: 'Bullet & Numbered Lists: Automate lists using Paragraph Studio.', videoUrl: '' },
@@ -325,11 +282,9 @@ export const courseData = {
       ]
     },
     { 
-      id: 'pb5', 
-      title: 'មេរៀនទី ៥៖ រូបភាព, Assets និងតារាង', 
-      title_en: 'Lesson 5: Images, Assets & Tables', 
-      desc: 'បង្កើតតារាងទិន្នន័យ និងរៀបចំរូបភាពចូលទៅក្នុង Picture Frames។', 
-      desc_en: 'Build formatted data tables and drop images perfectly into Picture Frames.', 
+      id: 'pb5', title: 'មេរៀនទី ៥៖ រូបភាព, Assets និងតារាង', title_en: 'Lesson 5: Images, Assets & Tables', 
+      desc: 'បង្កើតតារាងទិន្នន័យ និងរៀបចំរូបភាពចូលទៅក្នុង Picture Frames។', desc_en: 'Build formatted data tables and drop images perfectly into Picture Frames.', 
+      instruction: defaultInstruction, instruction_en: defaultInstructionEn, downloadUrl: defaultDownloadUrl,
       steps: [
         { id: 1, khmer: 'Picture Frames៖ បង្កើតកន្លែងត្រៀមដាក់រូប និង Place រូបភាពចូល។', english: 'Picture Frames: Create placeholders and "Place" images inside.', videoUrl: '' },
         { id: 2, khmer: 'Assets Studio៖ រក្សាទុក Logo និងឯកសាររចនាដើម្បីទាញប្រើពេលក្រោយ។', english: 'The Assets Studio: Store logos and design elements for quick use.', videoUrl: '' },
@@ -337,11 +292,9 @@ export const courseData = {
       ]
     },
     { 
-      id: 'pb6', 
-      title: 'មេរៀនទី ៦៖ ឧបករណ៍បោះពុម្ពកម្រិតខ្ពស់', 
-      title_en: 'Lesson 6: Advanced Publishing Tools', 
-      desc: 'បង្កើតមាតិកាសៀវភៅដោយស្វ័យប្រវត្តិ និងប្រើប្រាស់ Preflight Studio។', 
-      desc_en: 'Generate a Table of Contents automatically and use the Preflight Studio.', 
+      id: 'pb6', title: 'មេរៀនទី ៦៖ ឧបករណ៍បោះពុម្ពកម្រិតខ្ពស់', title_en: 'Lesson 6: Advanced Publishing Tools', 
+      desc: 'បង្កើតមាតិកាសៀវភៅដោយស្វ័យប្រវត្តិ និងប្រើប្រាស់ Preflight Studio។', desc_en: 'Generate a Table of Contents automatically and use the Preflight Studio.', 
+      instruction: defaultInstruction, instruction_en: defaultInstructionEn, downloadUrl: defaultDownloadUrl,
       steps: [
         { id: 1, khmer: 'Section Manager៖ រៀបចំឯកសារជាជំពូក ឬផ្នែកៗ។', english: 'Section Manager: Organize a large document into chapters.', videoUrl: '' },
         { id: 2, khmer: 'មាតិកា និង Index៖ បង្កើតតារាងមាតិកាដោយស្វ័យប្រវត្តិ។', english: 'TOC & Indexing: Automatically generate a Table of Contents.', videoUrl: '' },
@@ -349,44 +302,36 @@ export const courseData = {
       ]
     },
     { 
-      id: 'pb7', 
-      title: 'គម្រោងទី ១៖ អត្ថបទចុះទស្សនាវដ្តី', 
-      title_en: 'Project 1: Magazine Feature Article', 
-      desc: 'រៀបចំប្លង់អត្ថបទសម្រាប់ទស្សនាវដ្តី ដែលមានរូបភាពធំ ចំណងជើង និងអត្ថបទ ៣ ជួរ។', 
-      desc_en: 'Create a feature article with a hero image, headline, and three text columns.', 
+      id: 'pb7', title: 'គម្រោងទី ១៖ អត្ថបទចុះទស្សនាវដ្តី', title_en: 'Project 1: Magazine Feature Article', 
+      desc: 'រៀបចំប្លង់អត្ថបទសម្រាប់ទស្សនាវដ្តី ដែលមានរូបភាពធំ ចំណងជើង និងអត្ថបទ ៣ ជួរ។', desc_en: 'Create a feature article with a hero image, headline, and three text columns.', 
+      instruction: defaultInstruction, instruction_en: defaultInstructionEn, downloadUrl: defaultDownloadUrl,
       steps: [
         { id: 1, khmer: 'គោលដៅ៖ រចនាអត្ថបទជាមួយរូបភាពធំ និងអត្ថបទជាជួរៗ។', english: 'Goal: Create an article layout with hero image and columns.', videoUrl: '' },
         { id: 2, khmer: 'ជំនាញគោល៖ ការកំណត់ Text Wrap ជុំវិញរូបភាព និងការប្រើ Drop Caps។', english: 'Key Skill: Mastering Text Wrap around images and Drop Caps.', videoUrl: '' }
       ]
     },
     { 
-      id: 'pb8', 
-      title: 'គម្រោងទី ២៖ Corporate Brochure ៨ ទំព័រ', 
-      title_en: 'Project 2: Corporate Brochure', 
-      desc: 'រចនាខិត្តប័ណ្ណ (Brochure) ៨ ទំព័រ ដោយប្រើ Global Colors និង Master Pages។', 
-      desc_en: 'Design an 8-page brochure utilizing Global Colors and multiple Master Pages.', 
+      id: 'pb8', title: 'គម្រោងទី ២៖ Corporate Brochure ៨ ទំព័រ', title_en: 'Project 2: Corporate Brochure', 
+      desc: 'រចនាខិត្តប័ណ្ណ (Brochure) ៨ ទំព័រ ដោយប្រើ Global Colors និង Master Pages។', desc_en: 'Design an 8-page brochure utilizing Global Colors and multiple Master Pages.', 
+      instruction: defaultInstruction, instruction_en: defaultInstructionEn, downloadUrl: defaultDownloadUrl,
       steps: [
         { id: 1, khmer: 'គោលដៅ៖ រចនា Brochure ដែលមាន ៨ ទំព័រ។', english: 'Goal: Design an 8-page brochure using two Master Pages.', videoUrl: '' },
         { id: 2, khmer: 'ជំនាញគោល៖ ការគ្រប់គ្រងពណ៌ប្រេន (Global Colors) ឱ្យបានច្បាស់លាស់។', english: 'Key Skill: Managing consistent branding with Global Colors.', videoUrl: '' }
       ]
     },
     { 
-      id: 'pb9', 
-      title: 'គម្រោងទី ៣៖ Digital Planner អន្តរកម្ម', 
-      title_en: 'Project 3: Digital Interactive Planner', 
-      desc: 'បង្កើតសៀវភៅផែនការប្រចាំខែ (Digital Planner) ជា PDF ដែលអាចចុច Link បាន។', 
-      desc_en: 'Create a monthly PDF planner with functional hyperlinks and complex tabs.', 
+      id: 'pb9', title: 'គម្រោងទី ៣៖ Digital Planner អន្តរកម្ម', title_en: 'Project 3: Digital Interactive Planner', 
+      desc: 'បង្កើតសៀវភៅផែនការប្រចាំខែ (Digital Planner) ជា PDF ដែលអាចចុច Link បាន។', desc_en: 'Create a monthly PDF planner with functional hyperlinks and complex tabs.', 
+      instruction: defaultInstruction, instruction_en: defaultInstructionEn, downloadUrl: defaultDownloadUrl,
       steps: [
         { id: 1, khmer: 'គោលដៅ៖ បង្កើត Digital Planner ជា PDF ដែលអាចចុចបាន។', english: 'Goal: Create a monthly planner with functional hyperlinks.', videoUrl: '' },
         { id: 2, khmer: 'ជំនាញគោល៖ ការប្រើប្រាស់ Hyperlinks Studio និង Master Page Stacking។', english: 'Key Skill: Using the Hyperlinks Studio and Master Page Stacking.', videoUrl: '' }
       ]
     },
     { 
-      id: 'pb10', 
-      title: 'គម្រោងទី ៤៖ ការរៀបចំប្លង់សៀវភៅអាជីព', 
-      title_en: 'Project 4: Professional Book Layout', 
-      desc: 'រៀបចំប្លង់សៀវភៅដែលមានលេខរៀងទំព័រស្វ័យប្រវត្តិ និង Export ជា PDF សម្រាប់ការបោះពុម្ព។', 
-      desc_en: 'Layout a short chapter book with automated page numbers and Print PDF/X-4 export.', 
+      id: 'pb10', title: 'គម្រោងទី ៤៖ ការរៀបចំប្លង់សៀវភៅអាជីព', title_en: 'Project 4: Professional Book Layout', 
+      desc: 'រៀបចំប្លង់សៀវភៅដែលមានលេខរៀងទំព័រស្វ័យប្រវត្តិ និង Export ជា PDF សម្រាប់ការបោះពុម្ព។', desc_en: 'Layout a short chapter book with automated page numbers and Print PDF/X-4 export.', 
+      instruction: defaultInstruction, instruction_en: defaultInstructionEn, downloadUrl: defaultDownloadUrl,
       steps: [
         { id: 1, khmer: 'គោលដៅ៖ រៀបចំប្លង់សៀវភៅរួមមាន ក្រប មាតិកា និងលេខទំព័រ។', english: 'Goal: Layout a book including cover, TOC, and page numbers.', videoUrl: '' },
         { id: 2, khmer: 'ជំនាញគោល៖ ការប្រើ Books Panel និងការ Export ជា PDF សម្រាប់បោះពុម្ព (PDF/X-4)។', english: 'Key Skill: Using the Books Panel and Exporting for Print (PDF/X-4).', videoUrl: '' }
