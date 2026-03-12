@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Trophy, Flame, CheckCircle2, XCircle, RotateCcw, Play, Star, List as ListIcon, Lightbulb, Award, Lock, ChevronRight, User, Timer } from 'lucide-react';
+import { Trophy, Flame, CheckCircle2, XCircle, Play, Star, Award, Lock, ChevronRight, User, Timer, Camera, PenTool, Book } from 'lucide-react';
 import { useLanguage } from '../../../contexts/LanguageContext';
 import { initialQuestionBank } from '../../../data/data';
 import CertificateForm from './CertificateForm';
@@ -30,8 +30,11 @@ const Test = ({ isDarkMode }) => {
     const [score, setScore] = useState(0);
     const [selectedOption, setSelectedOption] = useState(null);
     const [isAnswered, setIsAnswered] = useState(false);
-    const [quizConfig, setQuizConfig] = useState({ level: 'beginner', amount: 10 });
+    const [quizConfig, setQuizConfig] = useState({ level: 'beginner', amount: 5 }); // Default to 5 since we have fewer questions per app now
     
+    // 🌟 NEW STATE: Which Affinity app is selected?
+    const [activeAppTab, setActiveAppTab] = useState('photo');
+
     const [userName, setUserName] = useState(() => localStorage.getItem('graphicDesign_user_name') || '');
     const nameInputRef = useRef(null);
 
@@ -45,7 +48,6 @@ const Test = ({ isDarkMode }) => {
     const [streak, setStreak] = useState(0);
     const [isShaking, setIsShaking] = useState(false);
 
-    // Populate the contentEditable box on initial mount so the cursor doesn't jump
     useEffect(() => {
         if (nameInputRef.current && userName && !nameInputRef.current.textContent) {
             nameInputRef.current.textContent = userName;
@@ -83,13 +85,19 @@ const Test = ({ isDarkMode }) => {
         if (!unlockedLevels.includes(level) && level !== 'final') { triggerHaptic('error'); return; }
         triggerHaptic();
         
-        let filtered = level === 'final' ? [...initialQuestionBank] : initialQuestionBank.filter(q => q.level === level); 
+        // 🌟 FILTER BY APP AND LEVEL 🌟
+        let filtered = initialQuestionBank.filter(q => q.app === activeAppTab);
+        if (level !== 'final') {
+             filtered = filtered.filter(q => q.level === level);
+        }
+
+        // If not enough questions for the level, grab from other levels in the SAME app
         if (filtered.length < quizConfig.amount && level !== 'final') {
-            const extra = initialQuestionBank.filter(q => q.level !== level);
+            const extra = initialQuestionBank.filter(q => q.app === activeAppTab && q.level !== level);
             filtered = [...filtered, ...extra];
         }
 
-        const amount = level === 'final' ? 50 : Math.min(quizConfig.amount, filtered.length);
+        const amount = level === 'final' ? 15 : Math.min(quizConfig.amount, filtered.length);
         let shuffledQuestions = shuffleArray(filtered).slice(0, amount);
 
         const finalQuestions = shuffledQuestions.map(q => {
@@ -136,6 +144,20 @@ const Test = ({ isDarkMode }) => {
         const allUnlocked = unlockedLevels.includes('advanced') && levelStars.advanced >= 2;
         return (
             <div className="flex flex-col items-center justify-start min-h-full pt-4 sm:pt-8 px-2 sm:px-6 pb-28 sm:pb-32 w-full">
+                
+                {/* 🌟 NEW 3-WAY TOGGLE ABOVE THE QUIZ MENU 🌟 */}
+                <div className={`flex justify-center p-1.5 rounded-2xl mx-auto max-w-md w-full mb-6 border shadow-sm ${isDarkMode ? 'bg-[#1E1E1E] border-[#2C2C2C]' : 'bg-[#FFFFFF] border-[#E5E7EB]'}`}>
+                    <button onClick={() => { setActiveAppTab('photo'); triggerHaptic(); }} className={`flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl font-bold text-sm transition-all ${activeAppTab === 'photo' ? (isDarkMode ? 'bg-[#41B6E6] text-[#0A0A0A]' : 'bg-[#0277C5] text-white') : (isDarkMode ? 'text-[#A0A0A0] hover:text-[#F1F1F1]' : 'text-[#6B7280] hover:text-[#1A1A1A]')}`}>
+                        <Camera size={16} /> Photo
+                    </button>
+                    <button onClick={() => { setActiveAppTab('designer'); triggerHaptic(); }} className={`flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl font-bold text-sm transition-all ${activeAppTab === 'designer' ? (isDarkMode ? 'bg-[#41B6E6] text-[#0A0A0A]' : 'bg-[#0277C5] text-white') : (isDarkMode ? 'text-[#A0A0A0] hover:text-[#F1F1F1]' : 'text-[#6B7280] hover:text-[#1A1A1A]')}`}>
+                        <PenTool size={16} /> Designer
+                    </button>
+                    <button onClick={() => { setActiveAppTab('publisher'); triggerHaptic(); }} className={`flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl font-bold text-sm transition-all ${activeAppTab === 'publisher' ? (isDarkMode ? 'bg-[#41B6E6] text-[#0A0A0A]' : 'bg-[#0277C5] text-white') : (isDarkMode ? 'text-[#A0A0A0] hover:text-[#F1F1F1]' : 'text-[#6B7280] hover:text-[#1A1A1A]')}`}>
+                        <Book size={16} /> Publisher
+                    </button>
+                </div>
+
                 <div className={`p-5 sm:p-8 rounded-[32px] sm:rounded-[40px] border shadow-2xl w-full max-w-[95%] sm:max-w-lg transition-all duration-500 backdrop-blur-2xl animate-fade-in-up ${isDarkMode ? 'bg-[#1A1A1A]/90 border-white/10 shadow-[0_20px_60px_rgba(0,0,0,0.6)]' : 'bg-[#FFFFFF]/95 border-black/5 shadow-[0_20px_60px_rgba(2,119,197,0.1)]'}`}>
                     
                     <div className="flex items-center justify-between mb-5 sm:mb-6 px-1">
@@ -150,7 +172,7 @@ const Test = ({ isDarkMode }) => {
                         <div className={`flex flex-col items-end px-3 sm:px-4 py-2 rounded-2xl border shadow-sm ${isDarkMode ? 'bg-[#121212] border-white/10' : 'bg-[#F8F9FA] border-[#E5E7EB]'}`}>
                             <label className={`text-[8px] sm:text-[9px] font-black uppercase mb-1 tracking-widest ${isDarkMode ? 'text-[#A0A0A0]' : 'text-[#6B7280]'}`}>{lang === 'en' ? 'Questions' : 'សំណួរ'}</label>
                             <div className="flex gap-3">
-                                {[10, 20, 30].map(amt => (
+                                {[5, 10].map(amt => (
                                     <button key={amt} onClick={() => { triggerHaptic(); setQuizConfig({...quizConfig, amount: amt}) }} className={`text-[13px] font-black transition-all ${quizConfig.amount === amt ? (isDarkMode ? 'text-[#41B6E6] scale-110 drop-shadow-md' : 'text-[#0277C5] scale-110 drop-shadow-md') : (isDarkMode ? 'text-[#6B7280] hover:text-[#A0A0A0]' : 'text-[#9CA3AF] hover:text-[#6B7280]')}`}>{amt}</button>
                                 ))}
                             </div>
@@ -159,14 +181,10 @@ const Test = ({ isDarkMode }) => {
 
                     <div className={`relative flex items-center gap-3 p-4 mb-6 rounded-2xl border transition-all duration-300 shadow-inner group ${isDarkMode ? 'bg-[#121212] border-[#2C2C2C] focus-within:border-[#41B6E6]/50 focus-within:bg-[#1E1E1E]/50' : 'bg-[#F8F9FA] border-[#E5E7EB] focus-within:border-[#0277C5]/50 focus-within:bg-white'}`}>
                         <User size={18} className={`opacity-50 transition-colors ${isDarkMode ? 'text-[#41B6E6] group-focus-within:opacity-100' : 'text-[#0277C5] group-focus-within:opacity-100'}`} />
-                        
-                        {/* 🌟 TWO-STEP PROTECTION: Step 1 - The Honeypots 🌟 */}
                         <div className="absolute overflow-hidden w-0 h-0 opacity-0 -z-10">
                             <input type="text" name="fake_email" tabIndex="-1" />
                             <input type="password" name="fake_password" tabIndex="-1" />
                         </div>
-
-                        {/* 🌟 TWO-STEP PROTECTION: Step 2 - The AI Chatbot Trick (contentEditable Div) 🌟 */}
                         <div className="relative flex-1 flex items-center w-full">
                             {!userName && (
                                 <div className={`absolute left-0 pointer-events-none text-[14px] font-khmer font-bold tracking-wide opacity-40 ${isDarkMode ? 'text-[#A0A0A0]' : 'text-[#6B7280]'}`}>
@@ -179,12 +197,11 @@ const Test = ({ isDarkMode }) => {
                                 onInput={(e) => setUserName(e.currentTarget.textContent)}
                                 onKeyDown={(e) => {
                                     if (e.key === 'Enter') {
-                                        e.preventDefault(); // Prevent multi-line returns
-                                        e.target.blur(); // Automatically dismiss keyboard
+                                        e.preventDefault(); 
+                                        e.target.blur(); 
                                     }
                                 }}
                                 onFocus={(e) => {
-                                    // Give the iOS keyboard a fraction of a second to slide up, then cleanly center the element
                                     setTimeout(() => {
                                         e.target.scrollIntoView({ behavior: 'smooth', block: 'center' });
                                     }, 300);
@@ -228,7 +245,7 @@ const Test = ({ isDarkMode }) => {
                                     <div className={`p-3 rounded-2xl ${allUnlocked ? 'bg-[#C5B002] text-white shadow-inner' : 'bg-gray-100 text-gray-400 dark:bg-[#2C2C2C] dark:text-[#A0A0A0]'}`}><Trophy size={20}/></div>
                                     <div className="text-left">
                                         <span className={`font-khmer font-black text-[15px] block tracking-tight ${allUnlocked ? 'text-[#C5B002]' : ''}`}>{certData ? (lang === 'en' ? 'Retake Final Exam' : 'ប្រឡងយកវិញ្ញាបនបត្រម្តងទៀត') : (lang === 'en' ? 'Final Certification Exam' : 'តេស្តបញ្ចប់យកវិញ្ញាបនបត្រ')}</span>
-                                        <span className={`text-[10px] font-black uppercase tracking-widest mt-1 block ${allUnlocked ? 'opacity-80 text-[#C5B002]' : 'opacity-50'}`}>{lang === 'en' ? '50 Questions • 15 Mins • 90% to Pass' : '៥០ សំណួរ • ១៥ នាទី • ជាប់ ៩០%'}</span>
+                                        <span className={`text-[10px] font-black uppercase tracking-widest mt-1 block ${allUnlocked ? 'opacity-80 text-[#C5B002]' : 'opacity-50'}`}>{lang === 'en' ? '15 Questions • 15 Mins • 90% to Pass' : '១៥ សំណួរ • ១៥ នាទី • ជាប់ ៩០%'}</span>
                                     </div>
                                 </div>
                                 {!allUnlocked && <Lock size={16} className="opacity-30"/>}
