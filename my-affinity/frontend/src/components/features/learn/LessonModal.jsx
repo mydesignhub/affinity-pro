@@ -1,8 +1,14 @@
 import React, { useEffect, useState } from 'react';
-import { X, PlayCircle, DownloadCloud } from 'lucide-react';
+import { X, PlayCircle, DownloadCloud, CheckCircle2, Circle } from 'lucide-react';
 import { useLanguage } from '../../../contexts/LanguageContext';
 
-const LessonModal = ({ lesson, onClose, isDarkMode }) => {
+const triggerHaptic = () => {
+    if (typeof navigator !== 'undefined' && navigator.vibrate) {
+        navigator.vibrate(10);
+    }
+};
+
+const LessonModal = ({ lesson, onClose, isDarkMode, completedSteps, setCompletedSteps }) => {
   const { lang } = useLanguage();
   const [isVisible, setIsVisible] = useState(false);
   const [activeStep, setActiveStep] = useState(0);
@@ -16,6 +22,17 @@ const LessonModal = ({ lesson, onClose, isDarkMode }) => {
   const handleClose = () => {
     setIsVisible(false);
     setTimeout(onClose, 300); 
+  };
+
+  // 🌟 NEW: Function to toggle a step as complete/incomplete
+  const handleToggleComplete = (e, stepKey) => {
+      e.stopPropagation();
+      triggerHaptic();
+      if (completedSteps.includes(stepKey)) {
+          setCompletedSteps(prev => prev.filter(id => id !== stepKey));
+      } else {
+          setCompletedSteps(prev => [...prev, stepKey]);
+      }
   };
 
   if (!lesson) return null;
@@ -51,7 +68,7 @@ const LessonModal = ({ lesson, onClose, isDarkMode }) => {
                 {lang === 'en' ? lesson.desc_en : lesson.desc}
             </p>
 
-            {/* 🌟 DYNAMIC VIDEO PLAYER 🌟 */}
+            {/* DYNAMIC VIDEO PLAYER */}
             {currentStepData && (
                 <div className={`w-full aspect-video rounded-2xl relative overflow-hidden flex flex-col items-center justify-center group mb-6 shadow-lg border shrink-0 ${isDarkMode ? 'bg-[#0A0A0A] border-[#2C2C2C]' : 'bg-[#1A1A1A] border-black'}`}>
                     {currentStepData.videoUrl ? (
@@ -72,7 +89,7 @@ const LessonModal = ({ lesson, onClose, isDarkMode }) => {
                 </div>
             )}
 
-            {/* 🌟 PRACTICE RESOURCES BOX 🌟 */}
+            {/* PRACTICE RESOURCES BOX */}
             {(lesson.instruction || lesson.downloadUrl) && (
                 <div className={`mb-8 p-5 rounded-2xl border flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between ${isDarkMode ? 'bg-[#1E1E1E]/50 border-[#2C2C2C]' : 'bg-[#F8F9FA] border-[#E5E7EB]'}`}>
                     <div className="flex-1">
@@ -99,7 +116,7 @@ const LessonModal = ({ lesson, onClose, isDarkMode }) => {
                 </div>
             )}
 
-            {/* 🌟 INTERACTIVE PLAYLIST MENU 🌟 */}
+            {/* 🌟 INTERACTIVE CHECKLIST MENU 🌟 */}
             <div className="flex flex-col gap-3 pb-6">
                 <h4 className={`text-sm font-bold uppercase tracking-widest px-2 opacity-50 ${isDarkMode ? 'text-[#A0A0A0]' : 'text-[#6B7280]'}`}>
                     {lang === 'en' ? 'Course Content' : 'មាតិកាមេរៀន'}
@@ -107,35 +124,55 @@ const LessonModal = ({ lesson, onClose, isDarkMode }) => {
                 
                 {lesson.steps?.map((step, idx) => {
                     const isActive = activeStep === idx;
+                    
+                    // Unique ID for this exact step to save in memory
+                    const stepKey = `${lesson.id}_${step.id}`;
+                    const isCompleted = completedSteps.includes(stepKey);
+
                     return (
-                        <button 
+                        <div 
                             key={step.id}
-                            onClick={() => setActiveStep(idx)}
-                            className={`flex items-start gap-4 p-4 rounded-2xl border text-left transition-all duration-300 ease-out active:scale-[0.98]
+                            className={`flex items-center gap-3 p-3 sm:p-4 rounded-2xl border transition-all duration-300 ease-out
                                 ${isActive 
                                     ? (isDarkMode ? 'bg-[#41B6E6]/10 border-[#41B6E6]/50 shadow-md' : 'bg-[#0277C5]/10 border-[#0277C5]/50 shadow-md') 
-                                    : (isDarkMode ? 'bg-[#1E1E1E] border-[#2C2C2C] hover:bg-[#2C2C2C]' : 'bg-[#F8F9FA] border-[#E5E7EB] hover:bg-[#E5E7EB]')
+                                    : (isDarkMode ? 'bg-[#1E1E1E] border-[#2C2C2C]' : 'bg-[#F8F9FA] border-[#E5E7EB]')
                                 }
                             `}
                         >
-                            <div className={`mt-0.5 w-7 h-7 shrink-0 rounded-full flex items-center justify-center font-bold text-xs
-                                ${isActive 
-                                    ? (isDarkMode ? 'bg-[#41B6E6] text-[#0A0A0A]' : 'bg-[#0277C5] text-white') 
-                                    : (isDarkMode ? 'bg-[#2C2C2C] text-[#A0A0A0]' : 'bg-[#E5E7EB] text-[#6B7280]')
-                                }
-                            `}>
-                                {isActive ? <PlayCircle size={14} className="ml-0.5" /> : step.id}
-                            </div>
+                            {/* Left: Play/Watch Button area */}
+                            <button 
+                                onClick={() => setActiveStep(idx)}
+                                className="flex-1 flex items-start gap-4 text-left active:scale-[0.98] transition-transform"
+                            >
+                                <div className={`mt-0.5 w-7 h-7 shrink-0 rounded-full flex items-center justify-center font-bold text-xs
+                                    ${isActive 
+                                        ? (isDarkMode ? 'bg-[#41B6E6] text-[#0A0A0A]' : 'bg-[#0277C5] text-white') 
+                                        : (isDarkMode ? 'bg-[#2C2C2C] text-[#A0A0A0]' : 'bg-[#E5E7EB] text-[#6B7280]')
+                                    }
+                                `}>
+                                    {isActive ? <PlayCircle size={14} className="ml-0.5" /> : step.id}
+                                </div>
 
-                            <p className={`text-[15px] font-khmer leading-relaxed flex-1
-                                ${isActive 
-                                    ? (isDarkMode ? 'text-[#F1F1F1] font-medium' : 'text-[#1A1A1A] font-medium') 
-                                    : (isDarkMode ? 'text-[#A0A0A0]' : 'text-[#6B7280]')
-                                }
-                            `}>
-                                {lang === 'en' ? step.english : step.khmer}
-                            </p>
-                        </button>
+                                <p className={`text-[14px] sm:text-[15px] font-khmer leading-relaxed
+                                    ${isActive 
+                                        ? (isDarkMode ? 'text-[#F1F1F1] font-medium' : 'text-[#1A1A1A] font-medium') 
+                                        : (isDarkMode ? 'text-[#A0A0A0]' : 'text-[#6B7280]')
+                                    }
+                                `}>
+                                    {lang === 'en' ? step.english : step.khmer}
+                                </p>
+                            </button>
+
+                            {/* Right: The Checkmark Toggle */}
+                            <button 
+                                onClick={(e) => handleToggleComplete(e, stepKey)}
+                                className={`shrink-0 p-2 rounded-full transition-transform active:scale-75
+                                    ${isCompleted ? 'text-green-500' : (isDarkMode ? 'text-[#2C2C2C] hover:text-[#A0A0A0]' : 'text-[#E5E7EB] hover:text-[#6B7280]')}
+                                `}
+                            >
+                                {isCompleted ? <CheckCircle2 size={24} className="fill-green-500/20" /> : <Circle size={24} />}
+                            </button>
+                        </div>
                     );
                 })}
             </div>

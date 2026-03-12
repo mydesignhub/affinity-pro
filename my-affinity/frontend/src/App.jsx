@@ -109,12 +109,9 @@ const ContactSection = ({ isDarkMode }) => {
 };
 
 function AppContent() {
-  const { t } = useLanguage();
+  const { t, lang } = useLanguage();
   const [activeTab, setActiveTab] = useState('learn');
-  
-  // 🌟 NEW STATE: Tracks which Affinity App is selected in the Learn Tab
   const [activeAppTab, setActiveAppTab] = useState('photo'); 
-  
   const [expandedLesson, setExpandedLesson] = useState(null);
   const [expandedSection, setExpandedSection] = useState(null);
   
@@ -123,9 +120,19 @@ function AppContent() {
       return true; 
   });
 
+  // 🌟 NEW STATE: PROGRESS TRACKING 🌟
+  const [completedSteps, setCompletedSteps] = useState(() => {
+      if (typeof window !== 'undefined') {
+          const saved = localStorage.getItem('myAffinity_completed_steps');
+          return saved ? JSON.parse(saved) : [];
+      }
+      return [];
+  });
+
   const [chatMessages, setChatMessages] = useState([]);
   const [isKeyboardOpen, setIsKeyboardOpen] = useState(false);
 
+  // Sync Theme
   useEffect(() => {
       localStorage.setItem('myAffinity_theme', isDarkMode ? 'dark' : 'light');
       const newBgColor = isDarkMode ? '#0A0A0A' : '#F4F5F7';
@@ -136,12 +143,15 @@ function AppContent() {
       document.body.style.backgroundColor = newBgColor;
   }, [isDarkMode]);
 
+  // Sync Progress to Storage
+  useEffect(() => {
+      localStorage.setItem('myAffinity_completed_steps', JSON.stringify(completedSteps));
+  }, [completedSteps]);
+
+  // Global Listeners
   useEffect(() => {
     const handleSwitchTab = (e) => {
-        if (e.detail) {
-            setActiveTab(e.detail);
-            setExpandedLesson(null); 
-        }
+        if (e.detail) { setActiveTab(e.detail); setExpandedLesson(null); }
     };
     window.addEventListener('switchTab', handleSwitchTab);
 
@@ -161,11 +171,20 @@ function AppContent() {
     };
   }, []);
 
-  // 🌟 Find the correct lesson data to pass to the modal across all 3 apps
   const getSelectedLesson = () => {
       if (!expandedLesson) return null;
       return courseData[activeAppTab].find(l => l.id === expandedLesson);
   };
+
+  // 🌟 CALCULATE PROGRESS MATHS 🌟
+  const currentCourseData = courseData[activeAppTab] || [];
+  const totalSteps = currentCourseData.reduce((acc, lesson) => acc + (lesson.steps?.length || 0), 0);
+  
+  // Filter completions based on prefix ('ph' for photo, 'ds' for designer, 'pb' for publisher)
+  const prefix = activeAppTab === 'photo' ? 'ph' : activeAppTab === 'designer' ? 'ds' : 'pb';
+  const completedInThisTab = completedSteps.filter(id => id.startsWith(prefix)).length;
+  
+  const progressPercentage = totalSteps === 0 ? 0 : Math.round((completedInThisTab / totalSteps) * 100);
 
   return (
     <div className={`fixed inset-0 w-full h-full flex flex-col font-khmer overflow-hidden touch-pan-x touch-pan-y transition-colors duration-500 pt-[env(safe-area-inset-top)] ${isDarkMode ? 'bg-[#0A0A0A] text-[#F1F1F1]' : 'bg-[#F4F5F7] text-[#1A1A1A]'}`}>
@@ -183,7 +202,13 @@ function AppContent() {
       )}
       
       {expandedLesson && (
-        <LessonModal lesson={getSelectedLesson()} onClose={() => setExpandedLesson(null)} isDarkMode={isDarkMode} />
+        <LessonModal 
+            lesson={getSelectedLesson()} 
+            onClose={() => setExpandedLesson(null)} 
+            isDarkMode={isDarkMode} 
+            completedSteps={completedSteps}
+            setCompletedSteps={setCompletedSteps}
+        />
       )}
       
       {activeTab !== 'ai' ? (
@@ -193,10 +218,11 @@ function AppContent() {
                 <div className="text-center py-6 mt-2 relative">
                     <div className={`absolute inset-0 blur-[120px] rounded-full pointer-events-none ${isDarkMode ? 'bg-[#41B6E6]/10' : 'bg-[#0277C5]/10'}`} />
                     <h2 className={`text-3xl md:text-5xl font-black mb-4 tracking-tight ${isDarkMode ? 'text-[#F1F1F1]' : 'text-[#1A1A1A]'}`}>iPad Masterclass</h2>
-                    <p className={`max-w-xl mx-auto text-sm md:text-base leading-relaxed ${isDarkMode ? 'text-[#A0A0A0]' : 'text-[#6B7280]'}`}>Select an app to begin your professional training.</p>
+                    <p className={`max-w-xl mx-auto text-sm md:text-base leading-relaxed ${isDarkMode ? 'text-[#A0A0A0]' : 'text-[#6B7280]'}`}>
+                        {lang === 'en' ? 'Select an app to begin your professional training.' : 'ជ្រើសរើសកម្មវិធីដើម្បីចាប់ផ្តើមការហ្វឹកហាត់កម្រិតអាជីពរបស់អ្នក។'}
+                    </p>
                 </div>
 
-                {/* 🌟 THE 3-WAY APP TOGGLE BUTTONS 🌟 */}
                 <div className={`flex justify-center p-1.5 rounded-2xl mx-auto max-w-md border shadow-sm ${isDarkMode ? 'bg-[#1E1E1E] border-[#2C2C2C]' : 'bg-[#FFFFFF] border-[#E5E7EB]'}`}>
                     <button onClick={() => { setActiveAppTab('photo'); triggerHaptic(); }} className={`flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl font-bold text-sm transition-all ${activeAppTab === 'photo' ? (isDarkMode ? 'bg-[#41B6E6] text-[#0A0A0A]' : 'bg-[#0277C5] text-white') : (isDarkMode ? 'text-[#A0A0A0] hover:text-[#F1F1F1]' : 'text-[#6B7280] hover:text-[#1A1A1A]')}`}>
                         <Camera size={16} /> Photo
@@ -209,8 +235,28 @@ function AppContent() {
                     </button>
                 </div>
 
-                {/* 🌟 RENDER THE SPECIFIC 10 LESSONS FOR THE SELECTED APP 🌟 */}
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 mt-6">
+                {/* 🌟 THE PROGRESS BAR UI 🌟 */}
+                <div className={`mt-8 mb-4 p-5 md:p-6 rounded-[24px] border shadow-sm animate-fade-in-up ${isDarkMode ? 'bg-[#1E1E1E]/50 border-[#2C2C2C]' : 'bg-[#FFFFFF] border-[#E5E7EB]'}`}>
+                    <div className="flex justify-between items-end mb-4">
+                        <div>
+                            <h4 className={`font-bold font-khmer text-[13px] md:text-sm uppercase tracking-widest ${isDarkMode ? 'text-[#41B6E6]' : 'text-[#0277C5]'}`}>
+                                {lang === 'en' ? 'Course Progress' : 'វឌ្ឍនភាពនៃការសិក្សា'}
+                            </h4>
+                            <p className={`text-[12px] md:text-sm mt-1.5 font-khmer ${isDarkMode ? 'text-[#A0A0A0]' : 'text-[#6B7280]'}`}>
+                                {lang === 'en' ? `${completedInThisTab} of ${totalSteps} lessons completed` : `បានបញ្ចប់ ${completedInThisTab} នៃ ${totalSteps} មេរៀន`}
+                            </p>
+                        </div>
+                        <span className={`text-3xl font-black ${isDarkMode ? 'text-[#F1F1F1]' : 'text-[#1A1A1A]'}`}>{progressPercentage}%</span>
+                    </div>
+                    <div className={`h-3 w-full rounded-full overflow-hidden ${isDarkMode ? 'bg-[#2C2C2C]' : 'bg-[#F4F5F7]'}`}>
+                        <div 
+                            className={`h-full rounded-full transition-all duration-1000 ease-out ${isDarkMode ? 'bg-gradient-to-r from-[#41B6E6] to-[#0277C5]' : 'bg-gradient-to-r from-[#0277C5] to-[#01579B]'}`}
+                            style={{ width: `${progressPercentage}%` }}
+                        ></div>
+                    </div>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
                     {courseData[activeAppTab]?.map((l) => (
                         <LessonCard key={l.id} lesson={l} onClick={() => setExpandedLesson(l.id)} isDarkMode={isDarkMode} />
                     ))}
