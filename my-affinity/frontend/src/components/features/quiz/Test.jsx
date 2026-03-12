@@ -21,6 +21,16 @@ const shuffleArray = (array) => {
     return newArr;
 };
 
+// Default empty states for the 3 apps
+const defaultLevels = { photo: ['beginner'], designer: ['beginner'], publisher: ['beginner'] };
+const defaultStars = { 
+    photo: { beginner: 0, intermediate: 0, advanced: 0 }, 
+    designer: { beginner: 0, intermediate: 0, advanced: 0 }, 
+    publisher: { beginner: 0, intermediate: 0, advanced: 0 } 
+};
+const defaultScores = { photo: 0, designer: 0, publisher: 0 };
+const defaultCerts = { photo: null, designer: null, publisher: null };
+
 const Test = ({ isDarkMode }) => {
     const { lang } = useLanguage(); 
 
@@ -30,35 +40,45 @@ const Test = ({ isDarkMode }) => {
     const [score, setScore] = useState(0);
     const [selectedOption, setSelectedOption] = useState(null);
     const [isAnswered, setIsAnswered] = useState(false);
-    const [quizConfig, setQuizConfig] = useState({ level: 'beginner', amount: 5 }); // Default to 5 since we have fewer questions per app now
+    const [quizConfig, setQuizConfig] = useState({ level: 'beginner', amount: 5 });
     
-    // 🌟 NEW STATE: Which Affinity app is selected?
+    // Tracks which Affinity app is active
     const [activeAppTab, setActiveAppTab] = useState('photo');
 
-    const [userName, setUserName] = useState(() => localStorage.getItem('graphicDesign_user_name') || '');
+    const [userName, setUserName] = useState(() => localStorage.getItem('myAffinity_user_name') || '');
     const nameInputRef = useRef(null);
 
-    const [highScore, setHighScore] = useState(() => parseInt(localStorage.getItem('graphicDesignHighScore')) || 0);
-    const [unlockedLevels, setUnlockedLevels] = useState(() => JSON.parse(localStorage.getItem('graphicDesign_unlocked_levels')) || ['beginner']);
-    const [levelStars, setLevelStars] = useState(() => JSON.parse(localStorage.getItem('graphicDesign_level_stars')) || { beginner: 0, intermediate: 0, advanced: 0 });
-    const [certData, setCertData] = useState(() => JSON.parse(localStorage.getItem('graphicDesign_cert_data')) || null);
+    // 🌟 SEPARATED PROGRESS STATES 🌟
+    const [highScores, setHighScores] = useState(() => JSON.parse(localStorage.getItem('myAffinity_quiz_scores')) || defaultScores);
+    const [unlockedLevels, setUnlockedLevels] = useState(() => JSON.parse(localStorage.getItem('myAffinity_quiz_unlocked')) || defaultLevels);
+    const [levelStars, setLevelStars] = useState(() => JSON.parse(localStorage.getItem('myAffinity_quiz_stars')) || defaultStars);
+    const [certsData, setCertsData] = useState(() => JSON.parse(localStorage.getItem('myAffinity_quiz_certs')) || defaultCerts);
     
     const [timeLeft, setTimeLeft] = useState(null);
     const [userAnswers, setUserAnswers] = useState([]);
     const [streak, setStreak] = useState(0);
     const [isShaking, setIsShaking] = useState(false);
 
+    // Extract current app's specific data
+    const currentUnlocked = unlockedLevels[activeAppTab] || ['beginner'];
+    const currentStars = levelStars[activeAppTab] || { beginner: 0, intermediate: 0, advanced: 0 };
+    const currentHighScore = highScores[activeAppTab] || 0;
+    const currentCert = certsData[activeAppTab] || null;
+
     useEffect(() => {
         if (nameInputRef.current && userName && !nameInputRef.current.textContent) {
             nameInputRef.current.textContent = userName;
         }
-    }, []);
+    }, [activeAppTab]); // re-run if they switch tabs and come back
 
+    // Save everything to localStorage whenever it changes
     useEffect(() => {
-        localStorage.setItem('graphicDesign_unlocked_levels', JSON.stringify(unlockedLevels));
-        localStorage.setItem('graphicDesign_level_stars', JSON.stringify(levelStars));
-        if (userName) localStorage.setItem('graphicDesign_user_name', userName);
-    }, [unlockedLevels, levelStars, userName]);
+        localStorage.setItem('myAffinity_quiz_unlocked', JSON.stringify(unlockedLevels));
+        localStorage.setItem('myAffinity_quiz_stars', JSON.stringify(levelStars));
+        localStorage.setItem('myAffinity_quiz_scores', JSON.stringify(highScores));
+        localStorage.setItem('myAffinity_quiz_certs', JSON.stringify(certsData));
+        if (userName) localStorage.setItem('myAffinity_user_name', userName);
+    }, [unlockedLevels, levelStars, highScores, certsData, userName]);
 
     useEffect(() => {
         if (gameState !== 'playing' || quizConfig.level !== 'final' || timeLeft === null) return;
@@ -75,23 +95,23 @@ const Test = ({ isDarkMode }) => {
     const startQuiz = (level) => { 
         if (level === 'final') {
             if (!userName.trim()) { alert(lang === 'en' ? "Please enter your name first!" : "សូមបញ្ចូលឈ្មោះរបស់អ្នកជាមុនសិន!"); return; }
-            if (certData) {
+            if (currentCert) {
                 const confirmRetake = window.confirm(lang === 'en' ? "You already have a certificate. Retake?" : "អ្នកមានវិញ្ញាបនបត្ររួចហើយ។ បន្តឬទេ?");
                 if (!confirmRetake) return;
             }
             setTimeLeft(15 * 60);
         } else { setTimeLeft(null); }
 
-        if (!unlockedLevels.includes(level) && level !== 'final') { triggerHaptic('error'); return; }
+        if (!currentUnlocked.includes(level) && level !== 'final') { triggerHaptic('error'); return; }
         triggerHaptic();
         
-        // 🌟 FILTER BY APP AND LEVEL 🌟
+        // Filter ONLY questions for the active app
         let filtered = initialQuestionBank.filter(q => q.app === activeAppTab);
         if (level !== 'final') {
              filtered = filtered.filter(q => q.level === level);
         }
 
-        // If not enough questions for the level, grab from other levels in the SAME app
+        // Pad with other levels if not enough questions exist
         if (filtered.length < quizConfig.amount && level !== 'final') {
             const extra = initialQuestionBank.filter(q => q.app === activeAppTab && q.level !== level);
             filtered = [...filtered, ...extra];
@@ -117,35 +137,67 @@ const Test = ({ isDarkMode }) => {
 
     const finishQuiz = (finalScore) => {
         const percentage = Math.round((finalScore / questions.length) * 100);
+        
+        // Get formatted app name for the Certificate
+        const appDisplayName = activeAppTab === 'photo' ? 'Affinity Photo' : activeAppTab === 'designer' ? 'Affinity Designer' : 'Affinity Publisher';
+
         if (quizConfig.level === 'final') {
             if (percentage >= 90) {
-                const newCert = { name: userName, score: percentage, date: new Date().toISOString() };
-                setCertData(newCert);
-                localStorage.setItem('graphicDesign_cert_data', JSON.stringify(newCert));
+                // Save the cert exactly to this active App!
+                const newCert = { name: userName, score: percentage, date: new Date().toISOString(), appCourse: appDisplayName };
+                setCertsData(prev => ({ ...prev, [activeAppTab]: newCert }));
                 setGameState('certificate');
             } else {
-                setCertData(null); localStorage.removeItem('graphicDesign_cert_data'); setGameState('result');
+                setCertsData(prev => ({ ...prev, [activeAppTab]: null })); 
+                setGameState('result');
             }
         } else {
             let stars = finalScore >= (questions.length * 0.8) ? 3 : finalScore >= (questions.length * 0.5) ? 2 : finalScore >= (questions.length * 0.3) ? 1 : 0;
-            if (stars > (levelStars[quizConfig.level] || 0)) setLevelStars(prev => ({ ...prev, [quizConfig.level]: stars }));
+            
+            // Save Stars
+            setLevelStars(prev => {
+                const appStars = prev[activeAppTab] || { beginner: 0, intermediate: 0, advanced: 0 };
+                if (stars > (appStars[quizConfig.level] || 0)) {
+                    return { ...prev, [activeAppTab]: { ...appStars, [quizConfig.level]: stars } };
+                }
+                return prev;
+            });
+
+            // Unlock next levels
             if (stars >= 1 || percentage >= 80) {
-                if (quizConfig.level === 'beginner' && !unlockedLevels.includes('intermediate')) setUnlockedLevels(prev => [...prev, 'intermediate']);
-                else if (quizConfig.level === 'intermediate' && !unlockedLevels.includes('advanced')) setUnlockedLevels(prev => [...prev, 'advanced']);
+                setUnlockedLevels(prev => {
+                    const appLevels = prev[activeAppTab] || ['beginner'];
+                    if (quizConfig.level === 'beginner' && !appLevels.includes('intermediate')) {
+                        return { ...prev, [activeAppTab]: [...appLevels, 'intermediate'] };
+                    } else if (quizConfig.level === 'intermediate' && !appLevels.includes('advanced')) {
+                        return { ...prev, [activeAppTab]: [...appLevels, 'advanced'] };
+                    }
+                    return prev;
+                });
             }
-            if (finalScore > highScore) { setHighScore(finalScore); localStorage.setItem('graphicDesignHighScore', finalScore); }
+
+            // Save High Score
+            setHighScores(prev => {
+                const appScore = prev[activeAppTab] || 0;
+                if (finalScore > appScore) {
+                    return { ...prev, [activeAppTab]: finalScore };
+                }
+                return prev;
+            });
+
             setGameState('result');
         }
     };
 
-    if (gameState === 'certificate') return <CertificateForm certData={certData} isDarkMode={isDarkMode} onBack={() => setGameState('menu')} />;
+    // Note: Passed `currentCert` to CertificateForm so it displays the specific app data
+    if (gameState === 'certificate') return <CertificateForm certData={currentCert} isDarkMode={isDarkMode} onBack={() => setGameState('menu')} />;
 
     if (gameState === 'menu') {
-        const allUnlocked = unlockedLevels.includes('advanced') && levelStars.advanced >= 2;
+        const allUnlocked = currentUnlocked.includes('advanced') && currentStars.advanced >= 2;
         return (
             <div className="flex flex-col items-center justify-start min-h-full pt-4 sm:pt-8 px-2 sm:px-6 pb-28 sm:pb-32 w-full">
                 
-                {/* 🌟 NEW 3-WAY TOGGLE ABOVE THE QUIZ MENU 🌟 */}
+                {/* 🌟 3-WAY TOGGLE ABOVE THE QUIZ MENU 🌟 */}
                 <div className={`flex justify-center p-1.5 rounded-2xl mx-auto max-w-md w-full mb-6 border shadow-sm ${isDarkMode ? 'bg-[#1E1E1E] border-[#2C2C2C]' : 'bg-[#FFFFFF] border-[#E5E7EB]'}`}>
                     <button onClick={() => { setActiveAppTab('photo'); triggerHaptic(); }} className={`flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl font-bold text-sm transition-all ${activeAppTab === 'photo' ? (isDarkMode ? 'bg-[#41B6E6] text-[#0A0A0A]' : 'bg-[#0277C5] text-white') : (isDarkMode ? 'text-[#A0A0A0] hover:text-[#F1F1F1]' : 'text-[#6B7280] hover:text-[#1A1A1A]')}`}>
                         <Camera size={16} /> Photo
@@ -165,7 +217,7 @@ const Test = ({ isDarkMode }) => {
                             <div className={`w-12 h-12 rounded-[16px] flex items-center justify-center shadow-inner ${isDarkMode ? 'bg-[#41B6E6]/10' : 'bg-[#0277C5]/10'}`}><Award className={isDarkMode ? 'text-[#41B6E6]' : 'text-[#0277C5]'} size={24} /></div>
                             <div className="flex flex-col">
                                 <h2 className={`text-[19px] sm:text-[22px] font-black font-khmer leading-none tracking-tight ${isDarkMode ? 'text-[#F1F1F1]' : 'text-[#1A1A1A]'}`}>{lang === 'en' ? 'Skill Test' : 'តេស្តសមត្ថភាព'}</h2>
-                                <p className={`text-[9px] sm:text-[10px] mt-1.5 uppercase font-black tracking-widest ${isDarkMode ? 'text-[#A0A0A0]' : 'text-[#6B7280]'}`}>{lang === 'en' ? 'High Score:' : 'ពិន្ទុខ្ពស់បំផុត:'} {highScore}</p>
+                                <p className={`text-[9px] sm:text-[10px] mt-1.5 uppercase font-black tracking-widest ${isDarkMode ? 'text-[#A0A0A0]' : 'text-[#6B7280]'}`}>{lang === 'en' ? 'High Score:' : 'ពិន្ទុខ្ពស់បំផុត:'} {currentHighScore}</p>
                             </div>
                         </div>
                         
@@ -219,8 +271,8 @@ const Test = ({ isDarkMode }) => {
 
                     <div className="grid gap-3">
                         {['beginner', 'intermediate', 'advanced'].map(lvl => {
-                            const isLocked = !unlockedLevels.includes(lvl);
-                            const stars = levelStars[lvl] || 0;
+                            const isLocked = !currentUnlocked.includes(lvl);
+                            const stars = currentStars[lvl] || 0;
                             const displayLevel = lang === 'en' ? lvl.charAt(0).toUpperCase() + lvl.slice(1) : (lvl === 'beginner' ? 'កម្រិតដំបូង' : lvl === 'intermediate' ? 'កម្រិតមធ្យម' : 'កម្រិតខ្ពស់');
 
                             return (
@@ -244,14 +296,14 @@ const Test = ({ isDarkMode }) => {
                                 <div className="flex items-center gap-4">
                                     <div className={`p-3 rounded-2xl ${allUnlocked ? 'bg-[#C5B002] text-white shadow-inner' : 'bg-gray-100 text-gray-400 dark:bg-[#2C2C2C] dark:text-[#A0A0A0]'}`}><Trophy size={20}/></div>
                                     <div className="text-left">
-                                        <span className={`font-khmer font-black text-[15px] block tracking-tight ${allUnlocked ? 'text-[#C5B002]' : ''}`}>{certData ? (lang === 'en' ? 'Retake Final Exam' : 'ប្រឡងយកវិញ្ញាបនបត្រម្តងទៀត') : (lang === 'en' ? 'Final Certification Exam' : 'តេស្តបញ្ចប់យកវិញ្ញាបនបត្រ')}</span>
+                                        <span className={`font-khmer font-black text-[15px] block tracking-tight ${allUnlocked ? 'text-[#C5B002]' : ''}`}>{currentCert ? (lang === 'en' ? 'Retake Final Exam' : 'ប្រឡងយកវិញ្ញាបនបត្រម្តងទៀត') : (lang === 'en' ? 'Final Certification Exam' : 'តេស្តបញ្ចប់យកវិញ្ញាបនបត្រ')}</span>
                                         <span className={`text-[10px] font-black uppercase tracking-widest mt-1 block ${allUnlocked ? 'opacity-80 text-[#C5B002]' : 'opacity-50'}`}>{lang === 'en' ? '15 Questions • 15 Mins • 90% to Pass' : '១៥ សំណួរ • ១៥ នាទី • ជាប់ ៩០%'}</span>
                                     </div>
                                 </div>
                                 {!allUnlocked && <Lock size={16} className="opacity-30"/>}
                             </button>
 
-                            {certData && (
+                            {currentCert && (
                                 <button onClick={() => setGameState('certificate')} className={`p-4 rounded-[24px] border flex items-center justify-center gap-3 transition-all duration-500 ease-out hover:-translate-y-1 active:scale-95 shadow-md ${isDarkMode ? 'border-[#41B6E6]/50 bg-[#41B6E6]/10 text-[#41B6E6] hover:shadow-[0_10px_20px_rgba(65,182,230,0.15)]' : 'border-[#0277C5]/50 bg-[#0277C5]/10 text-[#0277C5] hover:shadow-[0_10px_20px_rgba(2,119,197,0.15)]'}`}>
                                     <Award size={20} />
                                     <span className="font-khmer font-black text-[15px] tracking-tight">{lang === 'en' ? 'View My Certificate' : 'មើលវិញ្ញាបនបត្ររបស់ខ្ញុំ'}</span>
