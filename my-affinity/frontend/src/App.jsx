@@ -181,7 +181,10 @@ function AppContent() {
         .animate-fade-in-up { animation: fade-in-up 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
       `}</style>
       
-      <Header activeTab={activeTab} setActiveTab={setActiveTab} isDarkMode={isDarkMode} setIsDarkMode={setIsDarkMode} />
+      {/* 🌟 CONDITIONAL HEADER: Only shows if tab is NOT 'tools' AND NOT 'ai' */}
+      {activeTab !== 'tools' && activeTab !== 'ai' && (
+          <Header activeTab={activeTab} setActiveTab={setActiveTab} isDarkMode={isDarkMode} setIsDarkMode={setIsDarkMode} />
+      )}
       
       {/* If you have UpdateNotifier, you can uncomment it below once you move it over */}
       {/* <UpdateNotifier isDarkMode={isDarkMode} /> */}
