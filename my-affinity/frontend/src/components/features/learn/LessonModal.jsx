@@ -15,6 +15,10 @@ const LessonModal = ({ lesson, onClose, isDarkMode, completedSteps, setCompleted
   const [activeStep, setActiveStep] = useState(0);
   const [isVideoLoading, setIsVideoLoading] = useState(true);
   
+  // 🌟 NEW STATES FOR CUSTOM PLAY & POPUP 🌟
+  const [hasStarted, setHasStarted] = useState(false);
+  const [previewEnded, setPreviewEnded] = useState(false);
+  
   const videoRef = useRef(null);
 
   useEffect(() => {
@@ -23,8 +27,11 @@ const LessonModal = ({ lesson, onClose, isDarkMode, completedSteps, setCompleted
     return () => { document.body.style.overflow = 'auto'; };
   }, []);
 
+  // Reset the video state when changing lessons
   useEffect(() => {
     setIsVideoLoading(true);
+    setHasStarted(false);
+    setPreviewEnded(false);
   }, [activeStep]);
 
   const handleClose = () => {
@@ -34,13 +41,11 @@ const LessonModal = ({ lesson, onClose, isDarkMode, completedSteps, setCompleted
 
   const handleToggleComplete = (e, stepKey) => {
       e.stopPropagation();
-      
       if (!isPurchased) {
           triggerHaptic('error');
           alert(lang === 'en' ? "Please unlock the full course to track your progress!" : "សូមដោះសោវគ្គសិក្សាដើម្បីតាមដានការសិក្សារបស់អ្នក!");
           return;
       }
-
       triggerHaptic();
       if (completedSteps.includes(stepKey)) {
           setCompletedSteps(prev => prev.filter(id => id !== stepKey));
@@ -52,19 +57,15 @@ const LessonModal = ({ lesson, onClose, isDarkMode, completedSteps, setCompleted
   const toggleFullScreen = async () => {
       const elem = videoRef.current;
       if (!elem) return;
-
       triggerHaptic();
-
       try {
           const isFullscreen = document.fullscreenElement || document.webkitFullscreenElement;
-
           if (!isFullscreen) {
               if (elem.requestFullscreen) {
                   await elem.requestFullscreen();
               } else if (elem.webkitRequestFullscreen) {
                   elem.webkitRequestFullscreen(); 
               }
-
               if (window.screen && window.screen.orientation && window.screen.orientation.lock) {
                   try {
                       await window.screen.orientation.lock('landscape');
@@ -78,7 +79,6 @@ const LessonModal = ({ lesson, onClose, isDarkMode, completedSteps, setCompleted
               } else if (document.webkitExitFullscreen) {
                   document.webkitExitFullscreen();
               }
-              
               if (window.screen && window.screen.orientation && window.screen.orientation.unlock) {
                   window.screen.orientation.unlock();
               }
@@ -92,14 +92,25 @@ const LessonModal = ({ lesson, onClose, isDarkMode, completedSteps, setCompleted
 
   const currentStepData = lesson.steps && lesson.steps.length > 0 ? lesson.steps[activeStep] : null;
 
-  // 🌟 BULLETPROOF PREVIEW URL MAKER 🌟
+  // 🌟 TRIGGER PLAY & START TIMER 🌟
+  const handlePlayClick = () => {
+      setHasStarted(true);
+      if (!isPurchased) {
+          // Timer: 20 seconds of video + 1.5 seconds for loading buffer
+          setTimeout(() => {
+              setPreviewEnded(true);
+              triggerHaptic('error'); // Slight buzz to let them know the preview ended
+          }, 21500);
+      }
+  };
+
   const getVideoUrl = (url) => {
       if (!url) return '';
       const separator = url.includes('?') ? '&' : '?';
-      
-      // If purchased: return normal URL
-      // If locked: Add end=20, completely hide controls (controls=0), disable keyboard skipping (disablekb=1)
-      return isPurchased ? url : `${url}${separator}end=20&controls=0&disablekb=1&rel=0`;
+      // Added autoplay=1 and playsinline=1 so it plays instantly when the custom button is clicked
+      return isPurchased 
+          ? `${url}${separator}autoplay=1&playsinline=1` 
+          : `${url}${separator}end=20&controls=0&disablekb=1&rel=0&autoplay=1&playsinline=1`;
   };
 
   return (
@@ -131,7 +142,7 @@ const LessonModal = ({ lesson, onClose, isDarkMode, completedSteps, setCompleted
                 <div className="mb-6">
                     <div className={`w-full aspect-video rounded-2xl relative overflow-hidden flex flex-col items-center justify-center group shadow-lg border shrink-0 ${isDarkMode ? 'bg-[#0A0A0A] border-[#2C2C2C]' : 'bg-[#1A1A1A] border-black'}`}>
                         
-                        {!isPurchased && (
+                        {!isPurchased && !previewEnded && (
                             <div className="absolute top-4 right-4 z-40 bg-[#C5B002] text-white px-3 py-1.5 rounded-full font-bold text-[10px] tracking-widest uppercase shadow-lg flex items-center gap-1.5 animate-pulse pointer-events-none">
                                 <Clock size={12} /> 20s PREVIEW
                             </div>
@@ -139,33 +150,62 @@ const LessonModal = ({ lesson, onClose, isDarkMode, completedSteps, setCompleted
 
                         {currentStepData.videoUrl ? (
                             <>
-                                {isVideoLoading && (
-                                    <div className="absolute inset-0 flex flex-col items-center justify-center z-10">
-                                        <Loader2 size={36} className={`animate-spin mb-3 ${isDarkMode ? 'text-[#41B6E6]' : 'text-[#0277C5]'}`} />
-                                        <span className={`text-[11px] font-bold uppercase tracking-widest ${isDarkMode ? 'text-[#A0A0A0]' : 'text-[#6B7280]'}`}>
-                                            Loading
+                                {/* 🌟 STATE 1: CUSTOM PLAY BUTTON 🌟 */}
+                                {!hasStarted ? (
+                                    <div 
+                                        onClick={handlePlayClick}
+                                        className="absolute inset-0 flex flex-col items-center justify-center bg-black/60 cursor-pointer z-50 hover:bg-black/50 transition-colors"
+                                    >
+                                        <PlayCircle size={64} className="text-[#C5B002] mb-3 drop-shadow-lg" />
+                                        <span className="font-bold font-khmer text-white tracking-wide drop-shadow-md">
+                                            {isPurchased 
+                                                ? (lang === 'en' ? 'Play Video' : 'ចាក់វីដេអូ') 
+                                                : (lang === 'en' ? 'Play 20s Free Preview' : 'ចាក់មើលសាកល្បង ២០ វិនាទី')}
                                         </span>
                                     </div>
-                                )}
 
-                                <iframe 
-                                    ref={videoRef}
-                                    src={getVideoUrl(currentStepData.videoUrl)}
-                                    className={`w-full h-full absolute inset-0 transition-opacity duration-700 ease-in-out ${isVideoLoading ? 'opacity-0' : 'opacity-100 z-20'}`}
-                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; fullscreen" 
-                                    referrerPolicy="strict-origin-when-cross-origin"
-                                    allowFullScreen
-                                    title={`Step ${currentStepData.id} Video`}
-                                    onLoad={() => setIsVideoLoading(false)}
-                                />
+                                // 🌟 STATE 2: PREVIEW ENDED (Hides video to prevent YouTube Suggestions) 🌟
+                                ) : previewEnded && !isPurchased ? (
+                                    <div className="absolute inset-0 flex flex-col items-center justify-center bg-[#0A0A0A] z-50 p-6 text-center border-2 border-[#C5B002]/30 rounded-2xl animate-fade-in-up">
+                                        <Lock size={40} className="text-[#C5B002] mb-4 animate-bounce" />
+                                        <h4 className="text-white font-black font-khmer text-lg sm:text-xl mb-2">
+                                            {lang === 'en' ? 'Preview Finished!' : 'ការមើលសាកល្បងត្រូវបានបញ្ចប់!'}
+                                        </h4>
+                                        <p className="text-[#A0A0A0] text-[13px] sm:text-sm font-khmer mb-6 max-w-sm mx-auto">
+                                            {lang === 'en' ? 'Unlock the full course to watch the rest of this lesson and access all features.' : 'ដោះសោវគ្គសិក្សាដើម្បីបន្តមើលមេរៀននេះ និងទទួលបានឯកសារអនុវត្ត។'}
+                                        </p>
+                                        <button onClick={handleClose} className="px-8 py-3 bg-[#C5B002] text-white font-black font-khmer rounded-xl text-[13px] active:scale-95 shadow-lg shadow-[#C5B002]/20">
+                                            {lang === 'en' ? 'Unlock Full Access' : 'ដោះសោសិទ្ធិពេញលេញ'}
+                                        </button>
+                                    </div>
 
-                                {/* 🌟 INVISIBLE SHIELDS 🌟 */}
-                                {/* 1. Top Shield: Blocks Share & Title Clicks */}
-                                <div className="absolute top-0 left-0 w-full h-[65px] z-30 bg-transparent" />
-                                
-                                {/* 2. Bottom Shield: Physically blocks the timeline area if it tries to appear! */}
-                                {!isPurchased && (
-                                    <div className="absolute bottom-0 left-0 w-full h-[60px] z-30 bg-transparent" />
+                                // 🌟 STATE 3: PLAYING VIDEO 🌟
+                                ) : (
+                                    <>
+                                        {isVideoLoading && (
+                                            <div className="absolute inset-0 flex flex-col items-center justify-center z-10">
+                                                <Loader2 size={36} className={`animate-spin mb-3 ${isDarkMode ? 'text-[#41B6E6]' : 'text-[#0277C5]'}`} />
+                                                <span className={`text-[11px] font-bold uppercase tracking-widest ${isDarkMode ? 'text-[#A0A0A0]' : 'text-[#6B7280]'}`}>
+                                                    Loading
+                                                </span>
+                                            </div>
+                                        )}
+
+                                        <iframe 
+                                            ref={videoRef}
+                                            src={getVideoUrl(currentStepData.videoUrl)}
+                                            className={`w-full h-full absolute inset-0 transition-opacity duration-700 ease-in-out ${isVideoLoading ? 'opacity-0' : 'opacity-100 z-20'}`}
+                                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; fullscreen" 
+                                            referrerPolicy="strict-origin-when-cross-origin"
+                                            allowFullScreen
+                                            title={`Step ${currentStepData.id} Video`}
+                                            onLoad={() => setIsVideoLoading(false)}
+                                        />
+
+                                        {/* Invisible Shields to block Share and Timeline */}
+                                        <div className="absolute top-0 left-0 w-full h-[65px] z-30 bg-transparent" />
+                                        {!isPurchased && <div className="absolute bottom-0 left-0 w-full h-[60px] z-30 bg-transparent" />}
+                                    </>
                                 )}
                             </>
                         ) : (
@@ -178,34 +218,29 @@ const LessonModal = ({ lesson, onClose, isDarkMode, completedSteps, setCompleted
                         )}
                     </div>
                     
+                    {/* 🌟 NEW: SMALL BUTTON UI (Replaces the giant banner) 🌟 */}
                     {currentStepData.videoUrl && (
-                        <button 
-                            onClick={toggleFullScreen}
-                            className={`mt-3 w-full py-3 rounded-xl flex items-center justify-center gap-2 font-bold font-khmer text-[13px] sm:text-[14px] transition-all active:scale-[0.98] shadow-sm border ${isDarkMode ? 'bg-[#1E1E1E] border-[#2C2C2C] text-[#F1F1F1] hover:bg-[#2C2C2C]' : 'bg-white border-[#E5E7EB] text-[#1A1A1A] hover:bg-[#F8F9FA]'}`}
-                        >
-                            <Maximize size={18} className={isDarkMode ? 'text-[#41B6E6]' : 'text-[#0277C5]'} />
-                            {lang === 'en' ? 'Rotate & Fullscreen Video' : 'បង្វិល និងមើលពេញអេក្រង់'}
-                        </button>
-                    )}
-                </div>
-            )}
+                        <div className="flex flex-col sm:flex-row gap-3 mt-3 w-full">
+                            <button 
+                                onClick={toggleFullScreen}
+                                className={`flex-1 py-3.5 rounded-xl flex items-center justify-center gap-2 font-bold font-khmer text-[13px] sm:text-[14px] transition-all active:scale-[0.98] shadow-sm border ${isDarkMode ? 'bg-[#1E1E1E] border-[#2C2C2C] text-[#F1F1F1] hover:bg-[#2C2C2C]' : 'bg-white border-[#E5E7EB] text-[#1A1A1A] hover:bg-[#F8F9FA]'}`}
+                            >
+                                <Maximize size={18} className={isDarkMode ? 'text-[#41B6E6]' : 'text-[#0277C5]'} />
+                                {lang === 'en' ? 'Rotate Fullscreen' : 'មើលពេញអេក្រង់'}
+                            </button>
 
-            {/* PREMIUM UPSELL BANNER */}
-            {!isPurchased && (
-                <div className={`mb-6 p-6 rounded-2xl border flex flex-col items-center text-center shadow-lg relative overflow-hidden ${isDarkMode ? 'bg-[#1E1E1E] border-[#C5B002]/30' : 'bg-gradient-to-br from-[#FFFDE7] to-white border-[#C5B002]/30'}`}>
-                    <div className={`absolute -top-10 -right-10 w-32 h-32 rounded-full blur-[40px] pointer-events-none ${isDarkMode ? 'bg-[#C5B002]/20' : 'bg-[#C5B002]/10'}`}></div>
-                    
-                    <Lock className="w-10 h-10 text-[#C5B002] mb-3" />
-                    <h4 className={`font-black text-lg font-khmer mb-2 ${isDarkMode ? 'text-[#F1F1F1]' : 'text-[#1A1A1A]'}`}>
-                        {lang === 'en' ? 'Did you enjoy the 20-second preview?' : 'តើអ្នកចូលចិត្តការមើលសាកល្បងនេះទេ?'}
-                    </h4>
-                    <p className={`text-[13px] sm:text-sm font-khmer mb-6 max-w-md ${isDarkMode ? 'text-[#A0A0A0]' : 'text-[#6B7280]'}`}>
-                        {lang === 'en' ? 'Close this window to view payment instructions and unlock the full course, practice assets, and your certificate.' : 'សូមបិទផ្ទាំងនេះដើម្បីមើលការណែនាំពីការបង់ប្រាក់ ដើម្បីទទួលបានវីដេអូពេញលេញ ឯកសារអនុវត្ត និងវិញ្ញាបនបត្រ។'}
-                    </p>
-                    
-                    <button onClick={handleClose} className="px-8 py-3 rounded-xl font-black font-khmer text-[13px] bg-[#C5B002] text-white shadow-lg active:scale-95 transition-all">
-                        {lang === 'en' ? 'Unlock Full Access' : 'ដោះសោសិទ្ធិពេញលេញ'}
-                    </button>
+                            {/* Small Unlock Button for Unpurchased Users */}
+                            {!isPurchased && (
+                                <button 
+                                    onClick={handleClose}
+                                    className="flex-1 py-3.5 rounded-xl flex items-center justify-center gap-2 font-bold font-khmer text-[13px] sm:text-[14px] transition-all active:scale-[0.98] shadow-sm border border-[#C5B002]/40 bg-[#C5B002]/10 text-[#C5B002] hover:bg-[#C5B002]/20"
+                                >
+                                    <Lock size={18} />
+                                    {lang === 'en' ? 'Unlock Full Course' : 'ដោះសោវគ្គសិក្សា'}
+                                </button>
+                            )}
+                        </div>
+                    )}
                 </div>
             )}
 
