@@ -45,19 +45,42 @@ const Test = ({ isDarkMode }) => {
     // Tracks which Affinity app is active
     const [activeAppTab, setActiveAppTab] = useState('photo');
 
-    const [userName, setUserName] = useState(() => localStorage.getItem('myAffinity_user_name') || '');
+    // 🌟 VERCEL FIX: Initialize states safely to prevent Error #418 Hydration Mismatch
+    const [userName, setUserName] = useState('');
+    const [highScores, setHighScores] = useState(defaultScores);
+    const [unlockedLevels, setUnlockedLevels] = useState(defaultLevels);
+    const [levelStars, setLevelStars] = useState(defaultStars);
+    const [certsData, setCertsData] = useState(defaultCerts);
+    const [isDataLoaded, setIsDataLoaded] = useState(false);
+
     const nameInputRef = useRef(null);
 
-    // 🌟 SEPARATED PROGRESS STATES 🌟
-    const [highScores, setHighScores] = useState(() => JSON.parse(localStorage.getItem('myAffinity_quiz_scores')) || defaultScores);
-    const [unlockedLevels, setUnlockedLevels] = useState(() => JSON.parse(localStorage.getItem('myAffinity_quiz_unlocked')) || defaultLevels);
-    const [levelStars, setLevelStars] = useState(() => JSON.parse(localStorage.getItem('myAffinity_quiz_stars')) || defaultStars);
-    const [certsData, setCertsData] = useState(() => JSON.parse(localStorage.getItem('myAffinity_quiz_certs')) || defaultCerts);
-    
     const [timeLeft, setTimeLeft] = useState(null);
     const [userAnswers, setUserAnswers] = useState([]);
     const [streak, setStreak] = useState(0);
     const [isShaking, setIsShaking] = useState(false);
+
+    // 🌟 VERCEL FIX: Read from localStorage ONLY after the component has mounted
+    useEffect(() => {
+        if (typeof window !== 'undefined') {
+            const savedName = localStorage.getItem('myAffinity_user_name');
+            if (savedName) setUserName(savedName);
+
+            const savedScores = localStorage.getItem('myAffinity_quiz_scores');
+            if (savedScores) setHighScores(JSON.parse(savedScores));
+
+            const savedUnlocked = localStorage.getItem('myAffinity_quiz_unlocked');
+            if (savedUnlocked) setUnlockedLevels(JSON.parse(savedUnlocked));
+
+            const savedStars = localStorage.getItem('myAffinity_quiz_stars');
+            if (savedStars) setLevelStars(JSON.parse(savedStars));
+
+            const savedCerts = localStorage.getItem('myAffinity_quiz_certs');
+            if (savedCerts) setCertsData(JSON.parse(savedCerts));
+
+            setIsDataLoaded(true);
+        }
+    }, []);
 
     // Extract current app's specific data
     const currentUnlocked = unlockedLevels[activeAppTab] || ['beginner'];
@@ -69,16 +92,18 @@ const Test = ({ isDarkMode }) => {
         if (nameInputRef.current && userName && !nameInputRef.current.textContent) {
             nameInputRef.current.textContent = userName;
         }
-    }, [activeAppTab]); // re-run if they switch tabs and come back
+    }, [activeAppTab, userName]); 
 
-    // Save everything to localStorage whenever it changes
+    // Save everything to localStorage whenever it changes (ONLY if data is loaded)
     useEffect(() => {
-        localStorage.setItem('myAffinity_quiz_unlocked', JSON.stringify(unlockedLevels));
-        localStorage.setItem('myAffinity_quiz_stars', JSON.stringify(levelStars));
-        localStorage.setItem('myAffinity_quiz_scores', JSON.stringify(highScores));
-        localStorage.setItem('myAffinity_quiz_certs', JSON.stringify(certsData));
-        if (userName) localStorage.setItem('myAffinity_user_name', userName);
-    }, [unlockedLevels, levelStars, highScores, certsData, userName]);
+        if (isDataLoaded) {
+            localStorage.setItem('myAffinity_quiz_unlocked', JSON.stringify(unlockedLevels));
+            localStorage.setItem('myAffinity_quiz_stars', JSON.stringify(levelStars));
+            localStorage.setItem('myAffinity_quiz_scores', JSON.stringify(highScores));
+            localStorage.setItem('myAffinity_quiz_certs', JSON.stringify(certsData));
+            if (userName) localStorage.setItem('myAffinity_user_name', userName);
+        }
+    }, [unlockedLevels, levelStars, highScores, certsData, userName, isDataLoaded]);
 
     useEffect(() => {
         if (gameState !== 'playing' || quizConfig.level !== 'final' || timeLeft === null) return;
@@ -189,7 +214,6 @@ const Test = ({ isDarkMode }) => {
         }
     };
 
-    // Note: Passed `currentCert` to CertificateForm so it displays the specific app data
     if (gameState === 'certificate') return <CertificateForm certData={currentCert} isDarkMode={isDarkMode} onBack={() => setGameState('menu')} />;
 
     if (gameState === 'menu') {
@@ -372,7 +396,13 @@ const Test = ({ isDarkMode }) => {
                                     else { setStreak(0); setIsShaking(true); triggerHaptic('error'); setTimeout(() => setIsShaking(false), 500); }
                                     setUserAnswers(prev => [...prev, { qId: currentQuestion, selected: i, isCorrect }]);
                                     setTimeout(() => {
-                                        if (currentQuestion + 1 < questions.length) { setCurrentQuestion(currentQuestion + 1); setIsAnswered(false); setSelectedOption(null); }
+                                        if (currentQuestion + 1 < questions.length) { 
+                                            setCurrentQuestion(currentQuestion + 1); 
+                                            
+                                            // 🌟 FIX: Reset the selection and answer status for the NEXT question!
+                                            setIsAnswered(false); 
+                                            setSelectedOption(null); 
+                                        }
                                         else finishQuiz(score + (isCorrect ? 1 : 0));
                                     }, 1000);
                                 }} className={`p-4 text-left rounded-[20px] sm:rounded-[24px] border-2 transition-all duration-300 ease-out font-khmer text-[15px] sm:text-[16px] flex items-center group relative overflow-hidden ${btnStyle}`}>
