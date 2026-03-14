@@ -73,9 +73,11 @@ const LessonModal = ({ lesson, onClose, isDarkMode, completedSteps, setCompleted
                 <div className={`w-full aspect-video rounded-2xl relative overflow-hidden flex flex-col items-center justify-center group mb-6 shadow-lg border shrink-0 ${isDarkMode ? 'bg-[#0A0A0A] border-[#2C2C2C]' : 'bg-[#1A1A1A] border-black'}`}>
                     {currentStepData.videoUrl ? (
                         <iframe 
-                            src={currentStepData.videoUrl} 
+                            src={currentStepData.videoUrl}
                             className="w-full h-full absolute inset-0"
-                            allowFullScreen 
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                            referrerPolicy="strict-origin-when-cross-origin"
+                            allowFullScreen
                             title={`Step ${currentStepData.id} Video`}
                         />
                     ) : (
