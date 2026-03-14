@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { X, PlayCircle, DownloadCloud, CheckCircle2, Circle, Loader2, Maximize, Lock, Award } from 'lucide-react';
+import { X, PlayCircle, DownloadCloud, CheckCircle2, Circle, Loader2, Maximize, Lock, Clock } from 'lucide-react';
 import { useLanguage } from '../../../contexts/LanguageContext';
 
 const triggerHaptic = (type = 'light') => {
@@ -9,7 +9,7 @@ const triggerHaptic = (type = 'light') => {
     }
 };
 
-const LessonModal = ({ lesson, onClose, isDarkMode, completedSteps, setCompletedSteps, isPurchased, onUnlockDemo }) => {
+const LessonModal = ({ lesson, onClose, isDarkMode, completedSteps, setCompletedSteps, isPurchased }) => {
   const { lang } = useLanguage();
   const [isVisible, setIsVisible] = useState(false);
   const [activeStep, setActiveStep] = useState(0);
@@ -35,7 +35,6 @@ const LessonModal = ({ lesson, onClose, isDarkMode, completedSteps, setCompleted
   const handleToggleComplete = (e, stepKey) => {
       e.stopPropagation();
       
-      // 🌟 IF NOT PURCHASED, SHOW ERROR AND PREVENT CHECKING
       if (!isPurchased) {
           triggerHaptic('error');
           alert(lang === 'en' ? "Please unlock the full course to track your progress!" : "សូមដោះសោវគ្គសិក្សាដើម្បីតាមដានការសិក្សារបស់អ្នក!");
@@ -93,10 +92,12 @@ const LessonModal = ({ lesson, onClose, isDarkMode, completedSteps, setCompleted
 
   const currentStepData = lesson.steps && lesson.steps.length > 0 ? lesson.steps[activeStep] : null;
 
-  // 🌟 DYNAMIC URL MAKER: Adds end=20 parameter if the user hasn't purchased!
+  // 🌟 DYNAMIC URL MAKER: Automatically enforces the 20-second limit if not purchased!
   const getVideoUrl = (url) => {
       if (!url) return '';
+      // Check if URL already has parameters
       const separator = url.includes('?') ? '&' : '?';
+      // Add end=20 parameter to stop video at 20 seconds
       return isPurchased ? url : `${url}${separator}end=20`;
   };
 
@@ -128,6 +129,13 @@ const LessonModal = ({ lesson, onClose, isDarkMode, completedSteps, setCompleted
             {currentStepData && (
                 <div className="mb-6">
                     <div className={`w-full aspect-video rounded-2xl relative overflow-hidden flex flex-col items-center justify-center group shadow-lg border shrink-0 ${isDarkMode ? 'bg-[#0A0A0A] border-[#2C2C2C]' : 'bg-[#1A1A1A] border-black'}`}>
+                        
+                        {!isPurchased && (
+                            <div className="absolute top-4 right-4 z-30 bg-[#C5B002] text-white px-3 py-1.5 rounded-full font-bold text-[10px] tracking-widest uppercase shadow-lg flex items-center gap-1.5 animate-pulse">
+                                <Clock size={12} /> 20s PREVIEW
+                            </div>
+                        )}
+
                         {currentStepData.videoUrl ? (
                             <>
                                 {isVideoLoading && (
@@ -172,27 +180,22 @@ const LessonModal = ({ lesson, onClose, isDarkMode, completedSteps, setCompleted
                 </div>
             )}
 
-            {/* 🌟 PREMIUM UPSELL BANNER (Only shows if course is locked) 🌟 */}
+            {/* 🌟 PREMIUM UPSELL BANNER 🌟 */}
             {!isPurchased && (
                 <div className={`mb-6 p-6 rounded-2xl border flex flex-col items-center text-center shadow-lg relative overflow-hidden ${isDarkMode ? 'bg-[#1E1E1E] border-[#C5B002]/30' : 'bg-gradient-to-br from-[#FFFDE7] to-white border-[#C5B002]/30'}`}>
                     <div className={`absolute -top-10 -right-10 w-32 h-32 rounded-full blur-[40px] pointer-events-none ${isDarkMode ? 'bg-[#C5B002]/20' : 'bg-[#C5B002]/10'}`}></div>
                     
                     <Lock className="w-10 h-10 text-[#C5B002] mb-3" />
                     <h4 className={`font-black text-lg font-khmer mb-2 ${isDarkMode ? 'text-[#F1F1F1]' : 'text-[#1A1A1A]'}`}>
-                        {lang === 'en' ? '20-Second Free Preview' : 'ការមើលសាកល្បង ២០ វិនាទី'}
+                        {lang === 'en' ? 'Did you enjoy the 20-second preview?' : 'តើអ្នកចូលចិត្តការមើលសាកល្បងនេះទេ?'}
                     </h4>
                     <p className={`text-[13px] sm:text-sm font-khmer mb-6 max-w-md ${isDarkMode ? 'text-[#A0A0A0]' : 'text-[#6B7280]'}`}>
-                        {lang === 'en' ? 'Unlock the full course to watch complete videos, download practice assets, and track your progress.' : 'ដោះសោវគ្គសិក្សាដើម្បីមើលវីដេអូពេញលេញ ទាញយកឯកសារអនុវត្ត និងតាមដានការសិក្សា។'}
+                        {lang === 'en' ? 'Close this window to view payment instructions and unlock the full course, practice assets, and your certificate.' : 'សូមបិទផ្ទាំងនេះដើម្បីមើលការណែនាំពីការបង់ប្រាក់ ដើម្បីទទួលបានវីដេអូពេញលេញ ឯកសារអនុវត្ត និងវិញ្ញាបនបត្រ។'}
                     </p>
                     
-                    <div className="flex flex-col sm:flex-row gap-3 w-full justify-center">
-                        <a href="https://myaffinity.gumroad.com" target="_blank" rel="noopener noreferrer" className="px-6 py-3 rounded-xl font-black font-khmer text-[13px] bg-[#C5B002] text-white shadow-lg active:scale-95 transition-all flex items-center justify-center gap-2">
-                            <Award size={16} /> {lang === 'en' ? 'Purchase on Gumroad' : 'ទិញនៅលើ Gumroad'}
-                        </a>
-                        <button onClick={onUnlockDemo} className={`px-6 py-3 rounded-xl font-black font-khmer text-[13px] border-2 transition-all active:scale-95 ${isDarkMode ? 'border-[#2C2C2C] text-[#A0A0A0] hover:text-[#F1F1F1]' : 'border-[#E5E7EB] text-[#6B7280] hover:text-[#1A1A1A]'}`}>
-                            {lang === 'en' ? 'Unlock (Demo)' : 'ដោះសោសាកល្បង'}
-                        </button>
-                    </div>
+                    <button onClick={handleClose} className="px-8 py-3 rounded-xl font-black font-khmer text-[13px] bg-[#C5B002] text-white shadow-lg active:scale-95 transition-all">
+                        {lang === 'en' ? 'Unlock Full Access' : 'ដោះសោសិទ្ធិពេញលេញ'}
+                    </button>
                 </div>
             )}
 
