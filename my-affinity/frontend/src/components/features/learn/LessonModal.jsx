@@ -1,6 +1,5 @@
-import React, { useEffect, useState } from 'react';
-// 🌟 VERCEL FIX: Ensured Loader2 is explicitly imported here!
-import { X, PlayCircle, DownloadCloud, CheckCircle2, Circle, Loader2 } from 'lucide-react';
+import React, { useEffect, useState, useRef } from 'react';
+import { X, PlayCircle, DownloadCloud, CheckCircle2, Circle, Loader2, Maximize } from 'lucide-react';
 import { useLanguage } from '../../../contexts/LanguageContext';
 
 const triggerHaptic = () => {
@@ -13,9 +12,10 @@ const LessonModal = ({ lesson, onClose, isDarkMode, completedSteps, setCompleted
   const { lang } = useLanguage();
   const [isVisible, setIsVisible] = useState(false);
   const [activeStep, setActiveStep] = useState(0);
-  
-  // Track if the YouTube iframe is still loading
   const [isVideoLoading, setIsVideoLoading] = useState(true);
+  
+  // 🌟 NEW: Reference to the iframe to trigger fullscreen
+  const videoRef = useRef(null);
 
   useEffect(() => {
     setIsVisible(true);
@@ -23,7 +23,6 @@ const LessonModal = ({ lesson, onClose, isDarkMode, completedSteps, setCompleted
     return () => { document.body.style.overflow = 'auto'; };
   }, []);
 
-  // Reset the loading spinner every time a new video step is clicked
   useEffect(() => {
     setIsVideoLoading(true);
   }, [activeStep]);
@@ -40,6 +39,50 @@ const LessonModal = ({ lesson, onClose, isDarkMode, completedSteps, setCompleted
           setCompletedSteps(prev => prev.filter(id => id !== stepKey));
       } else {
           setCompletedSteps(prev => [...prev, stepKey]);
+      }
+  };
+
+  // 🌟 NEW: Function to force Fullscreen and Landscape Rotation
+  const toggleFullScreen = async () => {
+      const elem = videoRef.current;
+      if (!elem) return;
+
+      triggerHaptic();
+
+      try {
+          const isFullscreen = document.fullscreenElement || document.webkitFullscreenElement;
+
+          if (!isFullscreen) {
+              // 1. Request Fullscreen (Cross-browser support)
+              if (elem.requestFullscreen) {
+                  await elem.requestFullscreen();
+              } else if (elem.webkitRequestFullscreen) {
+                  elem.webkitRequestFullscreen(); // Safari/iOS
+              }
+
+              // 2. Force screen rotation to Landscape (Android & Modern Browsers)
+              if (window.screen && window.screen.orientation && window.screen.orientation.lock) {
+                  try {
+                      await window.screen.orientation.lock('landscape');
+                  } catch (e) {
+                      console.warn('Orientation lock is not supported on this device/browser.');
+                  }
+              }
+          } else {
+              // Exit Fullscreen
+              if (document.exitFullscreen) {
+                  await document.exitFullscreen();
+              } else if (document.webkitExitFullscreen) {
+                  document.webkitExitFullscreen();
+              }
+              
+              // Unlock rotation
+              if (window.screen && window.screen.orientation && window.screen.orientation.unlock) {
+                  window.screen.orientation.unlock();
+              }
+          }
+      } catch (err) {
+          console.error("Fullscreen API error:", err);
       }
   };
 
@@ -78,37 +121,51 @@ const LessonModal = ({ lesson, onClose, isDarkMode, completedSteps, setCompleted
 
             {/* DYNAMIC VIDEO PLAYER WITH LOADING STATE */}
             {currentStepData && (
-                <div className={`w-full aspect-video rounded-2xl relative overflow-hidden flex flex-col items-center justify-center group mb-6 shadow-lg border shrink-0 ${isDarkMode ? 'bg-[#0A0A0A] border-[#2C2C2C]' : 'bg-[#1A1A1A] border-black'}`}>
-                    {currentStepData.videoUrl ? (
-                        <>
-                            {/* The Animated Loading Spinner */}
-                            {isVideoLoading && (
-                                <div className="absolute inset-0 flex flex-col items-center justify-center z-10">
-                                    <Loader2 size={36} className={`animate-spin mb-3 ${isDarkMode ? 'text-[#41B6E6]' : 'text-[#0277C5]'}`} />
-                                    <span className={`text-[11px] font-bold uppercase tracking-widest ${isDarkMode ? 'text-[#A0A0A0]' : 'text-[#6B7280]'}`}>
-                                        Loading
-                                    </span>
-                                </div>
-                            )}
+                <div className="mb-8">
+                    <div className={`w-full aspect-video rounded-2xl relative overflow-hidden flex flex-col items-center justify-center group shadow-lg border shrink-0 ${isDarkMode ? 'bg-[#0A0A0A] border-[#2C2C2C]' : 'bg-[#1A1A1A] border-black'}`}>
+                        {currentStepData.videoUrl ? (
+                            <>
+                                {/* The Animated Loading Spinner */}
+                                {isVideoLoading && (
+                                    <div className="absolute inset-0 flex flex-col items-center justify-center z-10">
+                                        <Loader2 size={36} className={`animate-spin mb-3 ${isDarkMode ? 'text-[#41B6E6]' : 'text-[#0277C5]'}`} />
+                                        <span className={`text-[11px] font-bold uppercase tracking-widest ${isDarkMode ? 'text-[#A0A0A0]' : 'text-[#6B7280]'}`}>
+                                            Loading
+                                        </span>
+                                    </div>
+                                )}
 
-                            {/* The iFrame Video */}
-                            <iframe 
-                                src={currentStepData.videoUrl}
-                                className={`w-full h-full absolute inset-0 transition-opacity duration-700 ease-in-out ${isVideoLoading ? 'opacity-0' : 'opacity-100 z-20'}`}
-                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
-                                referrerPolicy="strict-origin-when-cross-origin"
-                                allowFullScreen
-                                title={`Step ${currentStepData.id} Video`}
-                                onLoad={() => setIsVideoLoading(false)}
-                            />
-                        </>
-                    ) : (
-                        <div className="text-center text-white/50 p-4">
-                            <PlayCircle size={48} className="mx-auto mb-3 opacity-50 group-hover:opacity-100 transition-opacity text-[#41B6E6]" />
-                            <p className="font-khmer font-bold tracking-wide">
-                                {lang === 'en' ? `STEP ${currentStepData.id} COMING SOON` : `វីដេអូទី ${currentStepData.id} កំពុងរៀបចំ`}
-                            </p>
-                        </div>
+                                {/* The iFrame Video */}
+                                <iframe 
+                                    ref={videoRef}
+                                    src={currentStepData.videoUrl}
+                                    className={`w-full h-full absolute inset-0 transition-opacity duration-700 ease-in-out ${isVideoLoading ? 'opacity-0' : 'opacity-100 z-20'}`}
+                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; fullscreen" 
+                                    referrerPolicy="strict-origin-when-cross-origin"
+                                    allowFullScreen
+                                    title={`Step ${currentStepData.id} Video`}
+                                    onLoad={() => setIsVideoLoading(false)}
+                                />
+                            </>
+                        ) : (
+                            <div className="text-center text-white/50 p-4">
+                                <PlayCircle size={48} className="mx-auto mb-3 opacity-50 group-hover:opacity-100 transition-opacity text-[#41B6E6]" />
+                                <p className="font-khmer font-bold tracking-wide">
+                                    {lang === 'en' ? `STEP ${currentStepData.id} COMING SOON` : `វីដេអូទី ${currentStepData.id} កំពុងរៀបចំ`}
+                                </p>
+                            </div>
+                        )}
+                    </div>
+                    
+                    {/* 🌟 NEW: Custom Rotate & Fullscreen Button 🌟 */}
+                    {currentStepData.videoUrl && (
+                        <button 
+                            onClick={toggleFullScreen}
+                            className={`mt-3 w-full py-3 rounded-xl flex items-center justify-center gap-2 font-bold font-khmer text-[13px] sm:text-[14px] transition-all active:scale-[0.98] shadow-sm border ${isDarkMode ? 'bg-[#1E1E1E] border-[#2C2C2C] text-[#F1F1F1] hover:bg-[#2C2C2C]' : 'bg-white border-[#E5E7EB] text-[#1A1A1A] hover:bg-[#F8F9FA]'}`}
+                        >
+                            <Maximize size={18} className={isDarkMode ? 'text-[#41B6E6]' : 'text-[#0277C5]'} />
+                            {lang === 'en' ? 'Rotate & Fullscreen Video' : 'បង្វិល និងមើលពេញអេក្រង់'}
+                        </button>
                     )}
                 </div>
             )}
