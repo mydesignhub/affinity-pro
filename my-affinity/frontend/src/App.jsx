@@ -129,7 +129,7 @@ function AppContent() {
   const [isDarkMode, setIsDarkMode] = useState(true);
   const [completedSteps, setCompletedSteps] = useState([]);
   
-  // 🌟 FIX: Photo is no longer a free trial. All apps start locked (null).
+  // All apps start locked (null)
   const [purchasedCourses, setPurchasedCourses] = useState({
       photo: null,
       designer: null,
