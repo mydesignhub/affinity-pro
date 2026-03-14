@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { ChevronRight, PlayCircle, Sparkles, Zap, Facebook, Send, Globe, BookOpen, Award, Bot, Camera, PenTool, Book } from 'lucide-react';
+// 🌟 NEW: Added the Lock icon to the imports
+import { ChevronRight, PlayCircle, Sparkles, Zap, Facebook, Send, Globe, BookOpen, Award, Bot, Camera, PenTool, Book, Lock } from 'lucide-react';
 
 import Header from './components/layout/Header';
 import ToolsView from './components/features/tools/ToolsView';
@@ -115,12 +116,17 @@ function AppContent() {
   const [expandedLesson, setExpandedLesson] = useState(null);
   const [expandedSection, setExpandedSection] = useState(null);
   
-  // 🌟 FIX: Vercel Hydration Error (#418) 
-  // Start BOTH empty/true to match Vercel's server perfectly.
   const [isDarkMode, setIsDarkMode] = useState(true);
   const [completedSteps, setCompletedSteps] = useState([]);
   
-  // A safe flag so we don't accidentally overwrite progress
+  // 🌟 NEW STATE: PURCHASE TRACKING 🌟
+  // By default, Photo is a free trial (true), Designer & Publisher are locked (false)
+  const [purchasedCourses, setPurchasedCourses] = useState({
+      photo: true,
+      designer: false,
+      publisher: false
+  });
+
   const [isDataLoaded, setIsDataLoaded] = useState(false);
 
   // Read actual client data safely AFTER mount
@@ -135,8 +141,14 @@ function AppContent() {
           if (savedSteps) {
               setCompletedSteps(JSON.parse(savedSteps));
           }
+
+          // Read saved purchases
+          const savedPurchases = localStorage.getItem('myAffinity_purchases');
+          if (savedPurchases) {
+              setPurchasedCourses(JSON.parse(savedPurchases));
+          }
           
-          setIsDataLoaded(true); // Allow saving to storage now
+          setIsDataLoaded(true); 
       }
   }, []);
 
@@ -157,26 +169,22 @@ function AppContent() {
       }
   }, [isDarkMode, isDataLoaded]);
 
-  // Sync Progress to Storage ONLY after initial data is loaded
+  // Sync Data to Storage
   useEffect(() => {
       if (isDataLoaded) {
           localStorage.setItem('myAffinity_completed_steps', JSON.stringify(completedSteps));
+          localStorage.setItem('myAffinity_purchases', JSON.stringify(purchasedCourses));
       }
-  }, [completedSteps, isDataLoaded]);
+  }, [completedSteps, purchasedCourses, isDataLoaded]);
 
-  // ==========================================
-  // 🌟 HARDWARE BACK BUTTON LOGIC (PWA/ANDROID) 🌟
-  // ==========================================
+  // Hardware Back Button Logic
   useEffect(() => {
     const handlePopState = (event) => {
-        // 1. If a modal is open, close it FIRST
         if (expandedLesson !== null) {
             setExpandedLesson(null);
             window.history.pushState({ modalOpen: false, tab: activeTab }, '');
             return;
         }
-        
-        // 2. If no modal is open, but they aren't on the 'learn' tab, send them back to 'learn'
         if (activeTab !== 'learn') {
             setActiveTab('learn');
             window.history.pushState({ modalOpen: false, tab: 'learn' }, '');
@@ -192,7 +200,6 @@ function AppContent() {
     };
   }, [expandedLesson, activeTab]);
 
-  // Hook to handle programmatic tab switching AND History API injection
   useEffect(() => {
     const handleSwitchTab = (e) => {
         if (e.detail) { 
@@ -232,10 +239,12 @@ function AppContent() {
   // CALCULATE PROGRESS MATHS
   const currentCourseData = courseData[activeAppTab] || [];
   const totalSteps = currentCourseData.reduce((acc, lesson) => acc + (lesson.steps?.length || 0), 0);
-  
   const prefix = activeAppTab === 'photo' ? 'ph' : activeAppTab === 'designer' ? 'ds' : 'pb';
   const completedInThisTab = completedSteps.filter(id => id.startsWith(prefix)).length;
   const progressPercentage = totalSteps === 0 ? 0 : Math.round((completedInThisTab / totalSteps) * 100);
+
+  // Check if current active tab course is purchased
+  const isCoursePurchased = purchasedCourses[activeAppTab];
 
   return (
     <div className={`fixed inset-0 w-full h-full flex flex-col font-khmer overflow-hidden touch-pan-x touch-pan-y transition-colors duration-500 pt-[env(safe-area-inset-top)] ${isDarkMode ? 'bg-[#0A0A0A] text-[#F1F1F1]' : 'bg-[#F4F5F7] text-[#1A1A1A]'}`}>
@@ -260,7 +269,6 @@ function AppContent() {
             lesson={getSelectedLesson()} 
             onClose={() => {
                 setExpandedLesson(null);
-                // Ensure browser history stays perfectly in sync when they tap the X button
                 if (window.history.state && window.history.state.modalOpen) {
                     window.history.back(); 
                 }
@@ -295,32 +303,77 @@ function AppContent() {
                     </button>
                 </div>
 
-                {/* THE PROGRESS BAR UI */}
-                <div className={`mt-8 mb-4 p-5 md:p-6 rounded-[24px] border shadow-sm animate-fade-in-up ${isDarkMode ? 'bg-[#1E1E1E]/50 border-[#2C2C2C]' : 'bg-[#FFFFFF] border-[#E5E7EB]'}`}>
-                    <div className="flex justify-between items-end mb-4">
-                        <div>
-                            <h4 className={`font-bold font-khmer text-[13px] md:text-sm uppercase tracking-widest ${isDarkMode ? 'text-[#41B6E6]' : 'text-[#0277C5]'}`}>
-                                {lang === 'en' ? 'Course Progress' : 'វឌ្ឍនភាពនៃការសិក្សា'}
-                            </h4>
-                            <p className={`text-[12px] md:text-sm mt-1.5 font-khmer ${isDarkMode ? 'text-[#A0A0A0]' : 'text-[#6B7280]'}`}>
-                                {lang === 'en' ? `${completedInThisTab} of ${totalSteps} lessons completed` : `បានបញ្ចប់ ${completedInThisTab} នៃ ${totalSteps} មេរៀន`}
-                            </p>
+                {isCoursePurchased ? (
+                    // --- COURSE IS PURCHASED: Show Progress and Lessons ---
+                    <>
+                        <div className={`mt-8 mb-4 p-5 md:p-6 rounded-[24px] border shadow-sm animate-fade-in-up ${isDarkMode ? 'bg-[#1E1E1E]/50 border-[#2C2C2C]' : 'bg-[#FFFFFF] border-[#E5E7EB]'}`}>
+                            <div className="flex justify-between items-end mb-4">
+                                <div>
+                                    <h4 className={`font-bold font-khmer text-[13px] md:text-sm uppercase tracking-widest ${isDarkMode ? 'text-[#41B6E6]' : 'text-[#0277C5]'}`}>
+                                        {lang === 'en' ? 'Course Progress' : 'វឌ្ឍនភាពនៃការសិក្សា'}
+                                    </h4>
+                                    <p className={`text-[12px] md:text-sm mt-1.5 font-khmer ${isDarkMode ? 'text-[#A0A0A0]' : 'text-[#6B7280]'}`}>
+                                        {lang === 'en' ? `${completedInThisTab} of ${totalSteps} lessons completed` : `បានបញ្ចប់ ${completedInThisTab} នៃ ${totalSteps} មេរៀន`}
+                                    </p>
+                                </div>
+                                <span className={`text-3xl font-black ${isDarkMode ? 'text-[#F1F1F1]' : 'text-[#1A1A1A]'}`}>{progressPercentage}%</span>
+                            </div>
+                            <div className={`h-3 w-full rounded-full overflow-hidden ${isDarkMode ? 'bg-[#2C2C2C]' : 'bg-[#F4F5F7]'}`}>
+                                <div 
+                                    className={`h-full rounded-full transition-all duration-1000 ease-out ${isDarkMode ? 'bg-gradient-to-r from-[#41B6E6] to-[#0277C5]' : 'bg-gradient-to-r from-[#0277C5] to-[#01579B]'}`}
+                                    style={{ width: `${progressPercentage}%` }}
+                                ></div>
+                            </div>
                         </div>
-                        <span className={`text-3xl font-black ${isDarkMode ? 'text-[#F1F1F1]' : 'text-[#1A1A1A]'}`}>{progressPercentage}%</span>
-                    </div>
-                    <div className={`h-3 w-full rounded-full overflow-hidden ${isDarkMode ? 'bg-[#2C2C2C]' : 'bg-[#F4F5F7]'}`}>
-                        <div 
-                            className={`h-full rounded-full transition-all duration-1000 ease-out ${isDarkMode ? 'bg-gradient-to-r from-[#41B6E6] to-[#0277C5]' : 'bg-gradient-to-r from-[#0277C5] to-[#01579B]'}`}
-                            style={{ width: `${progressPercentage}%` }}
-                        ></div>
-                    </div>
-                </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
-                    {courseData[activeAppTab]?.map((l) => (
-                        <LessonCard key={l.id} lesson={l} onClick={() => handleOpenLesson(l.id)} isDarkMode={isDarkMode} />
-                    ))}
-                </div>
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+                            {courseData[activeAppTab]?.map((l) => (
+                                <LessonCard key={l.id} lesson={l} onClick={() => handleOpenLesson(l.id)} isDarkMode={isDarkMode} />
+                            ))}
+                        </div>
+                    </>
+                ) : (
+                    // --- COURSE IS LOCKED: Show Premium Purchase Overlay ---
+                    <div className={`mt-8 mb-4 p-8 md:p-12 rounded-[32px] border text-center shadow-xl animate-fade-in-up relative overflow-hidden ${isDarkMode ? 'bg-[#1E1E1E] border-[#2C2C2C]' : 'bg-[#FFFFFF] border-[#E5E7EB]'}`}>
+                        {/* Background glowing effects */}
+                        <div className={`absolute -top-24 -right-24 w-64 h-64 rounded-full blur-[80px] pointer-events-none ${isDarkMode ? 'bg-[#C5B002]/20' : 'bg-[#C5B002]/10'}`}></div>
+                        <div className={`absolute -bottom-24 -left-24 w-64 h-64 rounded-full blur-[80px] pointer-events-none ${isDarkMode ? 'bg-[#C5B002]/10' : 'bg-[#C5B002]/5'}`}></div>
+
+                        <div className={`w-20 h-20 mx-auto rounded-3xl mb-6 flex items-center justify-center shadow-lg relative z-10 ${isDarkMode ? 'bg-gradient-to-br from-[#C5B002] to-[#8A7B01] text-white' : 'bg-gradient-to-br from-[#F5D800] to-[#C5B002] text-white'}`}>
+                            <Lock size={36} />
+                        </div>
+
+                        <h3 className={`text-2xl md:text-3xl font-black font-khmer mb-4 tracking-tight relative z-10 ${isDarkMode ? 'text-[#F1F1F1]' : 'text-[#1A1A1A]'}`}>
+                            {lang === 'en' ? 'Unlock Premium Course' : 'ដោះសោវគ្គសិក្សាពិសេស'}
+                        </h3>
+                        
+                        <p className={`text-base font-khmer max-w-md mx-auto mb-10 leading-relaxed relative z-10 ${isDarkMode ? 'text-[#A0A0A0]' : 'text-[#6B7280]'}`}>
+                            {lang === 'en' 
+                                ? `Get full access to all Affinity ${activeAppTab.charAt(0).toUpperCase() + activeAppTab.slice(1)} lessons, practice files, and your final certification.`
+                                : `ទទួលបានសិទ្ធិចូលរៀនមេរៀនទាំងអស់របស់ Affinity ${activeAppTab.charAt(0).toUpperCase() + activeAppTab.slice(1)} ព្រមទាំងឯកសារអនុវត្ត និងវិញ្ញាបនបត្រ។`}
+                        </p>
+
+                        <div className="flex flex-col sm:flex-row gap-4 justify-center items-center relative z-10">
+                            <a 
+                                href="https://myaffinity.gumroad.com" 
+                                target="_blank" 
+                                rel="noopener noreferrer" 
+                                className="w-full sm:w-auto px-8 py-4 rounded-2xl font-black font-khmer text-[15px] transition-all active:scale-95 shadow-xl hover:-translate-y-1 bg-[#C5B002] text-white hover:shadow-[#C5B002]/30 flex items-center justify-center gap-2"
+                            >
+                                <Award size={18} />
+                                {lang === 'en' ? 'Purchase on Gumroad' : 'ទិញនៅលើ Gumroad'}
+                            </a>
+                            
+                            {/* DEVELOPER DEMO BUTTON - Click to instantly unlock without paying */}
+                            <button 
+                                onClick={() => setPurchasedCourses(prev => ({...prev, [activeAppTab]: true}))} 
+                                className={`w-full sm:w-auto px-8 py-4 rounded-2xl font-black font-khmer text-[15px] border-2 transition-all active:scale-95 ${isDarkMode ? 'border-[#2C2C2C] text-[#A0A0A0] hover:text-[#F1F1F1] hover:bg-[#2C2C2C]' : 'border-[#E5E7EB] text-[#6B7280] hover:text-[#1A1A1A] hover:bg-[#F8F9FA]'}`}
+                            >
+                                 {lang === 'en' ? 'Unlock (Demo)' : 'ដោះសោសាកល្បង'}
+                            </button>
+                        </div>
+                    </div>
+                )}
 
                 <TipsSection isExpanded={expandedSection === 'tips'} onToggle={() => setExpandedSection(expandedSection === 'tips' ? null : 'tips')} isDarkMode={isDarkMode} />
                 <ContactSection isDarkMode={isDarkMode} />
