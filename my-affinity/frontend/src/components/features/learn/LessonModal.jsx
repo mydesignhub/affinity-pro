@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
-// 🌟 VERCEL FIX: Ensured Loader2 is explicitly imported here!
-import { X, PlayCircle, DownloadCloud, CheckCircle2, Circle, Loader2 } from 'lucide-react';
+import { X, PlayCircle, DownloadCloud, CheckCircle2, Circle } from 'lucide-react';
 import { useLanguage } from '../../../contexts/LanguageContext';
 
 const triggerHaptic = () => {
@@ -13,9 +12,6 @@ const LessonModal = ({ lesson, onClose, isDarkMode, completedSteps, setCompleted
   const { lang } = useLanguage();
   const [isVisible, setIsVisible] = useState(false);
   const [activeStep, setActiveStep] = useState(0);
-  
-  // Track if the YouTube iframe is still loading
-  const [isVideoLoading, setIsVideoLoading] = useState(true);
 
   useEffect(() => {
     setIsVisible(true);
@@ -23,16 +19,12 @@ const LessonModal = ({ lesson, onClose, isDarkMode, completedSteps, setCompleted
     return () => { document.body.style.overflow = 'auto'; };
   }, []);
 
-  // Reset the loading spinner every time a new video step is clicked
-  useEffect(() => {
-    setIsVideoLoading(true);
-  }, [activeStep]);
-
   const handleClose = () => {
     setIsVisible(false);
     setTimeout(onClose, 300); 
   };
 
+  // 🌟 NEW: Function to toggle a step as complete/incomplete
   const handleToggleComplete = (e, stepKey) => {
       e.stopPropagation();
       triggerHaptic();
@@ -76,32 +68,18 @@ const LessonModal = ({ lesson, onClose, isDarkMode, completedSteps, setCompleted
                 {lang === 'en' ? lesson.desc_en : lesson.desc}
             </p>
 
-            {/* DYNAMIC VIDEO PLAYER WITH LOADING STATE */}
+            {/* DYNAMIC VIDEO PLAYER */}
             {currentStepData && (
                 <div className={`w-full aspect-video rounded-2xl relative overflow-hidden flex flex-col items-center justify-center group mb-6 shadow-lg border shrink-0 ${isDarkMode ? 'bg-[#0A0A0A] border-[#2C2C2C]' : 'bg-[#1A1A1A] border-black'}`}>
                     {currentStepData.videoUrl ? (
-                        <>
-                            {/* The Animated Loading Spinner */}
-                            {isVideoLoading && (
-                                <div className="absolute inset-0 flex flex-col items-center justify-center z-10">
-                                    <Loader2 size={36} className={`animate-spin mb-3 ${isDarkMode ? 'text-[#41B6E6]' : 'text-[#0277C5]'}`} />
-                                    <span className={`text-[11px] font-bold uppercase tracking-widest ${isDarkMode ? 'text-[#A0A0A0]' : 'text-[#6B7280]'}`}>
-                                        Loading
-                                    </span>
-                                </div>
-                            )}
-
-                            {/* The iFrame Video */}
-                            <iframe 
-                                src={currentStepData.videoUrl}
-                                className={`w-full h-full absolute inset-0 transition-opacity duration-700 ease-in-out ${isVideoLoading ? 'opacity-0' : 'opacity-100 z-20'}`}
-                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
-                                referrerPolicy="strict-origin-when-cross-origin"
-                                allowFullScreen
-                                title={`Step ${currentStepData.id} Video`}
-                                onLoad={() => setIsVideoLoading(false)}
-                            />
-                        </>
+                        <iframe 
+                            src={currentStepData.videoUrl}
+                            className="w-full h-full absolute inset-0"
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                            referrerPolicy="strict-origin-when-cross-origin"
+                            allowFullScreen
+                            title={`Step ${currentStepData.id} Video`}
+                        />
                     ) : (
                         <div className="text-center text-white/50 p-4">
                             <PlayCircle size={48} className="mx-auto mb-3 opacity-50 group-hover:opacity-100 transition-opacity text-[#41B6E6]" />
@@ -148,6 +126,8 @@ const LessonModal = ({ lesson, onClose, isDarkMode, completedSteps, setCompleted
                 
                 {lesson.steps?.map((step, idx) => {
                     const isActive = activeStep === idx;
+                    
+                    // Unique ID for this exact step to save in memory
                     const stepKey = `${lesson.id}_${step.id}`;
                     const isCompleted = completedSteps.includes(stepKey);
 
@@ -161,6 +141,7 @@ const LessonModal = ({ lesson, onClose, isDarkMode, completedSteps, setCompleted
                                 }
                             `}
                         >
+                            {/* Left: Play/Watch Button area */}
                             <button 
                                 onClick={() => setActiveStep(idx)}
                                 className="flex-1 flex items-start gap-4 text-left active:scale-[0.98] transition-transform"
@@ -184,6 +165,7 @@ const LessonModal = ({ lesson, onClose, isDarkMode, completedSteps, setCompleted
                                 </p>
                             </button>
 
+                            {/* Right: The Checkmark Toggle */}
                             <button 
                                 onClick={(e) => handleToggleComplete(e, stepKey)}
                                 className={`shrink-0 p-2 rounded-full transition-transform active:scale-75
