@@ -92,12 +92,9 @@ const LessonModal = ({ lesson, onClose, isDarkMode, completedSteps, setCompleted
 
   const currentStepData = lesson.steps && lesson.steps.length > 0 ? lesson.steps[activeStep] : null;
 
-  // 🌟 DYNAMIC URL MAKER: Automatically enforces the 20-second limit if not purchased!
   const getVideoUrl = (url) => {
       if (!url) return '';
-      // Check if URL already has parameters
       const separator = url.includes('?') ? '&' : '?';
-      // Add end=20 parameter to stop video at 20 seconds
       return isPurchased ? url : `${url}${separator}end=20`;
   };
 
@@ -131,7 +128,7 @@ const LessonModal = ({ lesson, onClose, isDarkMode, completedSteps, setCompleted
                     <div className={`w-full aspect-video rounded-2xl relative overflow-hidden flex flex-col items-center justify-center group shadow-lg border shrink-0 ${isDarkMode ? 'bg-[#0A0A0A] border-[#2C2C2C]' : 'bg-[#1A1A1A] border-black'}`}>
                         
                         {!isPurchased && (
-                            <div className="absolute top-4 right-4 z-30 bg-[#C5B002] text-white px-3 py-1.5 rounded-full font-bold text-[10px] tracking-widest uppercase shadow-lg flex items-center gap-1.5 animate-pulse">
+                            <div className="absolute top-4 right-4 z-40 bg-[#C5B002] text-white px-3 py-1.5 rounded-full font-bold text-[10px] tracking-widest uppercase shadow-lg flex items-center gap-1.5 animate-pulse pointer-events-none">
                                 <Clock size={12} /> 20s PREVIEW
                             </div>
                         )}
@@ -157,6 +154,9 @@ const LessonModal = ({ lesson, onClose, isDarkMode, completedSteps, setCompleted
                                     title={`Step ${currentStepData.id} Video`}
                                     onLoad={() => setIsVideoLoading(false)}
                                 />
+
+                                {/* 🌟 NEW: THE INVISIBLE SHIELD (BLOCKS SHARE & TITLE CLICKS) 🌟 */}
+                                <div className="absolute top-0 left-0 w-full h-[65px] z-30 bg-transparent" />
                             </>
                         ) : (
                             <div className="text-center text-white/50 p-4">
@@ -180,7 +180,7 @@ const LessonModal = ({ lesson, onClose, isDarkMode, completedSteps, setCompleted
                 </div>
             )}
 
-            {/* 🌟 PREMIUM UPSELL BANNER 🌟 */}
+            {/* PREMIUM UPSELL BANNER */}
             {!isPurchased && (
                 <div className={`mb-6 p-6 rounded-2xl border flex flex-col items-center text-center shadow-lg relative overflow-hidden ${isDarkMode ? 'bg-[#1E1E1E] border-[#C5B002]/30' : 'bg-gradient-to-br from-[#FFFDE7] to-white border-[#C5B002]/30'}`}>
                     <div className={`absolute -top-10 -right-10 w-32 h-32 rounded-full blur-[40px] pointer-events-none ${isDarkMode ? 'bg-[#C5B002]/20' : 'bg-[#C5B002]/10'}`}></div>
