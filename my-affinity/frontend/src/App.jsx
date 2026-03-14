@@ -115,12 +115,20 @@ function AppContent() {
   const [expandedLesson, setExpandedLesson] = useState(null);
   const [expandedSection, setExpandedSection] = useState(null);
   
-  const [isDarkMode, setIsDarkMode] = useState(() => {
-      if (typeof window !== 'undefined') return localStorage.getItem('myAffinity_theme') === 'dark';
-      return true; 
-  });
+  // 🌟 FIX: Vercel Hydration Error (#418) 
+  // Always initialize to true (dark mode) to match server render
+  const [isDarkMode, setIsDarkMode] = useState(true);
 
-  // 🌟 NEW STATE: PROGRESS TRACKING 🌟
+  // Read actual client theme safely after mount
+  useEffect(() => {
+      if (typeof window !== 'undefined') {
+          const savedTheme = localStorage.getItem('myAffinity_theme');
+          if (savedTheme !== null) {
+              setIsDarkMode(savedTheme === 'dark');
+          }
+      }
+  }, []);
+
   const [completedSteps, setCompletedSteps] = useState(() => {
       if (typeof window !== 'undefined') {
           const saved = localStorage.getItem('myAffinity_completed_steps');
@@ -148,10 +156,44 @@ function AppContent() {
       localStorage.setItem('myAffinity_completed_steps', JSON.stringify(completedSteps));
   }, [completedSteps]);
 
-  // Global Listeners
+  // ==========================================
+  // 🌟 HARDWARE BACK BUTTON LOGIC (PWA/ANDROID) 🌟
+  // ==========================================
+  useEffect(() => {
+    const handlePopState = (event) => {
+        // 1. If a modal is open, close it FIRST
+        if (expandedLesson !== null) {
+            setExpandedLesson(null);
+            // Push the state back so they don't accidentally exit the app on the next back press
+            window.history.pushState({ modalOpen: false, tab: activeTab }, '');
+            return;
+        }
+        
+        // 2. If no modal is open, but they aren't on the 'learn' tab, send them back to 'learn'
+        if (activeTab !== 'learn') {
+            setActiveTab('learn');
+            window.history.pushState({ modalOpen: false, tab: 'learn' }, '');
+            return;
+        }
+    };
+
+    window.addEventListener('popstate', handlePopState);
+    // Initial push so we have something to pop
+    window.history.pushState({ modalOpen: false, tab: activeTab }, '');
+
+    return () => {
+        window.removeEventListener('popstate', handlePopState);
+    };
+  }, [expandedLesson, activeTab]);
+
+  // Hook to handle programmatic tab switching AND History API injection
   useEffect(() => {
     const handleSwitchTab = (e) => {
-        if (e.detail) { setActiveTab(e.detail); setExpandedLesson(null); }
+        if (e.detail) { 
+            setActiveTab(e.detail); 
+            setExpandedLesson(null); 
+            window.history.pushState({ modalOpen: false, tab: e.detail }, '');
+        }
     };
     window.addEventListener('switchTab', handleSwitchTab);
 
@@ -171,19 +213,23 @@ function AppContent() {
     };
   }, []);
 
+  // Hook for handling the Lesson Modal opening to inject into History API
+  const handleOpenLesson = (lessonId) => {
+      setExpandedLesson(lessonId);
+      window.history.pushState({ modalOpen: true, tab: activeTab }, '');
+  };
+
   const getSelectedLesson = () => {
       if (!expandedLesson) return null;
       return courseData[activeAppTab].find(l => l.id === expandedLesson);
   };
 
-  // 🌟 CALCULATE PROGRESS MATHS 🌟
+  // CALCULATE PROGRESS MATHS
   const currentCourseData = courseData[activeAppTab] || [];
   const totalSteps = currentCourseData.reduce((acc, lesson) => acc + (lesson.steps?.length || 0), 0);
   
-  // Filter completions based on prefix ('ph' for photo, 'ds' for designer, 'pb' for publisher)
   const prefix = activeAppTab === 'photo' ? 'ph' : activeAppTab === 'designer' ? 'ds' : 'pb';
   const completedInThisTab = completedSteps.filter(id => id.startsWith(prefix)).length;
-  
   const progressPercentage = totalSteps === 0 ? 0 : Math.round((completedInThisTab / totalSteps) * 100);
 
   return (
@@ -198,13 +244,22 @@ function AppContent() {
       `}</style>
       
       {activeTab !== 'tools' && activeTab !== 'ai' && (
-          <Header activeTab={activeTab} setActiveTab={setActiveTab} isDarkMode={isDarkMode} setIsDarkMode={setIsDarkMode} />
+          <Header activeTab={activeTab} setActiveTab={(tab) => {
+              setActiveTab(tab);
+              window.history.pushState({ modalOpen: false, tab: tab }, '');
+          }} isDarkMode={isDarkMode} setIsDarkMode={setIsDarkMode} />
       )}
       
       {expandedLesson && (
         <LessonModal 
             lesson={getSelectedLesson()} 
-            onClose={() => setExpandedLesson(null)} 
+            onClose={() => {
+                setExpandedLesson(null);
+                // Ensure browser history stays perfectly in sync when they tap the X button
+                if (window.history.state && window.history.state.modalOpen) {
+                    window.history.back(); 
+                }
+            }} 
             isDarkMode={isDarkMode} 
             completedSteps={completedSteps}
             setCompletedSteps={setCompletedSteps}
@@ -235,7 +290,7 @@ function AppContent() {
                     </button>
                 </div>
 
-                {/* 🌟 THE PROGRESS BAR UI 🌟 */}
+                {/* THE PROGRESS BAR UI */}
                 <div className={`mt-8 mb-4 p-5 md:p-6 rounded-[24px] border shadow-sm animate-fade-in-up ${isDarkMode ? 'bg-[#1E1E1E]/50 border-[#2C2C2C]' : 'bg-[#FFFFFF] border-[#E5E7EB]'}`}>
                     <div className="flex justify-between items-end mb-4">
                         <div>
@@ -258,7 +313,7 @@ function AppContent() {
 
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
                     {courseData[activeAppTab]?.map((l) => (
-                        <LessonCard key={l.id} lesson={l} onClick={() => setExpandedLesson(l.id)} isDarkMode={isDarkMode} />
+                        <LessonCard key={l.id} lesson={l} onClick={() => handleOpenLesson(l.id)} isDarkMode={isDarkMode} />
                     ))}
                 </div>
 
@@ -279,7 +334,11 @@ function AppContent() {
       <div className={`md:hidden absolute bottom-0 w-full p-4 z-50 pointer-events-none transition-all duration-300 ease-in-out ${isKeyboardOpen ? 'translate-y-32 opacity-0' : 'translate-y-0 opacity-100'}`}>
           <nav className={`pointer-events-auto backdrop-blur-2xl border flex justify-around p-3 pb-safe rounded-[32px] shadow-2xl transition-all duration-500 ${isDarkMode ? 'bg-[#121212]/80 border-white/10 shadow-black/80' : 'bg-white/80 border-black/5 shadow-[#0277C5]/10'}`}>
             {['learn', 'quiz', 'tools', 'ai'].map(t_id => (
-                <button key={t_id} onClick={() => { setActiveTab(t_id); triggerHaptic(); }} className={`flex flex-col items-center gap-1 transition-all duration-500 ease-out ${activeTab === t_id ? (isDarkMode ? 'text-[#41B6E6] -translate-y-1.5' : 'text-[#0277C5] -translate-y-1.5') : (isDarkMode ? 'text-[#A0A0A0] hover:text-[#F1F1F1]' : 'text-[#6B7280] hover:text-[#1A1A1A]')}`}>
+                <button key={t_id} onClick={() => { 
+                    setActiveTab(t_id); 
+                    triggerHaptic(); 
+                    window.history.pushState({ modalOpen: false, tab: t_id }, '');
+                }} className={`flex flex-col items-center gap-1 transition-all duration-500 ease-out ${activeTab === t_id ? (isDarkMode ? 'text-[#41B6E6] -translate-y-1.5' : 'text-[#0277C5] -translate-y-1.5') : (isDarkMode ? 'text-[#A0A0A0] hover:text-[#F1F1F1]' : 'text-[#6B7280] hover:text-[#1A1A1A]')}`}>
                     {t_id === 'learn' && <BookOpen size={22} className={activeTab === t_id ? 'drop-shadow-md' : ''}/>}
                     {t_id === 'quiz' && <Award size={22} className={activeTab === t_id ? 'drop-shadow-md' : ''}/>}
                     {t_id === 'tools' && <Zap size={22} className={activeTab === t_id ? 'drop-shadow-md' : ''}/>}
