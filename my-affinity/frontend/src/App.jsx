@@ -116,45 +116,53 @@ function AppContent() {
   const [expandedSection, setExpandedSection] = useState(null);
   
   // 🌟 FIX: Vercel Hydration Error (#418) 
-  // Always initialize to true (dark mode) to match server render
+  // Start BOTH empty/true to match Vercel's server perfectly.
   const [isDarkMode, setIsDarkMode] = useState(true);
+  const [completedSteps, setCompletedSteps] = useState([]);
+  
+  // A safe flag so we don't accidentally overwrite progress
+  const [isDataLoaded, setIsDataLoaded] = useState(false);
 
-  // Read actual client theme safely after mount
+  // Read actual client data safely AFTER mount
   useEffect(() => {
       if (typeof window !== 'undefined') {
           const savedTheme = localStorage.getItem('myAffinity_theme');
           if (savedTheme !== null) {
               setIsDarkMode(savedTheme === 'dark');
           }
+          
+          const savedSteps = localStorage.getItem('myAffinity_completed_steps');
+          if (savedSteps) {
+              setCompletedSteps(JSON.parse(savedSteps));
+          }
+          
+          setIsDataLoaded(true); // Allow saving to storage now
       }
   }, []);
-
-  const [completedSteps, setCompletedSteps] = useState(() => {
-      if (typeof window !== 'undefined') {
-          const saved = localStorage.getItem('myAffinity_completed_steps');
-          return saved ? JSON.parse(saved) : [];
-      }
-      return [];
-  });
 
   const [chatMessages, setChatMessages] = useState([]);
   const [isKeyboardOpen, setIsKeyboardOpen] = useState(false);
 
   // Sync Theme
   useEffect(() => {
-      localStorage.setItem('myAffinity_theme', isDarkMode ? 'dark' : 'light');
       const newBgColor = isDarkMode ? '#0A0A0A' : '#F4F5F7';
       let metaTheme = document.querySelector("meta[name='theme-color']");
       if (metaTheme) metaTheme.setAttribute("content", newBgColor);
       document.documentElement.style.colorScheme = isDarkMode ? 'dark' : 'light';
       document.documentElement.style.backgroundColor = newBgColor;
       document.body.style.backgroundColor = newBgColor;
-  }, [isDarkMode]);
 
-  // Sync Progress to Storage
+      if (isDataLoaded) {
+          localStorage.setItem('myAffinity_theme', isDarkMode ? 'dark' : 'light');
+      }
+  }, [isDarkMode, isDataLoaded]);
+
+  // Sync Progress to Storage ONLY after initial data is loaded
   useEffect(() => {
-      localStorage.setItem('myAffinity_completed_steps', JSON.stringify(completedSteps));
-  }, [completedSteps]);
+      if (isDataLoaded) {
+          localStorage.setItem('myAffinity_completed_steps', JSON.stringify(completedSteps));
+      }
+  }, [completedSteps, isDataLoaded]);
 
   // ==========================================
   // 🌟 HARDWARE BACK BUTTON LOGIC (PWA/ANDROID) 🌟
@@ -164,7 +172,6 @@ function AppContent() {
         // 1. If a modal is open, close it FIRST
         if (expandedLesson !== null) {
             setExpandedLesson(null);
-            // Push the state back so they don't accidentally exit the app on the next back press
             window.history.pushState({ modalOpen: false, tab: activeTab }, '');
             return;
         }
@@ -178,7 +185,6 @@ function AppContent() {
     };
 
     window.addEventListener('popstate', handlePopState);
-    // Initial push so we have something to pop
     window.history.pushState({ modalOpen: false, tab: activeTab }, '');
 
     return () => {
@@ -213,7 +219,6 @@ function AppContent() {
     };
   }, []);
 
-  // Hook for handling the Lesson Modal opening to inject into History API
   const handleOpenLesson = (lessonId) => {
       setExpandedLesson(lessonId);
       window.history.pushState({ modalOpen: true, tab: activeTab }, '');
