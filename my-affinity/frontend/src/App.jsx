@@ -129,9 +129,9 @@ function AppContent() {
   const [isDarkMode, setIsDarkMode] = useState(true);
   const [completedSteps, setCompletedSteps] = useState([]);
   
-  // By default, Photo is a free trial (true), Designer & Publisher are locked (null)
+  // 🌟 FIX: Photo is no longer a free trial. All apps start locked (null).
   const [purchasedCourses, setPurchasedCourses] = useState({
-      photo: { unlocked: true, expiry: Date.now() + ONE_YEAR_MS },
+      photo: null,
       designer: null,
       publisher: null
   });
@@ -165,11 +165,6 @@ function AppContent() {
                       validatedPurchases[app] = parsed[app];
                   }
               }
-              // Always keep photo unlocked for the free trial unless they paid for a 1-year pass of it too
-              if (!validatedPurchases.photo) {
-                  validatedPurchases.photo = { unlocked: true, expiry: Date.now() + ONE_YEAR_MS };
-              }
-
               setPurchasedCourses(validatedPurchases);
           }
           
@@ -283,6 +278,16 @@ function AppContent() {
   const progressPercentage = totalSteps === 0 ? 0 : Math.round((completedInThisTab / totalSteps) * 100);
 
   const isCoursePurchased = purchasedCourses[activeAppTab]?.unlocked === true;
+  
+  // DYNAMIC APP NAME FOR DISPLAY & TELEGRAM MESSAGE
+  const appDisplayName = activeAppTab === 'photo' ? 'Affinity Photo' : activeAppTab === 'designer' ? 'Affinity Designer' : 'Affinity Publisher';
+  
+  // Pre-filled Telegram Message
+  const telegramMessage = lang === 'en' 
+    ? `Hello! I would like to purchase the full 1-year access for the ${appDisplayName} course for $20. Here is my payment screenshot:` 
+    : `សួស្តី! ខ្ញុំចង់ទិញសិទ្ធិចូលរៀនវគ្គ ${appDisplayName} រយៈពេល១ឆ្នាំពេញ ក្នុងតម្លៃ $20។ នេះជារូបភាពវិក្កយបត្របង់ប្រាក់របស់ខ្ញុំ៖`;
+  
+  const telegramUrl = `https://t.me/myaffinity?text=${encodeURIComponent(telegramMessage)}`;
 
   return (
     <div className={`fixed inset-0 w-full h-full flex flex-col font-khmer overflow-hidden touch-pan-x touch-pan-y transition-colors duration-500 pt-[env(safe-area-inset-top)] ${isDarkMode ? 'bg-[#0A0A0A] text-[#F1F1F1]' : 'bg-[#F4F5F7] text-[#1A1A1A]'}`}>
@@ -376,30 +381,29 @@ function AppContent() {
                             {/* KHQR Image Column */}
                             <div className="flex flex-col items-center shrink-0 w-full md:w-auto">
                                 <div className="p-3 bg-white rounded-3xl shadow-lg border border-gray-100 mb-4">
-                                    {/* 🌟 NEW: Direct IMG Tag for ABA KHQR */}
                                     <img 
                                         src="/aba-khqr.png" 
                                         alt="ABA KHQR" 
                                         className={`w-48 h-48 object-contain rounded-xl shadow-sm border ${isDarkMode ? 'border-[#2C2C2C]' : 'border-gray-200'}`} 
                                     />
                                 </div>
-                                <h3 className={`text-2xl font-black font-khmer ${isDarkMode ? 'text-[#F1F1F1]' : 'text-[#1A1A1A]'}`}>$15.00</h3>
+                                <h3 className={`text-2xl font-black font-khmer ${isDarkMode ? 'text-[#F1F1F1]' : 'text-[#1A1A1A]'}`}>$20.00</h3>
                                 <p className={`text-xs font-bold uppercase tracking-widest mt-1 ${isDarkMode ? 'text-[#A0A0A0]' : 'text-[#6B7280]'}`}>Full 1-Year Access</p>
                             </div>
 
                             {/* Instructions & Input Column */}
                             <div className="flex-1 w-full text-center md:text-left">
                                 <h3 className={`text-xl md:text-2xl font-black font-khmer mb-3 ${isDarkMode ? 'text-[#F1F1F1]' : 'text-[#1A1A1A]'}`}>
-                                    {lang === 'en' ? 'Unlock Full Course' : 'ដោះសោវគ្គសិក្សាពេញលេញ'}
+                                    {lang === 'en' ? `Unlock Full ${appDisplayName}` : `ដោះសោវគ្គសិក្សា ${appDisplayName}`}
                                 </h3>
                                 <p className={`text-[14px] leading-relaxed font-khmer mb-6 ${isDarkMode ? 'text-[#A0A0A0]' : 'text-[#6B7280]'}`}>
                                     {lang === 'en' 
-                                        ? 'Scan the KHQR with your ABA app. Send the payment screenshot to our Telegram to receive your Secret Activation Code.' 
-                                        : 'ស្កេន KHQR ដើម្បីបង់ប្រាក់ រួចផ្ញើវិក្កយបត្រ (Screenshot) មកកាន់ Telegram ដើម្បីទទួលបានលេខកូដដោះសោសម្ងាត់។'}
+                                        ? `Scan the KHQR with your ABA app to pay $20. Send the payment screenshot to our Telegram to receive your Secret Activation Code.` 
+                                        : `ស្កេន KHQR ដើម្បីបង់ប្រាក់ $20 រួចផ្ញើវិក្កយបត្រ (Screenshot) មកកាន់ Telegram ដើម្បីទទួលបានលេខកូដដោះសោសម្ងាត់។`}
                                 </p>
 
                                 <a 
-                                    href="https://t.me/myaffinity" 
+                                    href={telegramUrl} 
                                     target="_blank" 
                                     rel="noopener noreferrer" 
                                     className="inline-flex items-center justify-center gap-2 px-6 py-3.5 w-full md:w-auto rounded-xl font-black font-khmer text-[14px] transition-all active:scale-95 shadow-lg hover:-translate-y-1 mb-8 text-white"
