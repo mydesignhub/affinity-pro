@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+// 🌟 VERCEL FIX: Ensured Loader2 is explicitly imported here!
 import { X, PlayCircle, DownloadCloud, CheckCircle2, Circle, Loader2 } from 'lucide-react';
 import { useLanguage } from '../../../contexts/LanguageContext';
 
@@ -13,7 +14,7 @@ const LessonModal = ({ lesson, onClose, isDarkMode, completedSteps, setCompleted
   const [isVisible, setIsVisible] = useState(false);
   const [activeStep, setActiveStep] = useState(0);
   
-  // 🌟 NEW: Track if the YouTube iframe is still loading over the internet
+  // Track if the YouTube iframe is still loading
   const [isVideoLoading, setIsVideoLoading] = useState(true);
 
   useEffect(() => {
@@ -22,7 +23,7 @@ const LessonModal = ({ lesson, onClose, isDarkMode, completedSteps, setCompleted
     return () => { document.body.style.overflow = 'auto'; };
   }, []);
 
-  // 🌟 NEW: Every time they click a new step, reset the loading state
+  // Reset the loading spinner every time a new video step is clicked
   useEffect(() => {
     setIsVideoLoading(true);
   }, [activeStep]);
@@ -75,7 +76,7 @@ const LessonModal = ({ lesson, onClose, isDarkMode, completedSteps, setCompleted
                 {lang === 'en' ? lesson.desc_en : lesson.desc}
             </p>
 
-            {/* 🌟 DYNAMIC VIDEO PLAYER WITH LOADING STATE 🌟 */}
+            {/* DYNAMIC VIDEO PLAYER WITH LOADING STATE */}
             {currentStepData && (
                 <div className={`w-full aspect-video rounded-2xl relative overflow-hidden flex flex-col items-center justify-center group mb-6 shadow-lg border shrink-0 ${isDarkMode ? 'bg-[#0A0A0A] border-[#2C2C2C]' : 'bg-[#1A1A1A] border-black'}`}>
                     {currentStepData.videoUrl ? (
@@ -90,15 +91,15 @@ const LessonModal = ({ lesson, onClose, isDarkMode, completedSteps, setCompleted
                                 </div>
                             )}
 
-                            {/* The iFrame (Fades in smoothly when fully loaded) */}
+                            {/* The iFrame Video */}
                             <iframe 
                                 src={currentStepData.videoUrl}
-                                className={`w-full h-full absolute inset-0 transition-opacity duration-700 ease-in-out ${isVideoLoading ? 'opacity-0 scale-105' : 'opacity-100 scale-100 z-20'}`}
+                                className={`w-full h-full absolute inset-0 transition-opacity duration-700 ease-in-out ${isVideoLoading ? 'opacity-0' : 'opacity-100 z-20'}`}
                                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
                                 referrerPolicy="strict-origin-when-cross-origin"
                                 allowFullScreen
                                 title={`Step ${currentStepData.id} Video`}
-                                onLoad={() => setIsVideoLoading(false)} // Tells React the video is ready!
+                                onLoad={() => setIsVideoLoading(false)}
                             />
                         </>
                     ) : (
