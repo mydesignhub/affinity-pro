@@ -1,20 +1,20 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { X, PlayCircle, DownloadCloud, CheckCircle2, Circle, Loader2, Maximize } from 'lucide-react';
+import { X, PlayCircle, DownloadCloud, CheckCircle2, Circle, Loader2, Maximize, Lock, Award } from 'lucide-react';
 import { useLanguage } from '../../../contexts/LanguageContext';
 
-const triggerHaptic = () => {
+const triggerHaptic = (type = 'light') => {
     if (typeof navigator !== 'undefined' && navigator.vibrate) {
-        navigator.vibrate(10);
+        if (type === 'error') navigator.vibrate([50, 50, 50]);
+        else navigator.vibrate(10);
     }
 };
 
-const LessonModal = ({ lesson, onClose, isDarkMode, completedSteps, setCompletedSteps }) => {
+const LessonModal = ({ lesson, onClose, isDarkMode, completedSteps, setCompletedSteps, isPurchased, onUnlockDemo }) => {
   const { lang } = useLanguage();
   const [isVisible, setIsVisible] = useState(false);
   const [activeStep, setActiveStep] = useState(0);
   const [isVideoLoading, setIsVideoLoading] = useState(true);
   
-  // 🌟 NEW: Reference to the iframe to trigger fullscreen
   const videoRef = useRef(null);
 
   useEffect(() => {
@@ -34,6 +34,14 @@ const LessonModal = ({ lesson, onClose, isDarkMode, completedSteps, setCompleted
 
   const handleToggleComplete = (e, stepKey) => {
       e.stopPropagation();
+      
+      // 🌟 IF NOT PURCHASED, SHOW ERROR AND PREVENT CHECKING
+      if (!isPurchased) {
+          triggerHaptic('error');
+          alert(lang === 'en' ? "Please unlock the full course to track your progress!" : "សូមដោះសោវគ្គសិក្សាដើម្បីតាមដានការសិក្សារបស់អ្នក!");
+          return;
+      }
+
       triggerHaptic();
       if (completedSteps.includes(stepKey)) {
           setCompletedSteps(prev => prev.filter(id => id !== stepKey));
@@ -42,7 +50,6 @@ const LessonModal = ({ lesson, onClose, isDarkMode, completedSteps, setCompleted
       }
   };
 
-  // 🌟 NEW: Function to force Fullscreen and Landscape Rotation
   const toggleFullScreen = async () => {
       const elem = videoRef.current;
       if (!elem) return;
@@ -53,30 +60,26 @@ const LessonModal = ({ lesson, onClose, isDarkMode, completedSteps, setCompleted
           const isFullscreen = document.fullscreenElement || document.webkitFullscreenElement;
 
           if (!isFullscreen) {
-              // 1. Request Fullscreen (Cross-browser support)
               if (elem.requestFullscreen) {
                   await elem.requestFullscreen();
               } else if (elem.webkitRequestFullscreen) {
-                  elem.webkitRequestFullscreen(); // Safari/iOS
+                  elem.webkitRequestFullscreen(); 
               }
 
-              // 2. Force screen rotation to Landscape (Android & Modern Browsers)
               if (window.screen && window.screen.orientation && window.screen.orientation.lock) {
                   try {
                       await window.screen.orientation.lock('landscape');
                   } catch (e) {
-                      console.warn('Orientation lock is not supported on this device/browser.');
+                      console.warn('Orientation lock is not supported.');
                   }
               }
           } else {
-              // Exit Fullscreen
               if (document.exitFullscreen) {
                   await document.exitFullscreen();
               } else if (document.webkitExitFullscreen) {
                   document.webkitExitFullscreen();
               }
               
-              // Unlock rotation
               if (window.screen && window.screen.orientation && window.screen.orientation.unlock) {
                   window.screen.orientation.unlock();
               }
@@ -90,19 +93,23 @@ const LessonModal = ({ lesson, onClose, isDarkMode, completedSteps, setCompleted
 
   const currentStepData = lesson.steps && lesson.steps.length > 0 ? lesson.steps[activeStep] : null;
 
+  // 🌟 DYNAMIC URL MAKER: Adds end=20 parameter if the user hasn't purchased!
+  const getVideoUrl = (url) => {
+      if (!url) return '';
+      const separator = url.includes('?') ? '&' : '?';
+      return isPurchased ? url : `${url}${separator}end=20`;
+  };
+
   return (
     <div className={`fixed inset-0 z-[100] flex items-end md:items-center justify-center p-0 md:p-6 transition-opacity duration-300 ${isVisible ? 'opacity-100' : 'opacity-0'}`}>
       
-      {/* Background Dimmer */}
       <div className="absolute inset-0 bg-black/60 backdrop-blur-md" onClick={handleClose} />
 
-      {/* Modal Container */}
       <div className={`relative w-full max-w-4xl h-[95vh] md:h-auto md:max-h-[90vh] flex flex-col shadow-2xl transition-transform duration-300 ease-out rounded-t-[32px] md:rounded-[32px]
         ${isVisible ? 'translate-y-0 scale-100' : 'translate-y-full md:translate-y-8 md:scale-95'}
         ${isDarkMode ? 'bg-[#121212] border border-[#2C2C2C]' : 'bg-[#FFFFFF] border border-[#E5E7EB]'}
       `}>
         
-        {/* Header Bar */}
         <div className={`flex items-center justify-between p-5 border-b shrink-0 ${isDarkMode ? 'border-[#2C2C2C]' : 'border-[#E5E7EB]'}`}>
             <h3 className={`font-bold font-khmer text-lg truncate pr-4 ${isDarkMode ? 'text-[#F1F1F1]' : 'text-[#1A1A1A]'}`}>
                 {lang === 'en' ? lesson.title_en : lesson.title}
@@ -112,20 +119,17 @@ const LessonModal = ({ lesson, onClose, isDarkMode, completedSteps, setCompleted
             </button>
         </div>
 
-        {/* Scrollable Content Area */}
         <div className="flex-1 overflow-y-auto p-4 md:p-6 no-scrollbar flex flex-col">
             
             <p className={`text-[15px] font-khmer leading-relaxed mb-6 px-1 ${isDarkMode ? 'text-[#A0A0A0]' : 'text-[#6B7280]'}`}>
                 {lang === 'en' ? lesson.desc_en : lesson.desc}
             </p>
 
-            {/* DYNAMIC VIDEO PLAYER WITH LOADING STATE */}
             {currentStepData && (
-                <div className="mb-8">
+                <div className="mb-6">
                     <div className={`w-full aspect-video rounded-2xl relative overflow-hidden flex flex-col items-center justify-center group shadow-lg border shrink-0 ${isDarkMode ? 'bg-[#0A0A0A] border-[#2C2C2C]' : 'bg-[#1A1A1A] border-black'}`}>
                         {currentStepData.videoUrl ? (
                             <>
-                                {/* The Animated Loading Spinner */}
                                 {isVideoLoading && (
                                     <div className="absolute inset-0 flex flex-col items-center justify-center z-10">
                                         <Loader2 size={36} className={`animate-spin mb-3 ${isDarkMode ? 'text-[#41B6E6]' : 'text-[#0277C5]'}`} />
@@ -135,10 +139,9 @@ const LessonModal = ({ lesson, onClose, isDarkMode, completedSteps, setCompleted
                                     </div>
                                 )}
 
-                                {/* The iFrame Video */}
                                 <iframe 
                                     ref={videoRef}
-                                    src={currentStepData.videoUrl}
+                                    src={getVideoUrl(currentStepData.videoUrl)}
                                     className={`w-full h-full absolute inset-0 transition-opacity duration-700 ease-in-out ${isVideoLoading ? 'opacity-0' : 'opacity-100 z-20'}`}
                                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; fullscreen" 
                                     referrerPolicy="strict-origin-when-cross-origin"
@@ -157,7 +160,6 @@ const LessonModal = ({ lesson, onClose, isDarkMode, completedSteps, setCompleted
                         )}
                     </div>
                     
-                    {/* 🌟 NEW: Custom Rotate & Fullscreen Button 🌟 */}
                     {currentStepData.videoUrl && (
                         <button 
                             onClick={toggleFullScreen}
@@ -167,6 +169,30 @@ const LessonModal = ({ lesson, onClose, isDarkMode, completedSteps, setCompleted
                             {lang === 'en' ? 'Rotate & Fullscreen Video' : 'បង្វិល និងមើលពេញអេក្រង់'}
                         </button>
                     )}
+                </div>
+            )}
+
+            {/* 🌟 PREMIUM UPSELL BANNER (Only shows if course is locked) 🌟 */}
+            {!isPurchased && (
+                <div className={`mb-6 p-6 rounded-2xl border flex flex-col items-center text-center shadow-lg relative overflow-hidden ${isDarkMode ? 'bg-[#1E1E1E] border-[#C5B002]/30' : 'bg-gradient-to-br from-[#FFFDE7] to-white border-[#C5B002]/30'}`}>
+                    <div className={`absolute -top-10 -right-10 w-32 h-32 rounded-full blur-[40px] pointer-events-none ${isDarkMode ? 'bg-[#C5B002]/20' : 'bg-[#C5B002]/10'}`}></div>
+                    
+                    <Lock className="w-10 h-10 text-[#C5B002] mb-3" />
+                    <h4 className={`font-black text-lg font-khmer mb-2 ${isDarkMode ? 'text-[#F1F1F1]' : 'text-[#1A1A1A]'}`}>
+                        {lang === 'en' ? '20-Second Free Preview' : 'ការមើលសាកល្បង ២០ វិនាទី'}
+                    </h4>
+                    <p className={`text-[13px] sm:text-sm font-khmer mb-6 max-w-md ${isDarkMode ? 'text-[#A0A0A0]' : 'text-[#6B7280]'}`}>
+                        {lang === 'en' ? 'Unlock the full course to watch complete videos, download practice assets, and track your progress.' : 'ដោះសោវគ្គសិក្សាដើម្បីមើលវីដេអូពេញលេញ ទាញយកឯកសារអនុវត្ត និងតាមដានការសិក្សា។'}
+                    </p>
+                    
+                    <div className="flex flex-col sm:flex-row gap-3 w-full justify-center">
+                        <a href="https://myaffinity.gumroad.com" target="_blank" rel="noopener noreferrer" className="px-6 py-3 rounded-xl font-black font-khmer text-[13px] bg-[#C5B002] text-white shadow-lg active:scale-95 transition-all flex items-center justify-center gap-2">
+                            <Award size={16} /> {lang === 'en' ? 'Purchase on Gumroad' : 'ទិញនៅលើ Gumroad'}
+                        </a>
+                        <button onClick={onUnlockDemo} className={`px-6 py-3 rounded-xl font-black font-khmer text-[13px] border-2 transition-all active:scale-95 ${isDarkMode ? 'border-[#2C2C2C] text-[#A0A0A0] hover:text-[#F1F1F1]' : 'border-[#E5E7EB] text-[#6B7280] hover:text-[#1A1A1A]'}`}>
+                            {lang === 'en' ? 'Unlock (Demo)' : 'ដោះសោសាកល្បង'}
+                        </button>
+                    </div>
                 </div>
             )}
 
@@ -183,21 +209,28 @@ const LessonModal = ({ lesson, onClose, isDarkMode, completedSteps, setCompleted
                         </p>
                     </div>
                     {lesson.downloadUrl && (
-                        <a 
-                            href={lesson.downloadUrl}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className={`shrink-0 w-full sm:w-auto text-center px-5 py-2.5 rounded-xl font-khmer font-bold text-[13px] transition-transform active:scale-95 shadow-sm
-                                ${isDarkMode ? 'bg-[#41B6E6] text-[#0A0A0A] hover:bg-[#2CA0D0]' : 'bg-[#0277C5] text-white hover:bg-[#01579B]'}
-                            `}
-                        >
-                            {lang === 'en' ? 'Download Assets (.zip)' : 'ទាញយកឯកសារ (.zip)'}
-                        </a>
+                        isPurchased ? (
+                            <a 
+                                href={lesson.downloadUrl}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className={`shrink-0 w-full sm:w-auto text-center px-5 py-2.5 rounded-xl font-khmer font-bold text-[13px] transition-transform active:scale-95 shadow-sm
+                                    ${isDarkMode ? 'bg-[#41B6E6] text-[#0A0A0A] hover:bg-[#2CA0D0]' : 'bg-[#0277C5] text-white hover:bg-[#01579B]'}
+                                `}
+                            >
+                                {lang === 'en' ? 'Download Assets (.zip)' : 'ទាញយកឯកសារ (.zip)'}
+                            </a>
+                        ) : (
+                            <button onClick={() => triggerHaptic('error')} className={`shrink-0 w-full sm:w-auto text-center px-5 py-2.5 rounded-xl font-khmer font-bold text-[13px] transition-all cursor-not-allowed flex justify-center items-center gap-2
+                                ${isDarkMode ? 'bg-[#2C2C2C] text-[#A0A0A0]' : 'bg-[#E5E7EB] text-[#6B7280]'}
+                            `}>
+                                <Lock size={14} /> {lang === 'en' ? 'Locked' : 'បានចាក់សោ'}
+                            </button>
+                        )
                     )}
                 </div>
             )}
 
-            {/* 🌟 INTERACTIVE CHECKLIST MENU 🌟 */}
             <div className="flex flex-col gap-3 pb-6">
                 <h4 className={`text-sm font-bold uppercase tracking-widest px-2 opacity-50 ${isDarkMode ? 'text-[#A0A0A0]' : 'text-[#6B7280]'}`}>
                     {lang === 'en' ? 'Course Content' : 'មាតិកាមេរៀន'}
@@ -245,6 +278,7 @@ const LessonModal = ({ lesson, onClose, isDarkMode, completedSteps, setCompleted
                                 onClick={(e) => handleToggleComplete(e, stepKey)}
                                 className={`shrink-0 p-2 rounded-full transition-transform active:scale-75
                                     ${isCompleted ? 'text-green-500' : (isDarkMode ? 'text-[#2C2C2C] hover:text-[#A0A0A0]' : 'text-[#E5E7EB] hover:text-[#6B7280]')}
+                                    ${!isPurchased ? 'opacity-30 cursor-not-allowed' : ''}
                                 `}
                             >
                                 {isCompleted ? <CheckCircle2 size={24} className="fill-green-500/20" /> : <Circle size={24} />}
