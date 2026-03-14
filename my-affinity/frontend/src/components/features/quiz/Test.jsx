@@ -142,7 +142,8 @@ const Test = ({ isDarkMode }) => {
             filtered = [...filtered, ...extra];
         }
 
-        const amount = level === 'final' ? 15 : Math.min(quizConfig.amount, filtered.length);
+        // 🌟 FINAL EXAM SET TO 40 QUESTIONS 🌟
+        const amount = level === 'final' ? 40 : Math.min(quizConfig.amount, filtered.length);
         let shuffledQuestions = shuffleArray(filtered).slice(0, amount);
 
         const finalQuestions = shuffledQuestions.map(q => {
@@ -321,7 +322,7 @@ const Test = ({ isDarkMode }) => {
                                     <div className={`p-3 rounded-2xl ${allUnlocked ? 'bg-[#C5B002] text-white shadow-inner' : 'bg-gray-100 text-gray-400 dark:bg-[#2C2C2C] dark:text-[#A0A0A0]'}`}><Trophy size={20}/></div>
                                     <div className="text-left">
                                         <span className={`font-khmer font-black text-[15px] block tracking-tight ${allUnlocked ? 'text-[#C5B002]' : ''}`}>{currentCert ? (lang === 'en' ? 'Retake Final Exam' : 'ប្រឡងយកវិញ្ញាបនបត្រម្តងទៀត') : (lang === 'en' ? 'Final Certification Exam' : 'តេស្តបញ្ចប់យកវិញ្ញាបនបត្រ')}</span>
-                                        <span className={`text-[10px] font-black uppercase tracking-widest mt-1 block ${allUnlocked ? 'opacity-80 text-[#C5B002]' : 'opacity-50'}`}>{lang === 'en' ? '15 Questions • 15 Mins • 90% to Pass' : '១៥ សំណួរ • ១៥ នាទី • ជាប់ ៩០%'}</span>
+                                        <span className={`text-[10px] font-black uppercase tracking-widest mt-1 block ${allUnlocked ? 'opacity-80 text-[#C5B002]' : 'opacity-50'}`}>{lang === 'en' ? '40 Questions • 15 Mins • 90% to Pass' : '៤០ សំណួរ • ១៥ នាទី • ជាប់ ៩០%'}</span>
                                     </div>
                                 </div>
                                 {!allUnlocked && <Lock size={16} className="opacity-30"/>}
