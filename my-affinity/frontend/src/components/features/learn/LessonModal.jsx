@@ -9,7 +9,7 @@ const triggerHaptic = (type = 'light') => {
     }
 };
 
-const LessonModal = ({ lesson, onClose, isDarkMode, completedSteps, setCompletedSteps, isPurchased }) => {
+const LessonModal = ({ lesson, onClose, isDarkMode, completedSteps, setCompletedSteps, isPurchased, onUnlockDemo }) => {
   const { lang } = useLanguage();
   const [isVisible, setIsVisible] = useState(false);
   const [activeStep, setActiveStep] = useState(0);
@@ -92,10 +92,14 @@ const LessonModal = ({ lesson, onClose, isDarkMode, completedSteps, setCompleted
 
   const currentStepData = lesson.steps && lesson.steps.length > 0 ? lesson.steps[activeStep] : null;
 
+  // 🌟 BULLETPROOF PREVIEW URL MAKER 🌟
   const getVideoUrl = (url) => {
       if (!url) return '';
       const separator = url.includes('?') ? '&' : '?';
-      return isPurchased ? url : `${url}${separator}end=20`;
+      
+      // If purchased: return normal URL
+      // If locked: Add end=20, completely hide controls (controls=0), disable keyboard skipping (disablekb=1)
+      return isPurchased ? url : `${url}${separator}end=20&controls=0&disablekb=1&rel=0`;
   };
 
   return (
@@ -155,8 +159,14 @@ const LessonModal = ({ lesson, onClose, isDarkMode, completedSteps, setCompleted
                                     onLoad={() => setIsVideoLoading(false)}
                                 />
 
-                                {/* 🌟 NEW: THE INVISIBLE SHIELD (BLOCKS SHARE & TITLE CLICKS) 🌟 */}
+                                {/* 🌟 INVISIBLE SHIELDS 🌟 */}
+                                {/* 1. Top Shield: Blocks Share & Title Clicks */}
                                 <div className="absolute top-0 left-0 w-full h-[65px] z-30 bg-transparent" />
+                                
+                                {/* 2. Bottom Shield: Physically blocks the timeline area if it tries to appear! */}
+                                {!isPurchased && (
+                                    <div className="absolute bottom-0 left-0 w-full h-[60px] z-30 bg-transparent" />
+                                )}
                             </>
                         ) : (
                             <div className="text-center text-white/50 p-4">
