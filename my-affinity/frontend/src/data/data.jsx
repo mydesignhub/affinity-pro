@@ -46,7 +46,7 @@ export const courseData = {
       desc: 'ស្ទាត់ជំនាញលើ Home Screen, កាយវិការបញ្ជា (Touch Gestures) និង Command Controller។', desc_en: 'Master the iPad Home Screen, touch gestures, and the Command Controller.', 
       instruction: 'មុននឹងចាប់ផ្តើម សូមទាញយកឯកសារ UI Guide ខាងក្រោមដើម្បីងាយស្រួលមើលចំណាំកន្លែង Tools ផ្សេងៗ។', instruction_en: 'Before starting, download the UI Guide PDF below to easily memorize where the tools are located.', downloadUrl: defaultDownloadUrl,
       steps: [
-        { id: 1, khmer: 'Home Screen៖ រៀនពីការគ្រប់គ្រង "Live Docs" និងការរៀបចំគម្រោងការងារ។', english: 'The Home Screen: Learn to manage "Live Docs" and organize work.', videoUrl: 'https://youtu.be/5GlKh-HH4HM' },
+        { id: 1, khmer: 'Home Screen៖ រៀនពីការគ្រប់គ្រង "Live Docs" និងការរៀបចំគម្រោងការងារ។', english: 'The Home Screen: Learn to manage "Live Docs" and organize work.', videoUrl: 'https://www.youtube.com/embed/5GlKh-HH4HM' },
         { id: 2, khmer: 'កាយវិការបញ្ជា (Touch Gestures)៖ ប្រើម្រាមពីរដើម្បី Undo, ម្រាមបីដើម្បី Redo និងការចាប់ពង្រីក។', english: 'Touch Gestures: Master two-finger undo, three-finger redo, and pinching.', videoUrl: '' },
         { id: 3, khmer: 'ផ្ទៃកម្មវិធី (Interface)៖ ស្វែងយល់ពី Tools, Studios និង Contextual Toolbar។', english: 'Interface Layout: Navigate Tools, Studios, and the Contextual Toolbar.', videoUrl: '' },
         { id: 4, khmer: 'ឧបករណ៍លើ iPad៖ ការប្រើប្រាស់ Command Controller និង Quick Menu។', english: 'iPad-Specific Tools: Use the Command Controller and Quick Menu.', videoUrl: '' }
