@@ -1,9 +1,9 @@
 import { initializeApp } from 'firebase/app';
 import { getAuth, GoogleAuthProvider } from 'firebase/auth';
 
-// Your web app's Firebase configuration
+// Your fully corrected Firebase configuration
 const firebaseConfig = {
-  apiKey: "AIzaSyAg3tAUG_50Xt6udwk-V2IhwAkGxShTwHs",
+  apiKey: "AIzaSyAg3tAUG_5OXt6udwk-V2IhwAkGxShTwHs",
   authDomain: "my-affinity-app.firebaseapp.com",
   projectId: "my-affinity-app",
   storageBucket: "my-affinity-app.firebasestorage.app",
@@ -14,6 +14,6 @@ const firebaseConfig = {
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 
-// Export Authentication tools so we can use them in App.js
+// We MUST export these so App.js can use them for the login button!
 export const auth = getAuth(app);
 export const googleProvider = new GoogleAuthProvider();
