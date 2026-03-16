@@ -20,7 +20,7 @@ const LessonModal = ({ lesson, onClose, isDarkMode, completedSteps, setCompleted
   const [previewEnded, setPreviewEnded] = useState(false);
   
   const videoRef = useRef(null);
-  const containerRef = useRef(null); // 👈 NEW: Ref for the master wrapper
+  const containerRef = useRef(null);
 
   useEffect(() => {
     setIsVisible(true);
@@ -28,7 +28,6 @@ const LessonModal = ({ lesson, onClose, isDarkMode, completedSteps, setCompleted
     return () => { document.body.style.overflow = 'auto'; };
   }, []);
 
-  // Reset the video state when changing lessons
   useEffect(() => {
     setIsVideoLoading(true);
     setHasStarted(false);
@@ -56,7 +55,6 @@ const LessonModal = ({ lesson, onClose, isDarkMode, completedSteps, setCompleted
   };
 
   const toggleFullScreen = async () => {
-      // 👈 NEW: Apply fullscreen to the CONTAINER, not just the video iframe
       const elem = containerRef.current; 
       if (!elem) return;
       triggerHaptic();
@@ -107,7 +105,6 @@ const LessonModal = ({ lesson, onClose, isDarkMode, completedSteps, setCompleted
   const getVideoUrl = (url) => {
       if (!url) return '';
       const separator = url.includes('?') ? '&' : '?';
-      // 👈 NEW: Added fs=0 (removes native fullscreen) & modestbranding=1 (hides YouTube logo)
       return isPurchased 
           ? `${url}${separator}autoplay=1&playsinline=1&fs=0&modestbranding=1&rel=0` 
           : `${url}${separator}end=20&controls=0&disablekb=1&rel=0&autoplay=1&playsinline=1&fs=0&modestbranding=1`;
@@ -140,7 +137,6 @@ const LessonModal = ({ lesson, onClose, isDarkMode, completedSteps, setCompleted
 
             {currentStepData && (
                 <div className="mb-6">
-                    {/* 👈 NEW: Attached containerRef to this wrapper & added bg-black for fullscreen letterboxing */}
                     <div ref={containerRef} className={`w-full aspect-video rounded-2xl relative overflow-hidden flex flex-col items-center justify-center group shadow-lg border shrink-0 bg-black ${isDarkMode ? 'border-[#2C2C2C]' : 'border-black'}`}>
                         
                         {!isPurchased && !previewEnded && (
@@ -198,10 +194,16 @@ const LessonModal = ({ lesson, onClose, isDarkMode, completedSteps, setCompleted
                                             onLoad={() => setIsVideoLoading(false)}
                                         />
 
-                                        {/* 👈 NEW: Invisible Shields now stretch to cover links in container-fullscreen */}
-                                        <div className="absolute top-0 left-0 w-full h-[65px] z-30 bg-transparent" />
-                                        {/* This blocks the bottom "Watch on YouTube" and logo links for everyone now! */}
-                                        <div className="absolute bottom-0 left-0 w-full h-[60px] z-30 bg-transparent" />
+                                        {/* 🛡️ INVISIBLE SHIELDS 🛡️ */}
+                                        {/* Top shield removed so users can click the Settings gear for quality */}
+                                        
+                                        {/* Bottom-left shield: Blocks the 'Watch on YouTube' button */}
+                                        <div className="absolute bottom-0 left-0 w-[160px] h-[60px] z-30 bg-transparent" />
+                                        
+                                        {/* Bottom-right shield: Blocks the YouTube logo link */}
+                                        <div className="absolute bottom-0 right-0 w-[70px] h-[50px] z-30 bg-transparent" />
+                                        
+                                        {/* The center of the bottom bar is completely open for the timeline! */}
                                     </>
                                 )}
                             </>
