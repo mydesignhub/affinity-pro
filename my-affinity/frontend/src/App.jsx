@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { ChevronRight, PlayCircle, Sparkles, Zap, Facebook, Send, Globe, BookOpen, Award, Bot, Camera, PenTool, Book, Lock, KeyRound, AlertCircle } from 'lucide-react';
+import { ChevronRight, PlayCircle, Sparkles, Zap, Facebook, Send, Globe, BookOpen, Award, Bot, Camera, PenTool, Book, Lock, KeyRound, AlertCircle, X, ChevronDown, RotateCcw } from 'lucide-react';
 
 import Header from './components/layout/Header';
 import ToolsView from './components/features/tools/ToolsView';
@@ -122,9 +122,10 @@ const ContactSection = ({ isDarkMode }) => {
 function AppContent() {
   const { t, lang } = useLanguage();
   const [activeTab, setActiveTab] = useState('learn');
-  const [activeAppTab, setActiveAppTab] = useState('photo'); 
+  const [activeAppTab, setActiveAppTab] = useState(null); // Now controls which full-screen course modal is open
   const [expandedLesson, setExpandedLesson] = useState(null);
   const [expandedSection, setExpandedSection] = useState(null);
+  const [showRegistration, setShowRegistration] = useState(false); // Controls the embedded registration pack
   
   const [isDarkMode, setIsDarkMode] = useState(true);
   const [completedSteps, setCompletedSteps] = useState([]);
@@ -199,30 +200,37 @@ function AppContent() {
     const handlePopState = (event) => {
         if (expandedLesson !== null) {
             setExpandedLesson(null);
-            window.history.pushState({ modalOpen: false, tab: activeTab }, '');
+            window.history.pushState({ modalOpen: true, tab: activeTab, course: activeAppTab }, '');
+            return;
+        }
+        if (activeAppTab !== null) {
+            setActiveAppTab(null);
+            setShowRegistration(false);
+            window.history.pushState({ modalOpen: false, tab: activeTab, course: null }, '');
             return;
         }
         if (activeTab !== 'learn') {
             setActiveTab('learn');
-            window.history.pushState({ modalOpen: false, tab: 'learn' }, '');
+            window.history.pushState({ modalOpen: false, tab: 'learn', course: null }, '');
             return;
         }
     };
 
     window.addEventListener('popstate', handlePopState);
-    window.history.pushState({ modalOpen: false, tab: activeTab }, '');
+    window.history.pushState({ modalOpen: false, tab: activeTab, course: null }, '');
 
     return () => {
         window.removeEventListener('popstate', handlePopState);
     };
-  }, [expandedLesson, activeTab]);
+  }, [expandedLesson, activeAppTab, activeTab]);
 
   useEffect(() => {
     const handleSwitchTab = (e) => {
         if (e.detail) { 
             setActiveTab(e.detail); 
             setExpandedLesson(null); 
-            window.history.pushState({ modalOpen: false, tab: e.detail }, '');
+            setActiveAppTab(null);
+            window.history.pushState({ modalOpen: false, tab: e.detail, course: null }, '');
         }
     };
     window.addEventListener('switchTab', handleSwitchTab);
@@ -243,18 +251,26 @@ function AppContent() {
     };
   }, []);
 
+  const handleOpenCourse = (courseId) => {
+      setActiveAppTab(courseId);
+      setShowRegistration(false);
+      triggerHaptic();
+      window.history.pushState({ modalOpen: true, tab: activeTab, course: courseId }, '');
+  };
+
   const handleOpenLesson = (lessonId) => {
       setExpandedLesson(lessonId);
-      window.history.pushState({ modalOpen: true, tab: activeTab }, '');
+      window.history.pushState({ modalOpen: true, tab: activeTab, course: activeAppTab }, '');
   };
 
   const getSelectedLesson = () => {
-      if (!expandedLesson) return null;
+      if (!expandedLesson || !activeAppTab) return null;
       return courseData[activeAppTab].find(l => l.id === expandedLesson);
   };
 
   // 🌟 PASSCODE VERIFICATION LOGIC 🌟
   const handleVerifyPasscode = () => {
+      if (!activeAppTab) return;
       const code = passcodeInput.trim().toUpperCase();
       if (VALID_PASSCODES[activeAppTab].includes(code)) {
           triggerHaptic('success');
@@ -264,6 +280,7 @@ function AppContent() {
               ...prev,
               [activeAppTab]: { unlocked: true, expiry: Date.now() + ONE_YEAR_MS }
           }));
+          setShowRegistration(false);
       } else {
           triggerHaptic('error');
           setPasscodeError(true);
@@ -271,16 +288,17 @@ function AppContent() {
       }
   };
 
-  const currentCourseData = courseData[activeAppTab] || [];
+  const currentCourseData = activeAppTab ? (courseData[activeAppTab] || []) : [];
   const totalSteps = currentCourseData.reduce((acc, lesson) => acc + (lesson.steps?.length || 0), 0);
   const prefix = activeAppTab === 'photo' ? 'ph' : activeAppTab === 'designer' ? 'ds' : 'pb';
   const completedInThisTab = completedSteps.filter(id => id.startsWith(prefix)).length;
   const progressPercentage = totalSteps === 0 ? 0 : Math.round((completedInThisTab / totalSteps) * 100);
 
-  const isCoursePurchased = purchasedCourses[activeAppTab]?.unlocked === true;
+  const isCoursePurchased = activeAppTab ? purchasedCourses[activeAppTab]?.unlocked === true : false;
   
   // DYNAMIC APP NAME FOR DISPLAY & TELEGRAM MESSAGE
-  const appDisplayName = activeAppTab === 'photo' ? 'Affinity Photo' : activeAppTab === 'designer' ? 'Affinity Designer' : 'Affinity Publisher';
+  const getAppDisplayName = (id) => id === 'photo' ? 'Affinity Photo 2 iPad' : id === 'designer' ? 'Affinity Designer 2 iPad' : 'Affinity Publisher 2 iPad';
+  const appDisplayName = activeAppTab ? getAppDisplayName(activeAppTab) : '';
   
   // Pre-filled Telegram Message
   const telegramMessage = lang === 'en' 
@@ -305,7 +323,7 @@ function AppContent() {
       {activeTab !== 'tools' && activeTab !== 'ai' && (
           <Header activeTab={activeTab} setActiveTab={(tab) => {
               setActiveTab(tab);
-              window.history.pushState({ modalOpen: false, tab: tab }, '');
+              window.history.pushState({ modalOpen: false, tab: tab, course: null }, '');
           }} isDarkMode={isDarkMode} setIsDarkMode={setIsDarkMode} />
       )}
       
@@ -325,34 +343,105 @@ function AppContent() {
             onUnlockDemo={() => setPurchasedCourses(prev => ({...prev, [activeAppTab]: { unlocked: true, expiry: Date.now() + ONE_YEAR_MS }}))}
         />
       )}
-      
-      {activeTab !== 'ai' ? (
-        <main className="flex-1 max-w-7xl mx-auto w-full overflow-y-auto custom-scrollbar p-4 md:p-8 relative z-0">
-            {activeTab === 'learn' && (
-            <div className="space-y-6 pb-24">
-                <div className="text-center py-6 mt-2 relative">
-                    <div className={`absolute inset-0 blur-[120px] rounded-full pointer-events-none ${isDarkMode ? 'bg-[#41B6E6]/10' : 'bg-[#0277C5]/10'}`} />
-                    <h2 className={`text-3xl md:text-5xl font-black mb-4 tracking-tight ${isDarkMode ? 'text-[#F1F1F1]' : 'text-[#1A1A1A]'}`}>iPad Masterclass</h2>
-                    <p className={`max-w-xl mx-auto text-sm md:text-base leading-relaxed ${isDarkMode ? 'text-[#A0A0A0]' : 'text-[#6B7280]'}`}>
-                        {lang === 'en' ? 'Select an app to begin your professional training.' : 'ជ្រើសរើសកម្មវិធីដើម្បីចាប់ផ្តើមការហ្វឹកហាត់កម្រិតអាជីពរបស់អ្នក។'}
-                    </p>
-                </div>
 
-                <div className={`flex justify-center p-1.5 rounded-2xl mx-auto max-w-md border shadow-sm ${isDarkMode ? 'bg-[#1E1E1E] border-[#2C2C2C]' : 'bg-[#FFFFFF] border-[#E5E7EB]'}`}>
-                    <button onClick={() => { setActiveAppTab('photo'); triggerHaptic(); }} className={`flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl font-bold text-sm transition-all ${activeAppTab === 'photo' ? (isDarkMode ? 'bg-[#41B6E6] text-[#0A0A0A]' : 'bg-[#0277C5] text-white') : (isDarkMode ? 'text-[#A0A0A0] hover:text-[#F1F1F1]' : 'text-[#6B7280] hover:text-[#1A1A1A]')}`}>
-                        <Camera size={16} /> Photo {!purchasedCourses['photo']?.unlocked && <Lock size={12} className="opacity-50 ml-[-4px]" />}
-                    </button>
-                    <button onClick={() => { setActiveAppTab('designer'); triggerHaptic(); }} className={`flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl font-bold text-sm transition-all ${activeAppTab === 'designer' ? (isDarkMode ? 'bg-[#41B6E6] text-[#0A0A0A]' : 'bg-[#0277C5] text-white') : (isDarkMode ? 'text-[#A0A0A0] hover:text-[#F1F1F1]' : 'text-[#6B7280] hover:text-[#1A1A1A]')}`}>
-                        <PenTool size={16} /> Designer {!purchasedCourses['designer']?.unlocked && <Lock size={12} className="opacity-50 ml-[-4px]" />}
-                    </button>
-                    <button onClick={() => { setActiveAppTab('publisher'); triggerHaptic(); }} className={`flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl font-bold text-sm transition-all ${activeAppTab === 'publisher' ? (isDarkMode ? 'bg-[#41B6E6] text-[#0A0A0A]' : 'bg-[#0277C5] text-white') : (isDarkMode ? 'text-[#A0A0A0] hover:text-[#F1F1F1]' : 'text-[#6B7280] hover:text-[#1A1A1A]')}`}>
-                        <Book size={16} /> Publisher {!purchasedCourses['publisher']?.unlocked && <Lock size={12} className="opacity-50 ml-[-4px]" />}
-                    </button>
-                </div>
+      {/* FULL SCREEN COURSE MODAL */}
+      {activeAppTab && !expandedLesson && (
+        <div className={`fixed inset-0 z-40 overflow-y-auto custom-scrollbar flex flex-col pt-[env(safe-area-inset-top)] ${isDarkMode ? 'bg-[#0A0A0A]' : 'bg-[#F4F5F7]'}`}>
+            {/* Modal Header */}
+            <div className={`sticky top-0 z-50 px-4 py-3 border-b flex items-center justify-between backdrop-blur-xl ${isDarkMode ? 'border-[#2C2C2C] bg-[#0A0A0A]/90' : 'border-[#E5E7EB] bg-[#FFFFFF]/90'}`}>
+                <button onClick={() => { setActiveAppTab(null); window.history.back(); }} className={`p-2 rounded-full transition-colors ${isDarkMode ? 'hover:bg-[#1E1E1E]' : 'hover:bg-gray-100'}`}>
+                    <ChevronRight className="w-6 h-6 rotate-180" />
+                </button>
+                <h2 className="font-bold text-lg">{appDisplayName}</h2>
+                <div className="w-10"></div> {/* Placeholder for balance */}
+            </div>
 
-                {isCoursePurchased ? (
-                    // --- COURSE IS PURCHASED: Show Progress Bar ---
-                    <div className={`mt-8 mb-4 p-5 md:p-6 rounded-[24px] border shadow-sm animate-fade-in-up ${isDarkMode ? 'bg-[#1E1E1E]/50 border-[#2C2C2C]' : 'bg-[#FFFFFF] border-[#E5E7EB]'}`}>
+            <div className="p-4 md:p-8 max-w-7xl mx-auto w-full pb-32">
+                {/* REGISTRATION / PAYMENT SECTION */}
+                {!isCoursePurchased && (
+                    <div className={`mb-8 border rounded-3xl overflow-hidden shadow-sm ${isDarkMode ? 'bg-[#1E1E1E] border-[#2C2C2C]' : 'bg-[#FFFFFF] border-[#E5E7EB]'}`}>
+                        <button 
+                            onClick={() => setShowRegistration(!showRegistration)} 
+                            className={`w-full p-6 flex items-center justify-between transition-colors active:scale-[0.99] ${showRegistration ? (isDarkMode ? 'bg-[#2C2C2C]' : 'bg-[#F8F9FA]') : ''}`}
+                        >
+                            <div className="flex items-center gap-4">
+                                <div className={`p-3 rounded-xl ${isDarkMode ? 'bg-[#C5B002]/20' : 'bg-[#C5B002]/10'}`}>
+                                    <Lock size={24} className="text-[#C5B002]" />
+                                </div>
+                                <h3 className="font-bold font-khmer text-lg md:text-xl text-left">
+                                    {lang === 'en' ? `Register for ${appDisplayName}` : `ចុះឈ្មោះវគ្គ ${appDisplayName}`}
+                                </h3>
+                            </div>
+                            <ChevronDown className={`w-6 h-6 transition-transform duration-300 ${showRegistration ? 'rotate-180' : ''}`} />
+                        </button>
+                        
+                        {/* Packed Registration Details */}
+                        {showRegistration && (
+                            <div className={`p-6 md:p-10 border-t ${isDarkMode ? 'border-[#2C2C2C]' : 'border-[#E5E7EB]'} animate-fade-in-up relative overflow-hidden`}>
+                                <div className={`absolute -top-24 -right-24 w-64 h-64 rounded-full blur-[80px] pointer-events-none ${isDarkMode ? 'bg-[#C5B002]/20' : 'bg-[#C5B002]/10'}`}></div>
+                                <div className="flex flex-col md:flex-row gap-8 relative z-10 items-center md:items-start">
+                                    {/* KHQR Column */}
+                                    <div className="flex flex-col items-center shrink-0 w-full md:w-auto">
+                                        <div className="p-3 bg-white rounded-3xl shadow-lg border border-gray-100 mb-4">
+                                            <img src="/aba-khqr.png" alt="ABA KHQR" className={`w-48 h-48 object-contain rounded-xl shadow-sm border ${isDarkMode ? 'border-[#2C2C2C]' : 'border-gray-200'}`} />
+                                        </div>
+                                        <h3 className={`text-2xl font-black font-khmer ${isDarkMode ? 'text-[#F1F1F1]' : 'text-[#1A1A1A]'}`}>$20.00</h3>
+                                        <p className={`text-xs font-bold uppercase tracking-widest mt-1 ${isDarkMode ? 'text-[#A0A0A0]' : 'text-[#6B7280]'}`}>Full 1-Year Access</p>
+                                    </div>
+
+                                    {/* Inputs & Buttons */}
+                                    <div className="flex-1 w-full text-center md:text-left">
+                                        <p className={`text-[14px] leading-relaxed font-khmer mb-6 ${isDarkMode ? 'text-[#A0A0A0]' : 'text-[#6B7280]'}`}>
+                                            {lang === 'en' 
+                                                ? `Scan the KHQR with your ABA app to pay $20. Send the payment screenshot to our Telegram to receive your Secret Activation Code.` 
+                                                : `ស្កេន KHQR ដើម្បីបង់ប្រាក់ $20 រួចផ្ញើវិក្កយបត្រ (Screenshot) មកកាន់ Telegram ដើម្បីទទួលបានលេខកូដដោះសោសម្ងាត់។`}
+                                        </p>
+
+                                        <a href={telegramUrl} target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center gap-2 px-6 py-3.5 w-full md:w-auto rounded-xl font-black font-khmer text-[14px] transition-all active:scale-95 shadow-lg hover:-translate-y-1 mb-6 text-white" style={{ backgroundColor: '#2AABEE' }}>
+                                            <Send size={18} /> {lang === 'en' ? 'Send to Telegram' : 'ផ្ញើវិក្កយបត្រទៅ Telegram'}
+                                        </a>
+
+                                        <div className={`flex flex-col sm:flex-row gap-3 p-4 rounded-2xl border ${passcodeError ? 'border-red-500 animate-shake bg-red-500/5' : (isDarkMode ? 'bg-[#121212] border-[#2C2C2C]' : 'bg-[#F8F9FA] border-[#E5E7EB]')}`}>
+                                            <div className="flex-1 flex items-center gap-3">
+                                                <KeyRound size={20} className={passcodeError ? 'text-red-500' : (isDarkMode ? 'text-[#A0A0A0]' : 'text-[#6B7280]')} />
+                                                <input 
+                                                    type="text" 
+                                                    value={passcodeInput}
+                                                    onChange={(e) => {
+                                                        setPasscodeInput(e.target.value.toUpperCase());
+                                                        setPasscodeError(false);
+                                                    }}
+                                                    placeholder={lang === 'en' ? "Enter Secret Code..." : "បញ្ចូលលេខកូដសម្ងាត់..."}
+                                                    className={`w-full bg-transparent outline-none font-bold text-center sm:text-left tracking-widest placeholder:tracking-normal ${isDarkMode ? 'text-white' : 'text-black'}`}
+                                                />
+                                            </div>
+                                            <button 
+                                                onClick={handleVerifyPasscode}
+                                                disabled={!passcodeInput.trim()}
+                                                className={`px-6 py-3 rounded-xl font-bold font-khmer text-[13px] transition-all active:scale-95 ${!passcodeInput.trim() ? 'opacity-50 cursor-not-allowed' : 'shadow-md hover:-translate-y-1'} bg-[#C5B002] text-white`}
+                                            >
+                                                {lang === 'en' ? 'Unlock Now' : 'ដោះសោឥឡូវនេះ'}
+                                            </button>
+                                        </div>
+                                        {passcodeError && (
+                                            <p className="text-red-500 text-[11px] font-bold tracking-wide mt-2 flex items-center justify-center md:justify-start gap-1">
+                                                <AlertCircle size={12} /> {lang === 'en' ? 'Invalid Code. Please try again.' : 'លេខកូដមិនត្រឹមត្រូវ។ សូមព្យាយាមម្តងទៀត។'}
+                                            </p>
+                                        )}
+
+                                        <button className={`mt-6 flex items-center justify-center md:justify-start gap-2 w-full md:w-auto text-sm font-bold opacity-70 hover:opacity-100 transition-opacity ${isDarkMode ? 'text-[#F1F1F1]' : 'text-[#1A1A1A]'}`}>
+                                            <RotateCcw size={16} /> {lang === 'en' ? 'Restore Purchase' : 'ស្តារការទិញឡើងវិញ'}
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        )}
+                    </div>
+                )}
+
+                {/* PROGRESS BAR (IF PURCHASED) */}
+                {isCoursePurchased && (
+                    <div className={`mb-8 p-5 md:p-6 rounded-[24px] border shadow-sm animate-fade-in-up ${isDarkMode ? 'bg-[#1E1E1E]/50 border-[#2C2C2C]' : 'bg-[#FFFFFF] border-[#E5E7EB]'}`}>
                         <div className="flex justify-between items-end mb-4">
                             <div>
                                 <h4 className={`font-bold font-khmer text-[13px] md:text-sm uppercase tracking-widest ${isDarkMode ? 'text-[#41B6E6]' : 'text-[#0277C5]'}`}>
@@ -371,85 +460,97 @@ function AppContent() {
                             ></div>
                         </div>
                     </div>
-                ) : (
-                    // --- COURSE IS LOCKED: Show KHQR Payment System ---
-                    <div className={`mt-8 mb-4 p-6 md:p-10 rounded-[32px] border shadow-xl animate-fade-in-up relative overflow-hidden ${isDarkMode ? 'bg-[#1E1E1E] border-[#2C2C2C]' : 'bg-[#FFFFFF] border-[#E5E7EB]'}`}>
-                        <div className={`absolute -top-24 -right-24 w-64 h-64 rounded-full blur-[80px] pointer-events-none ${isDarkMode ? 'bg-[#C5B002]/20' : 'bg-[#C5B002]/10'}`}></div>
-                        
-                        <div className="flex flex-col md:flex-row gap-8 relative z-10 items-center md:items-start">
-                            
-                            {/* KHQR Image Column */}
-                            <div className="flex flex-col items-center shrink-0 w-full md:w-auto">
-                                <div className="p-3 bg-white rounded-3xl shadow-lg border border-gray-100 mb-4">
-                                    <img 
-                                        src="/aba-khqr.png" 
-                                        alt="ABA KHQR" 
-                                        className={`w-48 h-48 object-contain rounded-xl shadow-sm border ${isDarkMode ? 'border-[#2C2C2C]' : 'border-gray-200'}`} 
-                                    />
-                                </div>
-                                <h3 className={`text-2xl font-black font-khmer ${isDarkMode ? 'text-[#F1F1F1]' : 'text-[#1A1A1A]'}`}>$20.00</h3>
-                                <p className={`text-xs font-bold uppercase tracking-widest mt-1 ${isDarkMode ? 'text-[#A0A0A0]' : 'text-[#6B7280]'}`}>Full 1-Year Access</p>
-                            </div>
-
-                            {/* Instructions & Input Column */}
-                            <div className="flex-1 w-full text-center md:text-left">
-                                <h3 className={`text-xl md:text-2xl font-black font-khmer mb-3 ${isDarkMode ? 'text-[#F1F1F1]' : 'text-[#1A1A1A]'}`}>
-                                    {lang === 'en' ? `Unlock Full ${appDisplayName}` : `ដោះសោវគ្គសិក្សា ${appDisplayName}`}
-                                </h3>
-                                <p className={`text-[14px] leading-relaxed font-khmer mb-6 ${isDarkMode ? 'text-[#A0A0A0]' : 'text-[#6B7280]'}`}>
-                                    {lang === 'en' 
-                                        ? `Scan the KHQR with your ABA app to pay $20. Send the payment screenshot to our Telegram to receive your Secret Activation Code.` 
-                                        : `ស្កេន KHQR ដើម្បីបង់ប្រាក់ $20 រួចផ្ញើវិក្កយបត្រ (Screenshot) មកកាន់ Telegram ដើម្បីទទួលបានលេខកូដដោះសោសម្ងាត់។`}
-                                </p>
-
-                                <a 
-                                    href={telegramUrl} 
-                                    target="_blank" 
-                                    rel="noopener noreferrer" 
-                                    className="inline-flex items-center justify-center gap-2 px-6 py-3.5 w-full md:w-auto rounded-xl font-black font-khmer text-[14px] transition-all active:scale-95 shadow-lg hover:-translate-y-1 mb-8 text-white"
-                                    style={{ backgroundColor: '#2AABEE' }}
-                                >
-                                    <Send size={18} /> {lang === 'en' ? 'Send to Telegram' : 'ផ្ញើវិក្កយបត្រទៅ Telegram'}
-                                </a>
-
-                                {/* Passcode Input Field */}
-                                <div className={`flex flex-col sm:flex-row gap-3 p-4 rounded-2xl border ${passcodeError ? 'border-red-500 animate-shake bg-red-500/5' : (isDarkMode ? 'bg-[#121212] border-[#2C2C2C]' : 'bg-[#F8F9FA] border-[#E5E7EB]')}`}>
-                                    <div className="flex-1 flex items-center gap-3">
-                                        <KeyRound size={20} className={passcodeError ? 'text-red-500' : (isDarkMode ? 'text-[#A0A0A0]' : 'text-[#6B7280]')} />
-                                        <input 
-                                            type="text" 
-                                            value={passcodeInput}
-                                            onChange={(e) => {
-                                                setPasscodeInput(e.target.value.toUpperCase());
-                                                setPasscodeError(false);
-                                            }}
-                                            placeholder={lang === 'en' ? "Enter Secret Code..." : "បញ្ចូលលេខកូដសម្ងាត់..."}
-                                            className={`w-full bg-transparent outline-none font-bold text-center sm:text-left tracking-widest placeholder:tracking-normal ${isDarkMode ? 'text-white' : 'text-black'}`}
-                                        />
-                                    </div>
-                                    <button 
-                                        onClick={handleVerifyPasscode}
-                                        disabled={!passcodeInput.trim()}
-                                        className={`px-6 py-3 rounded-xl font-bold font-khmer text-[13px] transition-all active:scale-95 ${!passcodeInput.trim() ? 'opacity-50 cursor-not-allowed' : 'shadow-md hover:-translate-y-1'} ${isDarkMode ? 'bg-[#C5B002] text-white' : 'bg-[#C5B002] text-white'}`}
-                                    >
-                                        {lang === 'en' ? 'Unlock Now' : 'ដោះសោឥឡូវនេះ'}
-                                    </button>
-                                </div>
-                                {passcodeError && (
-                                    <p className="text-red-500 text-[11px] font-bold tracking-wide mt-2 flex items-center justify-center md:justify-start gap-1">
-                                        <AlertCircle size={12} /> {lang === 'en' ? 'Invalid Code. Please try again.' : 'លេខកូដមិនត្រឹមត្រូវ។ សូមព្យាយាមម្តងទៀត។'}
-                                    </p>
-                                )}
-                            </div>
-                        </div>
-                    </div>
                 )}
+
+                {/* COURSE CURRICULUM HEADER */}
+                <h3 className={`font-black text-2xl mb-6 flex items-center gap-3 ${isDarkMode ? 'text-[#F1F1F1]' : 'text-[#1A1A1A]'}`}>
+                    <BookOpen className={isDarkMode ? 'text-[#41B6E6]' : 'text-[#0277C5]'} /> 
+                    {lang === 'en' ? 'Course Curriculum' : 'បញ្ជីមេរៀន'}
+                </h3>
 
                 {/* THE LESSON GRID */}
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
-                    {courseData[activeAppTab]?.map((l) => (
+                    {currentCourseData.map((l) => (
                         <LessonCard key={l.id} lesson={l} onClick={() => handleOpenLesson(l.id)} isDarkMode={isDarkMode} />
                     ))}
+                </div>
+            </div>
+        </div>
+      )}
+      
+      {activeTab !== 'ai' && !activeAppTab ? (
+        <main className="flex-1 max-w-7xl mx-auto w-full overflow-y-auto custom-scrollbar p-4 md:p-8 relative z-0">
+            {activeTab === 'learn' && (
+            <div className="space-y-6 pb-24">
+                <div className="text-center py-6 mt-2 relative">
+                    <div className={`absolute inset-0 blur-[120px] rounded-full pointer-events-none ${isDarkMode ? 'bg-[#41B6E6]/10' : 'bg-[#0277C5]/10'}`} />
+                    <h2 className={`text-3xl md:text-5xl font-black mb-4 tracking-tight ${isDarkMode ? 'text-[#F1F1F1]' : 'text-[#1A1A1A]'}`}>iPad Masterclass</h2>
+                    <p className={`max-w-xl mx-auto text-sm md:text-base leading-relaxed ${isDarkMode ? 'text-[#A0A0A0]' : 'text-[#6B7280]'}`}>
+                        {lang === 'en' ? 'Select an app to begin your professional training.' : 'ជ្រើសរើសកម្មវិធីដើម្បីចាប់ផ្តើមការហ្វឹកហាត់កម្រិតអាជីពរបស់អ្នក។'}
+                    </p>
+                </div>
+
+                {/* VERTICAL COURSE BUTTONS */}
+                <div className="flex flex-col gap-4 max-w-2xl mx-auto w-full">
+                    {/* Photo Button */}
+                    <button 
+                        onClick={() => handleOpenCourse('photo')} 
+                        className={`group relative flex items-center justify-between p-5 md:p-6 rounded-3xl border shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg active:scale-95 ${isDarkMode ? 'bg-[#1E1E1E] border-[#2C2C2C] hover:border-[#41B6E6]/50' : 'bg-[#FFFFFF] border-[#E5E7EB] hover:border-[#0277C5]/50'}`}
+                    >
+                        <div className="flex items-center gap-5">
+                            <div className={`p-4 rounded-2xl ${isDarkMode ? 'bg-[#41B6E6]/10 text-[#41B6E6]' : 'bg-[#0277C5]/10 text-[#0277C5]'}`}>
+                                <Camera size={28} />
+                            </div>
+                            <div className="text-left">
+                                <h3 className={`font-black text-lg md:text-xl ${isDarkMode ? 'text-white' : 'text-black'}`}>Affinity Photo 2 iPad</h3>
+                                <p className={`text-sm mt-1 ${isDarkMode ? 'text-[#A0A0A0]' : 'text-[#6B7280]'}`}>{lang === 'en' ? 'Professional photo editing & manipulation' : 'ការកែច្នៃរូបភាពបែបអាជីព'}</p>
+                            </div>
+                        </div>
+                        <div className="flex items-center gap-3">
+                            {!purchasedCourses['photo']?.unlocked && <Lock size={18} className="text-[#C5B002] opacity-80" />}
+                            <ChevronRight size={24} className={isDarkMode ? 'text-[#A0A0A0] group-hover:text-white' : 'text-[#6B7280] group-hover:text-black'} />
+                        </div>
+                    </button>
+
+                    {/* Designer Button */}
+                    <button 
+                        onClick={() => handleOpenCourse('designer')} 
+                        className={`group relative flex items-center justify-between p-5 md:p-6 rounded-3xl border shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg active:scale-95 ${isDarkMode ? 'bg-[#1E1E1E] border-[#2C2C2C] hover:border-[#41B6E6]/50' : 'bg-[#FFFFFF] border-[#E5E7EB] hover:border-[#0277C5]/50'}`}
+                    >
+                        <div className="flex items-center gap-5">
+                            <div className={`p-4 rounded-2xl ${isDarkMode ? 'bg-[#41B6E6]/10 text-[#41B6E6]' : 'bg-[#0277C5]/10 text-[#0277C5]'}`}>
+                                <PenTool size={28} />
+                            </div>
+                            <div className="text-left">
+                                <h3 className={`font-black text-lg md:text-xl ${isDarkMode ? 'text-white' : 'text-black'}`}>Affinity Designer 2 iPad</h3>
+                                <p className={`text-sm mt-1 ${isDarkMode ? 'text-[#A0A0A0]' : 'text-[#6B7280]'}`}>{lang === 'en' ? 'Vector graphics & illustration' : 'ការឌីហ្សាញក្រាហ្វិក និងគំនូរ'}</p>
+                            </div>
+                        </div>
+                        <div className="flex items-center gap-3">
+                            {!purchasedCourses['designer']?.unlocked && <Lock size={18} className="text-[#C5B002] opacity-80" />}
+                            <ChevronRight size={24} className={isDarkMode ? 'text-[#A0A0A0] group-hover:text-white' : 'text-[#6B7280] group-hover:text-black'} />
+                        </div>
+                    </button>
+
+                    {/* Publisher Button */}
+                    <button 
+                        onClick={() => handleOpenCourse('publisher')} 
+                        className={`group relative flex items-center justify-between p-5 md:p-6 rounded-3xl border shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg active:scale-95 ${isDarkMode ? 'bg-[#1E1E1E] border-[#2C2C2C] hover:border-[#41B6E6]/50' : 'bg-[#FFFFFF] border-[#E5E7EB] hover:border-[#0277C5]/50'}`}
+                    >
+                        <div className="flex items-center gap-5">
+                            <div className={`p-4 rounded-2xl ${isDarkMode ? 'bg-[#41B6E6]/10 text-[#41B6E6]' : 'bg-[#0277C5]/10 text-[#0277C5]'}`}>
+                                <Book size={28} />
+                            </div>
+                            <div className="text-left">
+                                <h3 className={`font-black text-lg md:text-xl ${isDarkMode ? 'text-white' : 'text-black'}`}>Affinity Publisher 2 iPad</h3>
+                                <p className={`text-sm mt-1 ${isDarkMode ? 'text-[#A0A0A0]' : 'text-[#6B7280]'}`}>{lang === 'en' ? 'Page layout & typography design' : 'ការរៀបចំទំព័រ និងសៀវភៅ'}</p>
+                            </div>
+                        </div>
+                        <div className="flex items-center gap-3">
+                            {!purchasedCourses['publisher']?.unlocked && <Lock size={18} className="text-[#C5B002] opacity-80" />}
+                            <ChevronRight size={24} className={isDarkMode ? 'text-[#A0A0A0] group-hover:text-white' : 'text-[#6B7280] group-hover:text-black'} />
+                        </div>
+                    </button>
                 </div>
 
                 <TipsSection isExpanded={expandedSection === 'tips'} onToggle={() => setExpandedSection(expandedSection === 'tips' ? null : 'tips')} isDarkMode={isDarkMode} />
@@ -460,7 +561,7 @@ function AppContent() {
             {activeTab === 'quiz' && <Test isDarkMode={isDarkMode} />}
         </main>
       ) : (
-        <div className="flex-1 relative w-full h-full md:pb-0 z-0">
+        <div className={`flex-1 relative w-full h-full md:pb-0 z-0 ${activeAppTab ? 'hidden' : 'block'}`}>
              <ChatBot messages={chatMessages} setMessages={setChatMessages} isDarkMode={isDarkMode} />
         </div>
       )}
@@ -470,9 +571,10 @@ function AppContent() {
           <nav className={`pointer-events-auto backdrop-blur-2xl border flex justify-around p-3 pb-safe rounded-[32px] shadow-2xl transition-all duration-500 ${isDarkMode ? 'bg-[#121212]/80 border-white/10 shadow-black/80' : 'bg-white/80 border-black/5 shadow-[#0277C5]/10'}`}>
             {['learn', 'quiz', 'tools', 'ai'].map(t_id => (
                 <button key={t_id} onClick={() => { 
-                    setActiveTab(t_id); 
+                    setActiveTab(t_id);
+                    setActiveAppTab(null);
                     triggerHaptic(); 
-                    window.history.pushState({ modalOpen: false, tab: t_id }, '');
+                    window.history.pushState({ modalOpen: false, tab: t_id, course: null }, '');
                 }} className={`flex flex-col items-center gap-1 transition-all duration-500 ease-out ${activeTab === t_id ? (isDarkMode ? 'text-[#41B6E6] -translate-y-1.5' : 'text-[#0277C5] -translate-y-1.5') : (isDarkMode ? 'text-[#A0A0A0] hover:text-[#F1F1F1]' : 'text-[#6B7280] hover:text-[#1A1A1A]')}`}>
                     {t_id === 'learn' && <BookOpen size={22} className={activeTab === t_id ? 'drop-shadow-md' : ''}/>}
                     {t_id === 'quiz' && <Award size={22} className={activeTab === t_id ? 'drop-shadow-md' : ''}/>}
