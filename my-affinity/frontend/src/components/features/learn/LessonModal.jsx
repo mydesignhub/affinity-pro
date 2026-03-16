@@ -20,6 +20,7 @@ const LessonModal = ({ lesson, onClose, isDarkMode, completedSteps, setCompleted
   const [previewEnded, setPreviewEnded] = useState(false);
   
   const videoRef = useRef(null);
+  const containerRef = useRef(null); // 👈 NEW: Ref for the master wrapper
 
   useEffect(() => {
     setIsVisible(true);
@@ -55,7 +56,8 @@ const LessonModal = ({ lesson, onClose, isDarkMode, completedSteps, setCompleted
   };
 
   const toggleFullScreen = async () => {
-      const elem = videoRef.current;
+      // 👈 NEW: Apply fullscreen to the CONTAINER, not just the video iframe
+      const elem = containerRef.current; 
       if (!elem) return;
       triggerHaptic();
       try {
@@ -92,14 +94,12 @@ const LessonModal = ({ lesson, onClose, isDarkMode, completedSteps, setCompleted
 
   const currentStepData = lesson.steps && lesson.steps.length > 0 ? lesson.steps[activeStep] : null;
 
-  // 🌟 TRIGGER PLAY & START TIMER 🌟
   const handlePlayClick = () => {
       setHasStarted(true);
       if (!isPurchased) {
-          // Timer: 20 seconds of video + 1.5 seconds for loading buffer
           setTimeout(() => {
               setPreviewEnded(true);
-              triggerHaptic('error'); // Slight buzz to let them know the preview ended
+              triggerHaptic('error'); 
           }, 21500);
       }
   };
@@ -107,10 +107,10 @@ const LessonModal = ({ lesson, onClose, isDarkMode, completedSteps, setCompleted
   const getVideoUrl = (url) => {
       if (!url) return '';
       const separator = url.includes('?') ? '&' : '?';
-      // Added autoplay=1 and playsinline=1 so it plays instantly when the custom button is clicked
+      // 👈 NEW: Added fs=0 (removes native fullscreen) & modestbranding=1 (hides YouTube logo)
       return isPurchased 
-          ? `${url}${separator}autoplay=1&playsinline=1` 
-          : `${url}${separator}end=20&controls=0&disablekb=1&rel=0&autoplay=1&playsinline=1`;
+          ? `${url}${separator}autoplay=1&playsinline=1&fs=0&modestbranding=1&rel=0` 
+          : `${url}${separator}end=20&controls=0&disablekb=1&rel=0&autoplay=1&playsinline=1&fs=0&modestbranding=1`;
   };
 
   return (
@@ -140,7 +140,8 @@ const LessonModal = ({ lesson, onClose, isDarkMode, completedSteps, setCompleted
 
             {currentStepData && (
                 <div className="mb-6">
-                    <div className={`w-full aspect-video rounded-2xl relative overflow-hidden flex flex-col items-center justify-center group shadow-lg border shrink-0 ${isDarkMode ? 'bg-[#0A0A0A] border-[#2C2C2C]' : 'bg-[#1A1A1A] border-black'}`}>
+                    {/* 👈 NEW: Attached containerRef to this wrapper & added bg-black for fullscreen letterboxing */}
+                    <div ref={containerRef} className={`w-full aspect-video rounded-2xl relative overflow-hidden flex flex-col items-center justify-center group shadow-lg border shrink-0 bg-black ${isDarkMode ? 'border-[#2C2C2C]' : 'border-black'}`}>
                         
                         {!isPurchased && !previewEnded && (
                             <div className="absolute top-4 right-4 z-40 bg-[#C5B002] text-white px-3 py-1.5 rounded-full font-bold text-[10px] tracking-widest uppercase shadow-lg flex items-center gap-1.5 animate-pulse pointer-events-none">
@@ -150,7 +151,6 @@ const LessonModal = ({ lesson, onClose, isDarkMode, completedSteps, setCompleted
 
                         {currentStepData.videoUrl ? (
                             <>
-                                {/* 🌟 STATE 1: CUSTOM PLAY BUTTON 🌟 */}
                                 {!hasStarted ? (
                                     <div 
                                         onClick={handlePlayClick}
@@ -163,8 +163,6 @@ const LessonModal = ({ lesson, onClose, isDarkMode, completedSteps, setCompleted
                                                 : (lang === 'en' ? 'Play 20s Free Preview' : 'ចាក់មើលសាកល្បង ២០ វិនាទី')}
                                         </span>
                                     </div>
-
-                                // 🌟 STATE 2: PREVIEW ENDED (Hides video to prevent YouTube Suggestions) 🌟
                                 ) : previewEnded && !isPurchased ? (
                                     <div className="absolute inset-0 flex flex-col items-center justify-center bg-[#0A0A0A] z-50 p-6 text-center border-2 border-[#C5B002]/30 rounded-2xl animate-fade-in-up">
                                         <Lock size={40} className="text-[#C5B002] mb-4 animate-bounce" />
@@ -178,8 +176,6 @@ const LessonModal = ({ lesson, onClose, isDarkMode, completedSteps, setCompleted
                                             {lang === 'en' ? 'Unlock Full Access' : 'ដោះសោសិទ្ធិពេញលេញ'}
                                         </button>
                                     </div>
-
-                                // 🌟 STATE 3: PLAYING VIDEO 🌟
                                 ) : (
                                     <>
                                         {isVideoLoading && (
@@ -202,9 +198,10 @@ const LessonModal = ({ lesson, onClose, isDarkMode, completedSteps, setCompleted
                                             onLoad={() => setIsVideoLoading(false)}
                                         />
 
-                                        {/* Invisible Shields to block Share and Timeline */}
+                                        {/* 👈 NEW: Invisible Shields now stretch to cover links in container-fullscreen */}
                                         <div className="absolute top-0 left-0 w-full h-[65px] z-30 bg-transparent" />
-                                        {!isPurchased && <div className="absolute bottom-0 left-0 w-full h-[60px] z-30 bg-transparent" />}
+                                        {/* This blocks the bottom "Watch on YouTube" and logo links for everyone now! */}
+                                        <div className="absolute bottom-0 left-0 w-full h-[60px] z-30 bg-transparent" />
                                     </>
                                 )}
                             </>
@@ -218,7 +215,6 @@ const LessonModal = ({ lesson, onClose, isDarkMode, completedSteps, setCompleted
                         )}
                     </div>
                     
-                    {/* 🌟 NEW: SMALL BUTTON UI (Replaces the giant banner) 🌟 */}
                     {currentStepData.videoUrl && (
                         <div className="flex flex-col sm:flex-row gap-3 mt-3 w-full">
                             <button 
@@ -229,7 +225,6 @@ const LessonModal = ({ lesson, onClose, isDarkMode, completedSteps, setCompleted
                                 {lang === 'en' ? 'Rotate Fullscreen' : 'មើលពេញអេក្រង់'}
                             </button>
 
-                            {/* Small Unlock Button for Unpurchased Users */}
                             {!isPurchased && (
                                 <button 
                                     onClick={handleClose}
@@ -244,7 +239,6 @@ const LessonModal = ({ lesson, onClose, isDarkMode, completedSteps, setCompleted
                 </div>
             )}
 
-            {/* PRACTICE RESOURCES BOX */}
             {(lesson.instruction || lesson.downloadUrl) && (
                 <div className={`mb-8 p-5 rounded-2xl border flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between ${isDarkMode ? 'bg-[#1E1E1E]/50 border-[#2C2C2C]' : 'bg-[#F8F9FA] border-[#E5E7EB]'}`}>
                     <div className="flex-1">
