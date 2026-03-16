@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { ChevronRight, PlayCircle, Sparkles, Zap, Facebook, Send, Globe, BookOpen, Award, Bot, Camera, PenTool, Book, Lock, KeyRound, AlertCircle, X, ChevronDown, RotateCcw, Mail } from 'lucide-react';
+import { ChevronRight, PlayCircle, Sparkles, Zap, Facebook, Send, Globe, BookOpen, Award, Bot, Camera, PenTool, Book, Lock, KeyRound, AlertCircle, ChevronDown, RotateCcw, Mail, Crown, LogOut, Copy, ShieldCheck } from 'lucide-react';
 
 // FIREBASE IMPORTS
 import { signInWithPopup, signOut } from 'firebase/auth';
@@ -23,6 +23,31 @@ const triggerHaptic = (type = 'light') => {
     }
 };
 
+// 🎨 APP THEME COLORS FOR PREMIUM UI
+const APP_THEMES = {
+    photo: {
+        gradient: 'from-[#B52885] to-[#223180]',
+        text: 'text-[#B52885]',
+        bg: 'bg-[#B52885]',
+        border: 'border-[#B52885]',
+        lightBg: 'bg-[#B52885]/10'
+    },
+    designer: {
+        gradient: 'from-[#2862B5] to-[#F4B32A]',
+        text: 'text-[#2862B5]',
+        bg: 'bg-[#2862B5]',
+        border: 'border-[#2862B5]',
+        lightBg: 'bg-[#2862B5]/10'
+    },
+    publisher: {
+        gradient: 'from-[#D7383D] to-[#532463]',
+        text: 'text-[#D7383D]',
+        bg: 'bg-[#D7383D]',
+        border: 'border-[#D7383D]',
+        lightBg: 'bg-[#D7383D]/10'
+    }
+};
+
 // 🌟 YOUR SECRET PASSCODES (Give these out on Telegram after payment)
 const VALID_PASSCODES = {
     photo: ['PH-2026-A1B2', 'PH-2026-C3D4', 'PH-2026-E5F6', 'PH-2026-G7H8'],
@@ -31,6 +56,7 @@ const VALID_PASSCODES = {
 };
 
 const ONE_YEAR_MS = 365 * 24 * 60 * 60 * 1000;
+const ADMIN_EMAIL = 'koymy.mlk@gmail.com';
 
 const TipsSection = ({ isExpanded, onToggle, isDarkMode }) => {
     const { t, lang } = useLanguage();
@@ -134,8 +160,13 @@ function AppContent() {
   const [isDarkMode, setIsDarkMode] = useState(true);
   const [completedSteps, setCompletedSteps] = useState([]);
   
-  // USER STATE
+  // USER & ADMIN STATE
   const [user, setUser] = useState(null);
+  const isAdmin = user?.email === ADMIN_EMAIL;
+
+  // ADMIN GENERATOR STATE
+  const [genAmount, setGenAmount] = useState(1);
+  const [generatedKeys, setGeneratedKeys] = useState('');
 
   const [purchasedCourses, setPurchasedCourses] = useState({
       photo: null,
@@ -174,7 +205,6 @@ function AppContent() {
               setPurchasedCourses(validatedPurchases);
           }
 
-          // Check if user is already logged in
           const unsubscribe = auth.onAuthStateChanged((currentUser) => {
               setUser(currentUser);
           });
@@ -265,6 +295,7 @@ function AppContent() {
   const handleOpenCourse = (courseId) => {
       setActiveAppTab(courseId);
       setShowRegistration(false);
+      setGeneratedKeys('');
       triggerHaptic();
       window.history.pushState({ modalOpen: true, tab: activeTab, course: courseId }, '');
   };
@@ -282,13 +313,14 @@ function AppContent() {
   const handleVerifyPasscode = () => {
       if (!activeAppTab) return;
       const code = passcodeInput.trim().toUpperCase();
-      if (VALID_PASSCODES[activeAppTab].includes(code)) {
+      // Allowing generated Admin keys to work locally (mocking DB check)
+      if (VALID_PASSCODES[activeAppTab].includes(code) || generatedKeys.includes(code)) {
           triggerHaptic('success');
           setPasscodeError(false);
           setPasscodeInput('');
           setPurchasedCourses(prev => ({
               ...prev,
-              [activeAppTab]: { unlocked: true, expiry: Date.now() + ONE_YEAR_MS }
+              [activeAppTab]: { unlocked: true, expiry: Date.now() + ONE_YEAR_MS, keyUsed: code }
           }));
           setShowRegistration(false);
       } else {
@@ -298,13 +330,11 @@ function AppContent() {
       }
   };
 
-  // 🌟 REAL FIREBASE GOOGLE LOGIN FUNCTION
   const handleGoogleLogin = async () => { 
       triggerHaptic(); 
       try {
           const result = await signInWithPopup(auth, googleProvider);
           const loggedInUser = result.user;
-          console.log("Success! Logged in as:", loggedInUser.email);
           setUser(loggedInUser);
       } catch (error) {
           console.error("Error signing in with Google:", error.message);
@@ -322,6 +352,37 @@ function AppContent() {
       }
   };
 
+  const handleSignOutDevice = () => {
+      triggerHaptic();
+      const message = lang === 'en' ? 'Are you sure you want to sign out this device? Your course access will be removed locally.' : 'តើអ្នកប្រាកដជាចង់ចាកចេញពីឧបករណ៍នេះទេ? សិទ្ធិចូលរៀនរបស់អ្នកនឹងត្រូវដកចេញ។';
+      if(window.confirm(message)) {
+          setPurchasedCourses(prev => ({...prev, [activeAppTab]: null}));
+          handleLogout();
+          setShowRegistration(false);
+      }
+  };
+
+  // ADMIN LOGIC
+  const handleGenerateAdminKeys = () => {
+      triggerHaptic();
+      if (!activeAppTab) return;
+      const prefix = activeAppTab === 'photo' ? 'PH' : activeAppTab === 'designer' ? 'DS' : 'PB';
+      let newKeys = [];
+      for(let i=0; i<genAmount; i++){
+          const ran1 = Math.random().toString(36).substring(2,6).toUpperCase();
+          const ran2 = Math.random().toString(36).substring(2,6).toUpperCase();
+          newKeys.push(`${prefix}-2026-${ran1}-${ran2}`);
+      }
+      setGeneratedKeys(newKeys.join('\n'));
+  };
+
+  const shareAdminKeysTelegram = () => {
+      triggerHaptic();
+      const text = `Here are the newly generated premium keys for ${getAppDisplayName(activeAppTab)}:\n\n${generatedKeys}`;
+      const url = `https://t.me/share/url?url=${encodeURIComponent(text)}`;
+      window.open(url, '_blank');
+  };
+
   const handleEmailLogin = () => { triggerHaptic(); console.log("Email Login Clicked"); };
 
   const currentCourseData = activeAppTab ? (courseData[activeAppTab] || []) : [];
@@ -330,7 +391,9 @@ function AppContent() {
   const completedInThisTab = completedSteps.filter(id => id.startsWith(prefix)).length;
   const progressPercentage = totalSteps === 0 ? 0 : Math.round((completedInThisTab / totalSteps) * 100);
 
-  const isCoursePurchased = activeAppTab ? purchasedCourses[activeAppTab]?.unlocked === true : false;
+  // Admin always has access to everything
+  const isCoursePurchased = isAdmin || (activeAppTab ? purchasedCourses[activeAppTab]?.unlocked === true : false);
+  const theme = activeAppTab ? APP_THEMES[activeAppTab] : APP_THEMES.photo;
   
   const getAppDisplayName = (id) => id === 'photo' ? 'Affinity Photo 2 iPad' : id === 'designer' ? 'Affinity Designer 2 iPad' : 'Affinity Publisher 2 iPad';
   const appDisplayName = activeAppTab ? getAppDisplayName(activeAppTab) : '';
@@ -378,167 +441,284 @@ function AppContent() {
         />
       )}
 
+      {/* FULL SCREEN COURSE MODAL */}
       {activeAppTab && !expandedLesson && (
         <div className={`fixed inset-0 z-40 overflow-y-auto custom-scrollbar flex flex-col pt-[env(safe-area-inset-top)] ${isDarkMode ? 'bg-[#0A0A0A]' : 'bg-[#F4F5F7]'}`}>
             <div className={`sticky top-0 z-50 px-4 py-3 border-b flex items-center justify-between backdrop-blur-xl ${isDarkMode ? 'border-[#2C2C2C] bg-[#0A0A0A]/90' : 'border-[#E5E7EB] bg-[#FFFFFF]/90'}`}>
                 <button onClick={() => { setActiveAppTab(null); window.history.back(); }} className={`p-2 rounded-full transition-colors ${isDarkMode ? 'hover:bg-[#1E1E1E]' : 'hover:bg-gray-100'}`}>
                     <ChevronRight className="w-6 h-6 rotate-180" />
                 </button>
-                <h2 className="font-bold text-lg">{appDisplayName}</h2>
+                <h2 className={`font-black text-lg text-transparent bg-clip-text bg-gradient-to-r ${theme.gradient}`}>{appDisplayName}</h2>
                 <div className="w-10"></div> 
             </div>
 
             <div className="p-4 md:p-8 max-w-7xl mx-auto w-full pb-32">
-                {!isCoursePurchased && (
-                    <div className={`mb-8 border rounded-3xl overflow-hidden shadow-sm ${isDarkMode ? 'bg-[#1E1E1E] border-[#2C2C2C]' : 'bg-[#FFFFFF] border-[#E5E7EB]'}`}>
-                        <button 
-                            onClick={() => setShowRegistration(!showRegistration)} 
-                            className={`w-full p-6 flex items-center justify-between transition-colors active:scale-[0.99] ${showRegistration ? (isDarkMode ? 'bg-[#2C2C2C]' : 'bg-[#F8F9FA]') : ''}`}
-                        >
-                            <div className="flex items-center gap-4">
-                                <div className={`p-3 rounded-xl ${isDarkMode ? 'bg-[#C5B002]/20' : 'bg-[#C5B002]/10'}`}>
-                                    <Lock size={24} className="text-[#C5B002]" />
-                                </div>
-                                <h3 className="font-bold font-khmer text-lg md:text-xl text-left">
-                                    {lang === 'en' ? `Register for ${appDisplayName}` : `ចុះឈ្មោះវគ្គ ${appDisplayName}`}
-                                </h3>
-                            </div>
-                            <ChevronDown className={`w-6 h-6 transition-transform duration-300 ${showRegistration ? 'rotate-180' : ''}`} />
-                        </button>
+                
+                {/* 🔒 ACCORDION: REGISTRATION OR PREMIUM ACCOUNT */}
+                <div className={`mb-8 border rounded-3xl overflow-hidden shadow-md ${isDarkMode ? 'bg-[#1E1E1E] border-[#2C2C2C]' : 'bg-[#FFFFFF] border-[#E5E7EB]'}`}>
+                    <button 
+                        onClick={() => setShowRegistration(!showRegistration)} 
+                        className={`w-full p-6 flex items-center justify-between transition-colors active:scale-[0.99] relative overflow-hidden ${showRegistration ? (isDarkMode ? 'bg-[#2C2C2C]' : 'bg-[#F8F9FA]') : ''}`}
+                    >
+                        {/* Dynamic background blur for Premium visual */}
+                        <div className={`absolute top-0 right-0 w-full h-full opacity-10 pointer-events-none bg-gradient-to-r ${theme.gradient}`}></div>
                         
-                        {showRegistration && (
-                            <div className={`p-6 md:p-10 border-t ${isDarkMode ? 'border-[#2C2C2C]' : 'border-[#E5E7EB]'} animate-fade-in-up relative overflow-hidden`}>
-                                <div className={`absolute -top-24 -right-24 w-64 h-64 rounded-full blur-[80px] pointer-events-none ${isDarkMode ? 'bg-[#C5B002]/20' : 'bg-[#C5B002]/10'}`}></div>
+                        <div className="flex items-center gap-4 relative z-10">
+                            {isCoursePurchased ? (
+                                <div className={`p-3 rounded-xl ${theme.lightBg}`}>
+                                    {isAdmin ? <ShieldCheck size={28} className={theme.text} /> : <Crown size={28} className={theme.text} />}
+                                </div>
+                            ) : (
+                                <div className={`p-3 rounded-xl ${theme.lightBg}`}>
+                                    <Lock size={28} className={theme.text} />
+                                </div>
+                            )}
+                            
+                            <div className="text-left">
+                                <h3 className={`font-black font-khmer text-lg md:text-xl ${isCoursePurchased ? theme.text : (isDarkMode ? 'text-white' : 'text-black')}`}>
+                                    {isCoursePurchased 
+                                        ? (isAdmin ? 'Admin Control Panel' : 'Premium Member') 
+                                        : (lang === 'en' ? `Register for ${appDisplayName}` : `ចុះឈ្មោះវគ្គ ${appDisplayName}`)}
+                                </h3>
+                                {isCoursePurchased && (
+                                    <p className={`text-xs font-bold mt-1 ${isDarkMode ? 'text-[#A0A0A0]' : 'text-[#6B7280]'}`}>Account Info & Settings</p>
+                                )}
+                            </div>
+                        </div>
+                        <ChevronDown className={`w-6 h-6 relative z-10 transition-transform duration-300 ${showRegistration ? 'rotate-180' : ''}`} />
+                    </button>
+                    
+                    {/* ACCORDION CONTENT */}
+                    {showRegistration && (
+                        <div className={`p-6 md:p-10 border-t ${isDarkMode ? 'border-[#2C2C2C]' : 'border-[#E5E7EB]'} animate-fade-in-up relative overflow-hidden`}>
+                            <div className={`absolute -top-24 -right-24 w-64 h-64 rounded-full blur-[80px] pointer-events-none bg-gradient-to-br ${theme.gradient} opacity-20`}></div>
+                            
+                            <div className="max-w-3xl mx-auto relative z-10">
                                 
-                                <div className="max-w-3xl mx-auto">
-                                    {/* STEP 1: ACCOUNT CREATION */}
-                                    <div className="mb-10">
-                                        <h4 className={`text-sm font-bold uppercase tracking-widest mb-4 flex items-center gap-2 ${isDarkMode ? 'text-[#41B6E6]' : 'text-[#0277C5]'}`}>
-                                            <span className="bg-current text-white w-5 h-5 flex items-center justify-center rounded-full text-[10px]">1</span> 
-                                            {lang === 'en' ? (user ? 'Account Linked' : 'Create Account') : (user ? 'គណនីបានភ្ជាប់' : 'បង្កើតគណនី')}
+                                {/* ----------------------- */}
+                                {/* IF ADMIN LOGGED IN */}
+                                {/* ----------------------- */}
+                                {isAdmin ? (
+                                    <div className="space-y-6">
+                                        <h4 className="text-sm font-bold uppercase tracking-widest text-[#41B6E6] flex items-center gap-2">
+                                            <ShieldCheck size={18} /> Admin Key Generator
                                         </h4>
-                                        
-                                        {/* USER LOGIN STATE UI */}
-                                        {user ? (
-                                            <div className={`p-4 rounded-xl border flex items-center justify-between shadow-sm animate-fade-in-up ${isDarkMode ? 'bg-[#121212] border-[#2C2C2C]' : 'bg-[#F8F9FA] border-[#E5E7EB]'}`}>
-                                                <div className="flex items-center gap-3">
-                                                    {user.photoURL ? (
-                                                        <img src={user.photoURL} alt="Profile" className="w-12 h-12 rounded-full border-2 border-[#41B6E6]" />
-                                                    ) : (
-                                                        <div className="w-12 h-12 rounded-full bg-[#41B6E6] flex items-center justify-center text-white font-bold text-lg">
-                                                            {user.email?.charAt(0).toUpperCase()}
-                                                        </div>
-                                                    )}
-                                                    <div>
-                                                        <p className={`font-bold text-sm ${isDarkMode ? 'text-white' : 'text-black'}`}>{user.displayName || 'User'}</p>
-                                                        <p className={`text-xs ${isDarkMode ? 'text-[#A0A0A0]' : 'text-[#6B7280]'}`}>{user.email}</p>
-                                                    </div>
-                                                </div>
-                                                <button onClick={handleLogout} className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-colors ${isDarkMode ? 'bg-[#2C2C2C] hover:bg-[#3C3C3C]' : 'bg-[#E5E7EB] hover:bg-[#D1D5DB]'}`}>
-                                                    {lang === 'en' ? 'Logout' : 'ចាកចេញ'}
-                                                </button>
+                                        <div className="flex gap-4 items-center">
+                                            <div className={`p-3 rounded-xl border flex-1 ${isDarkMode ? 'bg-[#121212] border-[#2C2C2C]' : 'bg-[#F8F9FA] border-[#E5E7EB]'}`}>
+                                                <input 
+                                                    type="number" min="1" max="100" 
+                                                    value={genAmount} onChange={e => setGenAmount(e.target.value)}
+                                                    className={`w-full bg-transparent outline-none font-bold ${isDarkMode ? 'text-white' : 'text-black'}`}
+                                                    placeholder="Amount to generate"
+                                                />
                                             </div>
-                                        ) : (
-                                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                                                {/* Google Button */}
-                                                <button 
-                                                    onClick={handleGoogleLogin}
-                                                    className={`flex items-center justify-center gap-3 p-3.5 rounded-xl font-bold text-sm border transition-all active:scale-95 shadow-sm hover:shadow-md ${isDarkMode ? 'bg-[#121212] border-[#2C2C2C] text-white hover:bg-[#1A1A1A]' : 'bg-white border-gray-200 text-black hover:bg-gray-50'}`}
-                                                >
-                                                    <svg className="w-5 h-5" viewBox="0 0 24 24">
-                                                        <path fill="currentColor" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
-                                                        <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" />
-                                                        <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" />
-                                                        <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" />
-                                                    </svg>
-                                                    {lang === 'en' ? 'Continue with Google' : 'បន្តជាមួយ Google'}
-                                                </button>
+                                            <button onClick={handleGenerateAdminKeys} className={`px-6 py-3.5 rounded-xl font-bold text-white bg-gradient-to-r ${theme.gradient} hover:opacity-90 active:scale-95`}>
+                                                Generate
+                                            </button>
+                                        </div>
 
-                                                {/* Email Button */}
-                                                <button 
-                                                    onClick={handleEmailLogin}
-                                                    className={`flex items-center justify-center gap-3 p-3.5 rounded-xl font-bold text-sm border transition-all active:scale-95 shadow-sm hover:shadow-md ${isDarkMode ? 'bg-[#121212] border-[#2C2C2C] text-white hover:bg-[#1A1A1A]' : 'bg-white border-gray-200 text-black hover:bg-gray-50'}`}
-                                                >
-                                                    <Mail size={20} className={isDarkMode ? 'text-[#A0A0A0]' : 'text-gray-500'} />
-                                                    {lang === 'en' ? 'Continue with Email' : 'បន្តជាមួយអ៊ីមែល'}
-                                                </button>
-                                            </div>
-                                        )}
-                                    </div>
-
-                                    <div className={`w-full h-px mb-10 ${isDarkMode ? 'bg-[#2C2C2C]' : 'bg-[#E5E7EB]'}`}></div>
-
-                                    {/* STEP 2: PAYMENT & UNLOCK */}
-                                    <div className={!user ? 'opacity-50 pointer-events-none transition-opacity' : 'transition-opacity'}>
-                                        <h4 className={`text-sm font-bold uppercase tracking-widest mb-6 flex items-center gap-2 ${isDarkMode ? 'text-[#41B6E6]' : 'text-[#0277C5]'}`}>
-                                            <span className="bg-current text-white w-5 h-5 flex items-center justify-center rounded-full text-[10px]">2</span> 
-                                            {lang === 'en' ? 'Pay & Unlock' : 'បង់ប្រាក់ & ដោះសោ'}
-                                        </h4>
-                                        <div className="flex flex-col md:flex-row gap-8 relative z-10 items-center md:items-start">
-                                            <div className="flex flex-col items-center shrink-0 w-full md:w-auto">
-                                                <div className="p-3 bg-white rounded-3xl shadow-lg border border-gray-100 mb-4">
-                                                    <img src="/aba-khqr.png" alt="ABA KHQR" className={`w-48 h-48 object-contain rounded-xl shadow-sm border ${isDarkMode ? 'border-[#2C2C2C]' : 'border-gray-200'}`} />
-                                                </div>
-                                                <h3 className={`text-2xl font-black font-khmer ${isDarkMode ? 'text-[#F1F1F1]' : 'text-[#1A1A1A]'}`}>$20.00</h3>
-                                                <p className={`text-xs font-bold uppercase tracking-widest mt-1 ${isDarkMode ? 'text-[#A0A0A0]' : 'text-[#6B7280]'}`}>Full 1-Year Access</p>
-                                            </div>
-
-                                            <div className="flex-1 w-full text-center md:text-left">
-                                                <p className={`text-[14px] leading-relaxed font-khmer mb-6 ${isDarkMode ? 'text-[#A0A0A0]' : 'text-[#6B7280]'}`}>
-                                                    {lang === 'en' 
-                                                        ? `Scan the KHQR with your ABA app to pay $20. Send the payment screenshot to our Telegram to receive your Secret Activation Code.` 
-                                                        : `ស្កេន KHQR ដើម្បីបង់ប្រាក់ $20 រួចផ្ញើវិក្កយបត្រ (Screenshot) មកកាន់ Telegram ដើម្បីទទួលបានលេខកូដដោះសោសម្ងាត់។`}
-                                                </p>
-
-                                                <a href={telegramUrl} target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center gap-2 px-6 py-3.5 w-full md:w-auto rounded-xl font-black font-khmer text-[14px] transition-all active:scale-95 shadow-lg hover:-translate-y-1 mb-6 text-white" style={{ backgroundColor: '#2AABEE' }}>
-                                                    <Send size={18} /> {lang === 'en' ? 'Send to Telegram' : 'ផ្ញើវិក្កយបត្រទៅ Telegram'}
-                                                </a>
-
-                                                <div className={`flex flex-col sm:flex-row gap-3 p-4 rounded-2xl border ${passcodeError ? 'border-red-500 animate-shake bg-red-500/5' : (isDarkMode ? 'bg-[#121212] border-[#2C2C2C]' : 'bg-[#F8F9FA] border-[#E5E7EB]')}`}>
-                                                    <div className="flex-1 flex items-center gap-3">
-                                                        <KeyRound size={20} className={passcodeError ? 'text-red-500' : (isDarkMode ? 'text-[#A0A0A0]' : 'text-[#6B7280]')} />
-                                                        <input 
-                                                            type="text" 
-                                                            value={passcodeInput}
-                                                            onChange={(e) => {
-                                                                setPasscodeInput(e.target.value.toUpperCase());
-                                                                setPasscodeError(false);
-                                                            }}
-                                                            placeholder={lang === 'en' ? "Enter Secret Code..." : "បញ្ចូលលេខកូដសម្ងាត់..."}
-                                                            className={`w-full bg-transparent outline-none font-bold text-center sm:text-left tracking-widest placeholder:tracking-normal ${isDarkMode ? 'text-white' : 'text-black'}`}
-                                                        />
-                                                    </div>
-                                                    <button 
-                                                        onClick={handleVerifyPasscode}
-                                                        disabled={!passcodeInput.trim()}
-                                                        className={`px-6 py-3 rounded-xl font-bold font-khmer text-[13px] transition-all active:scale-95 ${!passcodeInput.trim() ? 'opacity-50 cursor-not-allowed' : 'shadow-md hover:-translate-y-1'} bg-[#C5B002] text-white`}
-                                                    >
-                                                        {lang === 'en' ? 'Unlock Now' : 'ដោះសោឥឡូវនេះ'}
+                                        {generatedKeys && (
+                                            <div className="mt-4 animate-fade-in-up">
+                                                <textarea 
+                                                    readOnly 
+                                                    value={generatedKeys} 
+                                                    rows={5}
+                                                    className={`w-full p-4 rounded-xl border text-sm font-mono leading-relaxed resize-none ${isDarkMode ? 'bg-[#121212] border-[#2C2C2C] text-[#A0A0A0]' : 'bg-[#F8F9FA] border-[#E5E7EB] text-[#6B7280]'}`} 
+                                                />
+                                                <div className="flex gap-3 mt-3">
+                                                    <button onClick={() => {navigator.clipboard.writeText(generatedKeys); triggerHaptic('success');}} className={`flex-1 flex justify-center items-center gap-2 p-3 rounded-xl font-bold text-sm border ${isDarkMode ? 'bg-[#1E1E1E] border-[#2C2C2C] text-white hover:bg-[#2C2C2C]' : 'bg-white border-gray-200 text-black hover:bg-gray-50'}`}>
+                                                        <Copy size={16} /> Copy All
+                                                    </button>
+                                                    <button onClick={shareAdminKeysTelegram} className="flex-1 flex justify-center items-center gap-2 p-3 rounded-xl font-bold text-sm border-none text-white shadow-md active:scale-95" style={{ backgroundColor: '#2AABEE' }}>
+                                                        <Send size={16} /> Share via Telegram
                                                     </button>
                                                 </div>
-                                                {passcodeError && (
-                                                    <p className="text-red-500 text-[11px] font-bold tracking-wide mt-2 flex items-center justify-center md:justify-start gap-1">
-                                                        <AlertCircle size={12} /> {lang === 'en' ? 'Invalid Code. Please try again.' : 'លេខកូដមិនត្រឹមត្រូវ។ សូមព្យាយាមម្តងទៀត។'}
-                                                    </p>
-                                                )}
+                                            </div>
+                                        )}
 
-                                                <button className={`mt-6 flex items-center justify-center md:justify-start gap-2 w-full md:w-auto text-sm font-bold opacity-70 hover:opacity-100 transition-opacity ${isDarkMode ? 'text-[#F1F1F1]' : 'text-[#1A1A1A]'}`}>
-                                                    <RotateCcw size={16} /> {lang === 'en' ? 'Restore Purchase' : 'ស្តារការទិញឡើងវិញ'}
+                                        <div className={`w-full h-px my-8 ${isDarkMode ? 'bg-[#2C2C2C]' : 'bg-[#E5E7EB]'}`}></div>
+                                        <button onClick={handleSignOutDevice} className="flex items-center gap-2 text-sm font-bold text-red-500 hover:text-red-400 transition-colors">
+                                            <LogOut size={16} /> Sign Out Device
+                                        </button>
+                                    </div>
+
+                                ) : isCoursePurchased ? (
+                                    
+                                    /* ----------------------- */
+                                    /* IF STANDARD PREMIUM LOGGED IN */
+                                    /* ----------------------- */
+                                    <div className="space-y-8">
+                                        <div className={`p-6 rounded-2xl border shadow-sm flex items-center justify-between ${isDarkMode ? 'bg-[#121212] border-[#2C2C2C]' : 'bg-[#F8F9FA] border-[#E5E7EB]'}`}>
+                                            <div>
+                                                <p className={`text-xs font-bold uppercase tracking-widest mb-1 ${isDarkMode ? 'text-[#A0A0A0]' : 'text-[#6B7280]'}`}>Member Plan</p>
+                                                <p className={`text-xl font-black ${theme.text}`}>Full Access (1-Year)</p>
+                                                <p className={`text-sm mt-1 ${isDarkMode ? 'text-[#A0A0A0]' : 'text-[#6B7280]'}`}>
+                                                    Expires: {new Date(purchasedCourses[activeAppTab].expiry).toLocaleDateString()}
+                                                </p>
+                                            </div>
+                                            <Crown size={40} className={`opacity-20 ${theme.text}`} />
+                                        </div>
+
+                                        <div>
+                                            <p className={`text-sm font-bold mb-3 ${isDarkMode ? 'text-[#F1F1F1]' : 'text-[#1A1A1A]'}`}>Need Help?</p>
+                                            <a href="https://t.me/+d9YiokUaUtZiNTZl" target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl font-black text-sm transition-all active:scale-95 shadow-md hover:-translate-y-1 text-white" style={{ backgroundColor: '#2AABEE' }}>
+                                                <Send size={18} /> Support Team
+                                            </a>
+                                        </div>
+
+                                        <div className="space-y-3">
+                                            <p className={`text-sm font-bold ${isDarkMode ? 'text-[#F1F1F1]' : 'text-[#1A1A1A]'}`}>Update Key Code</p>
+                                            <div className={`flex flex-col sm:flex-row gap-3 p-2 rounded-2xl border ${isDarkMode ? 'bg-[#121212] border-[#2C2C2C]' : 'bg-[#F8F9FA] border-[#E5E7EB]'}`}>
+                                                <input 
+                                                    type="text" value={passcodeInput} onChange={(e) => setPasscodeInput(e.target.value.toUpperCase())}
+                                                    placeholder="Enter new code..."
+                                                    className={`flex-1 bg-transparent outline-none px-4 font-bold tracking-widest placeholder:tracking-normal ${isDarkMode ? 'text-white' : 'text-black'}`}
+                                                />
+                                                <button onClick={handleVerifyPasscode} disabled={!passcodeInput.trim()} className={`px-6 py-3 rounded-xl font-bold text-[13px] transition-all ${!passcodeInput.trim() ? 'opacity-50' : 'active:scale-95 text-white bg-gradient-to-r ' + theme.gradient}`}>
+                                                    Update
                                                 </button>
                                             </div>
                                         </div>
+
+                                        <div className={`w-full h-px my-6 ${isDarkMode ? 'bg-[#2C2C2C]' : 'bg-[#E5E7EB]'}`}></div>
+                                        <button onClick={handleSignOutDevice} className="flex items-center gap-2 text-sm font-bold text-red-500 hover:text-red-400 transition-colors">
+                                            <LogOut size={16} /> Sign Out Device
+                                        </button>
                                     </div>
-                                </div>
+
+                                ) : (
+                                    /* ----------------------- */
+                                    /* IF NOT PURCHASED YET */
+                                    /* ----------------------- */
+                                    <>
+                                        {/* KEY CODE FIRST */}
+                                        <div className="mb-10">
+                                            <h4 className={`text-sm font-bold uppercase tracking-widest mb-4 flex items-center gap-2 ${theme.text}`}>
+                                                <span className={`text-white w-5 h-5 flex items-center justify-center rounded-full text-[10px] ${theme.bg}`}>1</span> 
+                                                {lang === 'en' ? 'Enter Key Code (Instant Access)' : 'បញ្ចូលលេខកូដ (ចូលប្រើភ្លាមៗ)'}
+                                            </h4>
+                                            <div className={`flex flex-col sm:flex-row gap-3 p-4 rounded-2xl border ${passcodeError ? 'border-red-500 animate-shake bg-red-500/5' : (isDarkMode ? 'bg-[#121212] border-[#2C2C2C]' : 'bg-[#F8F9FA] border-[#E5E7EB]')}`}>
+                                                <div className="flex-1 flex items-center gap-3">
+                                                    <KeyRound size={20} className={passcodeError ? 'text-red-500' : (isDarkMode ? 'text-[#A0A0A0]' : 'text-[#6B7280]')} />
+                                                    <input 
+                                                        type="text" 
+                                                        value={passcodeInput}
+                                                        onChange={(e) => {
+                                                            setPasscodeInput(e.target.value.toUpperCase());
+                                                            setPasscodeError(false);
+                                                        }}
+                                                        placeholder={lang === 'en' ? "PH-2026-XXXX..." : "បញ្ចូលលេខកូដសម្ងាត់..."}
+                                                        className={`w-full bg-transparent outline-none font-bold text-center sm:text-left tracking-widest placeholder:tracking-normal ${isDarkMode ? 'text-white' : 'text-black'}`}
+                                                    />
+                                                </div>
+                                                <button 
+                                                    onClick={handleVerifyPasscode}
+                                                    disabled={!passcodeInput.trim()}
+                                                    className={`px-6 py-3 rounded-xl font-bold font-khmer text-[13px] transition-all active:scale-95 ${!passcodeInput.trim() ? 'opacity-50 cursor-not-allowed bg-gray-500' : `shadow-md hover:-translate-y-1 text-white bg-gradient-to-r ${theme.gradient}`}`}
+                                                >
+                                                    {lang === 'en' ? 'Unlock Now' : 'ដោះសោឥឡូវនេះ'}
+                                                </button>
+                                            </div>
+                                            {passcodeError && (
+                                                <p className="text-red-500 text-[11px] font-bold tracking-wide mt-2 flex items-center justify-center md:justify-start gap-1">
+                                                    <AlertCircle size={12} /> {lang === 'en' ? 'Invalid Code. Please try again.' : 'លេខកូដមិនត្រឹមត្រូវ។ សូមព្យាយាមម្តងទៀត។'}
+                                                </p>
+                                            )}
+                                            <p className={`text-xs mt-3 font-bold ${isDarkMode ? 'text-orange-400' : 'text-orange-600'}`}>
+                                                <Sparkles size={12} className="inline mr-1" />
+                                                Recommend: Sign up below to keep your purchase & sync across 2 devices limit.
+                                            </p>
+                                        </div>
+
+                                        <div className={`w-full h-px mb-10 ${isDarkMode ? 'bg-[#2C2C2C]' : 'bg-[#E5E7EB]'}`}></div>
+
+                                        {/* STEP 2: ACCOUNT CREATION */}
+                                        <div className="mb-10">
+                                            <h4 className={`text-sm font-bold uppercase tracking-widest mb-4 flex items-center gap-2 ${theme.text}`}>
+                                                <span className={`text-white w-5 h-5 flex items-center justify-center rounded-full text-[10px] ${theme.bg}`}>2</span> 
+                                                {lang === 'en' ? (user ? 'Account Linked' : 'Secure Account') : (user ? 'គណនីបានភ្ជាប់' : 'បង្កើតគណនី')}
+                                            </h4>
+                                            
+                                            {user ? (
+                                                <div className={`p-4 rounded-xl border flex items-center justify-between shadow-sm animate-fade-in-up ${isDarkMode ? 'bg-[#121212] border-[#2C2C2C]' : 'bg-[#F8F9FA] border-[#E5E7EB]'}`}>
+                                                    <div className="flex items-center gap-3">
+                                                        {user.photoURL ? (
+                                                            <img src={user.photoURL} alt="Profile" className={`w-12 h-12 rounded-full border-2 ${theme.border}`} />
+                                                        ) : (
+                                                            <div className={`w-12 h-12 rounded-full flex items-center justify-center text-white font-bold text-lg ${theme.bg}`}>
+                                                                {user.email?.charAt(0).toUpperCase()}
+                                                            </div>
+                                                        )}
+                                                        <div>
+                                                            <p className={`font-bold text-sm ${isDarkMode ? 'text-white' : 'text-black'}`}>{user.displayName || 'User'}</p>
+                                                            <p className={`text-xs ${isDarkMode ? 'text-[#A0A0A0]' : 'text-[#6B7280]'}`}>{user.email}</p>
+                                                        </div>
+                                                    </div>
+                                                    <button onClick={handleLogout} className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-colors ${isDarkMode ? 'bg-[#2C2C2C] hover:bg-[#3C3C3C]' : 'bg-[#E5E7EB] hover:bg-[#D1D5DB]'}`}>
+                                                        Logout
+                                                    </button>
+                                                </div>
+                                            ) : (
+                                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                                    <button onClick={handleGoogleLogin} className={`flex items-center justify-center gap-3 p-3.5 rounded-xl font-bold text-sm border transition-all active:scale-95 shadow-sm hover:shadow-md ${isDarkMode ? 'bg-[#121212] border-[#2C2C2C] text-white hover:bg-[#1A1A1A]' : 'bg-white border-gray-200 text-black hover:bg-gray-50'}`}>
+                                                        <svg className="w-5 h-5" viewBox="0 0 24 24"><path fill="currentColor" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" /><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" /><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" /><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" /></svg>
+                                                        Continue with Google
+                                                    </button>
+                                                    <button onClick={handleEmailLogin} className={`flex items-center justify-center gap-3 p-3.5 rounded-xl font-bold text-sm border transition-all active:scale-95 shadow-sm hover:shadow-md ${isDarkMode ? 'bg-[#121212] border-[#2C2C2C] text-white hover:bg-[#1A1A1A]' : 'bg-white border-gray-200 text-black hover:bg-gray-50'}`}>
+                                                        <Mail size={20} className={isDarkMode ? 'text-[#A0A0A0]' : 'text-gray-500'} /> Continue with Email
+                                                    </button>
+                                                </div>
+                                            )}
+                                        </div>
+
+                                        <div className={`w-full h-px mb-10 ${isDarkMode ? 'bg-[#2C2C2C]' : 'bg-[#E5E7EB]'}`}></div>
+
+                                        {/* STEP 3: PAYMENT IF NO KEY */}
+                                        <div>
+                                            <h4 className={`text-sm font-bold uppercase tracking-widest mb-6 flex items-center gap-2 ${theme.text}`}>
+                                                <span className={`text-white w-5 h-5 flex items-center justify-center rounded-full text-[10px] ${theme.bg}`}>3</span> 
+                                                {lang === 'en' ? "Don't have a Key? Pay Here" : 'បង់ប្រាក់ & យកលេខកូដ'}
+                                            </h4>
+                                            <div className="flex flex-col md:flex-row gap-8 relative z-10 items-center md:items-start">
+                                                <div className="flex flex-col items-center shrink-0 w-full md:w-auto">
+                                                    <div className="p-3 bg-white rounded-3xl shadow-lg border border-gray-100 mb-4">
+                                                        <img src="/aba-khqr.png" alt="ABA KHQR" className={`w-48 h-48 object-contain rounded-xl shadow-sm border ${isDarkMode ? 'border-[#2C2C2C]' : 'border-gray-200'}`} />
+                                                    </div>
+                                                    <h3 className={`text-2xl font-black font-khmer ${isDarkMode ? 'text-[#F1F1F1]' : 'text-[#1A1A1A]'}`}>$20.00</h3>
+                                                    <p className={`text-xs font-bold uppercase tracking-widest mt-1 ${isDarkMode ? 'text-[#A0A0A0]' : 'text-[#6B7280]'}`}>Full 1-Year Access</p>
+                                                </div>
+
+                                                <div className="flex-1 w-full text-center md:text-left">
+                                                    <p className={`text-[14px] leading-relaxed font-khmer mb-6 ${isDarkMode ? 'text-[#A0A0A0]' : 'text-[#6B7280]'}`}>
+                                                        {lang === 'en' 
+                                                            ? `Scan the KHQR to pay $20. Send the payment screenshot to our Telegram to receive your Key Code.` 
+                                                            : `ស្កេន KHQR ដើម្បីបង់ប្រាក់ $20 រួចផ្ញើវិក្កយបត្រមក Telegram ដើម្បីទទួលបានលេខកូដដោះសោសម្ងាត់។`}
+                                                    </p>
+                                                    <a href={telegramUrl} target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center gap-2 px-6 py-3.5 w-full md:w-auto rounded-xl font-black font-khmer text-[14px] transition-all active:scale-95 shadow-lg hover:-translate-y-1 mb-6 text-white" style={{ backgroundColor: '#2AABEE' }}>
+                                                        <Send size={18} /> {lang === 'en' ? 'Send to Telegram' : 'ផ្ញើវិក្កយបត្រទៅ Telegram'}
+                                                    </a>
+                                                    
+                                                    <div className="mt-4">
+                                                        <button className={`flex items-center justify-center md:justify-start gap-2 w-full md:w-auto text-sm font-bold opacity-70 hover:opacity-100 transition-opacity ${isDarkMode ? 'text-[#F1F1F1]' : 'text-[#1A1A1A]'}`}>
+                                                            <RotateCcw size={16} /> {lang === 'en' ? 'Restore Purchase' : 'ស្តារការទិញឡើងវិញ'}
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </>
+                                )}
                             </div>
-                        )}
-                    </div>
-                )}
+                        </div>
+                    )}
+                </div>
 
                 {isCoursePurchased && (
-                    <div className={`mb-8 p-5 md:p-6 rounded-[24px] border shadow-sm animate-fade-in-up ${isDarkMode ? 'bg-[#1E1E1E]/50 border-[#2C2C2C]' : 'bg-[#FFFFFF] border-[#E5E7EB]'}`}>
-                        <div className="flex justify-between items-end mb-4">
+                    <div className={`mb-8 p-5 md:p-6 rounded-[24px] border shadow-sm animate-fade-in-up relative overflow-hidden ${isDarkMode ? 'bg-[#1E1E1E]/50 border-[#2C2C2C]' : 'bg-[#FFFFFF] border-[#E5E7EB]'}`}>
+                        <div className={`absolute top-0 right-0 w-32 h-32 rounded-full blur-[60px] pointer-events-none bg-gradient-to-br ${theme.gradient} opacity-20`}></div>
+                        <div className="flex justify-between items-end mb-4 relative z-10">
                             <div>
-                                <h4 className={`font-bold font-khmer text-[13px] md:text-sm uppercase tracking-widest ${isDarkMode ? 'text-[#41B6E6]' : 'text-[#0277C5]'}`}>
+                                <h4 className={`font-bold font-khmer text-[13px] md:text-sm uppercase tracking-widest ${theme.text}`}>
                                     {lang === 'en' ? 'Course Progress' : 'វឌ្ឍនភាពនៃការសិក្សា'}
                                 </h4>
                                 <p className={`text-[12px] md:text-sm mt-1.5 font-khmer ${isDarkMode ? 'text-[#A0A0A0]' : 'text-[#6B7280]'}`}>
@@ -547,9 +727,9 @@ function AppContent() {
                             </div>
                             <span className={`text-3xl font-black ${isDarkMode ? 'text-[#F1F1F1]' : 'text-[#1A1A1A]'}`}>{progressPercentage}%</span>
                         </div>
-                        <div className={`h-3 w-full rounded-full overflow-hidden ${isDarkMode ? 'bg-[#2C2C2C]' : 'bg-[#F4F5F7]'}`}>
+                        <div className={`h-3 w-full rounded-full overflow-hidden relative z-10 ${isDarkMode ? 'bg-[#2C2C2C]' : 'bg-[#F4F5F7]'}`}>
                             <div 
-                                className={`h-full rounded-full transition-all duration-1000 ease-out ${isDarkMode ? 'bg-gradient-to-r from-[#41B6E6] to-[#0277C5]' : 'bg-gradient-to-r from-[#0277C5] to-[#01579B]'}`}
+                                className={`h-full rounded-full transition-all duration-1000 ease-out bg-gradient-to-r ${theme.gradient}`}
                                 style={{ width: `${progressPercentage}%` }}
                             ></div>
                         </div>
@@ -557,7 +737,7 @@ function AppContent() {
                 )}
 
                 <h3 className={`font-black text-2xl mb-6 flex items-center gap-3 ${isDarkMode ? 'text-[#F1F1F1]' : 'text-[#1A1A1A]'}`}>
-                    <BookOpen className={isDarkMode ? 'text-[#41B6E6]' : 'text-[#0277C5]'} /> 
+                    <BookOpen className={theme.text} /> 
                     {lang === 'en' ? 'Course Curriculum' : 'បញ្ជីមេរៀន'}
                 </h3>
 
@@ -575,20 +755,22 @@ function AppContent() {
             {activeTab === 'learn' && (
             <div className="space-y-6 pb-24">
                 <div className="text-center py-6 mt-2 relative">
-                    <div className={`absolute inset-0 blur-[120px] rounded-full pointer-events-none ${isDarkMode ? 'bg-[#41B6E6]/10' : 'bg-[#0277C5]/10'}`} />
+                    <div className={`absolute inset-0 blur-[120px] rounded-full pointer-events-none ${isDarkMode ? 'bg-[#B52885]/10' : 'bg-[#B52885]/5'}`} />
                     <h2 className={`text-3xl md:text-5xl font-black mb-4 tracking-tight ${isDarkMode ? 'text-[#F1F1F1]' : 'text-[#1A1A1A]'}`}>iPad Masterclass</h2>
                     <p className={`max-w-xl mx-auto text-sm md:text-base leading-relaxed ${isDarkMode ? 'text-[#A0A0A0]' : 'text-[#6B7280]'}`}>
                         {lang === 'en' ? 'Select an app to begin your professional training.' : 'ជ្រើសរើសកម្មវិធីដើម្បីចាប់ផ្តើមការហ្វឹកហាត់កម្រិតអាជីពរបស់អ្នក។'}
                     </p>
                 </div>
 
-                <div className="flex flex-col gap-4 max-w-2xl mx-auto w-full">
+                <div className="flex flex-col gap-4 max-w-2xl mx-auto w-full relative z-10">
+                    {/* PHOTO BUTTON */}
                     <button 
                         onClick={() => handleOpenCourse('photo')} 
-                        className={`group relative flex items-center justify-between p-5 md:p-6 rounded-3xl border shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg active:scale-95 ${isDarkMode ? 'bg-[#1E1E1E] border-[#2C2C2C] hover:border-[#41B6E6]/50' : 'bg-[#FFFFFF] border-[#E5E7EB] hover:border-[#0277C5]/50'}`}
+                        className={`group relative flex items-center justify-between p-5 md:p-6 rounded-3xl border shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg active:scale-95 overflow-hidden ${isDarkMode ? 'bg-[#1E1E1E] border-[#2C2C2C]' : 'bg-[#FFFFFF] border-[#E5E7EB]'}`}
                     >
-                        <div className="flex items-center gap-5">
-                            <div className={`p-4 rounded-2xl ${isDarkMode ? 'bg-[#41B6E6]/10 text-[#41B6E6]' : 'bg-[#0277C5]/10 text-[#0277C5]'}`}>
+                        <div className={`absolute inset-0 opacity-0 group-hover:opacity-10 transition-opacity duration-500 pointer-events-none bg-gradient-to-r ${APP_THEMES.photo.gradient}`}></div>
+                        <div className="flex items-center gap-5 relative z-10">
+                            <div className={`p-4 rounded-2xl ${APP_THEMES.photo.lightBg} ${APP_THEMES.photo.text}`}>
                                 <Camera size={28} />
                             </div>
                             <div className="text-left">
@@ -596,18 +778,21 @@ function AppContent() {
                                 <p className={`text-sm mt-1 ${isDarkMode ? 'text-[#A0A0A0]' : 'text-[#6B7280]'}`}>{lang === 'en' ? 'Professional photo editing & manipulation' : 'ការកែច្នៃរូបភាពបែបអាជីព'}</p>
                             </div>
                         </div>
-                        <div className="flex items-center gap-3">
-                            {!purchasedCourses['photo']?.unlocked && <Lock size={18} className="text-[#C5B002] opacity-80" />}
+                        <div className="flex items-center gap-3 relative z-10">
+                            {!isAdmin && !purchasedCourses['photo']?.unlocked && <Lock size={18} className={`${APP_THEMES.photo.text} opacity-80`} />}
+                            {isAdmin && <ShieldCheck size={18} className="text-[#41B6E6]" />}
                             <ChevronRight size={24} className={isDarkMode ? 'text-[#A0A0A0] group-hover:text-white' : 'text-[#6B7280] group-hover:text-black'} />
                         </div>
                     </button>
 
+                    {/* DESIGNER BUTTON */}
                     <button 
                         onClick={() => handleOpenCourse('designer')} 
-                        className={`group relative flex items-center justify-between p-5 md:p-6 rounded-3xl border shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg active:scale-95 ${isDarkMode ? 'bg-[#1E1E1E] border-[#2C2C2C] hover:border-[#41B6E6]/50' : 'bg-[#FFFFFF] border-[#E5E7EB] hover:border-[#0277C5]/50'}`}
+                        className={`group relative flex items-center justify-between p-5 md:p-6 rounded-3xl border shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg active:scale-95 overflow-hidden ${isDarkMode ? 'bg-[#1E1E1E] border-[#2C2C2C]' : 'bg-[#FFFFFF] border-[#E5E7EB]'}`}
                     >
-                        <div className="flex items-center gap-5">
-                            <div className={`p-4 rounded-2xl ${isDarkMode ? 'bg-[#41B6E6]/10 text-[#41B6E6]' : 'bg-[#0277C5]/10 text-[#0277C5]'}`}>
+                        <div className={`absolute inset-0 opacity-0 group-hover:opacity-10 transition-opacity duration-500 pointer-events-none bg-gradient-to-r ${APP_THEMES.designer.gradient}`}></div>
+                        <div className="flex items-center gap-5 relative z-10">
+                            <div className={`p-4 rounded-2xl ${APP_THEMES.designer.lightBg} ${APP_THEMES.designer.text}`}>
                                 <PenTool size={28} />
                             </div>
                             <div className="text-left">
@@ -615,18 +800,21 @@ function AppContent() {
                                 <p className={`text-sm mt-1 ${isDarkMode ? 'text-[#A0A0A0]' : 'text-[#6B7280]'}`}>{lang === 'en' ? 'Vector graphics & illustration' : 'ការឌីហ្សាញក្រាហ្វិក និងគំនូរ'}</p>
                             </div>
                         </div>
-                        <div className="flex items-center gap-3">
-                            {!purchasedCourses['designer']?.unlocked && <Lock size={18} className="text-[#C5B002] opacity-80" />}
+                        <div className="flex items-center gap-3 relative z-10">
+                            {!isAdmin && !purchasedCourses['designer']?.unlocked && <Lock size={18} className={`${APP_THEMES.designer.text} opacity-80`} />}
+                            {isAdmin && <ShieldCheck size={18} className="text-[#41B6E6]" />}
                             <ChevronRight size={24} className={isDarkMode ? 'text-[#A0A0A0] group-hover:text-white' : 'text-[#6B7280] group-hover:text-black'} />
                         </div>
                     </button>
 
+                    {/* PUBLISHER BUTTON */}
                     <button 
                         onClick={() => handleOpenCourse('publisher')} 
-                        className={`group relative flex items-center justify-between p-5 md:p-6 rounded-3xl border shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg active:scale-95 ${isDarkMode ? 'bg-[#1E1E1E] border-[#2C2C2C] hover:border-[#41B6E6]/50' : 'bg-[#FFFFFF] border-[#E5E7EB] hover:border-[#0277C5]/50'}`}
+                        className={`group relative flex items-center justify-between p-5 md:p-6 rounded-3xl border shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg active:scale-95 overflow-hidden ${isDarkMode ? 'bg-[#1E1E1E] border-[#2C2C2C]' : 'bg-[#FFFFFF] border-[#E5E7EB]'}`}
                     >
-                        <div className="flex items-center gap-5">
-                            <div className={`p-4 rounded-2xl ${isDarkMode ? 'bg-[#41B6E6]/10 text-[#41B6E6]' : 'bg-[#0277C5]/10 text-[#0277C5]'}`}>
+                        <div className={`absolute inset-0 opacity-0 group-hover:opacity-10 transition-opacity duration-500 pointer-events-none bg-gradient-to-r ${APP_THEMES.publisher.gradient}`}></div>
+                        <div className="flex items-center gap-5 relative z-10">
+                            <div className={`p-4 rounded-2xl ${APP_THEMES.publisher.lightBg} ${APP_THEMES.publisher.text}`}>
                                 <Book size={28} />
                             </div>
                             <div className="text-left">
@@ -634,8 +822,9 @@ function AppContent() {
                                 <p className={`text-sm mt-1 ${isDarkMode ? 'text-[#A0A0A0]' : 'text-[#6B7280]'}`}>{lang === 'en' ? 'Page layout & typography design' : 'ការរៀបចំទំព័រ និងសៀវភៅ'}</p>
                             </div>
                         </div>
-                        <div className="flex items-center gap-3">
-                            {!purchasedCourses['publisher']?.unlocked && <Lock size={18} className="text-[#C5B002] opacity-80" />}
+                        <div className="flex items-center gap-3 relative z-10">
+                            {!isAdmin && !purchasedCourses['publisher']?.unlocked && <Lock size={18} className={`${APP_THEMES.publisher.text} opacity-80`} />}
+                            {isAdmin && <ShieldCheck size={18} className="text-[#41B6E6]" />}
                             <ChevronRight size={24} className={isDarkMode ? 'text-[#A0A0A0] group-hover:text-white' : 'text-[#6B7280] group-hover:text-black'} />
                         </div>
                     </button>
