@@ -3,7 +3,8 @@ import { ChevronRight, PlayCircle, Sparkles, Zap, Facebook, Send, Globe, BookOpe
 
 // FIREBASE IMPORTS
 import { signInWithPopup, signOut } from 'firebase/auth';
-import { auth, googleProvider } from './firebase'; 
+import { doc, setDoc, getDoc, updateDoc } from 'firebase/firestore';
+import { auth, googleProvider, db } from './firebase'; 
 
 import Header from './components/layout/Header';
 import ToolsView from './components/features/tools/ToolsView';
@@ -23,39 +24,21 @@ const triggerHaptic = (type = 'light') => {
     }
 };
 
-// 🎨 APP THEME COLORS FOR PREMIUM UI
 const APP_THEMES = {
-    photo: {
-        gradient: 'from-[#B52885] to-[#223180]',
-        text: 'text-[#B52885]',
-        bg: 'bg-[#B52885]',
-        border: 'border-[#B52885]',
-        lightBg: 'bg-[#B52885]/10'
-    },
-    designer: {
-        gradient: 'from-[#2862B5] to-[#F4B32A]',
-        text: 'text-[#2862B5]',
-        bg: 'bg-[#2862B5]',
-        border: 'border-[#2862B5]',
-        lightBg: 'bg-[#2862B5]/10'
-    },
-    publisher: {
-        gradient: 'from-[#D7383D] to-[#532463]',
-        text: 'text-[#D7383D]',
-        bg: 'bg-[#D7383D]',
-        border: 'border-[#D7383D]',
-        lightBg: 'bg-[#D7383D]/10'
-    }
+    photo: { gradient: 'from-[#B52885] to-[#223180]', text: 'text-[#B52885]', bg: 'bg-[#B52885]', border: 'border-[#B52885]', lightBg: 'bg-[#B52885]/10' },
+    designer: { gradient: 'from-[#2862B5] to-[#F4B32A]', text: 'text-[#2862B5]', bg: 'bg-[#2862B5]', border: 'border-[#2862B5]', lightBg: 'bg-[#2862B5]/10' },
+    publisher: { gradient: 'from-[#D7383D] to-[#532463]', text: 'text-[#D7383D]', bg: 'bg-[#D7383D]', border: 'border-[#D7383D]', lightBg: 'bg-[#D7383D]/10' }
 };
 
-// 🌟 YOUR SECRET PASSCODES (Give these out on Telegram after payment)
+// Fallback manual codes (just in case database is down)
 const VALID_PASSCODES = {
-    photo: ['PH-2026-A1B2', 'PH-2026-C3D4', 'PH-2026-E5F6', 'PH-2026-G7H8'],
-    designer: ['DS-2026-A1B2', 'DS-2026-C3D4', 'DS-2026-E5F6', 'DS-2026-G7H8'],
-    publisher: ['PB-2026-A1B2', 'PB-2026-C3D4', 'PB-2026-E5F6', 'PB-2026-G7H8']
+    photo: ['PH-2026-A1B2', 'PH-2026-C3D4'],
+    designer: ['DS-2026-A1B2', 'DS-2026-C3D4'],
+    publisher: ['PB-2026-A1B2', 'PB-2026-C3D4']
 };
 
 const ONE_YEAR_MS = 365 * 24 * 60 * 60 * 1000;
+const SEVEN_DAYS_MS = 7 * 24 * 60 * 60 * 1000;
 const ADMIN_EMAIL = 'koymy.mlk@gmail.com';
 
 const TipsSection = ({ isExpanded, onToggle, isDarkMode }) => {
@@ -65,22 +48,15 @@ const TipsSection = ({ isExpanded, onToggle, isDarkMode }) => {
   
     const safeTipIndex = tipIndex < currentTipsList.length ? tipIndex : 0;
   
-    useEffect(() => { 
-        setTipIndex(Math.floor(Math.random() * currentTipsList.length)); 
-    }, [lang, currentTipsList.length]);
+    useEffect(() => { setTipIndex(Math.floor(Math.random() * currentTipsList.length)); }, [lang, currentTipsList.length]);
   
     useEffect(() => {
       if (!isExpanded) return;
-      const interval = setInterval(() => { 
-          setTipIndex((prev) => (prev + 1) % currentTipsList.length); 
-      }, 15000);
+      const interval = setInterval(() => { setTipIndex((prev) => (prev + 1) % currentTipsList.length); }, 15000);
       return () => clearInterval(interval);
     }, [isExpanded, currentTipsList.length]);
   
-    const nextTip = (e) => { 
-        e.stopPropagation(); 
-        setTipIndex((prev) => (prev + 1) % currentTipsList.length); 
-    };
+    const nextTip = (e) => { e.stopPropagation(); setTipIndex((prev) => (prev + 1) % currentTipsList.length); };
   
     return (
       <div className="mt-12">
@@ -156,7 +132,6 @@ function AppContent() {
   const [expandedLesson, setExpandedLesson] = useState(null);
   const [expandedSection, setExpandedSection] = useState(null);
   const [showRegistration, setShowRegistration] = useState(false); 
-  
   const [isDarkMode, setIsDarkMode] = useState(true);
   const [completedSteps, setCompletedSteps] = useState([]);
   
@@ -168,35 +143,25 @@ function AppContent() {
   const [genAmount, setGenAmount] = useState(1);
   const [generatedKeys, setGeneratedKeys] = useState('');
 
-  const [purchasedCourses, setPurchasedCourses] = useState({
-      photo: null,
-      designer: null,
-      publisher: null
-  });
-
+  const [purchasedCourses, setPurchasedCourses] = useState({ photo: null, designer: null, publisher: null });
   const [passcodeInput, setPasscodeInput] = useState('');
-  const [passcodeError, setPasscodeError] = useState(false);
-
+  const [passcodeError, setPasscodeError] = useState(''); // Updated to string for custom error messages
+  const [isVerifying, setIsVerifying] = useState(false);
   const [isDataLoaded, setIsDataLoaded] = useState(false);
 
   useEffect(() => {
       if (typeof window !== 'undefined') {
           const savedTheme = localStorage.getItem('myAffinity_theme');
-          if (savedTheme !== null) {
-              setIsDarkMode(savedTheme === 'dark');
-          }
+          if (savedTheme !== null) setIsDarkMode(savedTheme === 'dark');
           
           const savedSteps = localStorage.getItem('myAffinity_completed_steps');
-          if (savedSteps) {
-              setCompletedSteps(JSON.parse(savedSteps));
-          }
+          if (savedSteps) setCompletedSteps(JSON.parse(savedSteps));
 
           const savedPurchases = localStorage.getItem('myAffinity_purchases');
           if (savedPurchases) {
               const parsed = JSON.parse(savedPurchases);
               const validatedPurchases = { photo: null, designer: null, publisher: null };
               const now = Date.now();
-              
               for (const app in parsed) {
                   if (parsed[app] && parsed[app].expiry > now) {
                       validatedPurchases[app] = parsed[app];
@@ -225,9 +190,7 @@ function AppContent() {
       document.documentElement.style.backgroundColor = newBgColor;
       document.body.style.backgroundColor = newBgColor;
 
-      if (isDataLoaded) {
-          localStorage.setItem('myAffinity_theme', isDarkMode ? 'dark' : 'light');
-      }
+      if (isDataLoaded) localStorage.setItem('myAffinity_theme', isDarkMode ? 'dark' : 'light');
   }, [isDarkMode, isDataLoaded]);
 
   useEffect(() => {
@@ -256,13 +219,9 @@ function AppContent() {
             return;
         }
     };
-
     window.addEventListener('popstate', handlePopState);
     window.history.pushState({ modalOpen: false, tab: activeTab, course: null }, '');
-
-    return () => {
-        window.removeEventListener('popstate', handlePopState);
-    };
+    return () => window.removeEventListener('popstate', handlePopState);
   }, [expandedLesson, activeAppTab, activeTab]);
 
   useEffect(() => {
@@ -296,6 +255,7 @@ function AppContent() {
       setActiveAppTab(courseId);
       setShowRegistration(false);
       setGeneratedKeys('');
+      setPasscodeError('');
       triggerHaptic();
       window.history.pushState({ modalOpen: true, tab: activeTab, course: courseId }, '');
   };
@@ -310,35 +270,106 @@ function AppContent() {
       return courseData[activeAppTab].find(l => l.id === expandedLesson);
   };
 
-  const handleVerifyPasscode = () => {
+  // 🌟 FIREBASE KEY VERIFICATION LOGIC
+  const handleVerifyPasscode = async () => {
       if (!activeAppTab) return;
       const code = passcodeInput.trim().toUpperCase();
-      // Allowing generated Admin keys to work locally (mocking DB check)
-      if (VALID_PASSCODES[activeAppTab].includes(code) || generatedKeys.includes(code)) {
-          triggerHaptic('success');
-          setPasscodeError(false);
-          setPasscodeInput('');
-          setPurchasedCourses(prev => ({
-              ...prev,
-              [activeAppTab]: { unlocked: true, expiry: Date.now() + ONE_YEAR_MS, keyUsed: code }
-          }));
-          setShowRegistration(false);
-      } else {
-          triggerHaptic('error');
-          setPasscodeError(true);
-          setTimeout(() => setPasscodeError(false), 500); 
+      setIsVerifying(true);
+      setPasscodeError('');
+
+      try {
+          const keyRef = doc(db, "keys", code);
+          const keySnap = await getDoc(keyRef);
+
+          if (keySnap.exists()) {
+              const keyData = keySnap.data();
+              const now = Date.now();
+
+              // Rule 1: Key expires after 7 days if unused
+              if (keyData.status === 'unused' && (now - keyData.createdAt > SEVEN_DAYS_MS)) {
+                  triggerHaptic('error');
+                  setPasscodeError(lang === 'en' ? 'Key expired (over 7 days).' : 'លេខកូដនេះផុតកំណត់ហើយ។');
+                  setIsVerifying(false);
+                  return;
+              }
+
+              // Rule 2: Valid and Unused Key
+              if (keyData.status === 'unused' && keyData.course === activeAppTab) {
+                  await updateDoc(keyRef, { status: 'used', usedAt: now, usedBy: user ? user.uid : 'anonymous_device' });
+                  
+                  const updatedPurchases = {
+                      ...purchasedCourses,
+                      [activeAppTab]: { unlocked: true, expiry: now + ONE_YEAR_MS, keyUsed: code }
+                  };
+                  setPurchasedCourses(updatedPurchases);
+
+                  // Sync to cloud instantly if they are already logged in
+                  if (user) {
+                      await setDoc(doc(db, "users", user.uid), { purchasedCourses: updatedPurchases }, { merge: true });
+                  }
+
+                  triggerHaptic('success');
+                  setPasscodeInput('');
+                  setShowRegistration(false);
+              } else {
+                  triggerHaptic('error');
+                  setPasscodeError(lang === 'en' ? 'Key already used or invalid course.' : 'លេខកូដនេះត្រូវបានប្រើរួចហើយ ឬខុសវគ្គ។');
+              }
+          } 
+          // Fallback for hardcoded local keys
+          else if (VALID_PASSCODES[activeAppTab].includes(code)) {
+              triggerHaptic('success');
+              const updatedPurchases = { ...purchasedCourses, [activeAppTab]: { unlocked: true, expiry: Date.now() + ONE_YEAR_MS, keyUsed: code }};
+              setPurchasedCourses(updatedPurchases);
+              if (user) await setDoc(doc(db, "users", user.uid), { purchasedCourses: updatedPurchases }, { merge: true });
+              setPasscodeInput('');
+              setShowRegistration(false);
+          } else {
+              triggerHaptic('error');
+              setPasscodeError(lang === 'en' ? 'Invalid Key Code.' : 'លេខកូដមិនត្រឹមត្រូវ។');
+          }
+      } catch(error) {
+          console.error("Verification error", error);
+          setPasscodeError("Connection error. Please try again.");
       }
+      setIsVerifying(false);
   };
 
+  // 🌟 FIREBASE GOOGLE LOGIN & SYNC LOGIC
   const handleGoogleLogin = async () => { 
       triggerHaptic(); 
       try {
           const result = await signInWithPopup(auth, googleProvider);
           const loggedInUser = result.user;
           setUser(loggedInUser);
+
+          // FETCH FROM DATABASE AND SYNC LOCAL STORAGE
+          const userRef = doc(db, "users", loggedInUser.uid);
+          const userSnap = await getDoc(userRef);
+
+          if (userSnap.exists()) {
+              const data = userSnap.data();
+              if (data.purchasedCourses) {
+                  const mergedPurchases = { ...purchasedCourses };
+                  let hasChanges = false;
+                  // Compare Cloud vs Local to keep the active licenses
+                  for (const course in data.purchasedCourses) {
+                      if (data.purchasedCourses[course] && data.purchasedCourses[course].expiry > Date.now()) {
+                          mergedPurchases[course] = data.purchasedCourses[course];
+                          hasChanges = true;
+                      }
+                  }
+                  if (hasChanges) setPurchasedCourses(mergedPurchases);
+              }
+          } else {
+              // First time logging in: Back up local purchases to the cloud
+              if (Object.values(purchasedCourses).some(c => c !== null)) {
+                  await setDoc(userRef, { purchasedCourses });
+              }
+          }
       } catch (error) {
           console.error("Error signing in with Google:", error.message);
-          alert(lang === 'en' ? "Failed to sign in. Please try again." : "ការចូលបរាជ័យ។ សូមព្យាយាមម្តងទៀត។");
+          alert(lang === 'en' ? "Failed to sign in." : "ការចូលបរាជ័យ។");
       }
   };
 
@@ -362,28 +393,42 @@ function AppContent() {
       }
   };
 
-  // ADMIN LOGIC
-  const handleGenerateAdminKeys = () => {
+  // 🌟 ADMIN FIREBASE GENERATOR
+  const handleGenerateAdminKeys = async () => {
       triggerHaptic();
       if (!activeAppTab) return;
       const prefix = activeAppTab === 'photo' ? 'PH' : activeAppTab === 'designer' ? 'DS' : 'PB';
       let newKeys = [];
-      for(let i=0; i<genAmount; i++){
-          const ran1 = Math.random().toString(36).substring(2,6).toUpperCase();
-          const ran2 = Math.random().toString(36).substring(2,6).toUpperCase();
-          newKeys.push(`${prefix}-2026-${ran1}-${ran2}`);
+
+      try {
+          for(let i=0; i<genAmount; i++){
+              const ran1 = Math.random().toString(36).substring(2,6).toUpperCase();
+              const ran2 = Math.random().toString(36).substring(2,6).toUpperCase();
+              const keyCode = `${prefix}-2026-${ran1}-${ran2}`;
+              newKeys.push(keyCode);
+
+              // Push key straight to Firestore
+              await setDoc(doc(db, "keys", keyCode), {
+                  course: activeAppTab,
+                  createdAt: Date.now(),
+                  status: 'unused'
+              });
+          }
+          setGeneratedKeys(newKeys.join('\n'));
+      } catch (error) {
+          console.error("Error generating keys:", error);
+          alert("Failed to generate keys in database.");
       }
-      setGeneratedKeys(newKeys.join('\n'));
   };
 
   const shareAdminKeysTelegram = () => {
       triggerHaptic();
-      const text = `Here are the newly generated premium keys for ${getAppDisplayName(activeAppTab)}:\n\n${generatedKeys}`;
+      const text = `Here are the newly generated premium keys for ${getAppDisplayName(activeAppTab)} (Expires in 7 Days if unused):\n\n${generatedKeys}`;
       const url = `https://t.me/share/url?url=${encodeURIComponent(text)}`;
       window.open(url, '_blank');
   };
 
-  const handleEmailLogin = () => { triggerHaptic(); console.log("Email Login Clicked"); };
+  const handleEmailLogin = () => { triggerHaptic(); alert("Email Auth coming soon!"); };
 
   const currentCourseData = activeAppTab ? (courseData[activeAppTab] || []) : [];
   const totalSteps = currentCourseData.reduce((acc, lesson) => acc + (lesson.steps?.length || 0), 0);
@@ -391,7 +436,6 @@ function AppContent() {
   const completedInThisTab = completedSteps.filter(id => id.startsWith(prefix)).length;
   const progressPercentage = totalSteps === 0 ? 0 : Math.round((completedInThisTab / totalSteps) * 100);
 
-  // Admin always has access to everything
   const isCoursePurchased = isAdmin || (activeAppTab ? purchasedCourses[activeAppTab]?.unlocked === true : false);
   const theme = activeAppTab ? APP_THEMES[activeAppTab] : APP_THEMES.photo;
   
@@ -429,9 +473,7 @@ function AppContent() {
             lesson={getSelectedLesson()} 
             onClose={() => {
                 setExpandedLesson(null);
-                if (window.history.state && window.history.state.modalOpen) {
-                    window.history.back(); 
-                }
+                if (window.history.state && window.history.state.modalOpen) window.history.back(); 
             }} 
             isDarkMode={isDarkMode} 
             completedSteps={completedSteps}
@@ -441,7 +483,6 @@ function AppContent() {
         />
       )}
 
-      {/* FULL SCREEN COURSE MODAL */}
       {activeAppTab && !expandedLesson && (
         <div className={`fixed inset-0 z-40 overflow-y-auto custom-scrollbar flex flex-col pt-[env(safe-area-inset-top)] ${isDarkMode ? 'bg-[#0A0A0A]' : 'bg-[#F4F5F7]'}`}>
             <div className={`sticky top-0 z-50 px-4 py-3 border-b flex items-center justify-between backdrop-blur-xl ${isDarkMode ? 'border-[#2C2C2C] bg-[#0A0A0A]/90' : 'border-[#E5E7EB] bg-[#FFFFFF]/90'}`}>
@@ -454,13 +495,11 @@ function AppContent() {
 
             <div className="p-4 md:p-8 max-w-7xl mx-auto w-full pb-32">
                 
-                {/* 🔒 ACCORDION: REGISTRATION OR PREMIUM ACCOUNT */}
                 <div className={`mb-8 border rounded-3xl overflow-hidden shadow-md ${isDarkMode ? 'bg-[#1E1E1E] border-[#2C2C2C]' : 'bg-[#FFFFFF] border-[#E5E7EB]'}`}>
                     <button 
                         onClick={() => setShowRegistration(!showRegistration)} 
                         className={`w-full p-6 flex items-center justify-between transition-colors active:scale-[0.99] relative overflow-hidden ${showRegistration ? (isDarkMode ? 'bg-[#2C2C2C]' : 'bg-[#F8F9FA]') : ''}`}
                     >
-                        {/* Dynamic background blur for Premium visual */}
                         <div className={`absolute top-0 right-0 w-full h-full opacity-10 pointer-events-none bg-gradient-to-r ${theme.gradient}`}></div>
                         
                         <div className="flex items-center gap-4 relative z-10">
@@ -488,16 +527,13 @@ function AppContent() {
                         <ChevronDown className={`w-6 h-6 relative z-10 transition-transform duration-300 ${showRegistration ? 'rotate-180' : ''}`} />
                     </button>
                     
-                    {/* ACCORDION CONTENT */}
                     {showRegistration && (
                         <div className={`p-6 md:p-10 border-t ${isDarkMode ? 'border-[#2C2C2C]' : 'border-[#E5E7EB]'} animate-fade-in-up relative overflow-hidden`}>
                             <div className={`absolute -top-24 -right-24 w-64 h-64 rounded-full blur-[80px] pointer-events-none bg-gradient-to-br ${theme.gradient} opacity-20`}></div>
                             
                             <div className="max-w-3xl mx-auto relative z-10">
                                 
-                                {/* ----------------------- */}
-                                {/* IF ADMIN LOGGED IN */}
-                                {/* ----------------------- */}
+                                {/* ADMIN LOGIC */}
                                 {isAdmin ? (
                                     <div className="space-y-6">
                                         <h4 className="text-sm font-bold uppercase tracking-widest text-[#41B6E6] flex items-center gap-2">
@@ -544,9 +580,7 @@ function AppContent() {
 
                                 ) : isCoursePurchased ? (
                                     
-                                    /* ----------------------- */
-                                    /* IF STANDARD PREMIUM LOGGED IN */
-                                    /* ----------------------- */
+                                    /* PREMIUM LOGIC */
                                     <div className="space-y-8">
                                         <div className={`p-6 rounded-2xl border shadow-sm flex items-center justify-between ${isDarkMode ? 'bg-[#121212] border-[#2C2C2C]' : 'bg-[#F8F9FA] border-[#E5E7EB]'}`}>
                                             <div>
@@ -574,10 +608,15 @@ function AppContent() {
                                                     placeholder="Enter new code..."
                                                     className={`flex-1 bg-transparent outline-none px-4 font-bold tracking-widest placeholder:tracking-normal ${isDarkMode ? 'text-white' : 'text-black'}`}
                                                 />
-                                                <button onClick={handleVerifyPasscode} disabled={!passcodeInput.trim()} className={`px-6 py-3 rounded-xl font-bold text-[13px] transition-all ${!passcodeInput.trim() ? 'opacity-50' : 'active:scale-95 text-white bg-gradient-to-r ' + theme.gradient}`}>
-                                                    Update
+                                                <button onClick={handleVerifyPasscode} disabled={!passcodeInput.trim() || isVerifying} className={`px-6 py-3 rounded-xl font-bold text-[13px] transition-all ${!passcodeInput.trim() ? 'opacity-50' : 'active:scale-95 text-white bg-gradient-to-r ' + theme.gradient}`}>
+                                                    {isVerifying ? 'Verifying...' : 'Update'}
                                                 </button>
                                             </div>
+                                            {passcodeError && (
+                                                <p className="text-red-500 text-[11px] font-bold tracking-wide mt-2 flex items-center justify-start gap-1">
+                                                    <AlertCircle size={12} /> {passcodeError}
+                                                </p>
+                                            )}
                                         </div>
 
                                         <div className={`w-full h-px my-6 ${isDarkMode ? 'bg-[#2C2C2C]' : 'bg-[#E5E7EB]'}`}></div>
@@ -587,11 +626,8 @@ function AppContent() {
                                     </div>
 
                                 ) : (
-                                    /* ----------------------- */
-                                    /* IF NOT PURCHASED YET */
-                                    /* ----------------------- */
+                                    /* UNPURCHASED LOGIC */
                                     <>
-                                        {/* KEY CODE FIRST */}
                                         <div className="mb-10">
                                             <h4 className={`text-sm font-bold uppercase tracking-widest mb-4 flex items-center gap-2 ${theme.text}`}>
                                                 <span className={`text-white w-5 h-5 flex items-center justify-center rounded-full text-[10px] ${theme.bg}`}>1</span> 
@@ -605,7 +641,7 @@ function AppContent() {
                                                         value={passcodeInput}
                                                         onChange={(e) => {
                                                             setPasscodeInput(e.target.value.toUpperCase());
-                                                            setPasscodeError(false);
+                                                            setPasscodeError('');
                                                         }}
                                                         placeholder={lang === 'en' ? "PH-2026-XXXX..." : "បញ្ចូលលេខកូដសម្ងាត់..."}
                                                         className={`w-full bg-transparent outline-none font-bold text-center sm:text-left tracking-widest placeholder:tracking-normal ${isDarkMode ? 'text-white' : 'text-black'}`}
@@ -613,26 +649,25 @@ function AppContent() {
                                                 </div>
                                                 <button 
                                                     onClick={handleVerifyPasscode}
-                                                    disabled={!passcodeInput.trim()}
+                                                    disabled={!passcodeInput.trim() || isVerifying}
                                                     className={`px-6 py-3 rounded-xl font-bold font-khmer text-[13px] transition-all active:scale-95 ${!passcodeInput.trim() ? 'opacity-50 cursor-not-allowed bg-gray-500' : `shadow-md hover:-translate-y-1 text-white bg-gradient-to-r ${theme.gradient}`}`}
                                                 >
-                                                    {lang === 'en' ? 'Unlock Now' : 'ដោះសោឥឡូវនេះ'}
+                                                    {isVerifying ? 'Checking...' : (lang === 'en' ? 'Unlock Now' : 'ដោះសោឥឡូវនេះ')}
                                                 </button>
                                             </div>
                                             {passcodeError && (
                                                 <p className="text-red-500 text-[11px] font-bold tracking-wide mt-2 flex items-center justify-center md:justify-start gap-1">
-                                                    <AlertCircle size={12} /> {lang === 'en' ? 'Invalid Code. Please try again.' : 'លេខកូដមិនត្រឹមត្រូវ។ សូមព្យាយាមម្តងទៀត។'}
+                                                    <AlertCircle size={12} /> {passcodeError}
                                                 </p>
                                             )}
                                             <p className={`text-xs mt-3 font-bold ${isDarkMode ? 'text-orange-400' : 'text-orange-600'}`}>
                                                 <Sparkles size={12} className="inline mr-1" />
-                                                Recommend: Sign up below to keep your purchase & sync across 2 devices limit.
+                                                Recommend: Sign up below to secure access and sync your device.
                                             </p>
                                         </div>
 
                                         <div className={`w-full h-px mb-10 ${isDarkMode ? 'bg-[#2C2C2C]' : 'bg-[#E5E7EB]'}`}></div>
 
-                                        {/* STEP 2: ACCOUNT CREATION */}
                                         <div className="mb-10">
                                             <h4 className={`text-sm font-bold uppercase tracking-widest mb-4 flex items-center gap-2 ${theme.text}`}>
                                                 <span className={`text-white w-5 h-5 flex items-center justify-center rounded-full text-[10px] ${theme.bg}`}>2</span> 
@@ -673,7 +708,6 @@ function AppContent() {
 
                                         <div className={`w-full h-px mb-10 ${isDarkMode ? 'bg-[#2C2C2C]' : 'bg-[#E5E7EB]'}`}></div>
 
-                                        {/* STEP 3: PAYMENT IF NO KEY */}
                                         <div>
                                             <h4 className={`text-sm font-bold uppercase tracking-widest mb-6 flex items-center gap-2 ${theme.text}`}>
                                                 <span className={`text-white w-5 h-5 flex items-center justify-center rounded-full text-[10px] ${theme.bg}`}>3</span> 
@@ -697,12 +731,6 @@ function AppContent() {
                                                     <a href={telegramUrl} target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center gap-2 px-6 py-3.5 w-full md:w-auto rounded-xl font-black font-khmer text-[14px] transition-all active:scale-95 shadow-lg hover:-translate-y-1 mb-6 text-white" style={{ backgroundColor: '#2AABEE' }}>
                                                         <Send size={18} /> {lang === 'en' ? 'Send to Telegram' : 'ផ្ញើវិក្កយបត្រទៅ Telegram'}
                                                     </a>
-                                                    
-                                                    <div className="mt-4">
-                                                        <button className={`flex items-center justify-center md:justify-start gap-2 w-full md:w-auto text-sm font-bold opacity-70 hover:opacity-100 transition-opacity ${isDarkMode ? 'text-[#F1F1F1]' : 'text-[#1A1A1A]'}`}>
-                                                            <RotateCcw size={16} /> {lang === 'en' ? 'Restore Purchase' : 'ស្តារការទិញឡើងវិញ'}
-                                                        </button>
-                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
@@ -763,16 +791,10 @@ function AppContent() {
                 </div>
 
                 <div className="flex flex-col gap-4 max-w-2xl mx-auto w-full relative z-10">
-                    {/* PHOTO BUTTON */}
-                    <button 
-                        onClick={() => handleOpenCourse('photo')} 
-                        className={`group relative flex items-center justify-between p-5 md:p-6 rounded-3xl border shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg active:scale-95 overflow-hidden ${isDarkMode ? 'bg-[#1E1E1E] border-[#2C2C2C]' : 'bg-[#FFFFFF] border-[#E5E7EB]'}`}
-                    >
+                    <button onClick={() => handleOpenCourse('photo')} className={`group relative flex items-center justify-between p-5 md:p-6 rounded-3xl border shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg active:scale-95 overflow-hidden ${isDarkMode ? 'bg-[#1E1E1E] border-[#2C2C2C]' : 'bg-[#FFFFFF] border-[#E5E7EB]'}`}>
                         <div className={`absolute inset-0 opacity-0 group-hover:opacity-10 transition-opacity duration-500 pointer-events-none bg-gradient-to-r ${APP_THEMES.photo.gradient}`}></div>
                         <div className="flex items-center gap-5 relative z-10">
-                            <div className={`p-4 rounded-2xl ${APP_THEMES.photo.lightBg} ${APP_THEMES.photo.text}`}>
-                                <Camera size={28} />
-                            </div>
+                            <div className={`p-4 rounded-2xl ${APP_THEMES.photo.lightBg} ${APP_THEMES.photo.text}`}><Camera size={28} /></div>
                             <div className="text-left">
                                 <h3 className={`font-black text-lg md:text-xl ${isDarkMode ? 'text-white' : 'text-black'}`}>Affinity Photo 2 iPad</h3>
                                 <p className={`text-sm mt-1 ${isDarkMode ? 'text-[#A0A0A0]' : 'text-[#6B7280]'}`}>{lang === 'en' ? 'Professional photo editing & manipulation' : 'ការកែច្នៃរូបភាពបែបអាជីព'}</p>
@@ -785,16 +807,10 @@ function AppContent() {
                         </div>
                     </button>
 
-                    {/* DESIGNER BUTTON */}
-                    <button 
-                        onClick={() => handleOpenCourse('designer')} 
-                        className={`group relative flex items-center justify-between p-5 md:p-6 rounded-3xl border shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg active:scale-95 overflow-hidden ${isDarkMode ? 'bg-[#1E1E1E] border-[#2C2C2C]' : 'bg-[#FFFFFF] border-[#E5E7EB]'}`}
-                    >
+                    <button onClick={() => handleOpenCourse('designer')} className={`group relative flex items-center justify-between p-5 md:p-6 rounded-3xl border shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg active:scale-95 overflow-hidden ${isDarkMode ? 'bg-[#1E1E1E] border-[#2C2C2C]' : 'bg-[#FFFFFF] border-[#E5E7EB]'}`}>
                         <div className={`absolute inset-0 opacity-0 group-hover:opacity-10 transition-opacity duration-500 pointer-events-none bg-gradient-to-r ${APP_THEMES.designer.gradient}`}></div>
                         <div className="flex items-center gap-5 relative z-10">
-                            <div className={`p-4 rounded-2xl ${APP_THEMES.designer.lightBg} ${APP_THEMES.designer.text}`}>
-                                <PenTool size={28} />
-                            </div>
+                            <div className={`p-4 rounded-2xl ${APP_THEMES.designer.lightBg} ${APP_THEMES.designer.text}`}><PenTool size={28} /></div>
                             <div className="text-left">
                                 <h3 className={`font-black text-lg md:text-xl ${isDarkMode ? 'text-white' : 'text-black'}`}>Affinity Designer 2 iPad</h3>
                                 <p className={`text-sm mt-1 ${isDarkMode ? 'text-[#A0A0A0]' : 'text-[#6B7280]'}`}>{lang === 'en' ? 'Vector graphics & illustration' : 'ការឌីហ្សាញក្រាហ្វិក និងគំនូរ'}</p>
@@ -807,16 +823,10 @@ function AppContent() {
                         </div>
                     </button>
 
-                    {/* PUBLISHER BUTTON */}
-                    <button 
-                        onClick={() => handleOpenCourse('publisher')} 
-                        className={`group relative flex items-center justify-between p-5 md:p-6 rounded-3xl border shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg active:scale-95 overflow-hidden ${isDarkMode ? 'bg-[#1E1E1E] border-[#2C2C2C]' : 'bg-[#FFFFFF] border-[#E5E7EB]'}`}
-                    >
+                    <button onClick={() => handleOpenCourse('publisher')} className={`group relative flex items-center justify-between p-5 md:p-6 rounded-3xl border shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg active:scale-95 overflow-hidden ${isDarkMode ? 'bg-[#1E1E1E] border-[#2C2C2C]' : 'bg-[#FFFFFF] border-[#E5E7EB]'}`}>
                         <div className={`absolute inset-0 opacity-0 group-hover:opacity-10 transition-opacity duration-500 pointer-events-none bg-gradient-to-r ${APP_THEMES.publisher.gradient}`}></div>
                         <div className="flex items-center gap-5 relative z-10">
-                            <div className={`p-4 rounded-2xl ${APP_THEMES.publisher.lightBg} ${APP_THEMES.publisher.text}`}>
-                                <Book size={28} />
-                            </div>
+                            <div className={`p-4 rounded-2xl ${APP_THEMES.publisher.lightBg} ${APP_THEMES.publisher.text}`}><Book size={28} /></div>
                             <div className="text-left">
                                 <h3 className={`font-black text-lg md:text-xl ${isDarkMode ? 'text-white' : 'text-black'}`}>Affinity Publisher 2 iPad</h3>
                                 <p className={`text-sm mt-1 ${isDarkMode ? 'text-[#A0A0A0]' : 'text-[#6B7280]'}`}>{lang === 'en' ? 'Page layout & typography design' : 'ការរៀបចំទំព័រ និងសៀវភៅ'}</p>
@@ -856,9 +866,7 @@ function AppContent() {
                     {t_id === 'quiz' && <Award size={22} className={activeTab === t_id ? 'drop-shadow-md' : ''}/>}
                     {t_id === 'tools' && <Zap size={22} className={activeTab === t_id ? 'drop-shadow-md' : ''}/>}
                     {t_id === 'ai' && <Bot size={22} className={activeTab === t_id ? 'drop-shadow-md' : ''}/>}
-                    <span className="text-[9px] font-black uppercase tracking-widest">
-                        {t(`tab_${t_id}`)}
-                    </span>
+                    <span className="text-[9px] font-black uppercase tracking-widest">{t(`tab_${t_id}`)}</span>
                 </button>
             ))}
           </nav>
@@ -867,10 +875,4 @@ function AppContent() {
   );
 }
 
-export default function App() {
-  return (
-    <LanguageProvider>
-      <AppContent />
-    </LanguageProvider>
-  );
-}
+export default function App() { return <LanguageProvider><AppContent /></LanguageProvider>; }
