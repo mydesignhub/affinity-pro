@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { ChevronRight, PlayCircle, Sparkles, Zap, Facebook, Send, Globe, BookOpen, Award, Bot, Camera, PenTool, Book, Lock, KeyRound, AlertCircle, ChevronDown, RotateCcw, Crown, LogOut, Copy, ShieldCheck, CheckCircle } from 'lucide-react';
+import { ChevronRight, PlayCircle, Sparkles, Zap, Facebook, Send, Globe, BookOpen, Award, Bot, Camera, PenTool, Book, Lock, KeyRound, AlertCircle, ChevronDown, RotateCcw, Crown, LogOut, Copy, ShieldCheck, CheckCircle, Database } from 'lucide-react';
 
 // FIREBASE IMPORTS
 import { signInWithPopup, signOut } from 'firebase/auth';
-import { doc, setDoc, getDoc, updateDoc } from 'firebase/firestore';
+import { doc, setDoc, getDoc, updateDoc, collection, query, where, getDocs } from 'firebase/firestore';
 import { auth, googleProvider, db } from './firebase'; 
 
 import Header from './components/layout/Header';
@@ -143,6 +143,7 @@ function AppContent() {
   const [generatedKeys, setGeneratedKeys] = useState('');
   const [copiedAll, setCopiedAll] = useState(false);
   const [copiedCode, setCopiedCode] = useState(null);
+  const [isFetchingKeys, setIsFetchingKeys] = useState(false); // 🌟 NEW STATE
 
   const [purchasedCourses, setPurchasedCourses] = useState({ photo: null, designer: null, publisher: null });
   const [passcodeInput, setPasscodeInput] = useState('');
@@ -419,7 +420,41 @@ function AppContent() {
       }
   };
 
-  // 🌟 NEW: Dedicated function to share individual keys with formal preset text
+  // 🌟 NEW: Fetch Unused Keys for Admin
+  const handleFetchUnusedKeys = async () => {
+      triggerHaptic();
+      setIsFetchingKeys(true);
+      setGeneratedKeys(''); // Clear current view
+      
+      try {
+          // Safe query without composite index requirement
+          const q = query(collection(db, "keys"), where("course", "==", activeAppTab));
+          const querySnapshot = await getDocs(q);
+          
+          let keys = [];
+          const now = Date.now();
+          
+          querySnapshot.forEach((docSnap) => {
+              const data = docSnap.data();
+              // Locally filter unused and unexpired (7 days)
+              if (data.status === 'unused' && (now - data.createdAt <= SEVEN_DAYS_MS)) {
+                  keys.push(docSnap.id);
+              }
+          });
+          
+          if (keys.length > 0) {
+              setGeneratedKeys(keys.join('\n'));
+          } else {
+              alert(lang === 'en' ? "No active unused keys found." : "មិនមានលេខកូដដែលនៅទំនេរទេសម្រាប់វគ្គនេះ។");
+          }
+      } catch (error) {
+          console.error("Error fetching unused keys:", error);
+          alert("Failed to fetch keys from database.");
+      } finally {
+          setIsFetchingKeys(false);
+      }
+  };
+
   const shareSingleKeyTelegram = (code) => {
       triggerHaptic();
       const appName = getAppDisplayName(activeAppTab);
@@ -560,7 +595,7 @@ function AppContent() {
                                             Generate secure, single-use activation keys for <strong>{appDisplayName}</strong>. Keys automatically expire 7 days after generation.
                                         </p>
                                         
-                                        <div className="flex gap-3 mb-6">
+                                        <div className="flex gap-3 mb-4">
                                             <input 
                                                 type="number" 
                                                 value={genAmount} 
@@ -573,9 +608,19 @@ function AppContent() {
                                             </button>
                                         </div>
 
+                                        {/* 🌟 NEW: Fetch Available Keys Button 🌟 */}
+                                        <button 
+                                            onClick={handleFetchUnusedKeys} 
+                                            disabled={isFetchingKeys}
+                                            className={`w-full py-3.5 mb-6 rounded-2xl border font-bold font-khmer text-[14px] transition-all flex items-center justify-center gap-2 shadow-sm ${isDarkMode ? 'bg-[#121212] border-[#2C2C2C] text-[#A0A0A0] hover:text-white hover:border-[#41B6E6]/50' : 'bg-white border-[#E5E7EB] text-gray-600 hover:text-black hover:border-[#0277C5]/50'}`}
+                                        >
+                                            {isFetchingKeys ? <Loader2 size={18} className="animate-spin" /> : <Database size={18} />}
+                                            {lang === 'en' ? 'View Available Unused Keys' : 'មើលលេខកូដដែលនៅទំនេរ'}
+                                        </button>
+
                                         {generatedKeys && (
-                                            <div className="mt-6 space-y-3 max-h-64 overflow-y-auto custom-scrollbar animate-fade-in-up pr-2">
-                                                <div className="flex justify-between items-center mb-3">
+                                            <div className="space-y-3 max-h-64 overflow-y-auto custom-scrollbar animate-fade-in-up pr-2">
+                                                <div className="flex justify-between items-center mb-3 sticky top-0 bg-inherit py-1 z-10">
                                                     <span className={`text-xs font-bold uppercase tracking-widest ${theme.text}`}>
                                                         {generatedKeys.split('\n').length} Codes Ready
                                                     </span>
@@ -598,7 +643,6 @@ function AppContent() {
                                                             >
                                                                 {copiedCode === c ? <CheckCircle size={18} className="text-green-500"/> : <Copy size={18} className={isDarkMode ? 'text-gray-300' : 'text-gray-700'} />}
                                                             </button>
-                                                            {/* 🌟 UPDATED: This button now shares ONLY the specific key via Telegram */}
                                                             <button onClick={() => shareSingleKeyTelegram(c)} className={`p-2 rounded-lg transition-colors shadow-sm text-white bg-gradient-to-r ${theme.gradient}`}>
                                                                 <Send size={18} />
                                                             </button>
