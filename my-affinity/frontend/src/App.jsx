@@ -12,7 +12,7 @@ import Test from './components/features/quiz/Test';
 import ChatBot from './components/features/ai/ChatBot';
 import LessonCard from './components/features/learn/LessonCard';
 import LessonModal from './components/features/learn/LessonModal'; 
-import EmailAuthModal from './components/features/auth/EmailAuthModal'; // 👈 NEW IMPORT
+import EmailAuthModal from './components/features/EmailAuthModal';
 
 import { courseData, TIPS_LIST, TIPS_LIST_EN } from './data/data';
 import { useLanguage, LanguageProvider } from './contexts/LanguageContext';
