@@ -419,10 +419,17 @@ function AppContent() {
       }
   };
 
-  const shareAdminKeysTelegram = () => {
+  // 🌟 NEW: Dedicated function to share individual keys with formal preset text
+  const shareSingleKeyTelegram = (code) => {
       triggerHaptic();
-      const text = `Here are the newly generated premium keys for ${getAppDisplayName(activeAppTab)} (Expires in 7 Days if unused):\n\n${generatedKeys}`;
-      const url = `https://t.me/share/url?url=${encodeURIComponent(text)}`;
+      const appName = getAppDisplayName(activeAppTab);
+      
+      const textEn = `🎉 Thank you for your purchase! Here is your Premium Activation Key for the ${appName}:\n\n🔑 ${code}\n\n⚠️ IMPORTANT:\n1. This code is for ONE-TIME USE only.\n2. Please link your Google Account immediately after unlocking to secure your access.\n3. Your account supports a maximum of 2 devices.\n\nEnjoy learning!`;
+      
+      const textKm = `🎉 សូមអរគុណសម្រាប់ការគាំទ្រ! នេះគឺជាលេខកូដ Premium របស់អ្នកសម្រាប់វគ្គសិក្សា ${appName}៖\n\n🔑 ${code}\n\n⚠️ ព័ត៌មានសំខាន់ៗដែលត្រូវដឹង៖\n១. លេខកូដនេះអាចប្រើប្រាស់បានតែម្តងគត់ (One-time use)។\n២. សូមភ្ជាប់គណនី Google របស់អ្នកភ្លាមៗបន្ទាប់ពីបញ្ចូលកូដរួច ដើម្បីធានាថាសិទ្ធិប្រើប្រាស់របស់អ្នកត្រូវបានរក្សាទុកជាអចិន្ត្រៃយ៍។\n៣. គណនីរបស់អ្នកអាចប្រើប្រាស់បានអតិបរមាត្រឹម ២ ឧបករណ៍ប៉ុណ្ណោះ។\n\nសូមរីករាយក្នុងការសិក្សា!`;
+      
+      const message = lang === 'en' ? textEn : textKm;
+      const url = `https://t.me/share/url?url=${encodeURIComponent(message)}`;
       window.open(url, '_blank');
   };
 
@@ -591,7 +598,8 @@ function AppContent() {
                                                             >
                                                                 {copiedCode === c ? <CheckCircle size={18} className="text-green-500"/> : <Copy size={18} className={isDarkMode ? 'text-gray-300' : 'text-gray-700'} />}
                                                             </button>
-                                                            <button onClick={shareAdminKeysTelegram} className={`p-2 rounded-lg transition-colors shadow-sm text-white bg-gradient-to-r ${theme.gradient}`}>
+                                                            {/* 🌟 UPDATED: This button now shares ONLY the specific key via Telegram */}
+                                                            <button onClick={() => shareSingleKeyTelegram(c)} className={`p-2 rounded-lg transition-colors shadow-sm text-white bg-gradient-to-r ${theme.gradient}`}>
                                                                 <Send size={18} />
                                                             </button>
                                                         </div>
