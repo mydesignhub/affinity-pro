@@ -309,39 +309,52 @@ const LessonModal = ({ lesson, onClose, isDarkMode, completedSteps, setCompleted
                                             onLoad={() => setIsVideoLoading(false)}
                                         />
                                         
-                                        {/* 🛡️ CALIBRATED DEAD-ZONE SHIELDS 🛡️ */}
-                                        {/* onClick/onDoubleClick completely neutralizes any interaction */}
-
+                                        {/* 🛡️ ACTIVE TRAPDOOR SHIELDS - RESPONSIVE BREAKPOINTS FIXED 🛡️ */}
+                                        
                                         {/* 1. Top-Left: Channel Avatar & Title */}
-                                        <div 
-                                            className="absolute top-0 left-0 w-[calc(100%-60px)] sm:w-[calc(100%-160px)] h-[60px] z-30 bg-transparent no-callout cursor-default" 
-                                            onContextMenu={e => e.preventDefault()}
-                                            onClick={e => { e.preventDefault(); e.stopPropagation(); }}
-                                            onDoubleClick={e => { e.preventDefault(); e.stopPropagation(); }}
+                                        <button 
+                                            onClick={(e) => { e.preventDefault(); toggleFullScreen(); }}
+                                            className="absolute top-0 left-0 w-[60%] lg:w-[calc(100%-280px)] h-[80px] z-30 bg-transparent no-callout cursor-pointer outline-none border-none" 
+                                            onContextMenu={e => e.preventDefault()} 
+                                            tabIndex="-1"
+                                            aria-hidden="true"
                                         />
 
-                                        {/* 2. Top-Right (Desktop Only): Watch Later & Share */}
-                                        <div 
-                                            className="hidden sm:block absolute top-0 right-0 w-[150px] h-[60px] z-30 bg-transparent no-callout cursor-default" 
-                                            onContextMenu={e => e.preventDefault()}
-                                            onClick={e => { e.preventDefault(); e.stopPropagation(); }}
-                                            onDoubleClick={e => { e.preventDefault(); e.stopPropagation(); }}
+                                        {/* 2. Top-Right (Desktop/iPad PC mode): Watch Later & Share */}
+                                        <button 
+                                            onClick={(e) => { e.preventDefault(); toggleFullScreen(); }}
+                                            className="hidden lg:block absolute top-0 right-0 w-[280px] h-[80px] z-30 bg-transparent no-callout cursor-pointer outline-none border-none" 
+                                            onContextMenu={e => e.preventDefault()} 
+                                            tabIndex="-1"
+                                            aria-hidden="true"
                                         />
 
-                                        {/* 3. Bottom-Left (Mobile Only): Mobile Share Arrow */}
-                                        <div 
-                                            className="sm:hidden absolute bottom-0 left-0 w-[60px] h-[50px] z-30 bg-transparent no-callout cursor-default" 
-                                            onContextMenu={e => e.preventDefault()}
-                                            onClick={e => { e.preventDefault(); e.stopPropagation(); }}
-                                            onDoubleClick={e => { e.preventDefault(); e.stopPropagation(); }}
+                                        {/* 3. Top-Right Edge (Mobile/Landscape Phone): Blocks 3-dots, allows Gear */}
+                                        <button 
+                                            onClick={(e) => { e.preventDefault(); toggleFullScreen(); }}
+                                            className="lg:hidden absolute top-0 right-0 w-[75px] h-[75px] z-30 bg-transparent no-callout cursor-pointer outline-none border-none" 
+                                            onContextMenu={e => e.preventDefault()} 
+                                            tabIndex="-1"
+                                            aria-hidden="true"
                                         />
 
-                                        {/* 4. Bottom-Right: EXACTLY covers YouTube Logo ONLY. Leaves PC Gear Icon fully clickable! */}
-                                        <div 
-                                            className="absolute bottom-0 right-0 w-[80px] h-[40px] z-30 bg-transparent no-callout cursor-default" 
-                                            onContextMenu={e => e.preventDefault()}
-                                            onClick={e => { e.preventDefault(); e.stopPropagation(); }}
-                                            onDoubleClick={e => { e.preventDefault(); e.stopPropagation(); }}
+                                        {/* 4. Bottom-Left (Mobile & Tablet Portrait): Blocks Mobile Share Arrow */}
+                                        {/* Extended width to 160px for phones in landscape to beat letterboxing */}
+                                        <button 
+                                            onClick={(e) => { e.preventDefault(); toggleFullScreen(); }}
+                                            className="lg:hidden absolute bottom-0 left-0 w-[160px] h-[80px] z-30 bg-transparent no-callout cursor-pointer outline-none border-none" 
+                                            onContextMenu={e => e.preventDefault()} 
+                                            tabIndex="-1"
+                                            aria-hidden="true"
+                                        />
+
+                                        {/* 5. Bottom-Right (All Devices): YouTube Logo Watermark */}
+                                        <button 
+                                            onClick={(e) => { e.preventDefault(); toggleFullScreen(); }}
+                                            className="absolute bottom-0 right-0 w-[140px] h-[70px] z-30 bg-transparent no-callout cursor-pointer outline-none border-none" 
+                                            onContextMenu={e => e.preventDefault()} 
+                                            tabIndex="-1"
+                                            aria-hidden="true"
                                         />
                                     </>
                                 )}
