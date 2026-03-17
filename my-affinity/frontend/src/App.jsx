@@ -39,8 +39,8 @@ const ONE_YEAR_MS = 365 * 24 * 60 * 60 * 1000;
 const SEVEN_DAYS_MS = 7 * 24 * 60 * 60 * 1000;
 const ADMIN_EMAIL = 'koymy.mlk@gmail.com';
 
-// 🌟 REFACTORED LESSON MODAL WITH VISIBLE BRANDED SHIELDS 🌟
-const LessonModal = ({ lesson, theme, onClose, isDarkMode, completedSteps, setCompletedSteps, isPurchased, onUnlockDemo }) => {
+// 🌟 REFACTORED LESSON MODAL WITH SMART RESPONSIVE SHIELDS 🌟
+const LessonModal = ({ lesson, onClose, isDarkMode, completedSteps, setCompletedSteps, isPurchased, onUnlockDemo }) => {
   const { lang } = useLanguage();
   const [isVisible, setIsVisible] = useState(false);
   const [activeStep, setActiveStep] = useState(0);
@@ -300,45 +300,44 @@ const LessonModal = ({ lesson, theme, onClose, isDarkMode, completedSteps, setCo
                                             src={getVideoUrl(currentStepData.videoUrl)}
                                             className={`w-full h-full absolute inset-0 transition-opacity duration-700 ease-in-out ${isVideoLoading ? 'opacity-0' : 'opacity-100 z-20'}`}
                                             sandbox="allow-scripts allow-same-origin allow-presentation"
-                                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; fullscreen" 
                                             referrerPolicy="strict-origin-when-cross-origin"
                                             allowFullScreen
                                             title={`Step ${currentStepData.id} Video`}
                                             onLoad={() => setIsVideoLoading(false)}
                                         />
                                         
-                                        {/* 🛡️ VISIBLE CUSTOM BRANDED SHIELDS 🛡️ */}
+                                        {/* 🛡️ SMART RESPONSIVE SECURITY SHIELDS 🛡️ */}
                                         
-                                        {/* 1. Top-Left (Invisible): Blocks Avatar & Title */}
+                                        {/* 1. Top-Left (All Devices): Blocks Avatar & Title */}
                                         <div 
                                             className="absolute top-0 left-0 w-[70%] sm:w-[calc(100%-160px)] h-[70px] z-30 bg-[rgba(255,255,255,0.01)] cursor-default" 
                                             style={{ WebkitTouchCallout: 'none' }} onContextMenu={e => e.preventDefault()} 
                                         />
 
-                                        {/* 2. Top-Right (Visible): Premium Cover (Blocks Share, allows Gear on Mobile) */}
+                                        {/* 2. Top-Right (Desktop Only): Blocks Watch Later & Share */}
                                         <div 
-                                            className={`absolute top-[8px] right-[45px] sm:right-[10px] h-[38px] z-30 flex items-center justify-center gap-1.5 px-3 rounded-lg backdrop-blur-md border cursor-default shadow-sm transition-opacity duration-700 ease-in-out ${isVideoLoading ? 'opacity-0' : 'opacity-100'} ${isDarkMode ? 'bg-[#121212]/80 border-white/10' : 'bg-white/90 border-black/10'}`}
+                                            className="hidden sm:block absolute top-0 right-0 w-[160px] h-[70px] z-30 bg-[rgba(255,255,255,0.01)] cursor-default" 
                                             style={{ WebkitTouchCallout: 'none' }} onContextMenu={e => e.preventDefault()} 
-                                        >
-                                            <Crown className={`w-4 h-4 ${theme?.text || 'text-[#41B6E6]'}`} />
-                                            <span className={`hidden sm:block font-bold text-[10px] uppercase tracking-widest ${theme?.text || 'text-[#41B6E6]'}`}>Premium</span>
-                                        </div>
+                                        />
 
-                                        {/* 3. Bottom-Left (Invisible): Blocks Android Share Arrow */}
+                                        {/* 3. Top-Right Edge (Mobile Only): Blocks 3-dots, allows Gear */}
+                                        <div 
+                                            className="sm:hidden absolute top-0 right-0 w-[45px] h-[60px] z-30 bg-[rgba(255,255,255,0.01)] cursor-default" 
+                                            style={{ WebkitTouchCallout: 'none' }} onContextMenu={e => e.preventDefault()} 
+                                        />
+
+                                        {/* 4. Bottom-Left (Mobile Only): Blocks Share Arrow */}
                                         <div 
                                             className="sm:hidden absolute bottom-0 left-0 w-[70px] h-[60px] z-30 bg-[rgba(255,255,255,0.01)] cursor-default" 
                                             style={{ WebkitTouchCallout: 'none' }} onContextMenu={e => e.preventDefault()} 
                                         />
 
-                                        {/* 4. Bottom-Right (Visible): Custom "ម៉ាយឌីហ្សាញ" Watermark (Covers YouTube Logo) */}
+                                        {/* 5. Bottom-Right (All Devices): Blocks YouTube Logo */}
                                         <div 
-                                            className={`absolute bottom-[8px] right-[10px] w-[100px] h-[36px] z-30 flex items-center justify-center rounded-lg backdrop-blur-md border cursor-default shadow-sm transition-opacity duration-700 ease-in-out ${isVideoLoading ? 'opacity-0' : 'opacity-100'} ${isDarkMode ? 'bg-[#121212]/80 border-white/10' : 'bg-white/90 border-black/10'}`}
+                                            className="absolute bottom-0 right-0 w-[80px] h-[60px] z-30 bg-[rgba(255,255,255,0.01)] cursor-default" 
                                             style={{ WebkitTouchCallout: 'none' }} onContextMenu={e => e.preventDefault()} 
-                                        >
-                                            <span className={`font-khmer font-black text-[12px] tracking-wider ${theme?.text || 'text-[#41B6E6]'}`}>
-                                                ម៉ាយឌីហ្សាញ
-                                            </span>
-                                        </div>
+                                        />
                                     </>
                                 )}
                             </>
@@ -999,7 +998,6 @@ function AppContent() {
       {expandedLesson && (
         <LessonModal 
             lesson={getSelectedLesson()} 
-            theme={theme}
             onClose={() => {
                 setExpandedLesson(null);
                 if (window.history.state && window.history.state.modalOpen) window.history.back(); 
