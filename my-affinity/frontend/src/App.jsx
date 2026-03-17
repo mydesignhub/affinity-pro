@@ -30,11 +30,11 @@ const APP_THEMES = {
     publisher: { gradient: 'from-[#D7383D] to-[#532463]', text: 'text-[#D7383D]', bg: 'bg-[#D7383D]', border: 'border-[#D7383D]', lightBg: 'bg-[#D7383D]/10' }
 };
 
-// Fallback manual codes updated to the new shorter format
+// 🌟 UPDATED: Fallback manual codes with clear app prefixes
 const VALID_PASSCODES = {
-    photo: ['PH-A1B2C', 'PH-X9Y8Z'],
-    designer: ['DS-A1B2C', 'DS-X9Y8Z'],
-    publisher: ['PB-A1B2C', 'PB-X9Y8Z']
+    photo: ['PHOTO-A1B2C', 'PHOTO-X9Y8Z'],
+    designer: ['DESIGN-A1B2C', 'DESIGN-X9Y8Z'],
+    publisher: ['PUB-A1B2C', 'PUB-X9Y8Z']
 };
 
 const ONE_YEAR_MS = 365 * 24 * 60 * 60 * 1000;
@@ -387,15 +387,16 @@ function AppContent() {
       }
   };
 
+  // 🌟 UPDATED: Dynamic prefix generation
   const handleGenerateAdminKeys = async () => {
       triggerHaptic();
       if (!activeAppTab) return;
-      const prefix = activeAppTab === 'photo' ? 'PH' : activeAppTab === 'designer' ? 'DS' : 'PB';
+      
+      const prefix = activeAppTab === 'photo' ? 'PHOTO' : activeAppTab === 'designer' ? 'DESIGN' : 'PUB';
       let newKeys = [];
 
       try {
           for(let i=0; i<genAmount; i++){
-              // Generate exactly 5 random alphanumeric characters
               const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
               let randomStr = '';
               for(let j=0; j<5; j++) {
@@ -427,8 +428,8 @@ function AppContent() {
 
   const currentCourseData = activeAppTab ? (courseData[activeAppTab] || []) : [];
   const totalSteps = currentCourseData.reduce((acc, lesson) => acc + (lesson.steps?.length || 0), 0);
-  const prefix = activeAppTab === 'photo' ? 'ph' : activeAppTab === 'designer' ? 'ds' : 'pb';
-  const completedInThisTab = completedSteps.filter(id => id.startsWith(prefix)).length;
+  const progressPrefix = activeAppTab === 'photo' ? 'ph' : activeAppTab === 'designer' ? 'ds' : 'pb';
+  const completedInThisTab = completedSteps.filter(id => id.startsWith(progressPrefix)).length;
   const progressPercentage = totalSteps === 0 ? 0 : Math.round((completedInThisTab / totalSteps) * 100);
 
   const isCoursePurchased = isAdmin || (activeAppTab ? purchasedCourses[activeAppTab]?.unlocked === true : false);
@@ -442,6 +443,15 @@ function AppContent() {
     : `សួស្តី! ខ្ញុំចង់ទិញសិទ្ធិចូលរៀនវគ្គ ${appDisplayName} រយៈពេល១ឆ្នាំពេញ ក្នុងតម្លៃ $20។ នេះជារូបភាពវិក្កយបត្របង់ប្រាក់របស់ខ្ញុំ៖`;
   
   const telegramUrl = `https://t.me/koymy?text=${encodeURIComponent(telegramMessage)}`;
+
+  // 🌟 UPDATED: Dynamic placeholder helper
+  const getInputPlaceholder = () => {
+      if (lang !== 'en') return "បញ្ចូលលេខកូដសម្ងាត់...";
+      if (activeAppTab === 'photo') return "PHOTO-XXXXX";
+      if (activeAppTab === 'designer') return "DESIGN-XXXXX";
+      if (activeAppTab === 'publisher') return "PUB-XXXXX";
+      return "CODE-XXXXX";
+  };
 
   return (
     <div className={`fixed inset-0 w-full h-full flex flex-col font-khmer overflow-hidden touch-pan-x touch-pan-y transition-colors duration-500 pt-[env(safe-area-inset-top)] ${isDarkMode ? 'bg-[#0A0A0A] text-[#F1F1F1]' : 'bg-[#F4F5F7] text-[#1A1A1A]'}`}>
@@ -669,7 +679,7 @@ function AppContent() {
                                                             setPasscodeInput(e.target.value.toUpperCase());
                                                             setPasscodeError('');
                                                         }}
-                                                        placeholder={lang === 'en' ? "PH-XXXXX" : "បញ្ចូលលេខកូដសម្ងាត់..."}
+                                                        placeholder={getInputPlaceholder()}
                                                         className={`w-full bg-transparent outline-none font-bold text-center sm:text-left tracking-widest placeholder:tracking-normal ${isDarkMode ? 'text-white' : 'text-black'}`}
                                                     />
                                                 </div>
