@@ -202,10 +202,10 @@ const LessonModal = ({ lesson, onClose, isDarkMode, completedSteps, setCompleted
       <div 
           ref={modalRef} 
           className={`relative w-full h-full flex flex-col ease-spring ring-1 
-              ${isDarkMode ? 'bg-[#1E1E1E]/95 ring-white/10' : 'bg-[#FFFFFF]/95 ring-black/5'}
+              ${isDarkMode ? 'bg-[#1C1C1E]/95 ring-white/10' : 'bg-[#FFFFFF]/95 ring-black/5'}
               ${isCssFullscreen 
                   ? '!transform-none !backdrop-filter-none sm:max-w-none sm:max-h-none !w-full !h-[100dvh] !rounded-none !m-0 !p-0 z-[99999]' 
-                  : `sm:h-auto sm:max-h-[90vh] sm:max-w-3xl sm:rounded-3xl shadow-2xl backdrop-blur-2xl transition-transform duration-500 ${closing ? 'translate-y-full' : 'translate-y-0'}`
+                  : `sm:h-auto sm:max-h-[90vh] sm:max-w-3xl sm:rounded-[32px] shadow-2xl backdrop-blur-2xl transition-transform duration-500 ${closing ? 'translate-y-full' : 'translate-y-0'}`
               }
           `}
           style={isCssFullscreen ? { transform: 'none' } : { 
@@ -216,16 +216,16 @@ const LessonModal = ({ lesson, onClose, isDarkMode, completedSteps, setCompleted
       >
         
         {!isCssFullscreen && (
-            <div className={`flex flex-col border-b sticky top-0 z-20 shrink-0 sm:rounded-t-3xl ${isDarkMode ? 'border-[#2C2C2C] bg-[#1E1E1E]/80 backdrop-blur-xl' : 'border-[#E5E7EB] bg-[#FFFFFF]/80 backdrop-blur-xl'}`} style={{ paddingTop: 'env(safe-area-inset-top)' }}>
+            <div className={`flex flex-col border-b sticky top-0 z-20 shrink-0 sm:rounded-t-[32px] ${isDarkMode ? 'border-[#2C2C2C] bg-[#1C1C1E]/80 backdrop-blur-xl' : 'border-[#E5E7EB] bg-[#FFFFFF]/80 backdrop-blur-xl'}`} style={{ paddingTop: 'env(safe-area-inset-top)' }}>
                 <div className="w-full flex justify-center pt-3 pb-1 shrink-0 cursor-grab active:cursor-grabbing sm:hidden" onClick={handleClose}>
                     <div className={`w-12 h-1.5 rounded-full opacity-50 ${isDarkMode ? 'bg-[#9AA0A6]' : 'bg-[#5F6368]'}`}></div>
                 </div>
                 <div className="flex items-center justify-between p-4 sm:p-5">
                     <div className="flex items-center gap-3.5 pr-4">
-                        <div className="p-2.5 bg-[#C65102]/10 rounded-xl text-[#C65102] border border-[#C65102]/20 shadow-[0_0_15px_rgba(198,81,2,0.15)] shrink-0 [&>svg]:w-5 [&>svg]:h-5">{lesson.icon}</div>
-                        <h2 className={`text-xl font-bold font-khmer tracking-tight line-clamp-1 ${isDarkMode ? 'text-[#E3E3E3]' : 'text-[#1A1C1E]'}`}>{displayTitle}</h2>
+                        <div className="w-10 h-10 flex items-center justify-center bg-[#C65102]/10 rounded-[14px] text-[#C65102] border border-[#C65102]/20 shadow-[0_0_15px_rgba(198,81,2,0.15)] shrink-0 [&>svg]:w-5 [&>svg]:h-5">{lesson.icon}</div>
+                        <h2 className={`text-[19px] font-black font-khmer tracking-tight line-clamp-1 ${isDarkMode ? 'text-[#E3E3E3]' : 'text-[#1A1C1E]'}`}>{displayTitle}</h2>
                     </div>
-                    <button onClick={handleClose} className={`p-2 shrink-0 rounded-full transition-colors active:scale-90 ${isDarkMode ? 'bg-[#2C2C2C] text-[#A0A0A0] hover:text-[#F1F1F1]' : 'bg-[#F8F9FA] text-[#6B7280] hover:text-[#1A1A1A]'}`}>
+                    <button onClick={handleClose} className={`p-2.5 shrink-0 rounded-full transition-colors active:scale-90 ${isDarkMode ? 'bg-[#2C2C2C] text-[#A0A0A0] hover:text-[#F1F1F1]' : 'bg-[#F8F9FA] text-[#6B7280] hover:text-[#1A1A1A]'}`}>
                       <X size={20} />
                     </button>
                 </div>
@@ -309,9 +309,8 @@ const LessonModal = ({ lesson, onClose, isDarkMode, completedSteps, setCompleted
                                             onLoad={() => setIsVideoLoading(false)}
                                         />
                                         
-                                        {/* 🛡️ ACTIVE TRAPDOOR SHIELDS - RESPONSIVE BREAKPOINTS FIXED 🛡️ */}
+                                        {/* 🛡️ CALIBRATED DEAD-ZONE SHIELDS 🛡️ */}
                                         
-                                        {/* 1. Top-Left: Channel Avatar & Title */}
                                         <button 
                                             onClick={(e) => { e.preventDefault(); toggleFullScreen(); }}
                                             className="absolute top-0 left-0 w-[60%] lg:w-[calc(100%-280px)] h-[80px] z-30 bg-transparent no-callout cursor-pointer outline-none border-none" 
@@ -320,7 +319,6 @@ const LessonModal = ({ lesson, onClose, isDarkMode, completedSteps, setCompleted
                                             aria-hidden="true"
                                         />
 
-                                        {/* 2. Top-Right (Desktop/iPad PC mode): Watch Later & Share */}
                                         <button 
                                             onClick={(e) => { e.preventDefault(); toggleFullScreen(); }}
                                             className="hidden lg:block absolute top-0 right-0 w-[280px] h-[80px] z-30 bg-transparent no-callout cursor-pointer outline-none border-none" 
@@ -329,7 +327,6 @@ const LessonModal = ({ lesson, onClose, isDarkMode, completedSteps, setCompleted
                                             aria-hidden="true"
                                         />
 
-                                        {/* 3. Top-Right Edge (Mobile/Landscape Phone): Blocks 3-dots, allows Gear */}
                                         <button 
                                             onClick={(e) => { e.preventDefault(); toggleFullScreen(); }}
                                             className="lg:hidden absolute top-0 right-0 w-[75px] h-[75px] z-30 bg-transparent no-callout cursor-pointer outline-none border-none" 
@@ -338,8 +335,6 @@ const LessonModal = ({ lesson, onClose, isDarkMode, completedSteps, setCompleted
                                             aria-hidden="true"
                                         />
 
-                                        {/* 4. Bottom-Left (Mobile & Tablet Portrait): Blocks Mobile Share Arrow */}
-                                        {/* Extended width to 160px for phones in landscape to beat letterboxing */}
                                         <button 
                                             onClick={(e) => { e.preventDefault(); toggleFullScreen(); }}
                                             className="lg:hidden absolute bottom-0 left-0 w-[160px] h-[80px] z-30 bg-transparent no-callout cursor-pointer outline-none border-none" 
@@ -348,7 +343,6 @@ const LessonModal = ({ lesson, onClose, isDarkMode, completedSteps, setCompleted
                                             aria-hidden="true"
                                         />
 
-                                        {/* 5. Bottom-Right (All Devices): YouTube Logo Watermark */}
                                         <button 
                                             onClick={(e) => { e.preventDefault(); toggleFullScreen(); }}
                                             className="absolute bottom-0 right-0 w-[140px] h-[70px] z-30 bg-transparent no-callout cursor-pointer outline-none border-none" 
@@ -373,7 +367,7 @@ const LessonModal = ({ lesson, onClose, isDarkMode, completedSteps, setCompleted
                         <div className="flex flex-col sm:flex-row gap-3 mt-3 w-full">
                             <button 
                                 onClick={toggleFullScreen}
-                                className={`flex-1 py-3.5 rounded-xl flex items-center justify-center gap-2 font-bold font-khmer text-[13px] sm:text-[14px] transition-all active:scale-[0.98] shadow-sm border ${isDarkMode ? 'bg-[#1E1E1E] border-[#2C2C2C] text-[#F1F1F1] hover:bg-[#2C2C2C]' : 'bg-white border-[#E5E7EB] text-[#1A1A1A] hover:bg-[#F8F9FA]'}`}
+                                className={`flex-1 py-3.5 rounded-xl flex items-center justify-center gap-2 font-bold font-khmer text-[13px] sm:text-[14px] transition-all active:scale-[0.98] shadow-sm border ${isDarkMode ? 'bg-[#2C2C2C] border-[#3C3C3C] text-[#F1F1F1] hover:bg-[#3C3C3C]' : 'bg-white border-[#E5E7EB] text-[#1A1A1A] hover:bg-[#F8F9FA]'}`}
                             >
                                 {isCssFullscreen ? (
                                     <>
@@ -403,7 +397,7 @@ const LessonModal = ({ lesson, onClose, isDarkMode, completedSteps, setCompleted
             )}
 
             {!isCssFullscreen && (lesson.instruction || lesson.downloadUrl) && (
-                <div className={`mb-8 p-5 rounded-2xl border flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between ${isDarkMode ? 'bg-[#1E1E1E]/50 border-[#2C2C2C]' : 'bg-[#F8F9FA] border-[#E5E7EB]'}`}>
+                <div className={`mb-8 p-5 rounded-[20px] border flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between ${isDarkMode ? 'bg-[#1E1E1E]/50 border-[#2C2C2C]' : 'bg-[#F8F9FA] border-[#E5E7EB]'}`}>
                     <div className="flex-1">
                         <h4 className={`text-xs font-bold uppercase tracking-widest mb-2 flex items-center gap-2 ${isDarkMode ? 'text-[#41B6E6]' : 'text-[#0277C5]'}`}>
                             <DownloadCloud size={16} />
@@ -419,14 +413,14 @@ const LessonModal = ({ lesson, onClose, isDarkMode, completedSteps, setCompleted
                                 href={lesson.downloadUrl}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className={`shrink-0 w-full sm:w-auto text-center px-5 py-2.5 rounded-xl font-khmer font-bold text-[13px] transition-transform active:scale-95 shadow-sm
+                                className={`shrink-0 w-full sm:w-auto text-center px-5 py-3 rounded-xl font-khmer font-bold text-[13px] transition-transform active:scale-95 shadow-sm
                                     ${isDarkMode ? 'bg-[#41B6E6] text-[#0A0A0A] hover:bg-[#2CA0D0]' : 'bg-[#0277C5] text-white hover:bg-[#01579B]'}
                                 `}
                             >
                                 {lang === 'en' ? 'Download Assets (.zip)' : 'ទាញយកឯកសារ (.zip)'}
                             </a>
                         ) : (
-                            <button onClick={() => triggerHaptic('error')} className={`shrink-0 w-full sm:w-auto text-center px-5 py-2.5 rounded-xl font-khmer font-bold text-[13px] transition-all cursor-not-allowed flex justify-center items-center gap-2
+                            <button onClick={() => triggerHaptic('error')} className={`shrink-0 w-full sm:w-auto text-center px-5 py-3 rounded-xl font-khmer font-bold text-[13px] transition-all cursor-not-allowed flex justify-center items-center gap-2
                                 ${isDarkMode ? 'bg-[#2C2C2C] text-[#A0A0A0]' : 'bg-[#E5E7EB] text-[#6B7280]'}
                             `}>
                                 <Lock size={14} /> {lang === 'en' ? 'Locked' : 'បានចាក់សោ'}
@@ -450,44 +444,46 @@ const LessonModal = ({ lesson, onClose, isDarkMode, completedSteps, setCompleted
                         return (
                             <div 
                                 key={step.id}
-                                className={`flex items-center gap-3 p-3 sm:p-4 rounded-2xl border transition-all duration-300 ease-out
+                                className={`flex items-center gap-3 p-3 sm:p-4 rounded-[20px] border transition-all duration-300 ease-out
                                     ${isActive 
                                         ? (isDarkMode ? 'bg-[#41B6E6]/10 border-[#41B6E6]/50 shadow-md' : 'bg-[#0277C5]/10 border-[#0277C5]/50 shadow-md') 
-                                        : (isDarkMode ? 'bg-[#1E1E1E] border-[#2C2C2C]' : 'bg-[#F8F9FA] border-[#E5E7EB]')
+                                        : (isDarkMode ? 'bg-[#1E1E1E] border-[#2C2C2C]' : 'bg-[#FFFFFF] border-[#E5E7EB]')
                                     }
                                 `}
                             >
                                 <button 
                                     onClick={() => { setActiveStep(idx); triggerHaptic(); }}
-                                    className="flex-1 flex items-start gap-4 text-left active:scale-[0.98] transition-transform"
+                                    className="flex-1 flex items-center gap-4 text-left active:scale-[0.98] transition-transform min-w-0"
                                 >
-                                    <div className={`mt-0.5 w-7 h-7 shrink-0 rounded-full flex items-center justify-center font-bold text-xs
+                                    <div className={`w-10 h-10 shrink-0 rounded-full flex items-center justify-center font-bold text-[14px] shadow-inner
                                         ${isActive 
                                             ? (isDarkMode ? 'bg-[#41B6E6] text-[#0A0A0A]' : 'bg-[#0277C5] text-white') 
-                                            : (isDarkMode ? 'bg-[#2C2C2C] text-[#A0A0A0]' : 'bg-[#E5E7EB] text-[#6B7280]')
+                                            : (isDarkMode ? 'bg-[#2C2C2C] text-[#A0A0A0]' : 'bg-[#F3F4F6] text-[#6B7280]')
                                         }
                                     `}>
-                                        {isActive ? <PlayCircle size={14} className="ml-0.5" /> : step.id}
+                                        {isActive ? <PlayCircle size={18} className="ml-0.5" /> : step.id}
                                     </div>
 
-                                    <p className={`text-[14px] sm:text-[15px] font-khmer leading-relaxed
-                                        ${isActive 
-                                            ? (isDarkMode ? 'text-[#F1F1F1] font-medium' : 'text-[#1A1A1A] font-medium') 
-                                            : (isDarkMode ? 'text-[#A0A0A0]' : 'text-[#6B7280]')
-                                        }
-                                    `}>
-                                        {lang === 'en' ? step.english : step.khmer}
-                                    </p>
+                                    <div className="flex-1 min-w-0 pr-2">
+                                        <p className={`text-[14px] sm:text-[15px] font-khmer leading-relaxed truncate
+                                            ${isActive 
+                                                ? (isDarkMode ? 'text-[#F1F1F1] font-bold' : 'text-[#1A1A1A] font-bold') 
+                                                : (isDarkMode ? 'text-[#A0A0A0] font-medium' : 'text-[#4B5563] font-medium')
+                                            }
+                                        `}>
+                                            {lang === 'en' ? step.english : step.khmer}
+                                        </p>
+                                    </div>
                                 </button>
 
                                 <button 
                                     onClick={(e) => handleToggleComplete(e, stepKey)}
-                                    className={`shrink-0 p-2 rounded-full transition-transform active:scale-75
-                                        ${isCompleted ? 'text-green-500' : (isDarkMode ? 'text-[#2C2C2C] hover:text-[#A0A0A0]' : 'text-[#E5E7EB] hover:text-[#6B7280]')}
+                                    className={`shrink-0 w-10 h-10 flex items-center justify-center rounded-full transition-transform active:scale-75
+                                        ${isCompleted ? 'text-green-500 bg-green-500/10' : (isDarkMode ? 'text-[#3C3C3C] hover:text-[#A0A0A0]' : 'text-[#D1D5DB] hover:text-[#6B7280]')}
                                         ${!isPurchased ? 'opacity-30 cursor-not-allowed' : ''}
                                     `}
                                 >
-                                    {isCompleted ? <CheckCircle2 size={24} className="fill-green-500/20" /> : <Circle size={24} />}
+                                    {isCompleted ? <CheckCircle2 size={24} className="text-green-500" /> : <Circle size={24} />}
                                 </button>
                             </div>
                         );
@@ -520,38 +516,38 @@ const TipsSection = ({ isExpanded, onToggle, isDarkMode }) => {
   
     return (
       <div className="mt-12">
-        <button onClick={onToggle} className={`w-full flex items-center justify-between p-6 rounded-3xl border transition-all group active:scale-95 shadow-sm ${isDarkMode ? 'bg-[#1E1E1E] border-[#2C2C2C] hover:bg-[#2C2C2C]' : 'bg-[#FFFFFF] border-[#E5E7EB] hover:bg-[#F8F9FA]'}`}>
+        <button onClick={onToggle} className={`w-full flex items-center justify-between p-6 rounded-[24px] border transition-all group active:scale-[0.98] shadow-sm ${isDarkMode ? 'bg-[#1C1C1E] border-[#2C2C2C] hover:bg-[#2C2C2C]' : 'bg-[#FFFFFF] border-[#E5E7EB] hover:shadow-md'}`}>
           <div className="flex items-center space-x-5">
-              <div className={`p-3 rounded-2xl transition-colors ring-1 ${isDarkMode ? 'bg-[#41B6E6]/10 ring-[#41B6E6]/20 group-hover:bg-[#41B6E6]/20' : 'bg-[#0277C5]/10 ring-[#0277C5]/20 group-hover:bg-[#0277C5]/20'}`}>
+              <div className={`w-12 h-12 flex items-center justify-center rounded-2xl transition-colors ring-1 ${isDarkMode ? 'bg-[#41B6E6]/10 ring-[#41B6E6]/20 group-hover:bg-[#41B6E6]/20' : 'bg-[#0277C5]/10 ring-[#0277C5]/20 group-hover:bg-[#0277C5]/20'}`}>
                   <PlayCircle className={`w-6 h-6 ${isDarkMode ? 'text-[#41B6E6]' : 'text-[#0277C5]'}`} />
               </div>
-              <h3 className={`font-bold text-xl font-khmer tracking-tight ${isDarkMode ? 'text-[#F1F1F1]' : 'text-[#1A1A1A]'}`}>{t('tips_title')}</h3>
+              <h3 className={`font-bold text-[19px] font-khmer tracking-tight ${isDarkMode ? 'text-[#F1F1F1]' : 'text-[#1A1A1A]'}`}>{t('tips_title')}</h3>
           </div>
           <ChevronRight className={`w-6 h-6 transition-transform ${isExpanded ? 'rotate-90' : ''} ${isDarkMode ? 'text-[#A0A0A0]' : 'text-[#6B7280]'}`} />
         </button>
         {isExpanded && (
-          <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-6 animate-fade-in-up">
-            <div className={`bg-gradient-to-br border rounded-3xl p-8 md:col-span-2 relative overflow-hidden shadow-xl flex flex-col justify-center min-h-[180px] ${isDarkMode ? 'from-[#1E1E1E] to-[#121212] border-[#2C2C2C]' : 'from-[#FFFFFF] to-[#F8F9FA] border-[#E5E7EB]'}`}>
+          <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 animate-fade-in-up">
+            <div className={`bg-gradient-to-br border rounded-[24px] p-6 sm:p-8 md:col-span-2 relative overflow-hidden shadow-xl flex flex-col justify-center min-h-[180px] ${isDarkMode ? 'from-[#1C1C1E] to-[#121212] border-[#2C2C2C]' : 'from-[#FFFFFF] to-[#F8F9FA] border-[#E5E7EB]'}`}>
                <div className={`absolute top-0 right-0 w-64 h-64 rounded-full blur-[80px] -translate-y-1/2 translate-x-1/2 pointer-events-none ${isDarkMode ? 'bg-[#41B6E6]/10' : 'bg-[#0277C5]/10'}`}></div>
                <div className="flex justify-between items-center mb-6 relative z-10">
-                   <h4 className={`font-bold font-khmer flex items-center gap-3 text-lg whitespace-nowrap ${isDarkMode ? 'text-[#F1F1F1]' : 'text-[#1A1A1A]'}`}>
+                   <h4 className={`font-bold font-khmer flex items-center gap-3 text-[17px] sm:text-lg whitespace-nowrap ${isDarkMode ? 'text-[#F1F1F1]' : 'text-[#1A1A1A]'}`}>
                       <Sparkles className="w-5 h-5 text-[#C5B002]" /> {t('tips_pro')}
                    </h4>
-                   <button onClick={nextTip} className={`text-[10px] px-4 py-2 rounded-full font-khmer transition-all font-bold tracking-wide border active:scale-95 whitespace-nowrap ${isDarkMode ? 'bg-[#F1F1F1]/10 hover:bg-[#F1F1F1]/20 text-[#F1F1F1] border-[#F1F1F1]/5' : 'bg-[#1A1A1A]/5 hover:bg-[#1A1A1A]/10 text-[#1A1A1A] border-[#1A1A1A]/5'}`}>{t('tips_new')}</button>
+                   <button onClick={nextTip} className={`text-[11px] px-4 py-2 rounded-full font-khmer transition-all font-bold tracking-wide border active:scale-95 whitespace-nowrap ${isDarkMode ? 'bg-[#F1F1F1]/10 hover:bg-[#F1F1F1]/20 text-[#F1F1F1] border-[#F1F1F1]/5' : 'bg-[#1A1A1A]/5 hover:bg-[#1A1A1A]/10 text-[#1A1A1A] border-[#1A1A1A]/5'}`}>{t('tips_new')}</button>
                </div>
                <div className="relative z-10 flex-1 flex items-center">
-                   <p key={safeTipIndex} className={`text-base leading-relaxed border-l-4 pl-6 py-2 animate-fade-in-up ${lang === 'km' ? 'font-khmer' : 'font-sans'} ${isDarkMode ? 'text-[#F1F1F1] border-[#41B6E6]' : 'text-[#1A1A1A] border-[#0277C5]'}`}>
+                   <p key={safeTipIndex} className={`text-[15px] sm:text-base leading-relaxed border-l-[3px] pl-5 sm:pl-6 py-2 animate-fade-in-up ${lang === 'km' ? 'font-khmer' : 'font-sans'} ${isDarkMode ? 'text-[#F1F1F1] border-[#41B6E6]' : 'text-[#1A1A1A] border-[#0277C5]'}`}>
                        {currentTipsList[safeTipIndex]}
                    </p>
                </div>
             </div>
-            <div className={`border rounded-3xl p-8 md:col-span-2 shadow-lg ${isDarkMode ? 'bg-[#1E1E1E] border-[#2C2C2C]' : 'bg-[#FFFFFF] border-[#E5E7EB]'}`}>
-              <h4 className={`font-bold font-khmer mb-6 flex items-center text-lg ${isDarkMode ? 'text-[#F1F1F1]' : 'text-[#1A1A1A]'}`}><Zap className="w-5 h-5 mr-3 text-[#C5B002]" /> {t('tips_shortcut')}</h4>
-              <ul className={`space-y-4 text-sm font-khmer ${isDarkMode ? 'text-[#A0A0A0]' : 'text-[#6B7280]'}`}>
+            <div className={`border rounded-[24px] p-6 sm:p-8 md:col-span-2 shadow-lg ${isDarkMode ? 'bg-[#1C1C1E] border-[#2C2C2C]' : 'bg-[#FFFFFF] border-[#E5E7EB]'}`}>
+              <h4 className={`font-bold font-khmer mb-6 flex items-center text-[17px] sm:text-lg ${isDarkMode ? 'text-[#F1F1F1]' : 'text-[#1A1A1A]'}`}><Zap className="w-5 h-5 mr-3 text-[#C5B002]" /> {t('tips_shortcut')}</h4>
+              <ul className={`space-y-3 sm:space-y-4 text-[14px] sm:text-sm font-khmer ${isDarkMode ? 'text-[#A0A0A0]' : 'text-[#6B7280]'}`}>
                 {[1, 2, 3, 4].map((num) => (
-                    <li key={num} className={`flex items-start gap-4 p-4 rounded-2xl border transition-colors ${isDarkMode ? 'bg-[#121212]/50 border-[#2C2C2C] hover:bg-[#2C2C2C]' : 'bg-[#F8F9FA] border-[#E5E7EB] hover:bg-[#E5E7EB]/50'}`}>
-                        <span className={`font-bold w-8 h-8 flex items-center justify-center rounded-full text-sm shrink-0 ${isDarkMode ? 'bg-[#41B6E6]/10 text-[#41B6E6]' : 'bg-[#0277C5]/10 text-[#0277C5]'}`}>{num}</span>
-                        <span><span className={`font-bold block mb-1 ${lang === 'km' ? 'font-khmer' : 'font-sans'} ${isDarkMode ? 'text-[#F1F1F1]' : 'text-[#1A1A1A]'}`}>{t(`tip_${num}_title`)}</span> <span className={`${lang === 'km' ? 'font-khmer' : 'font-sans'}`} dangerouslySetInnerHTML={{ __html: t(`tip_${num}_desc`) }} /></span>
+                    <li key={num} className={`flex items-start gap-4 p-4 rounded-[20px] border transition-colors ${isDarkMode ? 'bg-[#121212]/50 border-[#2C2C2C] hover:bg-[#2C2C2C]' : 'bg-[#F8F9FA] border-[#E5E7EB] hover:bg-[#E5E7EB]/50'}`}>
+                        <span className={`font-bold w-10 h-10 flex items-center justify-center rounded-full text-sm shrink-0 shadow-inner ${isDarkMode ? 'bg-[#41B6E6]/10 text-[#41B6E6]' : 'bg-[#0277C5]/10 text-[#0277C5]'}`}>{num}</span>
+                        <span className="mt-0.5"><span className={`font-bold block mb-1 ${lang === 'km' ? 'font-khmer' : 'font-sans'} ${isDarkMode ? 'text-[#F1F1F1]' : 'text-[#1A1A1A]'}`}>{t(`tip_${num}_title`)}</span> <span className={`${lang === 'km' ? 'font-khmer' : 'font-sans'} leading-relaxed`} dangerouslySetInnerHTML={{ __html: t(`tip_${num}_desc`) }} /></span>
                     </li>
                 ))}
               </ul>
@@ -566,21 +562,21 @@ const ContactSection = ({ isDarkMode }) => {
     const { t } = useLanguage();
     return (
         <div className={`mt-16 mb-10 border-t pt-10 text-center ${isDarkMode ? 'border-[#2C2C2C]' : 'border-[#E5E7EB]'}`}>
-            <div className="flex justify-center gap-10">
-                <a href="https://web.facebook.com/myaffinity" target="_blank" rel="noopener noreferrer" className="group flex flex-col items-center gap-2 hover:opacity-80 transition-opacity">
-                    <div className={`p-3 rounded-xl border shadow-sm ${isDarkMode ? 'bg-[#1E1E1E] border-[#2C2C2C]' : 'bg-[#FFFFFF] border-[#E5E7EB]'}`}><Facebook className={isDarkMode ? 'text-[#41B6E6]' : 'text-[#0277C5]'} size={20} /></div>
-                    <span className={`text-[10px] font-khmer ${isDarkMode ? 'text-[#A0A0A0]' : 'text-[#6B7280]'}`}>Facebook</span>
+            <div className="flex justify-center gap-8 sm:gap-10">
+                <a href="https://web.facebook.com/myaffinity" target="_blank" rel="noopener noreferrer" className="group flex flex-col items-center gap-3 hover:opacity-80 transition-opacity">
+                    <div className={`w-14 h-14 flex items-center justify-center rounded-[20px] border shadow-sm ${isDarkMode ? 'bg-[#1C1C1E] border-[#2C2C2C]' : 'bg-[#FFFFFF] border-[#E5E7EB]'}`}><Facebook className={isDarkMode ? 'text-[#41B6E6]' : 'text-[#0277C5]'} size={24} /></div>
+                    <span className={`text-[11px] font-khmer tracking-wide ${isDarkMode ? 'text-[#A0A0A0]' : 'text-[#6B7280]'}`}>Facebook</span>
                 </a>
-                <a href="https://t.me/koymy" target="_blank" rel="noopener noreferrer" className="group flex flex-col items-center gap-2 hover:opacity-80 transition-opacity">
-                    <div className={`p-3 rounded-xl border shadow-sm ${isDarkMode ? 'bg-[#1E1E1E] border-[#2C2C2C]' : 'bg-[#FFFFFF] border-[#E5E7EB]'}`}><Send className={isDarkMode ? 'text-[#41B6E6]' : 'text-[#0277C5]'} size={20} /></div>
-                    <span className={`text-[10px] font-khmer ${isDarkMode ? 'text-[#A0A0A0]' : 'text-[#6B7280]'}`}>Telegram</span>
+                <a href="https://t.me/koymy" target="_blank" rel="noopener noreferrer" className="group flex flex-col items-center gap-3 hover:opacity-80 transition-opacity">
+                    <div className={`w-14 h-14 flex items-center justify-center rounded-[20px] border shadow-sm ${isDarkMode ? 'bg-[#1C1C1E] border-[#2C2C2C]' : 'bg-[#FFFFFF] border-[#E5E7EB]'}`}><Send className={isDarkMode ? 'text-[#41B6E6]' : 'text-[#0277C5]'} size={24} /></div>
+                    <span className={`text-[11px] font-khmer tracking-wide ${isDarkMode ? 'text-[#A0A0A0]' : 'text-[#6B7280]'}`}>Telegram</span>
                 </a>
-                <a href="https://myaffinity.gumroad.com" target="_blank" rel="noopener noreferrer" className="group flex flex-col items-center gap-2 hover:opacity-80 transition-opacity">
-                      <div className={`p-3 rounded-xl border shadow-sm ${isDarkMode ? 'bg-[#1E1E1E] border-[#2C2C2C]' : 'bg-[#FFFFFF] border-[#E5E7EB]'}`}><Globe className={isDarkMode ? 'text-[#41B6E6]' : 'text-[#0277C5]'} size={20} /></div>
-                    <span className={`text-[10px] font-khmer ${isDarkMode ? 'text-[#A0A0A0]' : 'text-[#6B7280]'}`}>Website</span>
+                <a href="https://myaffinity.gumroad.com" target="_blank" rel="noopener noreferrer" className="group flex flex-col items-center gap-3 hover:opacity-80 transition-opacity">
+                      <div className={`w-14 h-14 flex items-center justify-center rounded-[20px] border shadow-sm ${isDarkMode ? 'bg-[#1C1C1E] border-[#2C2C2C]' : 'bg-[#FFFFFF] border-[#E5E7EB]'}`}><Globe className={isDarkMode ? 'text-[#41B6E6]' : 'text-[#0277C5]'} size={24} /></div>
+                    <span className={`text-[11px] font-khmer tracking-wide ${isDarkMode ? 'text-[#A0A0A0]' : 'text-[#6B7280]'}`}>Website</span>
                 </a>
             </div>
-            <p className={`text-center text-[10px] mt-8 font-khmer uppercase opacity-50 tracking-widest ${isDarkMode ? 'text-[#A0A0A0]' : 'text-[#6B7280]'}`}>{t('footer_copy')}</p>
+            <p className={`text-center text-[10px] mt-10 font-khmer uppercase opacity-50 tracking-widest ${isDarkMode ? 'text-[#A0A0A0]' : 'text-[#6B7280]'}`}>{t('footer_copy')}</p>
         </div>
     );
 };
@@ -1046,36 +1042,36 @@ function AppContent() {
                 className="p-4 md:p-8 max-w-7xl mx-auto w-full flex-1"
                 style={{ paddingBottom: 'max(env(safe-area-inset-bottom), 40px)' }}
             >
-                <div className={`mb-8 border rounded-3xl overflow-hidden shadow-md ${isDarkMode ? 'bg-[#1E1E1E] border-[#2C2C2C]' : 'bg-[#FFFFFF] border-[#E5E7EB]'}`}>
+                <div className={`mb-8 border rounded-3xl overflow-hidden shadow-md ${isDarkMode ? 'bg-[#1C1C1E] border-[#2C2C2C]' : 'bg-[#FFFFFF] border-[#E5E7EB]'}`}>
                     <button 
                         onClick={() => setShowRegistration(!showRegistration)} 
                         className={`w-full p-6 flex items-center justify-between transition-colors active:scale-[0.99] relative overflow-hidden ${showRegistration ? (isDarkMode ? 'bg-[#2C2C2C]' : 'bg-[#F8F9FA]') : ''}`}
                     >
                         <div className={`absolute top-0 right-0 w-full h-full opacity-10 pointer-events-none bg-gradient-to-r ${theme.gradient}`}></div>
                         
-                        <div className="flex items-center gap-4 relative z-10">
+                        <div className="flex items-center gap-4 relative z-10 w-full">
                             {isCoursePurchased ? (
-                                <div className={`p-3 rounded-xl ${theme.lightBg}`}>
+                                <div className={`w-14 h-14 flex items-center justify-center shrink-0 rounded-[18px] shadow-inner ${theme.lightBg}`}>
                                     {isAdmin ? <ShieldCheck size={28} className={theme.text} /> : <Crown size={28} className={theme.text} />}
                                 </div>
                             ) : (
-                                <div className={`p-3 rounded-xl ${theme.lightBg}`}>
+                                <div className={`w-14 h-14 flex items-center justify-center shrink-0 rounded-[18px] shadow-inner ${theme.lightBg}`}>
                                     <Lock size={28} className={theme.text} />
                                 </div>
                             )}
                             
-                            <div className="text-left">
-                                <h3 className={`font-black font-khmer text-lg md:text-xl ${isCoursePurchased ? theme.text : (isDarkMode ? 'text-white' : 'text-black')}`}>
+                            <div className="text-left flex-1 min-w-0">
+                                <h3 className={`font-black font-khmer text-[17px] md:text-xl truncate ${isCoursePurchased ? theme.text : (isDarkMode ? 'text-white' : 'text-black')}`}>
                                     {isCoursePurchased 
                                         ? (isAdmin ? 'Admin Control Panel' : 'Premium Member') 
                                         : (lang === 'en' ? `Register for ${appDisplayName}` : `ចុះឈ្មោះវគ្គ ${appDisplayName}`)}
                                 </h3>
                                 {isCoursePurchased && (
-                                    <p className={`text-xs font-bold mt-1 ${isDarkMode ? 'text-[#A0A0A0]' : 'text-[#6B7280]'}`}>Account Info & Settings</p>
+                                    <p className={`text-[13px] font-bold mt-1 truncate ${isDarkMode ? 'text-[#A0A0A0]' : 'text-[#6B7280]'}`}>Account Info & Settings</p>
                                 )}
                             </div>
                         </div>
-                        <ChevronDown className={`w-6 h-6 relative z-10 transition-transform duration-300 ${showRegistration ? 'rotate-180' : ''}`} />
+                        <ChevronDown className={`w-6 h-6 shrink-0 relative z-10 transition-transform duration-300 ${showRegistration ? 'rotate-180' : ''}`} />
                     </button>
                     
                     {showRegistration && (
@@ -1085,12 +1081,12 @@ function AppContent() {
                             <div className="max-w-3xl mx-auto relative z-10">
                                 
                                 {isAdmin ? (
-                                    <div className={`p-5 sm:p-8 rounded-3xl border shadow-2xl relative overflow-hidden ${isDarkMode ? 'bg-[#1E1E1E] border-[#2C2C2C]' : 'bg-white border-[#E5E7EB]'}`}>
+                                    <div className={`p-5 sm:p-8 rounded-3xl border shadow-2xl relative overflow-hidden ${isDarkMode ? 'bg-[#1C1C1E] border-[#2C2C2C]' : 'bg-white border-[#E5E7EB]'}`}>
                                         <div className={`absolute top-0 right-0 w-40 h-40 bg-gradient-to-br ${theme.gradient} rounded-full blur-[60px] opacity-10 pointer-events-none`}></div>
                                         <h4 className={`text-xl font-black font-khmer flex items-center gap-3 mb-2 ${theme.text}`}>
                                             <ShieldCheck className="w-6 h-6"/> Admin Control Panel
                                         </h4>
-                                        <p className={`text-sm mb-6 font-khmer leading-relaxed ${isDarkMode ? 'text-[#9AA0A6]' : 'text-gray-500'}`}>
+                                        <p className={`text-[14px] mb-6 font-khmer leading-relaxed ${isDarkMode ? 'text-[#9AA0A6]' : 'text-gray-500'}`}>
                                             Generate secure, single-use activation keys for <strong>{appDisplayName}</strong>. Keys automatically expire 7 days after generation.
                                         </p>
                                         
@@ -1099,7 +1095,7 @@ function AppContent() {
                                                 type="number" 
                                                 value={genAmount} 
                                                 onChange={e => setGenAmount(Number(e.target.value))}
-                                                className={`w-24 p-3.5 rounded-2xl border text-center outline-none font-bold text-lg transition-colors ${isDarkMode ? 'bg-[#121212] border-[#2C2C2C] text-white focus:border-white/30' : 'bg-gray-50 border-[#E5E7EB] text-black focus:border-black/30'}`}
+                                                className={`w-24 p-3.5 rounded-2xl border text-center outline-none font-bold text-lg transition-colors shadow-inner ${isDarkMode ? 'bg-[#121212] border-[#2C2C2C] text-white focus:border-white/30' : 'bg-gray-50 border-[#E5E7EB] text-black focus:border-black/30'}`}
                                                 min="1" max="50"
                                             />
                                             <button onClick={handleGenerateAdminKeys} className={`flex-1 rounded-2xl font-bold font-khmer text-[15px] text-white transition-all active:scale-[0.98] shadow-lg flex items-center justify-center gap-2 bg-gradient-to-r ${theme.gradient}`}>
@@ -1127,8 +1123,8 @@ function AppContent() {
                                                     </button>
                                                 </div>
                                                 {generatedKeys.split('\n').map(c => (
-                                                    <div key={c} className={`p-3.5 rounded-xl border flex items-center justify-between shadow-sm transition-colors ${isDarkMode ? 'bg-[#121212] border-[#2C2C2C]' : 'bg-[#F8F9FA] border-[#E5E7EB]'}`}>
-                                                        <span className={`font-mono font-bold tracking-widest text-sm ${isDarkMode ? 'text-white' : 'text-black'}`}>{c}</span>
+                                                    <div key={c} className={`p-3.5 rounded-[20px] border flex items-center justify-between shadow-sm transition-colors ${isDarkMode ? 'bg-[#121212] border-[#2C2C2C]' : 'bg-[#F8F9FA] border-[#E5E7EB]'}`}>
+                                                        <span className={`font-mono font-bold tracking-widest text-[15px] ${isDarkMode ? 'text-white' : 'text-black'}`}>{c}</span>
                                                         <div className="flex gap-2">
                                                             <button 
                                                                 onClick={() => { 
@@ -1137,11 +1133,11 @@ function AppContent() {
                                                                     triggerHaptic();
                                                                     setTimeout(() => setCopiedCode(null), 2000); 
                                                                 }} 
-                                                                className={`p-2 rounded-lg transition-colors ${isDarkMode ? 'bg-white/5 hover:bg-white/10' : 'bg-black/5 hover:bg-black/10'}`}
+                                                                className={`p-2.5 rounded-xl transition-colors ${isDarkMode ? 'bg-white/5 hover:bg-white/10' : 'bg-black/5 hover:bg-black/10'}`}
                                                             >
                                                                 {copiedCode === c ? <CheckCircle size={18} className="text-green-500"/> : <Copy size={18} className={isDarkMode ? 'text-gray-300' : 'text-gray-700'} />}
                                                             </button>
-                                                            <button onClick={() => shareSingleKeyTelegram(c)} className={`p-2 rounded-lg transition-colors shadow-sm text-white bg-gradient-to-r ${theme.gradient}`}>
+                                                            <button onClick={() => shareSingleKeyTelegram(c)} className={`p-2.5 rounded-xl transition-colors shadow-sm text-white bg-gradient-to-r ${theme.gradient}`}>
                                                                 <Send size={18} />
                                                             </button>
                                                         </div>
@@ -1151,7 +1147,7 @@ function AppContent() {
                                         )}
 
                                         <div className={`w-full h-px my-6 ${isDarkMode ? 'bg-[#2C2C2C]' : 'bg-[#E5E7EB]'}`}></div>
-                                        <button onClick={handleSignOutDevice} className="w-full py-3.5 rounded-xl border font-bold font-khmer text-sm active:scale-[0.98] transition-colors flex items-center justify-center gap-2 text-red-500 hover:bg-red-500/10 border-red-500/20">
+                                        <button onClick={handleSignOutDevice} className="w-full py-3.5 rounded-xl border font-bold font-khmer text-[15px] active:scale-[0.98] transition-colors flex items-center justify-center gap-2 text-red-500 hover:bg-red-500/10 border-red-500/20">
                                             <LogOut size={18} /> Sign Out Device
                                         </button>
                                     </div>
@@ -1159,12 +1155,12 @@ function AppContent() {
                                 ) : isCoursePurchased ? (
                                     
                                     <div className="space-y-8 max-w-md mx-auto">
-                                        <div className={`p-6 sm:p-8 rounded-3xl border shadow-xl flex items-center justify-between relative overflow-hidden ${isDarkMode ? 'bg-[#1E1E1E] border-[#2C2C2C]' : 'bg-white border-[#E5E7EB]'}`}>
+                                        <div className={`p-6 sm:p-8 rounded-3xl border shadow-xl flex items-center justify-between relative overflow-hidden ${isDarkMode ? 'bg-[#1C1C1E] border-[#2C2C2C]' : 'bg-white border-[#E5E7EB]'}`}>
                                             <div className={`absolute top-0 right-0 w-32 h-32 rounded-full blur-[50px] opacity-20 pointer-events-none bg-gradient-to-br ${theme.gradient}`}></div>
                                             <div className="relative z-10">
-                                                <p className={`text-xs font-bold uppercase tracking-widest mb-1 opacity-70 ${isDarkMode ? 'text-[#9AA0A6]' : 'text-gray-500'}`}>Member Plan</p>
+                                                <p className={`text-[11px] font-bold uppercase tracking-widest mb-1 opacity-70 ${isDarkMode ? 'text-[#9AA0A6]' : 'text-gray-500'}`}>Member Plan</p>
                                                 <p className={`text-2xl font-black mb-1 ${theme.text}`}>Full Access</p>
-                                                <p className={`text-sm font-medium ${isDarkMode ? 'text-[#A0A0A0]' : 'text-gray-600'}`}>
+                                                <p className={`text-[13px] font-medium ${isDarkMode ? 'text-[#A0A0A0]' : 'text-gray-600'}`}>
                                                     Valid until: <span className="font-bold">{new Date(purchasedCourses[activeAppTab].expiry).toLocaleDateString()}</span>
                                                 </p>
                                             </div>
@@ -1173,31 +1169,31 @@ function AppContent() {
 
                                         <div className="w-full mb-8">
                                             {user ? (
-                                                <div className={`p-4 rounded-2xl border flex items-center justify-between shadow-sm animate-fade-in-up ${isDarkMode ? 'bg-[#1E1E1E] border-[#2C2C2C]' : 'bg-[#F8F9FA] border-[#E5E7EB]'}`}>
+                                                <div className={`p-4 rounded-[24px] border flex items-center justify-between shadow-sm animate-fade-in-up ${isDarkMode ? 'bg-[#1C1C1E] border-[#2C2C2C]' : 'bg-[#F8F9FA] border-[#E5E7EB]'}`}>
                                                     <div className="flex items-center gap-4">
                                                         {user.photoURL ? (
-                                                            <img src={user.photoURL} alt="Profile" className={`w-12 h-12 rounded-full border-2 ${theme.border}`} />
+                                                            <img src={user.photoURL} alt="Profile" className={`w-12 h-12 rounded-full border-2 ${theme.border} shrink-0`} />
                                                         ) : (
-                                                            <div className={`w-12 h-12 rounded-full flex items-center justify-center text-white font-bold text-lg ${theme.bg}`}>
+                                                            <div className={`w-12 h-12 shrink-0 rounded-full flex items-center justify-center text-white font-bold text-lg shadow-inner ${theme.bg}`}>
                                                                 {user.displayName ? user.displayName.charAt(0).toUpperCase() : user.email?.charAt(0).toUpperCase()}
                                                             </div>
                                                         )}
-                                                        <div>
-                                                            <p className={`font-bold text-sm ${isDarkMode ? 'text-white' : 'text-black'}`}>{user.displayName || 'User'}</p>
-                                                            <p className={`text-xs ${isDarkMode ? 'text-[#A0A0A0]' : 'text-[#6B7280]'}`}>{user.email}</p>
+                                                        <div className="flex-1 min-w-0 pr-2">
+                                                            <p className={`font-bold text-[15px] truncate ${isDarkMode ? 'text-white' : 'text-black'}`}>{user.displayName || 'User'}</p>
+                                                            <p className={`text-[13px] truncate ${isDarkMode ? 'text-[#A0A0A0]' : 'text-[#6B7280]'}`}>{user.email}</p>
                                                         </div>
                                                     </div>
-                                                    <button onClick={handleLogout} className={`px-4 py-2 rounded-xl text-xs font-bold transition-colors ${isDarkMode ? 'bg-[#2C2C2C] hover:bg-[#3C3C3C]' : 'bg-[#E5E7EB] hover:bg-[#D1D5DB]'}`}>
+                                                    <button onClick={handleLogout} className={`px-4 py-2.5 rounded-xl text-[13px] shrink-0 font-bold transition-colors ${isDarkMode ? 'bg-[#2C2C2C] hover:bg-[#3C3C3C]' : 'bg-[#E5E7EB] hover:bg-[#D1D5DB]'}`}>
                                                         Logout
                                                     </button>
                                                 </div>
                                             ) : (
                                                 <div className="text-center animate-fade-in-up">
-                                                    <p className={`text-xs mb-3 font-bold px-2 ${isDarkMode ? 'text-orange-400' : 'text-orange-600'}`}>
+                                                    <p className={`text-[13px] mb-3 font-bold px-2 leading-relaxed ${isDarkMode ? 'text-orange-400' : 'text-orange-600'}`}>
                                                         <Sparkles size={12} className="inline mr-1" />
                                                         {lang === 'en' ? '⚠️ You are using a local key. Link your Google account now to secure permanent access across devices.' : '⚠️ អ្នកកំពុងប្រើកូដនៅលើឧបករណ៍នេះតែប៉ុណ្ណោះ។ សូមភ្ជាប់គណនី Google របស់អ្នកឥឡូវនេះ ដើម្បីកុំឱ្យបាត់បង់សិទ្ធិចូលរៀន។'}
                                                     </p>
-                                                    <button onClick={handleGoogleLogin} className={`w-full flex items-center justify-center gap-3 p-4 rounded-2xl font-bold text-sm border transition-all active:scale-[0.98] shadow-sm hover:shadow-md ${isDarkMode ? 'bg-[#1E1E1E] border-[#2C2C2C] text-white hover:bg-[#2C2C2C]' : 'bg-white border-gray-200 text-black hover:bg-gray-50'}`}>
+                                                    <button onClick={handleGoogleLogin} className={`w-full flex items-center justify-center gap-3 p-4 rounded-2xl font-bold text-[15px] border transition-all active:scale-[0.98] shadow-sm hover:shadow-md ${isDarkMode ? 'bg-[#1C1C1E] border-[#2C2C2C] text-white hover:bg-[#2C2C2C]' : 'bg-white border-gray-200 text-black hover:bg-gray-50'}`}>
                                                         <svg className="w-5 h-5" viewBox="0 0 24 24"><path fill="currentColor" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" /><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" /><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" /><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" /></svg>
                                                         Link Google Account
                                                     </button>
@@ -1206,14 +1202,14 @@ function AppContent() {
                                         </div>
 
                                         <div className="text-center">
-                                            <p className={`text-sm font-bold mb-3 ${isDarkMode ? 'text-[#F1F1F1]' : 'text-[#1A1A1A]'}`}>Need Help with your purchase?</p>
-                                            <a href="https://t.me/+d9YiokUaUtZiNTZl" target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center gap-2 px-8 py-4 rounded-2xl font-black text-sm transition-all active:scale-[0.98] shadow-lg hover:-translate-y-1 text-white" style={{ backgroundColor: '#2AABEE' }}>
+                                            <p className={`text-[15px] font-bold mb-3 ${isDarkMode ? 'text-[#F1F1F1]' : 'text-[#1A1A1A]'}`}>Need Help with your purchase?</p>
+                                            <a href="https://t.me/+d9YiokUaUtZiNTZl" target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center gap-2 px-8 py-4 rounded-2xl font-black text-[15px] transition-all active:scale-[0.98] shadow-lg hover:-translate-y-1 text-white" style={{ backgroundColor: '#2AABEE' }}>
                                                 <Send size={18} /> Contact Support Team
                                             </a>
                                         </div>
 
                                         <div className={`w-full h-px my-6 ${isDarkMode ? 'bg-[#2C2C2C]' : 'bg-[#E5E7EB]'}`}></div>
-                                        <button onClick={handleSignOutDevice} className="w-full py-4 rounded-xl font-bold font-khmer text-sm active:scale-[0.98] transition-colors flex items-center justify-center gap-2 text-red-500 hover:bg-red-500/10">
+                                        <button onClick={handleSignOutDevice} className="w-full py-4 rounded-xl font-bold font-khmer text-[15px] active:scale-[0.98] transition-colors flex items-center justify-center gap-2 text-red-500 hover:bg-red-500/10">
                                             <LogOut size={18} /> Sign Out Device
                                         </button>
                                     </div>
@@ -1222,24 +1218,24 @@ function AppContent() {
                                     <div className="flex flex-col items-center animate-fade-in-up">
                                         
                                         <div className="text-center mb-8">
-                                            <div className={`inline-flex items-center justify-center p-4 rounded-3xl mb-4 ${theme.lightBg}`}>
+                                            <div className={`inline-flex items-center justify-center w-20 h-20 rounded-[24px] mb-4 shadow-inner ${theme.lightBg}`}>
                                                 <Crown className={`w-10 h-10 ${theme.text}`} />
                                             </div>
                                             <h3 className={`text-3xl font-black font-khmer tracking-tight mb-2 ${isDarkMode ? 'text-white' : 'text-black'}`}>
                                                 {lang === 'en' ? 'Pro Masterclass' : getKhmerCourseTitle(activeAppTab)}
                                             </h3>
-                                            <p className={`text-sm font-medium ${isDarkMode ? 'text-[#9AA0A6]' : 'text-gray-500'}`}>
+                                            <p className={`text-[15px] font-medium ${isDarkMode ? 'text-[#9AA0A6]' : 'text-gray-500'}`}>
                                                 {lang === 'en' ? 'One-time payment. One year full access.' : 'បង់ប្រាក់ម្ដង ប្រើប្រាស់បានពេញ១ឆ្នាំ'}
                                             </p>
                                             <div className="mt-4 flex items-baseline justify-center gap-1">
                                                 <span className={`text-4xl font-black ${isDarkMode ? 'text-white' : 'text-black'}`}>$20</span>
-                                                <span className={`text-sm font-bold uppercase tracking-widest ${isDarkMode ? 'text-[#9AA0A6]' : 'text-gray-400'}`}>/ {lang === 'en' ? 'YEAR' : 'ឆ្នាំ'}</span>
+                                                <span className={`text-[13px] font-bold uppercase tracking-widest ${isDarkMode ? 'text-[#9AA0A6]' : 'text-gray-400'}`}>/ {lang === 'en' ? 'YEAR' : 'ឆ្នាំ'}</span>
                                             </div>
                                         </div>
 
-                                        <div className={`w-full max-w-md mx-auto rounded-3xl p-6 sm:p-8 mb-8 border backdrop-blur-md shadow-xl flex flex-col items-center gap-6 ${isDarkMode ? 'bg-[#1E1E1E]/80 border-[#2C2C2C]' : 'bg-white/80 border-[#E5E7EB] shadow-black/5'}`}>
+                                        <div className={`w-full max-w-md mx-auto rounded-[32px] p-6 sm:p-8 mb-8 border backdrop-blur-md shadow-xl flex flex-col items-center gap-6 ${isDarkMode ? 'bg-[#1C1C1E]/80 border-[#2C2C2C]' : 'bg-white/80 border-[#E5E7EB] shadow-black/5'}`}>
                                             <div className="flex flex-col items-center gap-3">
-                                                <div className="w-44 h-44 bg-white rounded-3xl p-3 shadow-md border border-gray-100 flex items-center justify-center">
+                                                <div className="w-44 h-44 bg-white rounded-[24px] p-3 shadow-md border border-gray-100 flex items-center justify-center">
                                                     <img src="/aba-khqr.png" alt="ABA KHQR" className="w-full h-full object-contain rounded-xl" />
                                                 </div>
                                                 <span className={`text-xs font-bold tracking-widest uppercase ${theme.text}`}>SCAN TO PAY</span>
@@ -1247,15 +1243,15 @@ function AppContent() {
                                             
                                             <div className="w-full flex items-center gap-4 opacity-50">
                                                 <div className={`h-px flex-1 ${isDarkMode ? 'bg-white/20' : 'bg-black/10'}`}></div>
-                                                <span className={`text-[10px] font-bold tracking-widest uppercase ${isDarkMode ? 'text-white/50' : 'text-black/40'}`}>THEN</span>
+                                                <span className={`text-[11px] font-bold tracking-widest uppercase ${isDarkMode ? 'text-white/50' : 'text-black/40'}`}>THEN</span>
                                                 <div className={`h-px flex-1 ${isDarkMode ? 'bg-white/20' : 'bg-black/10'}`}></div>
                                             </div>
                                             
                                             <div className="w-full text-center">
-                                                <p className={`text-[13px] font-khmer mb-4 leading-relaxed ${isDarkMode ? 'text-[#E3E3E3]' : 'text-gray-600'}`}>
+                                                <p className={`text-[14px] font-khmer mb-4 leading-relaxed ${isDarkMode ? 'text-[#E3E3E3]' : 'text-gray-600'}`}>
                                                     {lang === 'en' ? 'Send your receipt via Telegram to get your activation key.' : 'ផ្ញើវិក័យប័ត្រតាម Telegram ដើម្បីទទួលបានលេខកូដ។'}
                                                 </p>
-                                                <a href={telegramUrl} target="_blank" rel="noopener noreferrer" className={`w-full py-4 rounded-2xl flex items-center justify-center gap-2 font-bold font-khmer transition-all active:scale-[0.98] shadow-lg text-white bg-gradient-to-r ${theme.gradient}`}>
+                                                <a href={telegramUrl} target="_blank" rel="noopener noreferrer" className={`w-full py-4 rounded-[20px] flex items-center justify-center gap-2 font-bold font-khmer transition-all active:scale-[0.98] shadow-lg text-white bg-gradient-to-r ${theme.gradient}`}>
                                                     <Send className="w-5 h-5" />
                                                     {lang === 'en' ? 'Send Receipt to Telegram' : 'ផ្ញើវិក័យប័ត្រទីនេះ'}
                                                 </a>
@@ -1266,8 +1262,8 @@ function AppContent() {
                                             <label className={`block text-[11px] font-bold uppercase tracking-widest mb-3 pl-1 ${isDarkMode ? 'text-[#9AA0A6]' : 'text-gray-500'}`}>
                                                 {lang === 'en' ? 'Activation Key' : 'លេខកូដសម្ងាត់'}
                                             </label>
-                                            <div className={`relative flex items-center p-1.5 rounded-2xl border transition-colors shadow-sm ${isDarkMode ? 'bg-[#121212] border-[#2C2C2C] focus-within:border-[#41B6E6]' : 'bg-white border-[#E5E7EB] focus-within:border-[#0277C5]'}`}>
-                                                <KeyRound className={`absolute left-4 w-5 h-5 ${isDarkMode ? 'text-[#9AA0A6]' : 'text-gray-400'}`} />
+                                            <div className={`relative flex items-center p-2 rounded-[24px] border transition-colors shadow-sm ${isDarkMode ? 'bg-[#121212] border-[#2C2C2C] focus-within:border-[#41B6E6]' : 'bg-white border-[#E5E7EB] focus-within:border-[#0277C5]'}`}>
+                                                <KeyRound className={`absolute left-5 w-6 h-6 ${isDarkMode ? 'text-[#9AA0A6]' : 'text-gray-400'}`} />
                                                 <input 
                                                     type="text" 
                                                     value={passcodeInput}
@@ -1276,57 +1272,57 @@ function AppContent() {
                                                         setPasscodeError('');
                                                     }}
                                                     placeholder={getInputPlaceholder()}
-                                                    className={`flex-1 bg-transparent py-3 pl-12 pr-2 outline-none font-bold tracking-widest uppercase text-sm w-full ${isDarkMode ? 'text-white' : 'text-black'}`}
+                                                    className={`flex-1 bg-transparent py-3 pl-14 pr-2 outline-none font-bold tracking-widest uppercase text-[15px] w-full ${isDarkMode ? 'text-white' : 'text-black'}`}
                                                 />
                                                 <button 
                                                     onClick={handleVerifyPasscode}
                                                     disabled={!passcodeInput.trim() || isVerifying}
-                                                    className={`px-6 py-3 rounded-xl text-white font-bold font-khmer text-sm active:scale-[0.95] transition-all flex items-center justify-center shrink-0 ${(isVerifying || !passcodeInput.trim()) ? 'opacity-50 cursor-not-allowed bg-gray-500' : `shadow-md bg-gradient-to-r ${theme.gradient}`}`}
+                                                    className={`px-7 py-3.5 rounded-[18px] text-white font-bold font-khmer text-[15px] active:scale-[0.95] transition-all flex items-center justify-center shrink-0 ${(isVerifying || !passcodeInput.trim()) ? 'opacity-50 cursor-not-allowed bg-gray-500' : `shadow-md bg-gradient-to-r ${theme.gradient}`}`}
                                                 >
                                                     {isVerifying ? 'Checking...' : (lang === 'en' ? 'Unlock' : 'បញ្ជាក់')}
                                                 </button>
                                             </div>
                                             {passcodeError && (
-                                                <p className="text-red-500 text-[11px] font-bold tracking-wide mt-3 flex items-center justify-center gap-1">
-                                                    <AlertCircle size={14} /> {passcodeError}
+                                                <p className="text-red-500 text-[13px] font-bold tracking-wide mt-4 flex items-center justify-center gap-1.5">
+                                                    <AlertCircle size={16} /> {passcodeError}
                                                 </p>
                                             )}
                                         </div>
 
                                         <div className="w-full flex items-center gap-4 opacity-50 max-w-md mx-auto mb-8">
                                             <div className={`h-px flex-1 ${isDarkMode ? 'bg-white/20' : 'bg-black/10'}`}></div>
-                                            <span className={`text-[10px] font-bold tracking-widest uppercase ${isDarkMode ? 'text-white/50' : 'text-black/40'}`}>ACCOUNT SYNC</span>
+                                            <span className={`text-[11px] font-bold tracking-widest uppercase ${isDarkMode ? 'text-white/50' : 'text-black/40'}`}>ACCOUNT SYNC</span>
                                             <div className={`h-px flex-1 ${isDarkMode ? 'bg-white/20' : 'bg-black/10'}`}></div>
                                         </div>
 
                                         <div className="w-full max-w-md mx-auto">
                                             {user ? (
-                                                <div className={`p-4 rounded-2xl border flex items-center justify-between shadow-sm animate-fade-in-up ${isDarkMode ? 'bg-[#1E1E1E] border-[#2C2C2C]' : 'bg-[#F8F9FA] border-[#E5E7EB]'}`}>
-                                                    <div className="flex items-center gap-4">
+                                                <div className={`p-4 rounded-[24px] border flex items-center justify-between shadow-sm animate-fade-in-up ${isDarkMode ? 'bg-[#1C1C1E] border-[#2C2C2C]' : 'bg-[#F8F9FA] border-[#E5E7EB]'}`}>
+                                                    <div className="flex items-center gap-4 min-w-0">
                                                         {user.photoURL ? (
-                                                            <img src={user.photoURL} alt="Profile" className={`w-12 h-12 rounded-full border-2 ${theme.border}`} />
+                                                            <img src={user.photoURL} alt="Profile" className={`w-12 h-12 rounded-full border-2 shrink-0 ${theme.border}`} />
                                                         ) : (
-                                                            <div className={`w-12 h-12 rounded-full flex items-center justify-center text-white font-bold text-lg ${theme.bg}`}>
+                                                            <div className={`w-12 h-12 shrink-0 rounded-full flex items-center justify-center text-white font-bold text-lg shadow-inner ${theme.bg}`}>
                                                                 {user.displayName ? user.displayName.charAt(0).toUpperCase() : user.email?.charAt(0).toUpperCase()}
                                                             </div>
                                                         )}
-                                                        <div>
-                                                            <p className={`font-bold text-sm ${isDarkMode ? 'text-white' : 'text-black'}`}>{user.displayName || 'User'}</p>
-                                                            <p className={`text-xs ${isDarkMode ? 'text-[#A0A0A0]' : 'text-[#6B7280]'}`}>{user.email}</p>
+                                                        <div className="min-w-0 pr-2">
+                                                            <p className={`font-bold text-[15px] truncate ${isDarkMode ? 'text-white' : 'text-black'}`}>{user.displayName || 'User'}</p>
+                                                            <p className={`text-[13px] truncate ${isDarkMode ? 'text-[#A0A0A0]' : 'text-[#6B7280]'}`}>{user.email}</p>
                                                         </div>
                                                     </div>
-                                                    <button onClick={handleLogout} className={`px-4 py-2 rounded-xl text-xs font-bold transition-colors ${isDarkMode ? 'bg-[#2C2C2C] hover:bg-[#3C3C3C]' : 'bg-[#E5E7EB] hover:bg-[#D1D5DB]'}`}>
+                                                    <button onClick={handleLogout} className={`px-4 py-2.5 shrink-0 rounded-xl text-[13px] font-bold transition-colors ${isDarkMode ? 'bg-[#2C2C2C] hover:bg-[#3C3C3C]' : 'bg-[#E5E7EB] hover:bg-[#D1D5DB]'}`}>
                                                         Logout
                                                     </button>
                                                 </div>
                                             ) : (
                                                 <div className="text-center">
-                                                    <button onClick={handleGoogleLogin} className={`w-full flex items-center justify-center gap-3 p-4 rounded-2xl font-bold text-sm border transition-all active:scale-[0.98] shadow-sm hover:shadow-md ${isDarkMode ? 'bg-[#1E1E1E] border-[#2C2C2C] text-white hover:bg-[#2C2C2C]' : 'bg-white border-gray-200 text-black hover:bg-gray-50'}`}>
+                                                    <button onClick={handleGoogleLogin} className={`w-full flex items-center justify-center gap-3 p-4 rounded-[24px] font-bold text-[15px] border transition-all active:scale-[0.98] shadow-sm hover:shadow-md ${isDarkMode ? 'bg-[#1C1C1E] border-[#2C2C2C] text-white hover:bg-[#2C2C2C]' : 'bg-white border-gray-200 text-black hover:bg-gray-50'}`}>
                                                         <svg className="w-5 h-5" viewBox="0 0 24 24"><path fill="currentColor" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" /><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" /><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" /><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" /></svg>
                                                         Continue with Google
                                                     </button>
-                                                    <p className={`text-xs mt-4 font-bold ${isDarkMode ? 'text-orange-400' : 'text-orange-600'}`}>
-                                                        <Sparkles size={12} className="inline mr-1" />
+                                                    <p className={`text-[13px] mt-4 font-bold ${isDarkMode ? 'text-orange-400' : 'text-orange-600'}`}>
+                                                        <Sparkles size={14} className="inline mr-1" />
                                                         {lang === 'en' ? 'Secure your purchase by linking an account.' : 'សូមភ្ជាប់គណនីដើម្បីការពារការទិញរបស់អ្នក។'}
                                                     </p>
                                                 </div>
@@ -1340,20 +1336,20 @@ function AppContent() {
                 </div>
 
                 {isCoursePurchased && (
-                    <div className={`mb-8 p-5 md:p-6 rounded-[24px] border shadow-sm animate-fade-in-up relative overflow-hidden ${isDarkMode ? 'bg-[#1E1E1E]/50 border-[#2C2C2C]' : 'bg-[#FFFFFF] border-[#E5E7EB]'}`}>
+                    <div className={`mb-8 p-5 md:p-6 rounded-[32px] border shadow-sm animate-fade-in-up relative overflow-hidden ${isDarkMode ? 'bg-[#1C1C1E]/50 border-[#2C2C2C]' : 'bg-[#FFFFFF] border-[#E5E7EB]'}`}>
                         <div className={`absolute top-0 right-0 w-32 h-32 rounded-full blur-[60px] pointer-events-none bg-gradient-to-br ${theme.gradient} opacity-20`}></div>
-                        <div className="flex justify-between items-end mb-4 relative z-10">
+                        <div className="flex justify-between items-end mb-5 relative z-10">
                             <div>
-                                <h4 className={`font-bold font-khmer text-[13px] md:text-sm uppercase tracking-widest ${theme.text}`}>
+                                <h4 className={`font-bold font-khmer text-[14px] md:text-[15px] uppercase tracking-widest ${theme.text}`}>
                                     {lang === 'en' ? 'Course Progress' : 'វឌ្ឍនភាពនៃការសិក្សា'}
                                 </h4>
-                                <p className={`text-[12px] md:text-sm mt-1.5 font-khmer ${isDarkMode ? 'text-[#A0A0A0]' : 'text-[#6B7280]'}`}>
+                                <p className={`text-[13px] md:text-[14px] mt-1.5 font-khmer ${isDarkMode ? 'text-[#A0A0A0]' : 'text-[#6B7280]'}`}>
                                     {lang === 'en' ? `${completedInThisTab} of ${totalSteps} lessons completed` : `បានបញ្ចប់ ${completedInThisTab} នៃ ${totalSteps} មេរៀន`}
                                 </p>
                             </div>
-                            <span className={`text-3xl font-black ${isDarkMode ? 'text-[#F1F1F1]' : 'text-[#1A1A1A]'}`}>{progressPercentage}%</span>
+                            <span className={`text-4xl font-black ${isDarkMode ? 'text-[#F1F1F1]' : 'text-[#1A1A1A]'}`}>{progressPercentage}%</span>
                         </div>
-                        <div className={`h-3 w-full rounded-full overflow-hidden relative z-10 ${isDarkMode ? 'bg-[#2C2C2C]' : 'bg-[#F4F5F7]'}`}>
+                        <div className={`h-4 w-full rounded-full overflow-hidden relative z-10 shadow-inner ${isDarkMode ? 'bg-[#2C2C2C]' : 'bg-[#F4F5F7]'}`}>
                             <div 
                                 className={`h-full rounded-full transition-all duration-1000 ease-out bg-gradient-to-r ${theme.gradient}`}
                                 style={{ width: `${progressPercentage}%` }}
@@ -1362,12 +1358,12 @@ function AppContent() {
                     </div>
                 )}
 
-                <h3 className={`font-black text-2xl mb-6 flex items-center gap-3 ${isDarkMode ? 'text-[#F1F1F1]' : 'text-[#1A1A1A]'}`}>
-                    <BookOpen className={theme.text} /> 
+                <h3 className={`font-black text-[22px] md:text-3xl mb-6 flex items-center gap-3 ${isDarkMode ? 'text-[#F1F1F1]' : 'text-[#1A1A1A]'}`}>
+                    <BookOpen className={`w-7 h-7 md:w-8 md:h-8 ${theme.text}`} /> 
                     {lang === 'en' ? 'Course Curriculum' : 'បញ្ជីមេរៀន'}
                 </h3>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                     {currentCourseData.map((l) => (
                         <LessonCard key={l.id} lesson={l} onClick={() => handleOpenLesson(l.id)} isDarkMode={isDarkMode} />
                     ))}
@@ -1382,58 +1378,70 @@ function AppContent() {
             <div className="space-y-6 pb-24">
                 <div className="text-center py-6 mt-2 relative">
                     <div className={`absolute inset-0 blur-[120px] rounded-full pointer-events-none ${isDarkMode ? 'bg-[#B52885]/10' : 'bg-[#B52885]/5'}`} />
-                    <h2 className={`text-3xl md:text-5xl font-black mb-4 tracking-tight ${isDarkMode ? 'text-[#F1F1F1]' : 'text-[#1A1A1A]'}`}>iPad Masterclass</h2>
-                    <p className={`max-w-xl mx-auto text-sm md:text-base leading-relaxed ${isDarkMode ? 'text-[#A0A0A0]' : 'text-[#6B7280]'}`}>
+                    <h2 className={`text-4xl md:text-5xl font-black mb-4 tracking-tight ${isDarkMode ? 'text-[#F1F1F1]' : 'text-[#1A1A1A]'}`}>iPad Masterclass</h2>
+                    <p className={`max-w-xl mx-auto text-[15px] md:text-base leading-relaxed ${isDarkMode ? 'text-[#A0A0A0]' : 'text-[#6B7280]'}`}>
                         {lang === 'en' ? 'Select an app to begin your professional training.' : 'ជ្រើសរើសកម្មវិធីដើម្បីចាប់ផ្តើមការហ្វឹកហាត់កម្រិតអាជីពរបស់អ្នក។'}
                     </p>
                 </div>
 
-                <div className="flex flex-col gap-4 max-w-2xl mx-auto w-full relative z-10">
-                    <button onClick={() => handleOpenCourse('photo')} className={`group relative flex items-center justify-between p-5 md:p-6 rounded-3xl border shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg active:scale-95 overflow-hidden ${isDarkMode ? 'bg-[#1E1E1E] border-[#2C2C2C]' : 'bg-[#FFFFFF] border-[#E5E7EB]'}`}>
+                <div className="flex flex-col gap-4 max-w-2xl mx-auto w-full relative z-10 px-1 sm:px-0">
+                    <button onClick={() => handleOpenCourse('photo')} className={`group relative w-full flex items-center p-4 sm:p-5 rounded-[24px] border transition-all duration-300 hover:-translate-y-1 active:scale-[0.98] overflow-hidden ${isDarkMode ? 'bg-[#1C1C1E] border-[#2C2C2C] hover:shadow-[0_8px_30px_rgba(0,0,0,0.5)]' : 'bg-white border-[#E5E7EB] hover:shadow-[0_8px_30px_rgba(0,0,0,0.06)]'}`}>
                         <div className={`absolute inset-0 opacity-0 group-hover:opacity-10 transition-opacity duration-500 pointer-events-none bg-gradient-to-r ${APP_THEMES.photo.gradient}`}></div>
-                        <div className="flex items-center gap-5 relative z-10">
-                            <div className={`p-4 rounded-2xl ${APP_THEMES.photo.lightBg} ${APP_THEMES.photo.text}`}><img src="/photo2 icon.svg" alt="Photo" className="w-9 h-9 object-contain" /></div>
-                            <div className="text-left">
-                                <h3 className={`font-black text-lg md:text-xl ${isDarkMode ? 'text-white' : 'text-black'}`}>Affinity Photo 2 iPad</h3>
-                                <p className={`text-sm mt-1 ${isDarkMode ? 'text-[#A0A0A0]' : 'text-[#6B7280]'}`}>{lang === 'en' ? 'Professional photo editing & manipulation' : 'ការកែច្នៃរូបភាពបែបអាជីព'}</p>
+                        <div className="flex items-center gap-4 sm:gap-5 relative z-10 w-full">
+                            <div className={`w-14 h-14 sm:w-16 sm:h-16 shrink-0 rounded-[18px] flex items-center justify-center shadow-inner ${APP_THEMES.photo.lightBg}`}>
+                                <img src="/photo2 icon.svg" alt="Photo" className="w-8 h-8 sm:w-10 sm:h-10 object-contain drop-shadow-sm" />
                             </div>
-                        </div>
-                        <div className="flex items-center gap-3 relative z-10">
-                            {!isAdmin && !purchasedCourses['photo']?.unlocked && <Lock size={18} className={`${APP_THEMES.photo.text} opacity-80`} />}
-                            {isAdmin && <ShieldCheck size={18} className="text-[#41B6E6]" />}
-                            <ChevronRight size={24} className={isDarkMode ? 'text-[#A0A0A0] group-hover:text-white' : 'text-[#6B7280] group-hover:text-black'} />
+                            <div className="text-left flex-1 min-w-0">
+                                <h3 className={`font-black text-[17px] sm:text-[20px] tracking-tight truncate ${isDarkMode ? 'text-white' : 'text-black'}`}>Affinity Photo 2 iPad</h3>
+                                <p className={`text-[13px] sm:text-[14px] mt-0.5 sm:mt-1 font-medium truncate ${isDarkMode ? 'text-[#9AA0A6]' : 'text-[#6B7280]'}`}>{lang === 'en' ? 'Professional photo editing & manipulation' : 'ការកែច្នៃរូបភាពបែបអាជីព'}</p>
+                            </div>
+                            <div className="flex items-center gap-2 sm:gap-3 shrink-0 pl-2">
+                                {!isAdmin && !purchasedCourses['photo']?.unlocked && <Lock size={18} className={`${APP_THEMES.photo.text} opacity-80`} />}
+                                {isAdmin && <ShieldCheck size={18} className="text-[#41B6E6]" />}
+                                <div className={`w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center transition-colors ${isDarkMode ? 'bg-white/5 group-hover:bg-white/10' : 'bg-black/5 group-hover:bg-black/10'}`}>
+                                    <ChevronRight size={20} className={isDarkMode ? 'text-[#A0A0A0] group-hover:text-white' : 'text-[#6B7280] group-hover:text-black'} />
+                                </div>
+                            </div>
                         </div>
                     </button>
 
-                    <button onClick={() => handleOpenCourse('designer')} className={`group relative flex items-center justify-between p-5 md:p-6 rounded-3xl border shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg active:scale-95 overflow-hidden ${isDarkMode ? 'bg-[#1E1E1E] border-[#2C2C2C]' : 'bg-[#FFFFFF] border-[#E5E7EB]'}`}>
+                    <button onClick={() => handleOpenCourse('designer')} className={`group relative w-full flex items-center p-4 sm:p-5 rounded-[24px] border transition-all duration-300 hover:-translate-y-1 active:scale-[0.98] overflow-hidden ${isDarkMode ? 'bg-[#1C1C1E] border-[#2C2C2C] hover:shadow-[0_8px_30px_rgba(0,0,0,0.5)]' : 'bg-white border-[#E5E7EB] hover:shadow-[0_8px_30px_rgba(0,0,0,0.06)]'}`}>
                         <div className={`absolute inset-0 opacity-0 group-hover:opacity-10 transition-opacity duration-500 pointer-events-none bg-gradient-to-r ${APP_THEMES.designer.gradient}`}></div>
-                        <div className="flex items-center gap-5 relative z-10">
-                            <div className={`p-4 rounded-2xl ${APP_THEMES.designer.lightBg} ${APP_THEMES.designer.text}`}><img src="/designer2 icon.svg" alt="Designer" className="w-9 h-9 object-contain" /></div>
-                            <div className="text-left">
-                                <h3 className={`font-black text-lg md:text-xl ${isDarkMode ? 'text-white' : 'text-black'}`}>Affinity Designer 2 iPad</h3>
-                                <p className={`text-sm mt-1 ${isDarkMode ? 'text-[#A0A0A0]' : 'text-[#6B7280]'}`}>{lang === 'en' ? 'Vector graphics & illustration' : 'ការឌីហ្សាញក្រាហ្វិក និងគំនូរ'}</p>
+                        <div className="flex items-center gap-4 sm:gap-5 relative z-10 w-full">
+                            <div className={`w-14 h-14 sm:w-16 sm:h-16 shrink-0 rounded-[18px] flex items-center justify-center shadow-inner ${APP_THEMES.designer.lightBg}`}>
+                                <img src="/designer2 icon.svg" alt="Designer" className="w-8 h-8 sm:w-10 sm:h-10 object-contain drop-shadow-sm" />
                             </div>
-                        </div>
-                        <div className="flex items-center gap-3 relative z-10">
-                            {!isAdmin && !purchasedCourses['designer']?.unlocked && <Lock size={18} className={`${APP_THEMES.designer.text} opacity-80`} />}
-                            {isAdmin && <ShieldCheck size={18} className="text-[#41B6E6]" />}
-                            <ChevronRight size={24} className={isDarkMode ? 'text-[#A0A0A0] group-hover:text-white' : 'text-[#6B7280] group-hover:text-black'} />
+                            <div className="text-left flex-1 min-w-0">
+                                <h3 className={`font-black text-[17px] sm:text-[20px] tracking-tight truncate ${isDarkMode ? 'text-white' : 'text-black'}`}>Affinity Designer 2 iPad</h3>
+                                <p className={`text-[13px] sm:text-[14px] mt-0.5 sm:mt-1 font-medium truncate ${isDarkMode ? 'text-[#9AA0A6]' : 'text-[#6B7280]'}`}>{lang === 'en' ? 'Vector graphics & illustration' : 'ការឌីហ្សាញក្រាហ្វិក និងគំនូរ'}</p>
+                            </div>
+                            <div className="flex items-center gap-2 sm:gap-3 shrink-0 pl-2">
+                                {!isAdmin && !purchasedCourses['designer']?.unlocked && <Lock size={18} className={`${APP_THEMES.designer.text} opacity-80`} />}
+                                {isAdmin && <ShieldCheck size={18} className="text-[#41B6E6]" />}
+                                <div className={`w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center transition-colors ${isDarkMode ? 'bg-white/5 group-hover:bg-white/10' : 'bg-black/5 group-hover:bg-black/10'}`}>
+                                    <ChevronRight size={20} className={isDarkMode ? 'text-[#A0A0A0] group-hover:text-white' : 'text-[#6B7280] group-hover:text-black'} />
+                                </div>
+                            </div>
                         </div>
                     </button>
 
-                    <button onClick={() => handleOpenCourse('publisher')} className={`group relative flex items-center justify-between p-5 md:p-6 rounded-3xl border shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg active:scale-95 overflow-hidden ${isDarkMode ? 'bg-[#1E1E1E] border-[#2C2C2C]' : 'bg-[#FFFFFF] border-[#E5E7EB]'}`}>
+                    <button onClick={() => handleOpenCourse('publisher')} className={`group relative w-full flex items-center p-4 sm:p-5 rounded-[24px] border transition-all duration-300 hover:-translate-y-1 active:scale-[0.98] overflow-hidden ${isDarkMode ? 'bg-[#1C1C1E] border-[#2C2C2C] hover:shadow-[0_8px_30px_rgba(0,0,0,0.5)]' : 'bg-white border-[#E5E7EB] hover:shadow-[0_8px_30px_rgba(0,0,0,0.06)]'}`}>
                         <div className={`absolute inset-0 opacity-0 group-hover:opacity-10 transition-opacity duration-500 pointer-events-none bg-gradient-to-r ${APP_THEMES.publisher.gradient}`}></div>
-                        <div className="flex items-center gap-5 relative z-10">
-                            <div className={`p-4 rounded-2xl ${APP_THEMES.publisher.lightBg} ${APP_THEMES.publisher.text}`}><img src="/publisher2 icon.svg" alt="Publisher" className="w-9 h-9 object-contain" /></div>
-                            <div className="text-left">
-                                <h3 className={`font-black text-lg md:text-xl ${isDarkMode ? 'text-white' : 'text-black'}`}>Affinity Publisher 2 iPad</h3>
-                                <p className={`text-sm mt-1 ${isDarkMode ? 'text-[#A0A0A0]' : 'text-[#6B7280]'}`}>{lang === 'en' ? 'Page layout & typography design' : 'ការរៀបចំទំព័រ និងសៀវភៅ'}</p>
+                        <div className="flex items-center gap-4 sm:gap-5 relative z-10 w-full">
+                            <div className={`w-14 h-14 sm:w-16 sm:h-16 shrink-0 rounded-[18px] flex items-center justify-center shadow-inner ${APP_THEMES.publisher.lightBg}`}>
+                                <img src="/publisher2 icon.svg" alt="Publisher" className="w-8 h-8 sm:w-10 sm:h-10 object-contain drop-shadow-sm" />
                             </div>
-                        </div>
-                        <div className="flex items-center gap-3 relative z-10">
-                            {!isAdmin && !purchasedCourses['publisher']?.unlocked && <Lock size={18} className={`${APP_THEMES.publisher.text} opacity-80`} />}
-                            {isAdmin && <ShieldCheck size={18} className="text-[#41B6E6]" />}
-                            <ChevronRight size={24} className={isDarkMode ? 'text-[#A0A0A0] group-hover:text-white' : 'text-[#6B7280] group-hover:text-black'} />
+                            <div className="text-left flex-1 min-w-0">
+                                <h3 className={`font-black text-[17px] sm:text-[20px] tracking-tight truncate ${isDarkMode ? 'text-white' : 'text-black'}`}>Affinity Publisher 2 iPad</h3>
+                                <p className={`text-[13px] sm:text-[14px] mt-0.5 sm:mt-1 font-medium truncate ${isDarkMode ? 'text-[#9AA0A6]' : 'text-[#6B7280]'}`}>{lang === 'en' ? 'Page layout & typography design' : 'ការរៀបចំទំព័រ និងសៀវភៅ'}</p>
+                            </div>
+                            <div className="flex items-center gap-2 sm:gap-3 shrink-0 pl-2">
+                                {!isAdmin && !purchasedCourses['publisher']?.unlocked && <Lock size={18} className={`${APP_THEMES.publisher.text} opacity-80`} />}
+                                {isAdmin && <ShieldCheck size={18} className="text-[#41B6E6]" />}
+                                <div className={`w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center transition-colors ${isDarkMode ? 'bg-white/5 group-hover:bg-white/10' : 'bg-black/5 group-hover:bg-black/10'}`}>
+                                    <ChevronRight size={20} className={isDarkMode ? 'text-[#A0A0A0] group-hover:text-white' : 'text-[#6B7280] group-hover:text-black'} />
+                                </div>
+                            </div>
                         </div>
                     </button>
                 </div>
@@ -1452,19 +1460,19 @@ function AppContent() {
       )}
 
       <div className={`md:hidden absolute bottom-0 w-full p-4 z-50 pointer-events-none transition-all duration-300 ease-in-out ${(isKeyboardOpen || activeAppTab) ? 'translate-y-32 opacity-0' : 'translate-y-0 opacity-100'}`}>
-          <nav className={`pointer-events-auto backdrop-blur-2xl border flex justify-around p-3 pb-safe rounded-[32px] shadow-2xl transition-all duration-500 ${isDarkMode ? 'bg-[#121212]/80 border-white/10 shadow-black/80' : 'bg-white/80 border-black/5 shadow-[#0277C5]/10'}`}>
+          <nav className={`pointer-events-auto backdrop-blur-2xl border flex justify-around p-3 pb-safe rounded-[32px] shadow-2xl transition-all duration-500 ${isDarkMode ? 'bg-[#1C1C1E]/80 border-white/10 shadow-[0_-5px_30px_rgba(0,0,0,0.3)]' : 'bg-white/80 border-black/5 shadow-[#0277C5]/10'}`}>
             {['learn', 'quiz', 'tools', 'ai'].map(t_id => (
                 <button key={t_id} onClick={() => { 
                     setActiveTab(t_id);
                     setActiveAppTab(null);
                     triggerHaptic(); 
                     window.history.pushState({ modalOpen: false, tab: t_id, course: null }, '');
-                }} className={`flex flex-col items-center gap-1 transition-all duration-500 ease-out ${activeTab === t_id ? (isDarkMode ? 'text-[#41B6E6] -translate-y-1.5' : 'text-[#0277C5] -translate-y-1.5') : (isDarkMode ? 'text-[#A0A0A0] hover:text-[#F1F1F1]' : 'text-[#6B7280] hover:text-[#1A1A1A]')}`}>
-                    {t_id === 'learn' && <BookOpen size={22} className={activeTab === t_id ? 'drop-shadow-md' : ''}/>}
-                    {t_id === 'quiz' && <Award size={22} className={activeTab === t_id ? 'drop-shadow-md' : ''}/>}
-                    {t_id === 'tools' && <Zap size={22} className={activeTab === t_id ? 'drop-shadow-md' : ''}/>}
-                    {t_id === 'ai' && <Bot size={22} className={activeTab === t_id ? 'drop-shadow-md' : ''}/>}
-                    <span className="text-[9px] font-black uppercase tracking-widest">{t(`tab_${t_id}`)}</span>
+                }} className={`flex flex-col items-center gap-1.5 transition-all duration-500 ease-out ${activeTab === t_id ? (isDarkMode ? 'text-[#41B6E6] -translate-y-1.5' : 'text-[#0277C5] -translate-y-1.5') : (isDarkMode ? 'text-[#A0A0A0] hover:text-[#F1F1F1]' : 'text-[#6B7280] hover:text-[#1A1A1A]')}`}>
+                    {t_id === 'learn' && <BookOpen size={24} className={activeTab === t_id ? 'drop-shadow-md' : ''}/>}
+                    {t_id === 'quiz' && <Award size={24} className={activeTab === t_id ? 'drop-shadow-md' : ''}/>}
+                    {t_id === 'tools' && <Zap size={24} className={activeTab === t_id ? 'drop-shadow-md' : ''}/>}
+                    {t_id === 'ai' && <Bot size={24} className={activeTab === t_id ? 'drop-shadow-md' : ''}/>}
+                    <span className="text-[10px] font-black uppercase tracking-widest">{t(`tab_${t_id}`)}</span>
                 </button>
             ))}
           </nav>
