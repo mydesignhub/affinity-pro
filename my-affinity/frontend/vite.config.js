@@ -15,7 +15,7 @@ export default defineConfig({
         theme_color: '#0A0A0A',
         background_color: '#0A0A0A',
         display: 'standalone', // This hides the browser URL bar!
-        orientation: 'portrait',
+        orientation: 'any', // 🌟 THE FIX: Changed from 'portrait' to allow free rotation on Android
         icons: [
           // 🌟 THE SECRET: Tells Android to use your SVG and allows it to be cut into the system container shape!
           {
