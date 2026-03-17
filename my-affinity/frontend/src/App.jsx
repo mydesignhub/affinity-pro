@@ -196,7 +196,13 @@ const LessonModal = ({ lesson, onClose, isDarkMode, completedSteps, setCompleted
           .video-container:-webkit-full-screen { width: 100vw !important; height: 100dvh !important; max-width: none !important; max-height: none !important; border-radius: 0 !important; border: none !important; background: black; display: flex !important; align-items: center !important; justify-content: center !important; }
           .video-container:fullscreen iframe { width: 100% !important; height: 100% !important; object-fit: cover; }
           .video-container:-webkit-full-screen iframe { width: 100% !important; height: 100% !important; object-fit: cover; }
-          .no-callout { -webkit-touch-callout: none !important; -webkit-user-select: none !important; user-select: none !important; outline: none !important; }
+          
+          .no-callout {
+              -webkit-touch-callout: none !important;
+              -webkit-user-select: none !important;
+              user-select: none !important;
+              outline: none !important;
+          }
       `}</style>
 
       <div 
@@ -309,25 +315,46 @@ const LessonModal = ({ lesson, onClose, isDarkMode, completedSteps, setCompleted
                                             onLoad={() => setIsVideoLoading(false)}
                                         />
                                         
-                                        {/* 🛡️ SIMPLIFIED, PERFECTLY CALIBRATED SHIELDS 🛡️ */}
+                                        {/* 🛡️ ACTIVE TRAPDOOR SHIELDS 🛡️ */}
                                         
-                                        {/* 1. Top Bar Shield: Covers Title & Avatar, but leaves absolute right 60px open for mobile Gear */}
-                                        <div 
-                                            className="absolute top-0 left-0 right-[60px] h-[65px] z-30 bg-transparent no-callout cursor-default" 
+                                        <button 
+                                            onClick={(e) => { e.preventDefault(); toggleFullScreen(); }}
+                                            className="absolute top-0 left-0 w-[70%] sm:w-[calc(100%-280px)] h-[70px] z-30 bg-transparent no-callout cursor-pointer outline-none border-none" 
                                             onContextMenu={e => e.preventDefault()} 
+                                            tabIndex="-1"
+                                            aria-hidden="true"
                                         />
 
-                                        {/* 2. Bottom-Left Shield: Blocks Mobile Share Arrow. Hides on Desktop so Bottom-Left Play works */}
-                                        <div 
-                                            className="lg:hidden absolute bottom-0 left-0 w-[60px] h-[60px] z-30 bg-transparent no-callout cursor-default" 
+                                        <button 
+                                            onClick={(e) => { e.preventDefault(); toggleFullScreen(); }}
+                                            className="hidden sm:block absolute top-0 right-0 w-[280px] h-[80px] z-30 bg-transparent no-callout cursor-pointer outline-none border-none" 
                                             onContextMenu={e => e.preventDefault()} 
+                                            tabIndex="-1"
+                                            aria-hidden="true"
                                         />
 
-                                        {/* 3. Bottom-Right Shield: Blocks YouTube Watermark */}
-                                        {/* 🌟 ON PC (sm): Shifts UP 48px to completely expose the YouTube control bar (Gear, CC, Fullscreen) 🌟 */}
-                                        <div 
-                                            className="absolute bottom-0 sm:bottom-[48px] right-0 w-[90px] sm:w-[110px] h-[60px] sm:h-[40px] z-30 bg-transparent no-callout cursor-default" 
+                                        <button 
+                                            onClick={(e) => { e.preventDefault(); toggleFullScreen(); }}
+                                            className="sm:hidden absolute top-0 right-0 w-[60px] h-[60px] z-30 bg-transparent no-callout cursor-pointer outline-none border-none" 
                                             onContextMenu={e => e.preventDefault()} 
+                                            tabIndex="-1"
+                                            aria-hidden="true"
+                                        />
+
+                                        <button 
+                                            onClick={(e) => { e.preventDefault(); toggleFullScreen(); }}
+                                            className="lg:hidden absolute bottom-0 left-0 w-[80px] h-[60px] z-30 bg-transparent no-callout cursor-pointer outline-none border-none" 
+                                            onContextMenu={e => e.preventDefault()} 
+                                            tabIndex="-1"
+                                            aria-hidden="true"
+                                        />
+
+                                        <button 
+                                            onClick={(e) => { e.preventDefault(); toggleFullScreen(); }}
+                                            className="absolute bottom-0 right-0 w-[120px] h-[60px] z-30 bg-transparent no-callout cursor-pointer outline-none border-none" 
+                                            onContextMenu={e => e.preventDefault()} 
+                                            tabIndex="-1"
+                                            aria-hidden="true"
                                         />
                                     </>
                                 )}
@@ -380,7 +407,7 @@ const LessonModal = ({ lesson, onClose, isDarkMode, completedSteps, setCompleted
                     <div className="flex-1">
                         <h4 className={`text-xs font-bold uppercase tracking-widest mb-2 flex items-center gap-2 ${isDarkMode ? 'text-[#41B6E6]' : 'text-[#0277C5]'}`}>
                             <DownloadCloud size={16} />
-                            {lang === 'en' ? 'Practice Resources' : 'ឯ প্রতারអនុវត្ត'}
+                            {lang === 'en' ? 'Practice Resources' : 'ឯកសារអនុវត្ត'}
                         </h4>
                         <p className={`text-[13px] font-khmer leading-relaxed ${isDarkMode ? 'text-[#A0A0A0]' : 'text-[#6B7280]'}`}>
                             {lang === 'en' ? lesson.instruction_en : lesson.instruction}
@@ -636,6 +663,29 @@ function AppContent() {
       document.body.style.backgroundColor = newBgColor;
 
       if (isDataLoaded) localStorage.setItem('myAffinity_theme', isDarkMode ? 'dark' : 'light');
+      
+      // 🌟 NATIVE ANDROID ROTATION UNLOCK: Dynamically injects manifest settings to allow free orientation!
+      const manifest = {
+        "short_name": "MyAffinity",
+        "name": "My Affinity Masterclass",
+        "start_url": ".",
+        "display": "standalone",
+        "orientation": "any", 
+        "theme_color": isDarkMode ? "#0A0A0A" : "#F4F5F7",
+        "background_color": isDarkMode ? "#0A0A0A" : "#F4F5F7"
+      };
+      
+      const manifestString = JSON.stringify(manifest);
+      const manifestUrl = 'data:application/manifest+json;charset=utf-8,' + encodeURIComponent(manifestString);
+      
+      let manifestLink = document.querySelector('link[rel="manifest"]');
+      if (!manifestLink) {
+        manifestLink = document.createElement('link');
+        manifestLink.rel = 'manifest';
+        document.head.appendChild(manifestLink);
+      }
+      manifestLink.href = manifestUrl;
+      
   }, [isDarkMode, isDataLoaded]);
 
   useEffect(() => {
