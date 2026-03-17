@@ -39,7 +39,7 @@ const ONE_YEAR_MS = 365 * 24 * 60 * 60 * 1000;
 const SEVEN_DAYS_MS = 7 * 24 * 60 * 60 * 1000;
 const ADMIN_EMAIL = 'koymy.mlk@gmail.com';
 
-// 🌟 COMPLETELY REFACTORED LESSON MODAL WITH PRECISION SHIELDS 🌟
+// 🌟 REFACTORED LESSON MODAL WITH SMART RESPONSIVE SHIELDS 🌟
 const LessonModal = ({ lesson, onClose, isDarkMode, completedSteps, setCompletedSteps, isPurchased, onUnlockDemo }) => {
   const { lang } = useLanguage();
   const [isVisible, setIsVisible] = useState(false);
@@ -192,8 +192,10 @@ const LessonModal = ({ lesson, onClose, isDarkMode, completedSteps, setCompleted
       <div className="absolute inset-0 bg-black/60 backdrop-blur-md" style={{ opacity: Math.max(0, opacity) }} onClick={handleClose} />
 
       <style>{`
-          .video-container:fullscreen { width: 100vw !important; height: 100dvh !important; max-width: none !important; max-height: none !important; border-radius: 0 !important; border: none !important; background: black; }
-          .video-container:-webkit-full-screen { width: 100vw !important; height: 100dvh !important; max-width: none !important; max-height: none !important; border-radius: 0 !important; border: none !important; background: black; }
+          .video-container:fullscreen { width: 100vw !important; height: 100dvh !important; max-width: none !important; max-height: none !important; border-radius: 0 !important; border: none !important; background: black; display: flex !important; align-items: center !important; justify-content: center !important; }
+          .video-container:-webkit-full-screen { width: 100vw !important; height: 100dvh !important; max-width: none !important; max-height: none !important; border-radius: 0 !important; border: none !important; background: black; display: flex !important; align-items: center !important; justify-content: center !important; }
+          .video-container:fullscreen iframe { width: 100% !important; height: 100% !important; }
+          .video-container:-webkit-full-screen iframe { width: 100% !important; height: 100% !important; }
       `}</style>
 
       <div 
@@ -305,18 +307,37 @@ const LessonModal = ({ lesson, onClose, isDarkMode, completedSteps, setCompleted
                                             onLoad={() => setIsVideoLoading(false)}
                                         />
                                         
-                                        {/* 🛡️ 4 PRECISION SECURITY SHIELDS TO BLOCK YT APP/SHARE BUT ALLOW SETTINGS 🛡️ */}
-                                        {/* 1. Top-Left: Blocks Avatar & Title */}
-                                        <div className="absolute top-0 left-0 w-[calc(100%-110px)] h-[65px] z-30 bg-transparent" />
+                                        {/* 🛡️ SMART RESPONSIVE SECURITY SHIELDS 🛡️ */}
                                         
-                                        {/* 2. Top-Right Center: Blocks Share/3-dots, leaves far-right 45px open for Mobile Gear */}
-                                        <div className="absolute top-0 right-[45px] w-[65px] h-[65px] z-30 bg-transparent" />
-                                        
-                                        {/* 3. Bottom-Left: Blocks Android Share Arrow */}
-                                        <div className="absolute bottom-0 left-0 w-[70px] h-[65px] z-30 bg-transparent" />
-                                        
-                                        {/* 4. Bottom-Right: Blocks Desktop YT Logo, leaves inner-right open for Desktop Gear/CC */}
-                                        <div className="absolute bottom-0 right-0 w-[70px] h-[55px] z-30 bg-transparent" />
+                                        {/* 1. Top-Left (All Devices): Blocks Avatar & Title */}
+                                        <div 
+                                            className="absolute top-0 left-0 w-[70%] sm:w-[calc(100%-160px)] h-[70px] z-30 bg-[rgba(255,255,255,0.01)] cursor-default" 
+                                            style={{ WebkitTouchCallout: 'none' }} onContextMenu={e => e.preventDefault()} 
+                                        />
+
+                                        {/* 2. Top-Right (Desktop Only): Blocks Watch Later & Share */}
+                                        <div 
+                                            className="hidden sm:block absolute top-0 right-0 w-[160px] h-[70px] z-30 bg-[rgba(255,255,255,0.01)] cursor-default" 
+                                            style={{ WebkitTouchCallout: 'none' }} onContextMenu={e => e.preventDefault()} 
+                                        />
+
+                                        {/* 3. Top-Right Edge (Mobile Only): Blocks 3-dots, allows Gear */}
+                                        <div 
+                                            className="sm:hidden absolute top-0 right-0 w-[45px] h-[60px] z-30 bg-[rgba(255,255,255,0.01)] cursor-default" 
+                                            style={{ WebkitTouchCallout: 'none' }} onContextMenu={e => e.preventDefault()} 
+                                        />
+
+                                        {/* 4. Bottom-Left (Mobile Only): Blocks Share Arrow */}
+                                        <div 
+                                            className="sm:hidden absolute bottom-0 left-0 w-[70px] h-[60px] z-30 bg-[rgba(255,255,255,0.01)] cursor-default" 
+                                            style={{ WebkitTouchCallout: 'none' }} onContextMenu={e => e.preventDefault()} 
+                                        />
+
+                                        {/* 5. Bottom-Right (All Devices): Blocks YouTube Logo */}
+                                        <div 
+                                            className="absolute bottom-0 right-0 w-[80px] h-[60px] z-30 bg-[rgba(255,255,255,0.01)] cursor-default" 
+                                            style={{ WebkitTouchCallout: 'none' }} onContextMenu={e => e.preventDefault()} 
+                                        />
                                     </>
                                 )}
                             </>
@@ -344,7 +365,6 @@ const LessonModal = ({ lesson, onClose, isDarkMode, completedSteps, setCompleted
                                 ) : (
                                     <>
                                         <Maximize size={18} className={isDarkMode ? 'text-[#41B6E6]' : 'text-[#0277C5]'} />
-                                        {/* 🌟 UPDATED TEXT HERE 🌟 */}
                                         {lang === 'en' ? 'Watch Fullscreen' : 'មើលពេញអេក្រង់'}
                                     </>
                                 )}
