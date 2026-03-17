@@ -309,46 +309,46 @@ const LessonModal = ({ lesson, onClose, isDarkMode, completedSteps, setCompleted
                                             onLoad={() => setIsVideoLoading(false)}
                                         />
                                         
-                                        {/* 🛡️ CALIBRATED DEAD-ZONE SHIELDS 🛡️ */}
+                                        {/* 🛡️ CALIBRATED PASSIVE DEAD-ZONE SHIELDS 🛡️ */}
                                         
-                                        <button 
-                                            onClick={(e) => { e.preventDefault(); toggleFullScreen(); }}
-                                            className="absolute top-0 left-0 w-[60%] lg:w-[calc(100%-280px)] h-[80px] z-30 bg-transparent no-callout cursor-pointer outline-none border-none" 
-                                            onContextMenu={e => e.preventDefault()} 
-                                            tabIndex="-1"
-                                            aria-hidden="true"
+                                        {/* 1. Top-Left: Channel Avatar & Title */}
+                                        <div 
+                                            className="absolute top-0 left-0 w-[60%] lg:w-[calc(100%-280px)] h-[80px] z-30 bg-transparent no-callout cursor-default" 
+                                            onContextMenu={e => e.preventDefault()}
+                                            onClick={e => { e.preventDefault(); e.stopPropagation(); }}
+                                            onDoubleClick={e => { e.preventDefault(); e.stopPropagation(); }}
                                         />
 
-                                        <button 
-                                            onClick={(e) => { e.preventDefault(); toggleFullScreen(); }}
-                                            className="hidden lg:block absolute top-0 right-0 w-[280px] h-[80px] z-30 bg-transparent no-callout cursor-pointer outline-none border-none" 
-                                            onContextMenu={e => e.preventDefault()} 
-                                            tabIndex="-1"
-                                            aria-hidden="true"
+                                        {/* 2. Top-Right (Desktop Only): Watch Later & Share */}
+                                        <div 
+                                            className="hidden lg:block absolute top-0 right-0 w-[280px] h-[80px] z-30 bg-transparent no-callout cursor-default" 
+                                            onContextMenu={e => e.preventDefault()}
+                                            onClick={e => { e.preventDefault(); e.stopPropagation(); }}
+                                            onDoubleClick={e => { e.preventDefault(); e.stopPropagation(); }}
                                         />
 
-                                        <button 
-                                            onClick={(e) => { e.preventDefault(); toggleFullScreen(); }}
-                                            className="lg:hidden absolute top-0 right-0 w-[75px] h-[75px] z-30 bg-transparent no-callout cursor-pointer outline-none border-none" 
-                                            onContextMenu={e => e.preventDefault()} 
-                                            tabIndex="-1"
-                                            aria-hidden="true"
+                                        {/* 3. Top-Right Edge (Mobile/Landscape Phone): Blocks 3-dots, allows Gear */}
+                                        <div 
+                                            className="lg:hidden absolute top-0 right-0 w-[75px] h-[75px] z-30 bg-transparent no-callout cursor-default" 
+                                            onContextMenu={e => e.preventDefault()}
+                                            onClick={e => { e.preventDefault(); e.stopPropagation(); }}
+                                            onDoubleClick={e => { e.preventDefault(); e.stopPropagation(); }}
                                         />
 
-                                        <button 
-                                            onClick={(e) => { e.preventDefault(); toggleFullScreen(); }}
-                                            className="lg:hidden absolute bottom-0 left-0 w-[160px] h-[80px] z-30 bg-transparent no-callout cursor-pointer outline-none border-none" 
-                                            onContextMenu={e => e.preventDefault()} 
-                                            tabIndex="-1"
-                                            aria-hidden="true"
+                                        {/* 4. Bottom-Left (Mobile & Tablet Portrait): Blocks Mobile Share Arrow */}
+                                        <div 
+                                            className="lg:hidden absolute bottom-0 left-0 w-[160px] h-[80px] z-30 bg-transparent no-callout cursor-default" 
+                                            onContextMenu={e => e.preventDefault()}
+                                            onClick={e => { e.preventDefault(); e.stopPropagation(); }}
+                                            onDoubleClick={e => { e.preventDefault(); e.stopPropagation(); }}
                                         />
 
-                                        <button 
-                                            onClick={(e) => { e.preventDefault(); toggleFullScreen(); }}
-                                            className="absolute bottom-0 right-0 w-[140px] h-[70px] z-30 bg-transparent no-callout cursor-pointer outline-none border-none" 
-                                            onContextMenu={e => e.preventDefault()} 
-                                            tabIndex="-1"
-                                            aria-hidden="true"
+                                        {/* 5. Bottom-Right (All Devices): YouTube Logo Watermark */}
+                                        <div 
+                                            className="absolute bottom-0 right-0 w-[140px] h-[70px] z-30 bg-transparent no-callout cursor-default" 
+                                            onContextMenu={e => e.preventDefault()}
+                                            onClick={e => { e.preventDefault(); e.stopPropagation(); }}
+                                            onDoubleClick={e => { e.preventDefault(); e.stopPropagation(); }}
                                         />
                                     </>
                                 )}
@@ -1170,20 +1170,20 @@ function AppContent() {
                                         <div className="w-full mb-8">
                                             {user ? (
                                                 <div className={`p-4 rounded-[24px] border flex items-center justify-between shadow-sm animate-fade-in-up ${isDarkMode ? 'bg-[#1C1C1E] border-[#2C2C2C]' : 'bg-[#F8F9FA] border-[#E5E7EB]'}`}>
-                                                    <div className="flex items-center gap-4">
+                                                    <div className="flex items-center gap-4 min-w-0">
                                                         {user.photoURL ? (
-                                                            <img src={user.photoURL} alt="Profile" className={`w-12 h-12 rounded-full border-2 ${theme.border} shrink-0`} />
+                                                            <img src={user.photoURL} alt="Profile" className={`w-12 h-12 rounded-full border-2 shrink-0 ${theme.border}`} />
                                                         ) : (
                                                             <div className={`w-12 h-12 shrink-0 rounded-full flex items-center justify-center text-white font-bold text-lg shadow-inner ${theme.bg}`}>
                                                                 {user.displayName ? user.displayName.charAt(0).toUpperCase() : user.email?.charAt(0).toUpperCase()}
                                                             </div>
                                                         )}
-                                                        <div className="flex-1 min-w-0 pr-2">
+                                                        <div className="min-w-0 pr-2">
                                                             <p className={`font-bold text-[15px] truncate ${isDarkMode ? 'text-white' : 'text-black'}`}>{user.displayName || 'User'}</p>
                                                             <p className={`text-[13px] truncate ${isDarkMode ? 'text-[#A0A0A0]' : 'text-[#6B7280]'}`}>{user.email}</p>
                                                         </div>
                                                     </div>
-                                                    <button onClick={handleLogout} className={`px-4 py-2.5 rounded-xl text-[13px] shrink-0 font-bold transition-colors ${isDarkMode ? 'bg-[#2C2C2C] hover:bg-[#3C3C3C]' : 'bg-[#E5E7EB] hover:bg-[#D1D5DB]'}`}>
+                                                    <button onClick={handleLogout} className={`px-4 py-2.5 shrink-0 rounded-xl text-[13px] font-bold transition-colors ${isDarkMode ? 'bg-[#2C2C2C] hover:bg-[#3C3C3C]' : 'bg-[#E5E7EB] hover:bg-[#D1D5DB]'}`}>
                                                         Logout
                                                     </button>
                                                 </div>
