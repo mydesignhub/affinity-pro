@@ -369,9 +369,7 @@ function AppContent() {
   const handleGoogleLogin = async () => { 
       triggerHaptic(); 
       try {
-          // 🌟 FORCES GOOGLE POPUP TO ASK WHICH ACCOUNT TO USE
           googleProvider.setCustomParameters({ prompt: 'select_account' });
-          
           const result = await signInWithPopup(auth, googleProvider);
           const loggedInUser = result.user;
           setUser(loggedInUser);
@@ -382,35 +380,35 @@ function AppContent() {
       }
   };
 
+  // 🌟 UPDATED: Close the loophole! Prevent local premium transfer to new accounts
   const handleLogout = async () => {
       triggerHaptic();
       try {
           await signOut(auth);
           setUser(null);
+          // Instantly wipe local storage so the next logged-in user doesn't get free premium
+          setPurchasedCourses({ photo: null, designer: null, publisher: null });
+          localStorage.removeItem('myAffinity_purchases');
       } catch (error) {
           console.error("Error signing out:", error);
       }
   };
 
-  // 🌟 UPDATED: SMART SIGN-OUT WARNINGS
   const handleSignOutDevice = () => {
       triggerHaptic();
       
       let message = '';
       if (!user) {
-          // Warning if no account is linked
           message = lang === 'en' 
               ? '⚠️ WARNING: You have NOT linked a Google account!\n\nIf you sign out now, you will LOSE ACCESS to your premium course permanently. Are you absolutely sure you want to sign out?' 
               : '⚠️ ព្រមាន៖ អ្នកមិនទាន់បានភ្ជាប់គណនី Google ទេ!\n\nប្រសិនបើអ្នកចាកចេញឥឡូវនេះ អ្នកនឹងបាត់បង់សិទ្ធិចូលរៀនវគ្គ Premium នេះជារៀងរហូត។ តើអ្នកពិតជាចង់ចាកចេញមែនទេ?';
       } else {
-          // Reassurance if account is linked
           message = lang === 'en'
               ? 'Are you sure you want to sign out?\n\nYour purchase is safely linked to your Google account. You can sign in again later on this or another device.'
               : 'តើអ្នកប្រាកដជាចង់ចាកចេញពីឧបករណ៍នេះទេ?\n\nសិទ្ធិ Premium របស់អ្នកត្រូវបានរក្សាទុកដោយសុវត្ថិភាពក្នុងគណនី Google របស់អ្នក។ អ្នកអាចចូលគណនីម្ដងទៀតនៅពេលក្រោយ។';
       }
 
       if(window.confirm(message)) {
-          setPurchasedCourses(prev => ({...prev, [activeAppTab]: null}));
           handleLogout();
           setShowRegistration(false);
       }
@@ -516,7 +514,6 @@ function AppContent() {
   const getAppDisplayName = (id) => id === 'photo' ? 'Affinity Photo 2 iPad' : id === 'designer' ? 'Affinity Designer 2 iPad' : 'Affinity Publisher 2 iPad';
   const appDisplayName = activeAppTab ? getAppDisplayName(activeAppTab) : '';
 
-  // 🌟 HELPER FOR DYNAMIC KHMER TITLE
   const getKhmerCourseTitle = (id) => {
       if (id === 'photo') return 'វគ្គសិក្សា Photo 2 iPad';
       if (id === 'designer') return 'វគ្គសិក្សា Designer 2 iPad';
