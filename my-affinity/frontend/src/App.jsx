@@ -39,7 +39,7 @@ const ONE_YEAR_MS = 365 * 24 * 60 * 60 * 1000;
 const SEVEN_DAYS_MS = 7 * 24 * 60 * 60 * 1000;
 const ADMIN_EMAIL = 'koymy.mlk@gmail.com';
 
-// 🌟 REFACTORED LESSON MODAL WITH SAFE-AREA PADDING & SMART SHIELDS 🌟
+// 🌟 REFACTORED LESSON MODAL WITH SMART RESPONSIVE SHIELDS 🌟
 const LessonModal = ({ lesson, onClose, isDarkMode, completedSteps, setCompletedSteps, isPurchased, onUnlockDemo }) => {
   const { lang } = useLanguage();
   const [isVisible, setIsVisible] = useState(false);
@@ -112,7 +112,6 @@ const LessonModal = ({ lesson, onClose, isDarkMode, completedSteps, setCompleted
       }
   };
 
-  // 🌟 Auto-Rotate lock REMOVED. Android can freely rotate vertical/horizontal!
   const toggleFullScreen = async () => {
       const elem = containerRef.current; 
       if (!elem) return;
@@ -122,20 +121,24 @@ const LessonModal = ({ lesson, onClose, isDarkMode, completedSteps, setCompleted
           const isStandardFs = document.fullscreenElement || document.webkitFullscreenElement;
           
           if (!isStandardFs && !isCssFullscreen) {
-              if (elem.requestFullscreen) await elem.requestFullscreen();
-              else if (elem.webkitRequestFullscreen) elem.webkitRequestFullscreen(); 
-              else setIsCssFullscreen(true);
-              
+              if (elem.requestFullscreen) {
+                  await elem.requestFullscreen();
+                  // 🌟 ANDROID FIX: Instantly unlock rotation so they can turn device freely
+                  try { window.screen.orientation.unlock(); } catch(e) {}
+              }
+              else if (elem.webkitRequestFullscreen) {
+                  elem.webkitRequestFullscreen(); 
+              }
+              else {
+                  setIsCssFullscreen(true);
+              }
           } else {
               if (isStandardFs) {
                   if (document.exitFullscreen) await document.exitFullscreen();
                   else if (document.webkitExitFullscreen) document.webkitExitFullscreen();
               }
               setIsCssFullscreen(false);
-              
-              if (window.screen && window.screen.orientation && window.screen.orientation.unlock) {
-                  window.screen.orientation.unlock();
-              }
+              try { window.screen.orientation.unlock(); } catch(e) {}
           }
       } catch (err) {
           console.error("Fullscreen API error:", err);
@@ -194,13 +197,7 @@ const LessonModal = ({ lesson, onClose, isDarkMode, completedSteps, setCompleted
           .video-container:-webkit-full-screen { width: 100vw !important; height: 100dvh !important; max-width: none !important; max-height: none !important; border-radius: 0 !important; border: none !important; background: black; display: flex !important; align-items: center !important; justify-content: center !important; }
           .video-container:fullscreen iframe { width: 100% !important; height: 100% !important; }
           .video-container:-webkit-full-screen iframe { width: 100% !important; height: 100% !important; }
-          
-          /* 🌟 STRICT PREVENTION OF SAFARI LONG-PRESS CONTEXT MENU 🌟 */
-          .no-callout {
-              -webkit-touch-callout: none !important;
-              -webkit-user-select: none !important;
-              user-select: none !important;
-          }
+          .no-callout { -webkit-touch-callout: none !important; -webkit-user-select: none !important; user-select: none !important; }
       `}</style>
 
       <div 
@@ -246,121 +243,110 @@ const LessonModal = ({ lesson, onClose, isDarkMode, completedSteps, setCompleted
 
             {currentStepData && (
                 <div className={isCssFullscreen ? 'w-full h-full' : 'mb-6'}>
-                    
-                    {/* 🌟 SAFE AREA PADDING APPLIED TO CONTAINER 🌟 This guarantees iPhone Notches don't cover the gear! */}
-                    <div ref={containerRef} className={`video-container w-full transition-all duration-300 flex flex-col bg-black
+                    <div ref={containerRef} className={`video-container w-full relative overflow-hidden flex flex-col items-center justify-center group shadow-lg shrink-0 bg-black transition-all duration-300
                         ${isCssFullscreen 
-                            ? 'fixed inset-0 z-[999999] h-[100dvh] rounded-none border-none m-0 p-0' 
-                            : `relative aspect-video rounded-2xl border shadow-lg shrink-0 ${isDarkMode ? 'border-[#2C2C2C]' : 'border-black'}`
+                            ? '!fixed !top-0 !left-0 !right-0 !bottom-0 !z-[999999] !w-full !h-[100dvh] !rounded-none !border-none !m-0 !p-0' 
+                            : `aspect-video rounded-2xl border ${isDarkMode ? 'border-[#2C2C2C]' : 'border-black'}`
                         }`}
-                        style={isCssFullscreen ? { 
-                            paddingTop: 'env(safe-area-inset-top)', 
-                            paddingBottom: 'env(safe-area-inset-bottom)', 
-                            paddingLeft: 'env(safe-area-inset-left)', 
-                            paddingRight: 'env(safe-area-inset-right)' 
-                        } : {}}
                     >
-                        {/* Wrapper so the iframe strictly follows safe area limits */}
-                        <div className={`relative w-full h-full flex-1 overflow-hidden ${isCssFullscreen ? '' : 'rounded-[inherit]'}`}>
-                            
-                            {isCssFullscreen && (
-                                <button 
-                                    onClick={toggleFullScreen}
-                                    className="absolute z-[60] p-3 sm:p-4 bg-black/60 text-white rounded-full backdrop-blur-md shadow-2xl active:scale-90 transition-transform"
-                                    style={{ top: '16px', left: '16px' }}
-                                >
-                                    <Minimize size={24} />
-                                </button>
-                            )}
+                        
+                        {isCssFullscreen && (
+                            <button 
+                                onClick={toggleFullScreen}
+                                className="absolute z-[60] p-3 sm:p-4 bg-black/60 text-white rounded-full backdrop-blur-md shadow-2xl active:scale-90 transition-transform"
+                                style={{ top: 'max(env(safe-area-inset-top), 16px)', left: 'max(env(safe-area-inset-left), 16px)' }}
+                            >
+                                <Minimize size={24} />
+                            </button>
+                        )}
 
-                            {!isPurchased && !previewEnded && (
-                                <div className="absolute top-4 right-4 z-40 bg-[#C5B002] text-white px-3 py-1.5 rounded-full font-bold text-[10px] tracking-widest uppercase shadow-lg flex items-center gap-1.5 animate-pulse pointer-events-none">
-                                    <Clock size={12} /> 20s PREVIEW
-                                </div>
-                            )}
+                        {!isPurchased && !previewEnded && (
+                            <div className="absolute top-4 right-4 z-40 bg-[#C5B002] text-white px-3 py-1.5 rounded-full font-bold text-[10px] tracking-widest uppercase shadow-lg flex items-center gap-1.5 animate-pulse pointer-events-none">
+                                <Clock size={12} /> 20s PREVIEW
+                            </div>
+                        )}
 
-                            {currentStepData.videoUrl ? (
-                                <>
-                                    {!hasStarted ? (
-                                        <div onClick={handlePlayClick} className="absolute inset-0 flex flex-col items-center justify-center bg-black/60 cursor-pointer z-50 hover:bg-black/50 transition-colors">
-                                            <PlayCircle size={64} className="text-[#C5B002] mb-3 drop-shadow-lg" />
-                                            <span className="font-bold font-khmer text-white tracking-wide drop-shadow-md">
-                                                {isPurchased ? (lang === 'en' ? 'Play Video' : 'ចាក់វីដេអូ') : (lang === 'en' ? 'Play 20s Free Preview' : 'ចាក់មើលសាកល្បង ២០ វិនាទី')}
-                                            </span>
-                                        </div>
-                                    ) : previewEnded && !isPurchased ? (
-                                        <div className="absolute inset-0 flex flex-col items-center justify-center bg-[#0A0A0A] z-50 p-6 text-center border-2 border-[#C5B002]/30 rounded-2xl animate-fade-in-up">
-                                            <Lock size={40} className="text-[#C5B002] mb-4 animate-bounce" />
-                                            <h4 className="text-white font-black font-khmer text-lg sm:text-xl mb-2">
-                                                {lang === 'en' ? 'Preview Finished!' : 'ការមើលសាកល្បងត្រូវបានបញ្ចប់!'}
-                                            </h4>
-                                            <p className="text-[#A0A0A0] text-[13px] sm:text-sm font-khmer mb-6 max-w-sm mx-auto">
-                                                {lang === 'en' ? 'Unlock the full course to watch the rest of this lesson and access all features.' : 'ដោះសោវគ្គសិក្សាដើម្បីបន្តមើលមេរៀននេះ និងទទួលបានឯកសារអនុវត្ត។'}
-                                            </p>
-                                            <button onClick={() => { handleClose(); setTimeout(onUnlockDemo, 300); }} className="px-8 py-3 bg-[#C5B002] text-white font-black font-khmer rounded-xl text-[13px] active:scale-95 shadow-lg shadow-[#C5B002]/20">
-                                                {lang === 'en' ? 'Unlock Full Access' : 'ដោះសោសិទ្ធិពេញលេញ'}
-                                            </button>
-                                        </div>
-                                    ) : (
-                                        <>
-                                            {isVideoLoading && (
-                                                <div className="absolute inset-0 flex flex-col items-center justify-center z-10">
-                                                    <Loader2 size={36} className={`animate-spin mb-3 ${isDarkMode ? 'text-[#41B6E6]' : 'text-[#0277C5]'}`} />
-                                                    <span className={`text-[11px] font-bold uppercase tracking-widest ${isDarkMode ? 'text-[#A0A0A0]' : 'text-[#6B7280]'}`}>Loading</span>
-                                                </div>
-                                            )}
+                        {currentStepData.videoUrl ? (
+                            <>
+                                {!hasStarted ? (
+                                    <div onClick={handlePlayClick} className="absolute inset-0 flex flex-col items-center justify-center bg-black/60 cursor-pointer z-50 hover:bg-black/50 transition-colors">
+                                        <PlayCircle size={64} className="text-[#C5B002] mb-3 drop-shadow-lg" />
+                                        <span className="font-bold font-khmer text-white tracking-wide drop-shadow-md">
+                                            {isPurchased ? (lang === 'en' ? 'Play Video' : 'ចាក់វីដេអូ') : (lang === 'en' ? 'Play 20s Free Preview' : 'ចាក់មើលសាកល្បង ២០ វិនាទី')}
+                                        </span>
+                                    </div>
+                                ) : previewEnded && !isPurchased ? (
+                                    <div className="absolute inset-0 flex flex-col items-center justify-center bg-[#0A0A0A] z-50 p-6 text-center border-2 border-[#C5B002]/30 rounded-2xl animate-fade-in-up">
+                                        <Lock size={40} className="text-[#C5B002] mb-4 animate-bounce" />
+                                        <h4 className="text-white font-black font-khmer text-lg sm:text-xl mb-2">
+                                            {lang === 'en' ? 'Preview Finished!' : 'ការមើលសាកល្បងត្រូវបានបញ្ចប់!'}
+                                        </h4>
+                                        <p className="text-[#A0A0A0] text-[13px] sm:text-sm font-khmer mb-6 max-w-sm mx-auto">
+                                            {lang === 'en' ? 'Unlock the full course to watch the rest of this lesson and access all features.' : 'ដោះសោវគ្គសិក្សាដើម្បីបន្តមើលមេរៀននេះ និងទទួលបានឯកសារអនុវត្ត។'}
+                                        </p>
+                                        <button onClick={() => { handleClose(); setTimeout(onUnlockDemo, 300); }} className="px-8 py-3 bg-[#C5B002] text-white font-black font-khmer rounded-xl text-[13px] active:scale-95 shadow-lg shadow-[#C5B002]/20">
+                                            {lang === 'en' ? 'Unlock Full Access' : 'ដោះសោសិទ្ធិពេញលេញ'}
+                                        </button>
+                                    </div>
+                                ) : (
+                                    <>
+                                        {isVideoLoading && (
+                                            <div className="absolute inset-0 flex flex-col items-center justify-center z-10">
+                                                <Loader2 size={36} className={`animate-spin mb-3 ${isDarkMode ? 'text-[#41B6E6]' : 'text-[#0277C5]'}`} />
+                                                <span className={`text-[11px] font-bold uppercase tracking-widest ${isDarkMode ? 'text-[#A0A0A0]' : 'text-[#6B7280]'}`}>Loading</span>
+                                            </div>
+                                        )}
 
-                                            <iframe 
-                                                ref={videoRef}
-                                                src={getVideoUrl(currentStepData.videoUrl)}
-                                                className={`w-full h-full absolute inset-0 transition-opacity duration-700 ease-in-out no-callout ${isVideoLoading ? 'opacity-0' : 'opacity-100 z-20'}`}
-                                                sandbox="allow-scripts allow-same-origin allow-presentation"
-                                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; fullscreen" 
-                                                referrerPolicy="strict-origin-when-cross-origin"
-                                                allowFullScreen
-                                                title={`Step ${currentStepData.id} Video`}
-                                                onLoad={() => setIsVideoLoading(false)}
-                                            />
-                                            
-                                            {/* 🛡️ ULTRA-PRECISE DEVICE-SPECIFIC SHIELDS 🛡️ */}
-                                            {/* Blocks YouTube clickouts without sacrificing user settings */}
+                                        {/* 🌟 KEYBOARD & POPUP LOCK: tabIndex="-1" permanently blocks Tab selection 🌟 */}
+                                        <iframe 
+                                            ref={videoRef}
+                                            tabIndex="-1"
+                                            src={getVideoUrl(currentStepData.videoUrl)}
+                                            className={`w-full h-full absolute inset-0 transition-opacity duration-700 ease-in-out no-callout ${isVideoLoading ? 'opacity-0' : 'opacity-100 z-20'}`}
+                                            sandbox="allow-scripts allow-same-origin allow-presentation"
+                                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; fullscreen" 
+                                            referrerPolicy="strict-origin-when-cross-origin"
+                                            allowFullScreen
+                                            title={`Step ${currentStepData.id} Video`}
+                                            onLoad={() => setIsVideoLoading(false)}
+                                        />
 
-                                            {/* 1. Top-Left (All Devices): Blocks Avatar & Title */}
-                                            <div 
-                                                className="absolute top-0 left-0 w-[70%] max-w-[250px] sm:max-w-[350px] h-[60px] sm:h-[70px] z-30 bg-transparent no-callout" 
-                                                onContextMenu={e => e.preventDefault()} 
-                                            />
+                                        {/* 🛡️ ULTIMATE RESPONSIVE SECURITY SHIELDS 🛡️ */}
+                                        
+                                        {/* 1. Top-Left: Blocks Title & Channel Avatar. Leaves room for custom Exit button */}
+                                        <div 
+                                            className="absolute top-0 left-0 w-[calc(100%-120px)] h-[70px] z-30 bg-transparent cursor-default no-callout" 
+                                            style={{ WebkitTouchCallout: 'none' }} onContextMenu={e => e.preventDefault()} 
+                                        />
 
-                                            {/* 2. Top-Right (Desktop iPad Safari Only): Blocks Desktop Share Arrow */}
-                                            {/* Mobile layout doesn't need this, so Gear/Volume is free to click! */}
-                                            <div 
-                                                className="hidden sm:block absolute top-0 right-0 w-[70px] h-[60px] z-30 bg-transparent no-callout" 
-                                                onContextMenu={e => e.preventDefault()} 
-                                            />
+                                        {/* 2. Top-Right Center: Blocks Share/Watch Later but perfectly avoids Mobile Gear Icon */}
+                                        <div 
+                                            className="absolute top-0 right-[50px] w-[100px] h-[70px] z-30 bg-transparent cursor-default no-callout" 
+                                            style={{ WebkitTouchCallout: 'none' }} onContextMenu={e => e.preventDefault()} 
+                                        />
 
-                                            {/* 3. Bottom-Left (Mobile Only): Blocks Mobile Share Arrow */}
-                                            <div 
-                                                className="sm:hidden absolute bottom-0 left-0 w-[60px] h-[60px] z-30 bg-transparent no-callout" 
-                                                onContextMenu={e => e.preventDefault()} 
-                                            />
+                                        {/* 3. Bottom-Left (MOBILE ONLY): Blocks Mobile Share Arrow. Hides on Large Screens so Desktop Play button works! */}
+                                        <div 
+                                            className="lg:hidden absolute bottom-0 left-0 w-[70px] h-[60px] z-30 bg-transparent cursor-default no-callout" 
+                                            style={{ WebkitTouchCallout: 'none' }} onContextMenu={e => e.preventDefault()} 
+                                        />
 
-                                            {/* 4. Bottom-Right (All Devices): Blocks YouTube Logo */}
-                                            <div 
-                                                className="absolute bottom-0 right-0 w-[80px] sm:w-[100px] h-[50px] sm:h-[60px] z-30 bg-transparent no-callout" 
-                                                onContextMenu={e => e.preventDefault()} 
-                                            />
-                                        </>
-                                    )}
-                                </>
-                            ) : (
-                                <div className="text-center text-white/50 p-4">
-                                    <PlayCircle size={48} className="mx-auto mb-3 opacity-50 group-hover:opacity-100 transition-opacity text-[#41B6E6]" />
-                                    <p className="font-khmer font-bold tracking-wide">
-                                        {lang === 'en' ? `STEP ${currentStepData.id} COMING SOON` : `វីដេអូទី ${currentStepData.id} កំពុងរៀបចំ`}
-                                    </p>
-                                </div>
-                            )}
-                        </div>
+                                        {/* 4. Bottom-Right: Blocks YouTube Logo Watermark */}
+                                        <div 
+                                            className="absolute bottom-0 right-0 w-[90px] h-[60px] z-30 bg-transparent cursor-default no-callout" 
+                                            style={{ WebkitTouchCallout: 'none' }} onContextMenu={e => e.preventDefault()} 
+                                        />
+                                    </>
+                                )}
+                            </>
+                        ) : (
+                            <div className="text-center text-white/50 p-4">
+                                <PlayCircle size={48} className="mx-auto mb-3 opacity-50 group-hover:opacity-100 transition-opacity text-[#41B6E6]" />
+                                <p className="font-khmer font-bold tracking-wide">
+                                    {lang === 'en' ? `STEP ${currentStepData.id} COMING SOON` : `វីដេអូទី ${currentStepData.id} កំពុងរៀបចំ`}
+                                </p>
+                            </div>
+                        )}
                     </div>
                     
                     {!isCssFullscreen && currentStepData.videoUrl && (
@@ -369,9 +355,17 @@ const LessonModal = ({ lesson, onClose, isDarkMode, completedSteps, setCompleted
                                 onClick={toggleFullScreen}
                                 className={`flex-1 py-3.5 rounded-xl flex items-center justify-center gap-2 font-bold font-khmer text-[13px] sm:text-[14px] transition-all active:scale-[0.98] shadow-sm border ${isDarkMode ? 'bg-[#1E1E1E] border-[#2C2C2C] text-[#F1F1F1] hover:bg-[#2C2C2C]' : 'bg-white border-[#E5E7EB] text-[#1A1A1A] hover:bg-[#F8F9FA]'}`}
                             >
-                                <Maximize size={18} className={isDarkMode ? 'text-[#41B6E6]' : 'text-[#0277C5]'} />
-                                {/* 🌟 TEXT UPDATED 🌟 */}
-                                {lang === 'en' ? 'Watch Fullscreen' : 'មើលពេញអេក្រង់'}
+                                {isCssFullscreen ? (
+                                    <>
+                                        <Minimize size={18} className={isDarkMode ? 'text-[#41B6E6]' : 'text-[#0277C5]'} />
+                                        {lang === 'en' ? 'Exit Fullscreen' : 'ចាកចេញពីអេក្រង់ពេញ'}
+                                    </>
+                                ) : (
+                                    <>
+                                        <Maximize size={18} className={isDarkMode ? 'text-[#41B6E6]' : 'text-[#0277C5]'} />
+                                        {lang === 'en' ? 'Watch Fullscreen' : 'មើលពេញអេក្រង់'}
+                                    </>
+                                )}
                             </button>
 
                             {!isPurchased && (
@@ -1014,7 +1008,6 @@ function AppContent() {
         />
       )}
 
-      {/* 🌟 FULL SCREEN COURSE PANEL 🌟 */}
       {activeAppTab && !expandedLesson && (
         <div className={`fixed inset-0 z-[60] overflow-y-auto custom-scrollbar flex flex-col ${isDarkMode ? 'bg-[#0A0A0A]' : 'bg-[#F4F5F7]'}`}>
             
@@ -1185,8 +1178,8 @@ function AppContent() {
                                                         {lang === 'en' ? '⚠️ You are using a local key. Link your Google account now to secure permanent access across devices.' : '⚠️ អ្នកកំពុងប្រើកូដនៅលើឧបករណ៍នេះតែប៉ុណ្ណោះ។ សូមភ្ជាប់គណនី Google របស់អ្នកឥឡូវនេះ ដើម្បីកុំឱ្យបាត់បង់សិទ្ធិចូលរៀន។'}
                                                     </p>
                                                     <button onClick={handleGoogleLogin} className={`w-full flex items-center justify-center gap-3 p-4 rounded-2xl font-bold text-sm border transition-all active:scale-[0.98] shadow-sm hover:shadow-md ${isDarkMode ? 'bg-[#1E1E1E] border-[#2C2C2C] text-white hover:bg-[#2C2C2C]' : 'bg-white border-gray-200 text-black hover:bg-gray-50'}`}>
-                                                        <svg className="w-5 h-5" viewBox="0 0 24 24"><path fill="currentColor" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" /><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" /><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" /><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" /></svg>
-                                                        Link Google Account
+                                                        <svg className="w-5 h-5" viewBox="0 0 24 24"><path fill="currentColor" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" /><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" /><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" /><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" /></svg>
+                                                        Continue with Google
                                                     </button>
                                                 </div>
                                             )}
