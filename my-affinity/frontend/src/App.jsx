@@ -12,6 +12,7 @@ import Test from './components/features/quiz/Test';
 import ChatBot from './components/features/ai/ChatBot';
 import LessonCard from './components/features/learn/LessonCard';
 import LessonModal from './components/features/learn/LessonModal'; 
+import EmailAuthModal from './components/features/auth/EmailAuthModal'; // 👈 NEW IMPORT
 
 import { courseData, TIPS_LIST, TIPS_LIST_EN } from './data/data';
 import { useLanguage, LanguageProvider } from './contexts/LanguageContext';
@@ -30,7 +31,6 @@ const APP_THEMES = {
     publisher: { gradient: 'from-[#D7383D] to-[#532463]', text: 'text-[#D7383D]', bg: 'bg-[#D7383D]', border: 'border-[#D7383D]', lightBg: 'bg-[#D7383D]/10' }
 };
 
-// Fallback manual codes (just in case database is down)
 const VALID_PASSCODES = {
     photo: ['PH-2026-A1B2', 'PH-2026-C3D4'],
     designer: ['DS-2026-A1B2', 'DS-2026-C3D4'],
@@ -132,6 +132,7 @@ function AppContent() {
   const [expandedLesson, setExpandedLesson] = useState(null);
   const [expandedSection, setExpandedSection] = useState(null);
   const [showRegistration, setShowRegistration] = useState(false); 
+  const [showEmailModal, setShowEmailModal] = useState(false); // 👈 NEW STATE FOR EMAIL POPUP
   const [isDarkMode, setIsDarkMode] = useState(true);
   const [completedSteps, setCompletedSteps] = useState([]);
   
@@ -145,7 +146,7 @@ function AppContent() {
 
   const [purchasedCourses, setPurchasedCourses] = useState({ photo: null, designer: null, publisher: null });
   const [passcodeInput, setPasscodeInput] = useState('');
-  const [passcodeError, setPasscodeError] = useState(''); // Updated to string for custom error messages
+  const [passcodeError, setPasscodeError] = useState(''); 
   const [isVerifying, setIsVerifying] = useState(false);
   const [isDataLoaded, setIsDataLoaded] = useState(false);
 
@@ -270,7 +271,6 @@ function AppContent() {
       return courseData[activeAppTab].find(l => l.id === expandedLesson);
   };
 
-  // 🌟 FIREBASE KEY VERIFICATION LOGIC
   const handleVerifyPasscode = async () => {
       if (!activeAppTab) return;
       const code = passcodeInput.trim().toUpperCase();
@@ -285,7 +285,6 @@ function AppContent() {
               const keyData = keySnap.data();
               const now = Date.now();
 
-              // Rule 1: Key expires after 7 days if unused
               if (keyData.status === 'unused' && (now - keyData.createdAt > SEVEN_DAYS_MS)) {
                   triggerHaptic('error');
                   setPasscodeError(lang === 'en' ? 'Key expired (over 7 days).' : 'លេខកូដនេះផុតកំណត់ហើយ។');
@@ -293,7 +292,6 @@ function AppContent() {
                   return;
               }
 
-              // Rule 2: Valid and Unused Key
               if (keyData.status === 'unused' && keyData.course === activeAppTab) {
                   await updateDoc(keyRef, { status: 'used', usedAt: now, usedBy: user ? user.uid : 'anonymous_device' });
                   
@@ -303,7 +301,6 @@ function AppContent() {
                   };
                   setPurchasedCourses(updatedPurchases);
 
-                  // Sync to cloud instantly if they are already logged in
                   if (user) {
                       await setDoc(doc(db, "users", user.uid), { purchasedCourses: updatedPurchases }, { merge: true });
                   }
@@ -316,7 +313,6 @@ function AppContent() {
                   setPasscodeError(lang === 'en' ? 'Key already used or invalid course.' : 'លេខកូដនេះត្រូវបានប្រើរួចហើយ ឬខុសវគ្គ។');
               }
           } 
-          // Fallback for hardcoded local keys
           else if (VALID_PASSCODES[activeAppTab].includes(code)) {
               triggerHaptic('success');
               const updatedPurchases = { ...purchasedCourses, [activeAppTab]: { unlocked: true, expiry: Date.now() + ONE_YEAR_MS, keyUsed: code }};
@@ -335,38 +331,38 @@ function AppContent() {
       setIsVerifying(false);
   };
 
-  // 🌟 FIREBASE GOOGLE LOGIN & SYNC LOGIC
+  // 🌟 NEW HELPER FOR SYNCING ANY AUTH METHOD 🌟
+  const syncPurchasesToCloud = async (loggedInUser) => {
+      const userRef = doc(db, "users", loggedInUser.uid);
+      const userSnap = await getDoc(userRef);
+
+      if (userSnap.exists()) {
+          const data = userSnap.data();
+          if (data.purchasedCourses) {
+              const mergedPurchases = { ...purchasedCourses };
+              let hasChanges = false;
+              for (const course in data.purchasedCourses) {
+                  if (data.purchasedCourses[course] && data.purchasedCourses[course].expiry > Date.now()) {
+                      mergedPurchases[course] = data.purchasedCourses[course];
+                      hasChanges = true;
+                  }
+              }
+              if (hasChanges) setPurchasedCourses(mergedPurchases);
+          }
+      } else {
+          if (Object.values(purchasedCourses).some(c => c !== null)) {
+              await setDoc(userRef, { purchasedCourses });
+          }
+      }
+  };
+
   const handleGoogleLogin = async () => { 
       triggerHaptic(); 
       try {
           const result = await signInWithPopup(auth, googleProvider);
           const loggedInUser = result.user;
           setUser(loggedInUser);
-
-          // FETCH FROM DATABASE AND SYNC LOCAL STORAGE
-          const userRef = doc(db, "users", loggedInUser.uid);
-          const userSnap = await getDoc(userRef);
-
-          if (userSnap.exists()) {
-              const data = userSnap.data();
-              if (data.purchasedCourses) {
-                  const mergedPurchases = { ...purchasedCourses };
-                  let hasChanges = false;
-                  // Compare Cloud vs Local to keep the active licenses
-                  for (const course in data.purchasedCourses) {
-                      if (data.purchasedCourses[course] && data.purchasedCourses[course].expiry > Date.now()) {
-                          mergedPurchases[course] = data.purchasedCourses[course];
-                          hasChanges = true;
-                      }
-                  }
-                  if (hasChanges) setPurchasedCourses(mergedPurchases);
-              }
-          } else {
-              // First time logging in: Back up local purchases to the cloud
-              if (Object.values(purchasedCourses).some(c => c !== null)) {
-                  await setDoc(userRef, { purchasedCourses });
-              }
-          }
+          await syncPurchasesToCloud(loggedInUser);
       } catch (error) {
           console.error("Error signing in with Google:", error.message);
           alert(lang === 'en' ? "Failed to sign in." : "ការចូលបរាជ័យ។");
@@ -393,7 +389,6 @@ function AppContent() {
       }
   };
 
-  // 🌟 ADMIN FIREBASE GENERATOR
   const handleGenerateAdminKeys = async () => {
       triggerHaptic();
       if (!activeAppTab) return;
@@ -407,7 +402,6 @@ function AppContent() {
               const keyCode = `${prefix}-2026-${ran1}-${ran2}`;
               newKeys.push(keyCode);
 
-              // Push key straight to Firestore
               await setDoc(doc(db, "keys", keyCode), {
                   course: activeAppTab,
                   createdAt: Date.now(),
@@ -427,8 +421,6 @@ function AppContent() {
       const url = `https://t.me/share/url?url=${encodeURIComponent(text)}`;
       window.open(url, '_blank');
   };
-
-  const handleEmailLogin = () => { triggerHaptic(); alert("Email Auth coming soon!"); };
 
   const currentCourseData = activeAppTab ? (courseData[activeAppTab] || []) : [];
   const totalSteps = currentCourseData.reduce((acc, lesson) => acc + (lesson.steps?.length || 0), 0);
@@ -468,6 +460,19 @@ function AppContent() {
           }} isDarkMode={isDarkMode} setIsDarkMode={setIsDarkMode} />
       )}
       
+      {/* 🌟 RENDER THE EMAIL MODAL IF TRIGGERED 🌟 */}
+      {showEmailModal && (
+          <EmailAuthModal 
+              isDarkMode={isDarkMode} 
+              lang={lang} 
+              onClose={() => setShowEmailModal(false)}
+              onSuccess={async (loggedInUser) => {
+                  setUser(loggedInUser);
+                  await syncPurchasesToCloud(loggedInUser);
+              }}
+          />
+      )}
+
       {expandedLesson && (
         <LessonModal 
             lesson={getSelectedLesson()} 
@@ -681,7 +686,7 @@ function AppContent() {
                                                             <img src={user.photoURL} alt="Profile" className={`w-12 h-12 rounded-full border-2 ${theme.border}`} />
                                                         ) : (
                                                             <div className={`w-12 h-12 rounded-full flex items-center justify-center text-white font-bold text-lg ${theme.bg}`}>
-                                                                {user.email?.charAt(0).toUpperCase()}
+                                                                {user.displayName ? user.displayName.charAt(0).toUpperCase() : user.email?.charAt(0).toUpperCase()}
                                                             </div>
                                                         )}
                                                         <div>
@@ -699,7 +704,7 @@ function AppContent() {
                                                         <svg className="w-5 h-5" viewBox="0 0 24 24"><path fill="currentColor" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" /><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" /><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" /><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" /></svg>
                                                         Continue with Google
                                                     </button>
-                                                    <button onClick={handleEmailLogin} className={`flex items-center justify-center gap-3 p-3.5 rounded-xl font-bold text-sm border transition-all active:scale-95 shadow-sm hover:shadow-md ${isDarkMode ? 'bg-[#121212] border-[#2C2C2C] text-white hover:bg-[#1A1A1A]' : 'bg-white border-gray-200 text-black hover:bg-gray-50'}`}>
+                                                    <button onClick={() => { triggerHaptic(); setShowEmailModal(true); }} className={`flex items-center justify-center gap-3 p-3.5 rounded-xl font-bold text-sm border transition-all active:scale-95 shadow-sm hover:shadow-md ${isDarkMode ? 'bg-[#121212] border-[#2C2C2C] text-white hover:bg-[#1A1A1A]' : 'bg-white border-gray-200 text-black hover:bg-gray-50'}`}>
                                                         <Mail size={20} className={isDarkMode ? 'text-[#A0A0A0]' : 'text-gray-500'} /> Continue with Email
                                                     </button>
                                                 </div>
