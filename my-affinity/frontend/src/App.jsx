@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { ChevronRight, PlayCircle, Sparkles, Zap, Facebook, Send, Globe, BookOpen, Award, Bot, Camera, PenTool, Book, Lock, KeyRound, AlertCircle, ChevronDown, RotateCcw, Mail, Crown, LogOut, Copy, ShieldCheck } from 'lucide-react';
+import { ChevronRight, PlayCircle, Sparkles, Zap, Facebook, Send, Globe, BookOpen, Award, Bot, Camera, PenTool, Book, Lock, KeyRound, AlertCircle, ChevronDown, RotateCcw, Crown, LogOut, Copy, ShieldCheck } from 'lucide-react';
 
 // FIREBASE IMPORTS
 import { signInWithPopup, signOut } from 'firebase/auth';
@@ -145,7 +145,7 @@ function AppContent() {
 
   const [purchasedCourses, setPurchasedCourses] = useState({ photo: null, designer: null, publisher: null });
   const [passcodeInput, setPasscodeInput] = useState('');
-  const [passcodeError, setPasscodeError] = useState(''); // Updated to string for custom error messages
+  const [passcodeError, setPasscodeError] = useState(''); 
   const [isVerifying, setIsVerifying] = useState(false);
   const [isDataLoaded, setIsDataLoaded] = useState(false);
 
@@ -270,7 +270,6 @@ function AppContent() {
       return courseData[activeAppTab].find(l => l.id === expandedLesson);
   };
 
-  // 🌟 FIREBASE KEY VERIFICATION LOGIC
   const handleVerifyPasscode = async () => {
       if (!activeAppTab) return;
       const code = passcodeInput.trim().toUpperCase();
@@ -285,7 +284,6 @@ function AppContent() {
               const keyData = keySnap.data();
               const now = Date.now();
 
-              // Rule 1: Key expires after 7 days if unused
               if (keyData.status === 'unused' && (now - keyData.createdAt > SEVEN_DAYS_MS)) {
                   triggerHaptic('error');
                   setPasscodeError(lang === 'en' ? 'Key expired (over 7 days).' : 'លេខកូដនេះផុតកំណត់ហើយ។');
@@ -293,7 +291,6 @@ function AppContent() {
                   return;
               }
 
-              // Rule 2: Valid and Unused Key
               if (keyData.status === 'unused' && keyData.course === activeAppTab) {
                   await updateDoc(keyRef, { status: 'used', usedAt: now, usedBy: user ? user.uid : 'anonymous_device' });
                   
@@ -303,7 +300,6 @@ function AppContent() {
                   };
                   setPurchasedCourses(updatedPurchases);
 
-                  // Sync to cloud instantly if they are already logged in
                   if (user) {
                       await setDoc(doc(db, "users", user.uid), { purchasedCourses: updatedPurchases }, { merge: true });
                   }
@@ -316,7 +312,6 @@ function AppContent() {
                   setPasscodeError(lang === 'en' ? 'Key already used or invalid course.' : 'លេខកូដនេះត្រូវបានប្រើរួចហើយ ឬខុសវគ្គ។');
               }
           } 
-          // Fallback for hardcoded local keys
           else if (VALID_PASSCODES[activeAppTab].includes(code)) {
               triggerHaptic('success');
               const updatedPurchases = { ...purchasedCourses, [activeAppTab]: { unlocked: true, expiry: Date.now() + ONE_YEAR_MS, keyUsed: code }};
@@ -335,38 +330,37 @@ function AppContent() {
       setIsVerifying(false);
   };
 
-  // 🌟 FIREBASE GOOGLE LOGIN & SYNC LOGIC
+  const syncPurchasesToCloud = async (loggedInUser) => {
+      const userRef = doc(db, "users", loggedInUser.uid);
+      const userSnap = await getDoc(userRef);
+
+      if (userSnap.exists()) {
+          const data = userSnap.data();
+          if (data.purchasedCourses) {
+              const mergedPurchases = { ...purchasedCourses };
+              let hasChanges = false;
+              for (const course in data.purchasedCourses) {
+                  if (data.purchasedCourses[course] && data.purchasedCourses[course].expiry > Date.now()) {
+                      mergedPurchases[course] = data.purchasedCourses[course];
+                      hasChanges = true;
+                  }
+              }
+              if (hasChanges) setPurchasedCourses(mergedPurchases);
+          }
+      } else {
+          if (Object.values(purchasedCourses).some(c => c !== null)) {
+              await setDoc(userRef, { purchasedCourses });
+          }
+      }
+  };
+
   const handleGoogleLogin = async () => { 
       triggerHaptic(); 
       try {
           const result = await signInWithPopup(auth, googleProvider);
           const loggedInUser = result.user;
           setUser(loggedInUser);
-
-          // FETCH FROM DATABASE AND SYNC LOCAL STORAGE
-          const userRef = doc(db, "users", loggedInUser.uid);
-          const userSnap = await getDoc(userRef);
-
-          if (userSnap.exists()) {
-              const data = userSnap.data();
-              if (data.purchasedCourses) {
-                  const mergedPurchases = { ...purchasedCourses };
-                  let hasChanges = false;
-                  // Compare Cloud vs Local to keep the active licenses
-                  for (const course in data.purchasedCourses) {
-                      if (data.purchasedCourses[course] && data.purchasedCourses[course].expiry > Date.now()) {
-                          mergedPurchases[course] = data.purchasedCourses[course];
-                          hasChanges = true;
-                      }
-                  }
-                  if (hasChanges) setPurchasedCourses(mergedPurchases);
-              }
-          } else {
-              // First time logging in: Back up local purchases to the cloud
-              if (Object.values(purchasedCourses).some(c => c !== null)) {
-                  await setDoc(userRef, { purchasedCourses });
-              }
-          }
+          await syncPurchasesToCloud(loggedInUser);
       } catch (error) {
           console.error("Error signing in with Google:", error.message);
           alert(lang === 'en' ? "Failed to sign in." : "ការចូលបរាជ័យ។");
@@ -393,7 +387,6 @@ function AppContent() {
       }
   };
 
-  // 🌟 ADMIN FIREBASE GENERATOR
   const handleGenerateAdminKeys = async () => {
       triggerHaptic();
       if (!activeAppTab) return;
@@ -407,7 +400,6 @@ function AppContent() {
               const keyCode = `${prefix}-2026-${ran1}-${ran2}`;
               newKeys.push(keyCode);
 
-              // Push key straight to Firestore
               await setDoc(doc(db, "keys", keyCode), {
                   course: activeAppTab,
                   createdAt: Date.now(),
@@ -427,8 +419,6 @@ function AppContent() {
       const url = `https://t.me/share/url?url=${encodeURIComponent(text)}`;
       window.open(url, '_blank');
   };
-
-  const handleEmailLogin = () => { triggerHaptic(); alert("Email Auth coming soon!"); };
 
   const currentCourseData = activeAppTab ? (courseData[activeAppTab] || []) : [];
   const totalSteps = currentCourseData.reduce((acc, lesson) => acc + (lesson.steps?.length || 0), 0);
@@ -626,12 +616,43 @@ function AppContent() {
                                     </div>
 
                                 ) : (
-                                    /* UNPURCHASED LOGIC */
+                                    /* UNPURCHASED LOGIC REORDERED */
                                     <>
+                                        {/* STEP 1: PAYMENT */}
+                                        <div className="mb-10">
+                                            <h4 className={`text-sm font-bold uppercase tracking-widest mb-6 flex items-center gap-2 ${theme.text}`}>
+                                                <span className={`text-white w-5 h-5 flex items-center justify-center rounded-full text-[10px] ${theme.bg}`}>1</span> 
+                                                {lang === 'en' ? "Get Access Code" : 'បង់ប្រាក់ & យកលេខកូដ'}
+                                            </h4>
+                                            <div className="flex flex-col md:flex-row gap-8 relative z-10 items-center md:items-start">
+                                                <div className="flex flex-col items-center shrink-0 w-full md:w-auto">
+                                                    <div className="p-3 bg-white rounded-3xl shadow-lg border border-gray-100 mb-4">
+                                                        <img src="/aba-khqr.png" alt="ABA KHQR" className={`w-48 h-48 object-contain rounded-xl shadow-sm border ${isDarkMode ? 'border-[#2C2C2C]' : 'border-gray-200'}`} />
+                                                    </div>
+                                                    <h3 className={`text-2xl font-black font-khmer ${isDarkMode ? 'text-[#F1F1F1]' : 'text-[#1A1A1A]'}`}>$20.00</h3>
+                                                    <p className={`text-xs font-bold uppercase tracking-widest mt-1 ${isDarkMode ? 'text-[#A0A0A0]' : 'text-[#6B7280]'}`}>Full 1-Year Access</p>
+                                                </div>
+
+                                                <div className="flex-1 w-full text-center md:text-left flex flex-col justify-center h-full pt-2 md:pt-10">
+                                                    <p className={`text-[14px] leading-relaxed font-khmer mb-6 ${isDarkMode ? 'text-[#A0A0A0]' : 'text-[#6B7280]'}`}>
+                                                        {lang === 'en' 
+                                                            ? `Scan the KHQR to pay $20. Send the payment screenshot to our Telegram to receive your Key Code.` 
+                                                            : `ស្កេន KHQR ដើម្បីបង់ប្រាក់ $20 រួចផ្ញើវិក្កយបត្រមក Telegram ដើម្បីទទួលបានលេខកូដដោះសោសម្ងាត់។`}
+                                                    </p>
+                                                    <a href={telegramUrl} target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center gap-2 px-6 py-3.5 w-full md:w-auto rounded-xl font-black font-khmer text-[14px] transition-all active:scale-95 shadow-lg hover:-translate-y-1 mb-6 text-white" style={{ backgroundColor: '#2AABEE' }}>
+                                                        <Send size={18} /> {lang === 'en' ? 'Send Screenshot to Telegram' : 'ផ្ញើវិក្កយបត្រទៅ Telegram'}
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div className={`w-full h-px mb-10 ${isDarkMode ? 'bg-[#2C2C2C]' : 'bg-[#E5E7EB]'}`}></div>
+
+                                        {/* STEP 2: KEY CODE */}
                                         <div className="mb-10">
                                             <h4 className={`text-sm font-bold uppercase tracking-widest mb-4 flex items-center gap-2 ${theme.text}`}>
-                                                <span className={`text-white w-5 h-5 flex items-center justify-center rounded-full text-[10px] ${theme.bg}`}>1</span> 
-                                                {lang === 'en' ? 'Enter Key Code (Instant Access)' : 'បញ្ចូលលេខកូដ (ចូលប្រើភ្លាមៗ)'}
+                                                <span className={`text-white w-5 h-5 flex items-center justify-center rounded-full text-[10px] ${theme.bg}`}>2</span> 
+                                                {lang === 'en' ? 'Enter Key Code' : 'បញ្ចូលលេខកូដ'}
                                             </h4>
                                             <div className={`flex flex-col sm:flex-row gap-3 p-4 rounded-2xl border ${passcodeError ? 'border-red-500 animate-shake bg-red-500/5' : (isDarkMode ? 'bg-[#121212] border-[#2C2C2C]' : 'bg-[#F8F9FA] border-[#E5E7EB]')}`}>
                                                 <div className="flex-1 flex items-center gap-3">
@@ -660,18 +681,15 @@ function AppContent() {
                                                     <AlertCircle size={12} /> {passcodeError}
                                                 </p>
                                             )}
-                                            <p className={`text-xs mt-3 font-bold ${isDarkMode ? 'text-orange-400' : 'text-orange-600'}`}>
-                                                <Sparkles size={12} className="inline mr-1" />
-                                                Recommend: Sign up below to secure access and sync your device.
-                                            </p>
                                         </div>
 
                                         <div className={`w-full h-px mb-10 ${isDarkMode ? 'bg-[#2C2C2C]' : 'bg-[#E5E7EB]'}`}></div>
 
-                                        <div className="mb-10">
+                                        {/* STEP 3: SECURE ACCOUNT (Google Only) */}
+                                        <div className="mb-4">
                                             <h4 className={`text-sm font-bold uppercase tracking-widest mb-4 flex items-center gap-2 ${theme.text}`}>
-                                                <span className={`text-white w-5 h-5 flex items-center justify-center rounded-full text-[10px] ${theme.bg}`}>2</span> 
-                                                {lang === 'en' ? (user ? 'Account Linked' : 'Secure Account') : (user ? 'គណនីបានភ្ជាប់' : 'បង្កើតគណនី')}
+                                                <span className={`text-white w-5 h-5 flex items-center justify-center rounded-full text-[10px] ${theme.bg}`}>3</span> 
+                                                {lang === 'en' ? (user ? 'Account Linked' : 'Secure Account') : (user ? 'គណនីបានភ្ជាប់' : 'ភ្ជាប់គណនី')}
                                             </h4>
                                             
                                             {user ? (
@@ -681,7 +699,7 @@ function AppContent() {
                                                             <img src={user.photoURL} alt="Profile" className={`w-12 h-12 rounded-full border-2 ${theme.border}`} />
                                                         ) : (
                                                             <div className={`w-12 h-12 rounded-full flex items-center justify-center text-white font-bold text-lg ${theme.bg}`}>
-                                                                {user.email?.charAt(0).toUpperCase()}
+                                                                {user.displayName ? user.displayName.charAt(0).toUpperCase() : user.email?.charAt(0).toUpperCase()}
                                                             </div>
                                                         )}
                                                         <div>
@@ -694,45 +712,17 @@ function AppContent() {
                                                     </button>
                                                 </div>
                                             ) : (
-                                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                                                    <button onClick={handleGoogleLogin} className={`flex items-center justify-center gap-3 p-3.5 rounded-xl font-bold text-sm border transition-all active:scale-95 shadow-sm hover:shadow-md ${isDarkMode ? 'bg-[#121212] border-[#2C2C2C] text-white hover:bg-[#1A1A1A]' : 'bg-white border-gray-200 text-black hover:bg-gray-50'}`}>
+                                                <div className="max-w-sm">
+                                                    <button onClick={handleGoogleLogin} className={`w-full flex items-center justify-center gap-3 p-4 rounded-xl font-bold text-sm border transition-all active:scale-95 shadow-sm hover:shadow-md ${isDarkMode ? 'bg-[#121212] border-[#2C2C2C] text-white hover:bg-[#1A1A1A]' : 'bg-white border-gray-200 text-black hover:bg-gray-50'}`}>
                                                         <svg className="w-5 h-5" viewBox="0 0 24 24"><path fill="currentColor" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" /><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" /><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" /><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" /></svg>
                                                         Continue with Google
                                                     </button>
-                                                    <button onClick={handleEmailLogin} className={`flex items-center justify-center gap-3 p-3.5 rounded-xl font-bold text-sm border transition-all active:scale-95 shadow-sm hover:shadow-md ${isDarkMode ? 'bg-[#121212] border-[#2C2C2C] text-white hover:bg-[#1A1A1A]' : 'bg-white border-gray-200 text-black hover:bg-gray-50'}`}>
-                                                        <Mail size={20} className={isDarkMode ? 'text-[#A0A0A0]' : 'text-gray-500'} /> Continue with Email
-                                                    </button>
+                                                    <p className={`text-xs mt-3 font-bold ${isDarkMode ? 'text-orange-400' : 'text-orange-600'}`}>
+                                                        <Sparkles size={12} className="inline mr-1" />
+                                                        Recommend: Link your account to secure your access.
+                                                    </p>
                                                 </div>
                                             )}
-                                        </div>
-
-                                        <div className={`w-full h-px mb-10 ${isDarkMode ? 'bg-[#2C2C2C]' : 'bg-[#E5E7EB]'}`}></div>
-
-                                        <div>
-                                            <h4 className={`text-sm font-bold uppercase tracking-widest mb-6 flex items-center gap-2 ${theme.text}`}>
-                                                <span className={`text-white w-5 h-5 flex items-center justify-center rounded-full text-[10px] ${theme.bg}`}>3</span> 
-                                                {lang === 'en' ? "Don't have a Key? Pay Here" : 'បង់ប្រាក់ & យកលេខកូដ'}
-                                            </h4>
-                                            <div className="flex flex-col md:flex-row gap-8 relative z-10 items-center md:items-start">
-                                                <div className="flex flex-col items-center shrink-0 w-full md:w-auto">
-                                                    <div className="p-3 bg-white rounded-3xl shadow-lg border border-gray-100 mb-4">
-                                                        <img src="/aba-khqr.png" alt="ABA KHQR" className={`w-48 h-48 object-contain rounded-xl shadow-sm border ${isDarkMode ? 'border-[#2C2C2C]' : 'border-gray-200'}`} />
-                                                    </div>
-                                                    <h3 className={`text-2xl font-black font-khmer ${isDarkMode ? 'text-[#F1F1F1]' : 'text-[#1A1A1A]'}`}>$20.00</h3>
-                                                    <p className={`text-xs font-bold uppercase tracking-widest mt-1 ${isDarkMode ? 'text-[#A0A0A0]' : 'text-[#6B7280]'}`}>Full 1-Year Access</p>
-                                                </div>
-
-                                                <div className="flex-1 w-full text-center md:text-left">
-                                                    <p className={`text-[14px] leading-relaxed font-khmer mb-6 ${isDarkMode ? 'text-[#A0A0A0]' : 'text-[#6B7280]'}`}>
-                                                        {lang === 'en' 
-                                                            ? `Scan the KHQR to pay $20. Send the payment screenshot to our Telegram to receive your Key Code.` 
-                                                            : `ស្កេន KHQR ដើម្បីបង់ប្រាក់ $20 រួចផ្ញើវិក្កយបត្រមក Telegram ដើម្បីទទួលបានលេខកូដដោះសោសម្ងាត់។`}
-                                                    </p>
-                                                    <a href={telegramUrl} target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center gap-2 px-6 py-3.5 w-full md:w-auto rounded-xl font-black font-khmer text-[14px] transition-all active:scale-95 shadow-lg hover:-translate-y-1 mb-6 text-white" style={{ backgroundColor: '#2AABEE' }}>
-                                                        <Send size={18} /> {lang === 'en' ? 'Send to Telegram' : 'ផ្ញើវិក្កយបត្រទៅ Telegram'}
-                                                    </a>
-                                                </div>
-                                            </div>
                                         </div>
                                     </>
                                 )}
