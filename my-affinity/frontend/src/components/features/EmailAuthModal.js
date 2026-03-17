@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { X, Mail, Lock, User, Loader2, AlertCircle } from 'lucide-react';
+import { X, Mail, Lock, User, Loader2, AlertCircle, CheckCircle2 } from 'lucide-react';
 import { auth } from '../../../firebase';
-import { signInWithEmailAndPassword, createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
+import { signInWithEmailAndPassword, createUserWithEmailAndPassword, updateProfile, sendEmailVerification, signOut } from 'firebase/auth';
 
 const triggerHaptic = (type = 'light') => {
     if (typeof navigator !== 'undefined' && navigator.vibrate) {
@@ -17,6 +17,7 @@ const EmailAuthModal = ({ onClose, onSuccess, isDarkMode, lang }) => {
     const [password, setPassword] = useState('');
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState('');
+    const [successMsg, setSuccessMsg] = useState(''); // New state for verification message
 
     const [isVisible, setIsVisible] = useState(false);
 
@@ -34,26 +35,48 @@ const EmailAuthModal = ({ onClose, onSuccess, isDarkMode, lang }) => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         setError('');
+        setSuccessMsg('');
         setIsLoading(true);
         triggerHaptic();
 
         try {
-            let userCredential;
             if (isSignUp) {
-                userCredential = await createUserWithEmailAndPassword(auth, email, password);
-                // Update profile with the name
+                // 1. Create the account
+                const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+                
+                // 2. Update their profile with their name
                 await updateProfile(userCredential.user, { displayName: name });
+                
+                // 3. Send the verification email
+                await sendEmailVerification(userCredential.user);
+                
+                // 4. Force sign out so they can't access the app until verified
+                await signOut(auth);
+                
+                triggerHaptic('success');
+                setSuccessMsg(lang === 'en' ? 'Account created! Please check your inbox to verify your email before signing in.' : 'គណនីបានបង្កើត! សូមពិនិត្យមើលប្រអប់សារអ៊ីមែលរបស់អ្នកដើម្បីបញ្ជាក់មុនពេលចូលគណនី។');
+                setIsSignUp(false); // Switch to sign in view
+                setPassword(''); // Clear password for security
+
             } else {
-                userCredential = await signInWithEmailAndPassword(auth, email, password);
+                // SIGN IN LOGIC
+                const userCredential = await signInWithEmailAndPassword(auth, email, password);
+                
+                // Check if they verified their email
+                if (!userCredential.user.emailVerified) {
+                    await signOut(auth); // Log them back out
+                    triggerHaptic('error');
+                    setError(lang === 'en' ? 'Please verify your email address first. Check your inbox or spam folder.' : 'សូមបញ្ជាក់អាសយដ្ឋានអ៊ីមែលរបស់អ្នកជាមុនសិន។ សូមពិនិត្យមើលប្រអប់សារ ឬថត Spam របស់អ្នក។');
+                } else {
+                    triggerHaptic('success');
+                    onSuccess(userCredential.user);
+                    handleClose();
+                }
             }
-            
-            triggerHaptic('success');
-            onSuccess(userCredential.user);
-            handleClose();
         } catch (err) {
             triggerHaptic('error');
             console.error("Auth error:", err);
-            // Friendly error messages
+            
             if (err.code === 'auth/email-already-in-use') setError(lang === 'en' ? 'Email is already in use.' : 'អ៊ីមែលនេះត្រូវបានប្រើរួចហើយ។');
             else if (err.code === 'auth/wrong-password' || err.code === 'auth/invalid-credential') setError(lang === 'en' ? 'Incorrect email or password.' : 'អ៊ីមែល ឬពាក្យសម្ងាត់មិនត្រឹមត្រូវ។');
             else if (err.code === 'auth/weak-password') setError(lang === 'en' ? 'Password should be at least 6 characters.' : 'ពាក្យសម្ងាត់ត្រូវមានយ៉ាងហោចណាស់ ៦ តួអក្សរ។');
@@ -77,10 +100,19 @@ const EmailAuthModal = ({ onClose, onSuccess, isDarkMode, lang }) => {
                     </button>
                 </div>
 
+                {/* ERROR MESSAGE */}
                 {error && (
-                    <div className="mb-4 p-3 rounded-xl bg-red-500/10 border border-red-500/20 flex items-center gap-2 text-red-500 text-xs font-bold animate-shake">
-                        <AlertCircle size={16} />
-                        <p>{error}</p>
+                    <div className="mb-4 p-3 rounded-xl bg-red-500/10 border border-red-500/20 flex items-start gap-2 text-red-500 text-xs font-bold animate-shake">
+                        <AlertCircle size={16} className="shrink-0 mt-0.5" />
+                        <p className="leading-relaxed">{error}</p>
+                    </div>
+                )}
+
+                {/* SUCCESS MESSAGE (For Verification Email) */}
+                {successMsg && (
+                    <div className="mb-4 p-3 rounded-xl bg-green-500/10 border border-green-500/20 flex items-start gap-2 text-green-500 text-xs font-bold animate-fade-in-up">
+                        <CheckCircle2 size={16} className="shrink-0 mt-0.5" />
+                        <p className="leading-relaxed">{successMsg}</p>
                     </div>
                 )}
 
@@ -119,7 +151,7 @@ const EmailAuthModal = ({ onClose, onSuccess, isDarkMode, lang }) => {
                 </form>
 
                 <div className="mt-6 text-center">
-                    <button onClick={() => { setIsSignUp(!isSignUp); setError(''); }} className={`text-sm font-bold font-khmer hover:underline ${isDarkMode ? 'text-[#A0A0A0]' : 'text-[#6B7280]'}`}>
+                    <button onClick={() => { setIsSignUp(!isSignUp); setError(''); setSuccessMsg(''); }} className={`text-sm font-bold font-khmer hover:underline ${isDarkMode ? 'text-[#A0A0A0]' : 'text-[#6B7280]'}`}>
                         {isSignUp 
                             ? (lang === 'en' ? 'Already have an account? Sign In' : 'មានគណនីរួចហើយ? ចូលគណនី') 
                             : (lang === 'en' ? "Don't have an account? Sign Up" : 'មិនទាន់មានគណនី? ចុះឈ្មោះ')}
