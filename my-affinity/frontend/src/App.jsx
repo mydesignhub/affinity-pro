@@ -39,7 +39,7 @@ const ONE_YEAR_MS = 365 * 24 * 60 * 60 * 1000;
 const SEVEN_DAYS_MS = 7 * 24 * 60 * 60 * 1000;
 const ADMIN_EMAIL = 'koymy.mlk@gmail.com';
 
-// 🌟 REFACTORED LESSON MODAL WITH SMART RESPONSIVE SHIELDS 🌟
+// 🌟 REFACTORED LESSON MODAL WITH ACTIVE "TRAPDOOR" SHIELDS 🌟
 const LessonModal = ({ lesson, onClose, isDarkMode, completedSteps, setCompletedSteps, isPurchased, onUnlockDemo }) => {
   const { lang } = useLanguage();
   const [isVisible, setIsVisible] = useState(false);
@@ -121,16 +121,18 @@ const LessonModal = ({ lesson, onClose, isDarkMode, completedSteps, setCompleted
           const isStandardFs = document.fullscreenElement || document.webkitFullscreenElement;
           
           if (!isStandardFs && !isCssFullscreen) {
-              if (elem.requestFullscreen) {
-                  await elem.requestFullscreen();
-                  // 🌟 ANDROID FIX: Instantly unlock rotation so they can turn device freely
-                  try { window.screen.orientation.unlock(); } catch(e) {}
-              }
-              else if (elem.webkitRequestFullscreen) {
-                  elem.webkitRequestFullscreen(); 
-              }
-              else {
-                  setIsCssFullscreen(true);
+              if (elem.requestFullscreen) await elem.requestFullscreen();
+              else if (elem.webkitRequestFullscreen) elem.webkitRequestFullscreen(); 
+              else setIsCssFullscreen(true);
+              
+              // 🌟 ANDROID SNAP & RELEASE: Forces landscape, then unbinds the sensor so they can freely rotate
+              if (window.screen && window.screen.orientation && window.screen.orientation.lock) {
+                  try { 
+                      await window.screen.orientation.lock('landscape'); 
+                      setTimeout(() => {
+                          try { window.screen.orientation.unlock(); } catch(e){}
+                      }, 1500);
+                  } catch (e) { console.log(e); }
               }
           } else {
               if (isStandardFs) {
@@ -138,7 +140,10 @@ const LessonModal = ({ lesson, onClose, isDarkMode, completedSteps, setCompleted
                   else if (document.webkitExitFullscreen) document.webkitExitFullscreen();
               }
               setIsCssFullscreen(false);
-              try { window.screen.orientation.unlock(); } catch(e) {}
+              
+              if (window.screen && window.screen.orientation && window.screen.orientation.unlock) {
+                  try { window.screen.orientation.unlock(); } catch(e){}
+              }
           }
       } catch (err) {
           console.error("Fullscreen API error:", err);
@@ -297,7 +302,6 @@ const LessonModal = ({ lesson, onClose, isDarkMode, completedSteps, setCompleted
                                             </div>
                                         )}
 
-                                        {/* 🌟 KEYBOARD & POPUP LOCK: tabIndex="-1" permanently blocks Tab selection 🌟 */}
                                         <iframe 
                                             ref={videoRef}
                                             tabIndex="-1"
@@ -310,31 +314,55 @@ const LessonModal = ({ lesson, onClose, isDarkMode, completedSteps, setCompleted
                                             title={`Step ${currentStepData.id} Video`}
                                             onLoad={() => setIsVideoLoading(false)}
                                         />
-
-                                        {/* 🛡️ ULTIMATE RESPONSIVE SECURITY SHIELDS 🛡️ */}
                                         
-                                        {/* 1. Top-Left: Blocks Title & Channel Avatar. Leaves room for custom Exit button */}
-                                        <div 
-                                            className="absolute top-0 left-0 w-[calc(100%-120px)] h-[70px] z-30 bg-transparent cursor-default no-callout" 
-                                            style={{ WebkitTouchCallout: 'none' }} onContextMenu={e => e.preventDefault()} 
+                                        {/* 🛡️ ACTIVE TRAPDOOR SHIELDS 🛡️ */}
+                                        {/* Clicks on these trigger fullscreen instead of letting users out! */}
+
+                                        {/* 1. Top-Left: Channel Avatar & Title */}
+                                        <button 
+                                            onClick={(e) => { e.preventDefault(); toggleFullScreen(); }}
+                                            className="absolute top-0 left-0 w-[70%] sm:w-[calc(100%-250px)] h-[70px] z-30 bg-transparent no-callout cursor-pointer" 
+                                            onContextMenu={e => e.preventDefault()} 
+                                            tabIndex="-1"
+                                            aria-hidden="true"
                                         />
 
-                                        {/* 2. Top-Right Center: Blocks Share/Watch Later but perfectly avoids Mobile Gear Icon */}
-                                        <div 
-                                            className="absolute top-0 right-[50px] w-[100px] h-[70px] z-30 bg-transparent cursor-default no-callout" 
-                                            style={{ WebkitTouchCallout: 'none' }} onContextMenu={e => e.preventDefault()} 
+                                        {/* 2. Top-Right (Desktop/iPad PC mode): Watch Later & Share */}
+                                        {/* Expanded width to 220px to guarantee it covers PC share buttons */}
+                                        <button 
+                                            onClick={(e) => { e.preventDefault(); toggleFullScreen(); }}
+                                            className="hidden sm:block absolute top-0 right-0 w-[220px] h-[80px] z-30 bg-transparent no-callout cursor-pointer" 
+                                            onContextMenu={e => e.preventDefault()} 
+                                            tabIndex="-1"
+                                            aria-hidden="true"
                                         />
 
-                                        {/* 3. Bottom-Left (MOBILE ONLY): Blocks Mobile Share Arrow. Hides on Large Screens so Desktop Play button works! */}
-                                        <div 
-                                            className="lg:hidden absolute bottom-0 left-0 w-[70px] h-[60px] z-30 bg-transparent cursor-default no-callout" 
-                                            style={{ WebkitTouchCallout: 'none' }} onContextMenu={e => e.preventDefault()} 
+                                        {/* 3. Top-Right Edge (Mobile): Blocks 3-dots, allows Gear */}
+                                        <button 
+                                            onClick={(e) => { e.preventDefault(); toggleFullScreen(); }}
+                                            className="sm:hidden absolute top-0 right-0 w-[60px] h-[60px] z-30 bg-transparent no-callout cursor-pointer" 
+                                            onContextMenu={e => e.preventDefault()} 
+                                            tabIndex="-1"
+                                            aria-hidden="true"
                                         />
 
-                                        {/* 4. Bottom-Right: Blocks YouTube Logo Watermark */}
-                                        <div 
-                                            className="absolute bottom-0 right-0 w-[90px] h-[60px] z-30 bg-transparent cursor-default no-callout" 
-                                            style={{ WebkitTouchCallout: 'none' }} onContextMenu={e => e.preventDefault()} 
+                                        {/* 4. Bottom-Left (Mobile Only): Blocks Mobile Share Arrow */}
+                                        {/* Fixed: Made it lg:hidden so iPhones in landscape still have the shield! */}
+                                        <button 
+                                            onClick={(e) => { e.preventDefault(); toggleFullScreen(); }}
+                                            className="lg:hidden absolute bottom-0 left-0 w-[80px] h-[60px] z-30 bg-transparent no-callout cursor-pointer" 
+                                            onContextMenu={e => e.preventDefault()} 
+                                            tabIndex="-1"
+                                            aria-hidden="true"
+                                        />
+
+                                        {/* 5. Bottom-Right (All Devices): YouTube Logo Watermark */}
+                                        <button 
+                                            onClick={(e) => { e.preventDefault(); toggleFullScreen(); }}
+                                            className="absolute bottom-0 right-0 w-[120px] h-[60px] z-30 bg-transparent no-callout cursor-pointer" 
+                                            onContextMenu={e => e.preventDefault()} 
+                                            tabIndex="-1"
+                                            aria-hidden="true"
                                         />
                                     </>
                                 )}
@@ -1008,6 +1036,7 @@ function AppContent() {
         />
       )}
 
+      {/* 🌟 FULL SCREEN COURSE PANEL 🌟 */}
       {activeAppTab && !expandedLesson && (
         <div className={`fixed inset-0 z-[60] overflow-y-auto custom-scrollbar flex flex-col ${isDarkMode ? 'bg-[#0A0A0A]' : 'bg-[#F4F5F7]'}`}>
             
@@ -1179,136 +1208,8 @@ function AppContent() {
                                                     </p>
                                                     <button onClick={handleGoogleLogin} className={`w-full flex items-center justify-center gap-3 p-4 rounded-2xl font-bold text-sm border transition-all active:scale-[0.98] shadow-sm hover:shadow-md ${isDarkMode ? 'bg-[#1E1E1E] border-[#2C2C2C] text-white hover:bg-[#2C2C2C]' : 'bg-white border-gray-200 text-black hover:bg-gray-50'}`}>
                                                         <svg className="w-5 h-5" viewBox="0 0 24 24"><path fill="currentColor" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" /><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" /><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" /><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" /></svg>
-                                                        Continue with Google
+                                                        Link Google Account
                                                     </button>
-                                                </div>
-                                            )}
-                                        </div>
-
-                                        <div className="text-center">
-                                            <p className={`text-sm font-bold mb-3 ${isDarkMode ? 'text-[#F1F1F1]' : 'text-[#1A1A1A]'}`}>Need Help with your purchase?</p>
-                                            <a href="https://t.me/+d9YiokUaUtZiNTZl" target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center gap-2 px-8 py-4 rounded-2xl font-black text-sm transition-all active:scale-[0.98] shadow-lg hover:-translate-y-1 text-white" style={{ backgroundColor: '#2AABEE' }}>
-                                                <Send size={18} /> Contact Support Team
-                                            </a>
-                                        </div>
-
-                                        <div className={`w-full h-px my-6 ${isDarkMode ? 'bg-[#2C2C2C]' : 'bg-[#E5E7EB]'}`}></div>
-                                        <button onClick={handleSignOutDevice} className="w-full py-4 rounded-xl font-bold font-khmer text-sm active:scale-[0.98] transition-colors flex items-center justify-center gap-2 text-red-500 hover:bg-red-500/10">
-                                            <LogOut size={18} /> Sign Out Device
-                                        </button>
-                                    </div>
-
-                                ) : (
-                                    <div className="flex flex-col items-center animate-fade-in-up">
-                                        
-                                        <div className="text-center mb-8">
-                                            <div className={`inline-flex items-center justify-center p-4 rounded-3xl mb-4 ${theme.lightBg}`}>
-                                                <Crown className={`w-10 h-10 ${theme.text}`} />
-                                            </div>
-                                            <h3 className={`text-3xl font-black font-khmer tracking-tight mb-2 ${isDarkMode ? 'text-white' : 'text-black'}`}>
-                                                {lang === 'en' ? 'Pro Masterclass' : getKhmerCourseTitle(activeAppTab)}
-                                            </h3>
-                                            <p className={`text-sm font-medium ${isDarkMode ? 'text-[#9AA0A6]' : 'text-gray-500'}`}>
-                                                {lang === 'en' ? 'One-time payment. One year full access.' : 'បង់ប្រាក់ម្ដង ប្រើប្រាស់បានពេញ១ឆ្នាំ'}
-                                            </p>
-                                            <div className="mt-4 flex items-baseline justify-center gap-1">
-                                                <span className={`text-4xl font-black ${isDarkMode ? 'text-white' : 'text-black'}`}>$20</span>
-                                                <span className={`text-sm font-bold uppercase tracking-widest ${isDarkMode ? 'text-[#9AA0A6]' : 'text-gray-400'}`}>/ {lang === 'en' ? 'YEAR' : 'ឆ្នាំ'}</span>
-                                            </div>
-                                        </div>
-
-                                        <div className={`w-full max-w-md mx-auto rounded-3xl p-6 sm:p-8 mb-8 border backdrop-blur-md shadow-xl flex flex-col items-center gap-6 ${isDarkMode ? 'bg-[#1E1E1E]/80 border-[#2C2C2C]' : 'bg-white/80 border-[#E5E7EB] shadow-black/5'}`}>
-                                            <div className="flex flex-col items-center gap-3">
-                                                <div className="w-44 h-44 bg-white rounded-3xl p-3 shadow-md border border-gray-100 flex items-center justify-center">
-                                                    <img src="/aba-khqr.png" alt="ABA KHQR" className="w-full h-full object-contain rounded-xl" />
-                                                </div>
-                                                <span className={`text-xs font-bold tracking-widest uppercase ${theme.text}`}>SCAN TO PAY</span>
-                                            </div>
-                                            
-                                            <div className="w-full flex items-center gap-4 opacity-50">
-                                                <div className={`h-px flex-1 ${isDarkMode ? 'bg-white/20' : 'bg-black/10'}`}></div>
-                                                <span className={`text-[10px] font-bold tracking-widest uppercase ${isDarkMode ? 'text-white/50' : 'text-black/40'}`}>THEN</span>
-                                                <div className={`h-px flex-1 ${isDarkMode ? 'bg-white/20' : 'bg-black/10'}`}></div>
-                                            </div>
-                                            
-                                            <div className="w-full text-center">
-                                                <p className={`text-[13px] font-khmer mb-4 leading-relaxed ${isDarkMode ? 'text-[#E3E3E3]' : 'text-gray-600'}`}>
-                                                    {lang === 'en' ? 'Send your receipt via Telegram to get your activation key.' : 'ផ្ញើវិក័យប័ត្រតាម Telegram ដើម្បីទទួលបានលេខកូដ។'}
-                                                </p>
-                                                <a href={telegramUrl} target="_blank" rel="noopener noreferrer" className={`w-full py-4 rounded-2xl flex items-center justify-center gap-2 font-bold font-khmer transition-all active:scale-[0.98] shadow-lg text-white bg-gradient-to-r ${theme.gradient}`}>
-                                                    <Send className="w-5 h-5" />
-                                                    {lang === 'en' ? 'Send Receipt to Telegram' : 'ផ្ញើវិក័យប័ត្រទីនេះ'}
-                                                </a>
-                                            </div>
-                                        </div>
-
-                                        <div className="w-full max-w-md mx-auto mb-10">
-                                            <label className={`block text-[11px] font-bold uppercase tracking-widest mb-3 pl-1 ${isDarkMode ? 'text-[#9AA0A6]' : 'text-gray-500'}`}>
-                                                {lang === 'en' ? 'Activation Key' : 'លេខកូដសម្ងាត់'}
-                                            </label>
-                                            <div className={`relative flex items-center p-1.5 rounded-2xl border transition-colors shadow-sm ${isDarkMode ? 'bg-[#121212] border-[#2C2C2C] focus-within:border-[#41B6E6]' : 'bg-white border-[#E5E7EB] focus-within:border-[#0277C5]'}`}>
-                                                <KeyRound className={`absolute left-4 w-5 h-5 ${isDarkMode ? 'text-[#9AA0A6]' : 'text-gray-400'}`} />
-                                                <input 
-                                                    type="text" 
-                                                    value={passcodeInput}
-                                                    onChange={(e) => {
-                                                        setPasscodeInput(e.target.value.toUpperCase());
-                                                        setPasscodeError('');
-                                                    }}
-                                                    placeholder={getInputPlaceholder()}
-                                                    className={`flex-1 bg-transparent py-3 pl-12 pr-2 outline-none font-bold tracking-widest uppercase text-sm w-full ${isDarkMode ? 'text-white' : 'text-black'}`}
-                                                />
-                                                <button 
-                                                    onClick={handleVerifyPasscode}
-                                                    disabled={!passcodeInput.trim() || isVerifying}
-                                                    className={`px-6 py-3 rounded-xl text-white font-bold font-khmer text-sm active:scale-[0.95] transition-all flex items-center justify-center shrink-0 ${(isVerifying || !passcodeInput.trim()) ? 'opacity-50 cursor-not-allowed bg-gray-500' : `shadow-md bg-gradient-to-r ${theme.gradient}`}`}
-                                                >
-                                                    {isVerifying ? 'Checking...' : (lang === 'en' ? 'Unlock' : 'បញ្ជាក់')}
-                                                </button>
-                                            </div>
-                                            {passcodeError && (
-                                                <p className="text-red-500 text-[11px] font-bold tracking-wide mt-3 flex items-center justify-center gap-1">
-                                                    <AlertCircle size={14} /> {passcodeError}
-                                                </p>
-                                            )}
-                                        </div>
-
-                                        <div className="w-full flex items-center gap-4 opacity-50 max-w-md mx-auto mb-8">
-                                            <div className={`h-px flex-1 ${isDarkMode ? 'bg-white/20' : 'bg-black/10'}`}></div>
-                                            <span className={`text-[10px] font-bold tracking-widest uppercase ${isDarkMode ? 'text-white/50' : 'text-black/40'}`}>ACCOUNT SYNC</span>
-                                            <div className={`h-px flex-1 ${isDarkMode ? 'bg-white/20' : 'bg-black/10'}`}></div>
-                                        </div>
-
-                                        <div className="w-full max-w-md mx-auto">
-                                            {user ? (
-                                                <div className={`p-4 rounded-2xl border flex items-center justify-between shadow-sm animate-fade-in-up ${isDarkMode ? 'bg-[#1E1E1E] border-[#2C2C2C]' : 'bg-[#F8F9FA] border-[#E5E7EB]'}`}>
-                                                    <div className="flex items-center gap-4">
-                                                        {user.photoURL ? (
-                                                            <img src={user.photoURL} alt="Profile" className={`w-12 h-12 rounded-full border-2 ${theme.border}`} />
-                                                        ) : (
-                                                            <div className={`w-12 h-12 rounded-full flex items-center justify-center text-white font-bold text-lg ${theme.bg}`}>
-                                                                {user.displayName ? user.displayName.charAt(0).toUpperCase() : user.email?.charAt(0).toUpperCase()}
-                                                            </div>
-                                                        )}
-                                                        <div>
-                                                            <p className={`font-bold text-sm ${isDarkMode ? 'text-white' : 'text-black'}`}>{user.displayName || 'User'}</p>
-                                                            <p className={`text-xs ${isDarkMode ? 'text-[#A0A0A0]' : 'text-[#6B7280]'}`}>{user.email}</p>
-                                                        </div>
-                                                    </div>
-                                                    <button onClick={handleLogout} className={`px-4 py-2 rounded-xl text-xs font-bold transition-colors ${isDarkMode ? 'bg-[#2C2C2C] hover:bg-[#3C3C3C]' : 'bg-[#E5E7EB] hover:bg-[#D1D5DB]'}`}>
-                                                        Logout
-                                                    </button>
-                                                </div>
-                                            ) : (
-                                                <div className="text-center">
-                                                    <button onClick={handleGoogleLogin} className={`w-full flex items-center justify-center gap-3 p-4 rounded-2xl font-bold text-sm border transition-all active:scale-[0.98] shadow-sm hover:shadow-md ${isDarkMode ? 'bg-[#1E1E1E] border-[#2C2C2C] text-white hover:bg-[#2C2C2C]' : 'bg-white border-gray-200 text-black hover:bg-gray-50'}`}>
-                                                        <svg className="w-5 h-5" viewBox="0 0 24 24"><path fill="currentColor" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" /><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" /><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" /><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" /></svg>
-                                                        Continue with Google
-                                                    </button>
-                                                    <p className={`text-xs mt-4 font-bold ${isDarkMode ? 'text-orange-400' : 'text-orange-600'}`}>
-                                                        <Sparkles size={12} className="inline mr-1" />
-                                                        {lang === 'en' ? 'Secure your purchase by linking an account.' : 'សូមភ្ជាប់គណនីដើម្បីការពារការទិញរបស់អ្នក។'}
-                                                    </p>
                                                 </div>
                                             )}
                                         </div>
