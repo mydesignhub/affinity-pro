@@ -122,7 +122,6 @@ const LessonModal = ({ lesson, onClose, isDarkMode, completedSteps, setCompleted
           if (!isStandardFs && !isCssFullscreen) {
               if (elem.requestFullscreen) {
                   await elem.requestFullscreen();
-                  // 🌟 ANDROID FIX: Explicitly command Chrome to unlock orientation sensors
                   try { window.screen.orientation.unlock(); } catch (e) {}
               }
               else if (elem.webkitRequestFullscreen) {
@@ -310,35 +309,24 @@ const LessonModal = ({ lesson, onClose, isDarkMode, completedSteps, setCompleted
                                             onLoad={() => setIsVideoLoading(false)}
                                         />
                                         
-                                        {/* 🛡️ PASSIVE INVISIBLE SHIELDS 🛡️ */}
+                                        {/* 🛡️ SIMPLIFIED, PERFECTLY CALIBRATED SHIELDS 🛡️ */}
                                         
-                                        {/* 1. Top-Left: Channel Avatar & Title */}
+                                        {/* 1. Top Bar Shield: Covers Title & Avatar, but leaves absolute right 60px open for mobile Gear */}
                                         <div 
-                                            className="absolute top-0 left-0 w-[70%] sm:w-[calc(100%-280px)] h-[70px] z-30 bg-transparent no-callout cursor-default" 
+                                            className="absolute top-0 left-0 right-[60px] h-[65px] z-30 bg-transparent no-callout cursor-default" 
                                             onContextMenu={e => e.preventDefault()} 
                                         />
 
-                                        {/* 2. Top-Right (Desktop/iPad PC mode): Watch Later & Share */}
+                                        {/* 2. Bottom-Left Shield: Blocks Mobile Share Arrow. Hides on Desktop so Bottom-Left Play works */}
                                         <div 
-                                            className="hidden sm:block absolute top-0 right-0 w-[280px] h-[80px] z-30 bg-transparent no-callout cursor-default" 
+                                            className="lg:hidden absolute bottom-0 left-0 w-[60px] h-[60px] z-30 bg-transparent no-callout cursor-default" 
                                             onContextMenu={e => e.preventDefault()} 
                                         />
 
-                                        {/* 3. Top-Right Edge (Mobile): Blocks 3-dots, allows Gear */}
+                                        {/* 3. Bottom-Right Shield: Blocks YouTube Watermark */}
+                                        {/* 🌟 ON PC (sm): Shifts UP 48px to completely expose the YouTube control bar (Gear, CC, Fullscreen) 🌟 */}
                                         <div 
-                                            className="sm:hidden absolute top-0 right-0 w-[60px] h-[60px] z-30 bg-transparent no-callout cursor-default" 
-                                            onContextMenu={e => e.preventDefault()} 
-                                        />
-
-                                        {/* 4. Bottom-Left (Mobile Only): Blocks Mobile Share Arrow */}
-                                        <div 
-                                            className="lg:hidden absolute bottom-0 left-0 w-[80px] h-[60px] z-30 bg-transparent no-callout cursor-default" 
-                                            onContextMenu={e => e.preventDefault()} 
-                                        />
-
-                                        {/* 5. Bottom-Right (All Devices): YouTube Logo Watermark */}
-                                        <div 
-                                            className="absolute bottom-0 right-0 w-[120px] h-[60px] z-30 bg-transparent no-callout cursor-default" 
+                                            className="absolute bottom-0 sm:bottom-[48px] right-0 w-[90px] sm:w-[110px] h-[60px] sm:h-[40px] z-30 bg-transparent no-callout cursor-default" 
                                             onContextMenu={e => e.preventDefault()} 
                                         />
                                     </>
@@ -392,7 +380,7 @@ const LessonModal = ({ lesson, onClose, isDarkMode, completedSteps, setCompleted
                     <div className="flex-1">
                         <h4 className={`text-xs font-bold uppercase tracking-widest mb-2 flex items-center gap-2 ${isDarkMode ? 'text-[#41B6E6]' : 'text-[#0277C5]'}`}>
                             <DownloadCloud size={16} />
-                            {lang === 'en' ? 'Practice Resources' : 'ឯកសារអនុវត្ត'}
+                            {lang === 'en' ? 'Practice Resources' : 'ឯ প্রতারអនុវត្ត'}
                         </h4>
                         <p className={`text-[13px] font-khmer leading-relaxed ${isDarkMode ? 'text-[#A0A0A0]' : 'text-[#6B7280]'}`}>
                             {lang === 'en' ? lesson.instruction_en : lesson.instruction}
