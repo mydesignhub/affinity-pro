@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { ChevronRight, PlayCircle, Sparkles, Zap, Facebook, Send, Globe, BookOpen, Award, Bot, Camera, PenTool, Book, Lock, KeyRound, AlertCircle, ChevronDown, RotateCcw, Crown, LogOut, Copy, ShieldCheck, CheckCircle, Database } from 'lucide-react';
+import { ChevronRight, PlayCircle, Sparkles, Zap, Facebook, Send, Globe, BookOpen, Award, Bot, Camera, PenTool, Book, Lock, KeyRound, AlertCircle, ChevronDown, RotateCcw, Crown, LogOut, Copy, ShieldCheck, CheckCircle, Database, Loader2 } from 'lucide-react';
 
 // FIREBASE IMPORTS
 import { signInWithPopup, signOut } from 'firebase/auth';
@@ -143,13 +143,25 @@ function AppContent() {
   const [generatedKeys, setGeneratedKeys] = useState('');
   const [copiedAll, setCopiedAll] = useState(false);
   const [copiedCode, setCopiedCode] = useState(null);
-  const [isFetchingKeys, setIsFetchingKeys] = useState(false); // 🌟 NEW STATE
+  const [isFetchingKeys, setIsFetchingKeys] = useState(false); 
 
   const [purchasedCourses, setPurchasedCourses] = useState({ photo: null, designer: null, publisher: null });
   const [passcodeInput, setPasscodeInput] = useState('');
   const [passcodeError, setPasscodeError] = useState(''); 
   const [isVerifying, setIsVerifying] = useState(false);
   const [isDataLoaded, setIsDataLoaded] = useState(false);
+
+  // 🌟 LOAD PREVIOUS ADMIN KEYS FROM LOCAL STORAGE WHEN OPENING PANEL
+  useEffect(() => {
+      if (isAdmin && activeAppTab && showRegistration) {
+          const savedKeys = localStorage.getItem(`myAffinity_last_keys_${activeAppTab}`);
+          if (savedKeys) {
+              setGeneratedKeys(savedKeys);
+          } else {
+              setGeneratedKeys('');
+          }
+      }
+  }, [activeAppTab, showRegistration, isAdmin]);
 
   useEffect(() => {
       if (typeof window !== 'undefined') {
@@ -256,7 +268,6 @@ function AppContent() {
   const handleOpenCourse = (courseId) => {
       setActiveAppTab(courseId);
       setShowRegistration(false);
-      setGeneratedKeys('');
       setPasscodeError('');
       triggerHaptic();
       window.history.pushState({ modalOpen: true, tab: activeTab, course: courseId }, '');
@@ -389,6 +400,7 @@ function AppContent() {
       }
   };
 
+  // 🌟 GENERATE & SAVE TO LOCAL STORAGE
   const handleGenerateAdminKeys = async () => {
       triggerHaptic();
       if (!activeAppTab) return;
@@ -413,21 +425,22 @@ function AppContent() {
                   status: 'unused'
               });
           }
-          setGeneratedKeys(newKeys.join('\n'));
+          const keysString = newKeys.join('\n');
+          setGeneratedKeys(keysString);
+          localStorage.setItem(`myAffinity_last_keys_${activeAppTab}`, keysString);
       } catch (error) {
           console.error("Error generating keys:", error);
           alert("Failed to generate keys in database.");
       }
   };
 
-  // 🌟 NEW: Fetch Unused Keys for Admin
+  // 🌟 FETCH & SAVE TO LOCAL STORAGE
   const handleFetchUnusedKeys = async () => {
       triggerHaptic();
       setIsFetchingKeys(true);
-      setGeneratedKeys(''); // Clear current view
+      setGeneratedKeys(''); 
       
       try {
-          // Safe query without composite index requirement
           const q = query(collection(db, "keys"), where("course", "==", activeAppTab));
           const querySnapshot = await getDocs(q);
           
@@ -436,16 +449,18 @@ function AppContent() {
           
           querySnapshot.forEach((docSnap) => {
               const data = docSnap.data();
-              // Locally filter unused and unexpired (7 days)
               if (data.status === 'unused' && (now - data.createdAt <= SEVEN_DAYS_MS)) {
                   keys.push(docSnap.id);
               }
           });
           
           if (keys.length > 0) {
-              setGeneratedKeys(keys.join('\n'));
+              const keysString = keys.join('\n');
+              setGeneratedKeys(keysString);
+              localStorage.setItem(`myAffinity_last_keys_${activeAppTab}`, keysString);
           } else {
               alert(lang === 'en' ? "No active unused keys found." : "មិនមានលេខកូដដែលនៅទំនេរទេសម្រាប់វគ្គនេះ។");
+              localStorage.removeItem(`myAffinity_last_keys_${activeAppTab}`);
           }
       } catch (error) {
           console.error("Error fetching unused keys:", error);
@@ -608,7 +623,6 @@ function AppContent() {
                                             </button>
                                         </div>
 
-                                        {/* 🌟 NEW: Fetch Available Keys Button 🌟 */}
                                         <button 
                                             onClick={handleFetchUnusedKeys} 
                                             disabled={isFetchingKeys}
