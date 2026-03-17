@@ -111,25 +111,36 @@ const LessonModal = ({ lesson, onClose, isDarkMode, completedSteps, setCompleted
   };
 
   return (
-    <div className={`fixed inset-0 z-[100] flex items-end md:items-center justify-center p-0 md:p-6 transition-opacity duration-300 ${isVisible ? 'opacity-100' : 'opacity-0'}`}>
+    <div className={`fixed inset-0 z-[200] flex items-end sm:items-center justify-center p-0 sm:p-6 transition-opacity duration-300 ${isVisible ? 'opacity-100' : 'opacity-0'}`}>
       
       <div className="absolute inset-0 bg-black/60 backdrop-blur-md" onClick={handleClose} />
 
-      <div className={`relative w-full max-w-4xl h-[95vh] md:h-auto md:max-h-[90vh] flex flex-col shadow-2xl transition-transform duration-300 ease-out rounded-t-[32px] md:rounded-[32px]
-        ${isVisible ? 'translate-y-0 scale-100' : 'translate-y-full md:translate-y-8 md:scale-95'}
-        ${isDarkMode ? 'bg-[#121212] border border-[#2C2C2C]' : 'bg-[#FFFFFF] border border-[#E5E7EB]'}
+      {/* 🌟 FULL SCREEN MODAL CONTAINER 🌟 */}
+      <div className={`relative w-full h-full sm:h-auto sm:max-h-[90vh] sm:max-w-4xl flex flex-col shadow-2xl transition-transform duration-300 ease-out rounded-none sm:rounded-[32px]
+        ${isVisible ? 'translate-y-0 scale-100' : 'translate-y-full sm:translate-y-8 sm:scale-95'}
+        ${isDarkMode ? 'bg-[#121212] sm:border border-[#2C2C2C]' : 'bg-[#FFFFFF] sm:border border-[#E5E7EB]'}
       `}>
         
-        <div className={`flex items-center justify-between p-5 border-b shrink-0 ${isDarkMode ? 'border-[#2C2C2C]' : 'border-[#E5E7EB]'}`}>
-            <h3 className={`font-bold font-khmer text-lg truncate pr-4 ${isDarkMode ? 'text-[#F1F1F1]' : 'text-[#1A1A1A]'}`}>
-                {lang === 'en' ? lesson.title_en : lesson.title}
-            </h3>
-            <button onClick={handleClose} className={`p-2 rounded-full transition-colors active:scale-90 ${isDarkMode ? 'bg-[#1E1E1E] text-[#A0A0A0] hover:text-[#F1F1F1]' : 'bg-[#F8F9FA] text-[#6B7280] hover:text-[#1A1A1A]'}`}>
-              <X size={20} />
-            </button>
+        {/* 🌟 SAFE AREA HEADER 🌟 Pushes content down below iOS Notch / Android Status Bar safely */}
+        <div 
+            className={`flex flex-col border-b shrink-0 ${isDarkMode ? 'border-[#2C2C2C]' : 'border-[#E5E7EB]'}`}
+            style={{ paddingTop: 'max(env(safe-area-inset-top), 12px)' }}
+        >
+            <div className="flex items-center justify-between p-4 sm:p-5">
+                <h3 className={`font-bold font-khmer text-lg truncate pr-4 ${isDarkMode ? 'text-[#F1F1F1]' : 'text-[#1A1A1A]'}`}>
+                    {lang === 'en' ? lesson.title_en : lesson.title}
+                </h3>
+                <button onClick={handleClose} className={`p-2 shrink-0 rounded-full transition-colors active:scale-90 ${isDarkMode ? 'bg-[#1E1E1E] text-[#A0A0A0] hover:text-[#F1F1F1]' : 'bg-[#F8F9FA] text-[#6B7280] hover:text-[#1A1A1A]'}`}>
+                  <X size={20} />
+                </button>
+            </div>
         </div>
 
-        <div className="flex-1 overflow-y-auto p-4 md:p-6 no-scrollbar flex flex-col">
+        {/* 🌟 SAFE AREA CONTENT 🌟 Pushes content up above iOS Home Indicator safely */}
+        <div 
+            className="flex-1 overflow-y-auto p-4 sm:p-6 no-scrollbar flex flex-col"
+            style={{ paddingBottom: 'max(env(safe-area-inset-bottom), 24px)' }}
+        >
             
             <p className={`text-[15px] font-khmer leading-relaxed mb-6 px-1 ${isDarkMode ? 'text-[#A0A0A0]' : 'text-[#6B7280]'}`}>
                 {lang === 'en' ? lesson.desc_en : lesson.desc}
@@ -193,9 +204,6 @@ const LessonModal = ({ lesson, onClose, isDarkMode, completedSteps, setCompleted
                                             title={`Step ${currentStepData.id} Video`}
                                             onLoad={() => setIsVideoLoading(false)}
                                         />
-
-                                        {/* 🛡️ INVISIBLE SHIELDS 🛡️ */}
-                                        {/* Top shield removed so users can click the Settings gear for quality */}
                                         
                                         {/* Full-width bottom shield to securely block sharing & YouTube links */}
                                         <div className="absolute bottom-0 left-0 w-full h-[60px] z-30 bg-transparent" />
