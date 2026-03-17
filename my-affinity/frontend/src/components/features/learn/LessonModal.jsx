@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { X, PlayCircle, DownloadCloud, CheckCircle2, Circle, Loader2, Maximize, Lock, Clock } from 'lucide-react';
+import { X, PlayCircle, DownloadCloud, CheckCircle2, Circle, Loader2, Maximize, Minimize, Lock, Clock } from 'lucide-react';
 import { useLanguage } from '../../../contexts/LanguageContext';
 
 const triggerHaptic = (type = 'light') => {
@@ -19,6 +19,9 @@ const LessonModal = ({ lesson, onClose, isDarkMode, completedSteps, setCompleted
   const [hasStarted, setHasStarted] = useState(false);
   const [previewEnded, setPreviewEnded] = useState(false);
   
+  // 🌟 NEW STATE: Tracks our custom iOS fullscreen fallback
+  const [isCssFullscreen, setIsCssFullscreen] = useState(false);
+  
   const videoRef = useRef(null);
   const containerRef = useRef(null);
 
@@ -33,6 +36,20 @@ const LessonModal = ({ lesson, onClose, isDarkMode, completedSteps, setCompleted
     setHasStarted(false);
     setPreviewEnded(false);
   }, [activeStep]);
+
+  // Sync standard fullscreen state with our CSS state
+  useEffect(() => {
+      const handleFsChange = () => {
+          const isStandard = document.fullscreenElement || document.webkitFullscreenElement;
+          if (!isStandard) setIsCssFullscreen(false);
+      };
+      document.addEventListener('fullscreenchange', handleFsChange);
+      document.addEventListener('webkitfullscreenchange', handleFsChange);
+      return () => {
+          document.removeEventListener('fullscreenchange', handleFsChange);
+          document.removeEventListener('webkitfullscreenchange', handleFsChange);
+      };
+  }, []);
 
   const handleClose = () => {
     setIsVisible(false);
@@ -58,33 +75,40 @@ const LessonModal = ({ lesson, onClose, isDarkMode, completedSteps, setCompleted
       const elem = containerRef.current; 
       if (!elem) return;
       triggerHaptic();
+      
       try {
-          const isFullscreen = document.fullscreenElement || document.webkitFullscreenElement;
-          if (!isFullscreen) {
+          const isStandardFs = document.fullscreenElement || document.webkitFullscreenElement;
+          
+          if (!isStandardFs && !isCssFullscreen) {
+              // 1. Try Standard API First
               if (elem.requestFullscreen) {
                   await elem.requestFullscreen();
               } else if (elem.webkitRequestFullscreen) {
                   elem.webkitRequestFullscreen(); 
+              } else {
+                  // 2. iOS Fallback triggered immediately if API doesn't exist
+                  setIsCssFullscreen(true);
               }
+              
               if (window.screen && window.screen.orientation && window.screen.orientation.lock) {
-                  try {
-                      await window.screen.orientation.lock('landscape');
-                  } catch (e) {
-                      console.warn('Orientation lock is not supported.');
-                  }
+                  try { await window.screen.orientation.lock('landscape'); } catch (e) {}
               }
           } else {
-              if (document.exitFullscreen) {
-                  await document.exitFullscreen();
-              } else if (document.webkitExitFullscreen) {
-                  document.webkitExitFullscreen();
+              // Exiting
+              if (isStandardFs) {
+                  if (document.exitFullscreen) await document.exitFullscreen();
+                  else if (document.webkitExitFullscreen) document.webkitExitFullscreen();
               }
+              setIsCssFullscreen(false);
+              
               if (window.screen && window.screen.orientation && window.screen.orientation.unlock) {
                   window.screen.orientation.unlock();
               }
           }
       } catch (err) {
           console.error("Fullscreen API error:", err);
+          // 3. iOS Fallback triggered if Standard API is blocked (common on iPhone)
+          setIsCssFullscreen(!isCssFullscreen);
       }
   };
 
@@ -105,8 +129,9 @@ const LessonModal = ({ lesson, onClose, isDarkMode, completedSteps, setCompleted
   const getVideoUrl = (url) => {
       if (!url) return '';
       const separator = url.includes('?') ? '&' : '?';
+      // 🌟 CHANGED: fs=1 allows the native YouTube fullscreen button as a backup
       return isPurchased 
-          ? `${url}${separator}autoplay=1&playsinline=1&fs=0&modestbranding=1&rel=0` 
+          ? `${url}${separator}autoplay=1&playsinline=1&fs=1&modestbranding=1&rel=0` 
           : `${url}${separator}end=20&controls=0&disablekb=1&rel=0&autoplay=1&playsinline=1&fs=0&modestbranding=1`;
   };
 
@@ -115,13 +140,11 @@ const LessonModal = ({ lesson, onClose, isDarkMode, completedSteps, setCompleted
       
       <div className="absolute inset-0 bg-black/60 backdrop-blur-md" onClick={handleClose} />
 
-      {/* 🌟 FULL SCREEN MODAL CONTAINER 🌟 */}
       <div className={`relative w-full h-full sm:h-auto sm:max-h-[90vh] sm:max-w-4xl flex flex-col shadow-2xl transition-transform duration-300 ease-out rounded-none sm:rounded-[32px]
         ${isVisible ? 'translate-y-0 scale-100' : 'translate-y-full sm:translate-y-8 sm:scale-95'}
         ${isDarkMode ? 'bg-[#121212] sm:border border-[#2C2C2C]' : 'bg-[#FFFFFF] sm:border border-[#E5E7EB]'}
       `}>
         
-        {/* 🌟 SAFE AREA HEADER 🌟 Pushes content down below iOS Notch / Android Status Bar safely */}
         <div 
             className={`flex flex-col border-b shrink-0 ${isDarkMode ? 'border-[#2C2C2C]' : 'border-[#E5E7EB]'}`}
             style={{ paddingTop: 'max(env(safe-area-inset-top), 12px)' }}
@@ -136,7 +159,6 @@ const LessonModal = ({ lesson, onClose, isDarkMode, completedSteps, setCompleted
             </div>
         </div>
 
-        {/* 🌟 SAFE AREA CONTENT 🌟 Pushes content up above iOS Home Indicator safely */}
         <div 
             className="flex-1 overflow-y-auto p-4 sm:p-6 no-scrollbar flex flex-col"
             style={{ paddingBottom: 'max(env(safe-area-inset-bottom), 24px)' }}
@@ -148,8 +170,28 @@ const LessonModal = ({ lesson, onClose, isDarkMode, completedSteps, setCompleted
 
             {currentStepData && (
                 <div className="mb-6">
-                    <div ref={containerRef} className={`w-full aspect-video rounded-2xl relative overflow-hidden flex flex-col items-center justify-center group shadow-lg border shrink-0 bg-black ${isDarkMode ? 'border-[#2C2C2C]' : 'border-black'}`}>
+                    {/* 🌟 CSS FULLSCREEN LOGIC APPLIED HERE 🌟 */}
+                    <div ref={containerRef} className={`w-full relative overflow-hidden flex flex-col items-center justify-center group shadow-lg shrink-0 bg-black transition-all duration-300
+                        ${isCssFullscreen 
+                            ? '!fixed !inset-0 !z-[99999] !w-full !h-[100dvh] !rounded-none !border-none' 
+                            : `aspect-video rounded-2xl border ${isDarkMode ? 'border-[#2C2C2C]' : 'border-black'}`
+                        }`}
+                    >
                         
+                        {/* 🌟 OVERLAY EXIT BUTTON FOR iOS CSS FULLSCREEN 🌟 */}
+                        {isCssFullscreen && (
+                            <button 
+                                onClick={toggleFullScreen}
+                                className="absolute z-[60] p-3 sm:p-4 bg-black/60 text-white rounded-full backdrop-blur-md shadow-2xl active:scale-90 transition-transform"
+                                style={{ 
+                                    top: 'max(env(safe-area-inset-top), 16px)', 
+                                    left: 'max(env(safe-area-inset-left), 16px)' 
+                                }}
+                            >
+                                <Minimize size={24} />
+                            </button>
+                        )}
+
                         {!isPurchased && !previewEnded && (
                             <div className="absolute top-4 right-4 z-40 bg-[#C5B002] text-white px-3 py-1.5 rounded-full font-bold text-[10px] tracking-widest uppercase shadow-lg flex items-center gap-1.5 animate-pulse pointer-events-none">
                                 <Clock size={12} /> 20s PREVIEW
@@ -205,7 +247,6 @@ const LessonModal = ({ lesson, onClose, isDarkMode, completedSteps, setCompleted
                                             onLoad={() => setIsVideoLoading(false)}
                                         />
                                         
-                                        {/* Full-width bottom shield to securely block sharing & YouTube links */}
                                         <div className="absolute bottom-0 left-0 w-full h-[60px] z-30 bg-transparent" />
                                     </>
                                 )}
@@ -226,8 +267,18 @@ const LessonModal = ({ lesson, onClose, isDarkMode, completedSteps, setCompleted
                                 onClick={toggleFullScreen}
                                 className={`flex-1 py-3.5 rounded-xl flex items-center justify-center gap-2 font-bold font-khmer text-[13px] sm:text-[14px] transition-all active:scale-[0.98] shadow-sm border ${isDarkMode ? 'bg-[#1E1E1E] border-[#2C2C2C] text-[#F1F1F1] hover:bg-[#2C2C2C]' : 'bg-white border-[#E5E7EB] text-[#1A1A1A] hover:bg-[#F8F9FA]'}`}
                             >
-                                <Maximize size={18} className={isDarkMode ? 'text-[#41B6E6]' : 'text-[#0277C5]'} />
-                                {lang === 'en' ? 'Rotate Fullscreen' : 'មើលពេញអេក្រង់'}
+                                {/* 🌟 DYNAMIC BUTTON TEXT 🌟 */}
+                                {isCssFullscreen ? (
+                                    <>
+                                        <Minimize size={18} className={isDarkMode ? 'text-[#41B6E6]' : 'text-[#0277C5]'} />
+                                        {lang === 'en' ? 'Exit Fullscreen' : 'ចាកចេញពីអេក្រង់ពេញ'}
+                                    </>
+                                ) : (
+                                    <>
+                                        <Maximize size={18} className={isDarkMode ? 'text-[#41B6E6]' : 'text-[#0277C5]'} />
+                                        {lang === 'en' ? 'Rotate Fullscreen' : 'មើលពេញអេក្រង់'}
+                                    </>
+                                )}
                             </button>
 
                             {!isPurchased && (
