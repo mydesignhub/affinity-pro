@@ -197,13 +197,8 @@ const LessonModal = ({ lesson, onClose, isDarkMode, completedSteps, setCompleted
                                         {/* 🛡️ INVISIBLE SHIELDS 🛡️ */}
                                         {/* Top shield removed so users can click the Settings gear for quality */}
                                         
-                                        {/* Bottom-left shield: Blocks the 'Watch on YouTube' button */}
-                                        <div className="absolute bottom-0 left-0 w-[160px] h-[60px] z-30 bg-transparent" />
-                                        
-                                        {/* Bottom-right shield: Blocks the YouTube logo link */}
-                                        <div className="absolute bottom-0 right-0 w-[70px] h-[50px] z-30 bg-transparent" />
-                                        
-                                        {/* The center of the bottom bar is completely open for the timeline! */}
+                                        {/* Full-width bottom shield to securely block sharing & YouTube links */}
+                                        <div className="absolute bottom-0 left-0 w-full h-[60px] z-30 bg-transparent" />
                                     </>
                                 )}
                             </>
