@@ -111,7 +111,6 @@ const LessonModal = ({ lesson, onClose, isDarkMode, completedSteps, setCompleted
       }
   };
 
-  // 🌟 FORCED UNLOCK ROTATION: Tells Android to drop software locks and use hardware sensors
   const toggleFullScreen = async () => {
       const elem = containerRef.current; 
       if (!elem) return;
@@ -123,17 +122,14 @@ const LessonModal = ({ lesson, onClose, isDarkMode, completedSteps, setCompleted
           if (!isStandardFs && !isCssFullscreen) {
               if (elem.requestFullscreen) {
                   await elem.requestFullscreen();
+                  try { window.screen.orientation.unlock(); } catch (e) {}
               }
               else if (elem.webkitRequestFullscreen) {
                   elem.webkitRequestFullscreen(); 
+                  try { window.screen.orientation.unlock(); } catch (e) {}
               }
               else {
                   setIsCssFullscreen(true);
-              }
-              
-              // Ensure Android Chrome lets go of the portrait lock!
-              if (window.screen && window.screen.orientation && window.screen.orientation.unlock) {
-                  try { window.screen.orientation.unlock(); } catch (e) {}
               }
           } else {
               if (isStandardFs) {
@@ -141,11 +137,7 @@ const LessonModal = ({ lesson, onClose, isDarkMode, completedSteps, setCompleted
                   else if (document.webkitExitFullscreen) document.webkitExitFullscreen();
               }
               setIsCssFullscreen(false);
-              
-              // Unlock again on exit just to be safe
-              if (window.screen && window.screen.orientation && window.screen.orientation.unlock) {
-                  try { window.screen.orientation.unlock(); } catch (e) {}
-              }
+              try { window.screen.orientation.unlock(); } catch (e) {}
           }
       } catch (err) {
           console.error("Fullscreen API error:", err);
@@ -204,13 +196,7 @@ const LessonModal = ({ lesson, onClose, isDarkMode, completedSteps, setCompleted
           .video-container:-webkit-full-screen { width: 100vw !important; height: 100dvh !important; max-width: none !important; max-height: none !important; border-radius: 0 !important; border: none !important; background: black; display: flex !important; align-items: center !important; justify-content: center !important; }
           .video-container:fullscreen iframe { width: 100% !important; height: 100% !important; object-fit: cover; }
           .video-container:-webkit-full-screen iframe { width: 100% !important; height: 100% !important; object-fit: cover; }
-          
-          .no-callout {
-              -webkit-touch-callout: none !important;
-              -webkit-user-select: none !important;
-              user-select: none !important;
-              outline: none !important;
-          }
+          .no-callout { -webkit-touch-callout: none !important; -webkit-user-select: none !important; user-select: none !important; outline: none !important; }
       `}</style>
 
       <div 
@@ -324,7 +310,8 @@ const LessonModal = ({ lesson, onClose, isDarkMode, completedSteps, setCompleted
                                         />
                                         
                                         {/* 🛡️ CALIBRATED DEAD-ZONE SHIELDS 🛡️ */}
-                                        
+                                        {/* onClick/onDoubleClick completely neutralizes any interaction */}
+
                                         {/* 1. Top-Left: Channel Avatar & Title */}
                                         <div 
                                             className="absolute top-0 left-0 w-[calc(100%-60px)] sm:w-[calc(100%-160px)] h-[60px] z-30 bg-transparent no-callout cursor-default" 
@@ -721,14 +708,6 @@ function AppContent() {
         document.removeEventListener('focusin', handleFocusIn);
         document.removeEventListener('focusout', handleFocusOut);
     };
-  }, []);
-
-  useEffect(() => {
-      // 🌟 UNLOCK GLOBAL APP ROTATION 🌟
-      // Ensures the main menu and the whole Android app can rotate if the user turns their phone
-      if (typeof window !== 'undefined' && window.screen && window.screen.orientation && window.screen.orientation.unlock) {
-          try { window.screen.orientation.unlock(); } catch (e) {}
-      }
   }, []);
 
   const handleOpenCourse = (courseId) => {
