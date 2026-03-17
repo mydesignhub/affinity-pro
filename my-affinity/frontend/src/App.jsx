@@ -30,11 +30,11 @@ const APP_THEMES = {
     publisher: { gradient: 'from-[#D7383D] to-[#532463]', text: 'text-[#D7383D]', bg: 'bg-[#D7383D]', border: 'border-[#D7383D]', lightBg: 'bg-[#D7383D]/10' }
 };
 
-// Fallback manual codes (just in case database is down)
+// Fallback manual codes updated to the new shorter format
 const VALID_PASSCODES = {
-    photo: ['PH-2026-A1B2', 'PH-2026-C3D4'],
-    designer: ['DS-2026-A1B2', 'DS-2026-C3D4'],
-    publisher: ['PB-2026-A1B2', 'PB-2026-C3D4']
+    photo: ['PH-A1B2C', 'PH-X9Y8Z'],
+    designer: ['DS-A1B2C', 'DS-X9Y8Z'],
+    publisher: ['PB-A1B2C', 'PB-X9Y8Z']
 };
 
 const ONE_YEAR_MS = 365 * 24 * 60 * 60 * 1000;
@@ -395,9 +395,14 @@ function AppContent() {
 
       try {
           for(let i=0; i<genAmount; i++){
-              const ran1 = Math.random().toString(36).substring(2,6).toUpperCase();
-              const ran2 = Math.random().toString(36).substring(2,6).toUpperCase();
-              const keyCode = `${prefix}-2026-${ran1}-${ran2}`;
+              // Generate exactly 5 random alphanumeric characters
+              const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+              let randomStr = '';
+              for(let j=0; j<5; j++) {
+                  randomStr += chars.charAt(Math.floor(Math.random() * chars.length));
+              }
+              
+              const keyCode = `${prefix}-${randomStr}`;
               newKeys.push(keyCode);
 
               await setDoc(doc(db, "keys", keyCode), {
@@ -664,7 +669,7 @@ function AppContent() {
                                                             setPasscodeInput(e.target.value.toUpperCase());
                                                             setPasscodeError('');
                                                         }}
-                                                        placeholder={lang === 'en' ? "PH-2026-XXXX..." : "បញ្ចូលលេខកូដសម្ងាត់..."}
+                                                        placeholder={lang === 'en' ? "PH-XXXXX" : "បញ្ចូលលេខកូដសម្ងាត់..."}
                                                         className={`w-full bg-transparent outline-none font-bold text-center sm:text-left tracking-widest placeholder:tracking-normal ${isDarkMode ? 'text-white' : 'text-black'}`}
                                                     />
                                                 </div>
