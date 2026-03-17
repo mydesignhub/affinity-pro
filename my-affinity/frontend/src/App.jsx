@@ -123,18 +123,11 @@ const LessonModal = ({ lesson, onClose, isDarkMode, completedSteps, setCompleted
           if (!isStandardFs && !isCssFullscreen) {
               if (elem.requestFullscreen) {
                   await elem.requestFullscreen();
-                  // 🌟 ANDROID SNAP & RELEASE: Forces landscape, then unbinds the sensor so they can freely rotate
-                  if (window.screen && window.screen.orientation && window.screen.orientation.lock) {
-                      try { 
-                          await window.screen.orientation.lock('landscape'); 
-                          setTimeout(() => {
-                              try { window.screen.orientation.unlock(); } catch(e){}
-                          }, 1500);
-                      } catch (e) { console.log(e); }
-                  }
+                  try { window.screen.orientation.unlock(); } catch (e) {}
               }
               else if (elem.webkitRequestFullscreen) {
                   elem.webkitRequestFullscreen(); 
+                  try { window.screen.orientation.unlock(); } catch (e) {}
               }
               else {
                   setIsCssFullscreen(true);
@@ -145,10 +138,7 @@ const LessonModal = ({ lesson, onClose, isDarkMode, completedSteps, setCompleted
                   else if (document.webkitExitFullscreen) document.webkitExitFullscreen();
               }
               setIsCssFullscreen(false);
-              
-              if (window.screen && window.screen.orientation && window.screen.orientation.unlock) {
-                  try { window.screen.orientation.unlock(); } catch(e){}
-              }
+              try { window.screen.orientation.unlock(); } catch (e) {}
           }
       } catch (err) {
           console.error("Fullscreen API error:", err);
@@ -205,8 +195,8 @@ const LessonModal = ({ lesson, onClose, isDarkMode, completedSteps, setCompleted
       <style>{`
           .video-container:fullscreen { width: 100vw !important; height: 100dvh !important; max-width: none !important; max-height: none !important; border-radius: 0 !important; border: none !important; background: black; display: flex !important; align-items: center !important; justify-content: center !important; }
           .video-container:-webkit-full-screen { width: 100vw !important; height: 100dvh !important; max-width: none !important; max-height: none !important; border-radius: 0 !important; border: none !important; background: black; display: flex !important; align-items: center !important; justify-content: center !important; }
-          .video-container:fullscreen iframe { width: 100% !important; height: 100% !important; object-fit: cover; }
-          .video-container:-webkit-full-screen iframe { width: 100% !important; height: 100% !important; object-fit: cover; }
+          .video-container:fullscreen iframe { width: 100% !important; height: 100% !important; }
+          .video-container:-webkit-full-screen iframe { width: 100% !important; height: 100% !important; }
           
           /* 🌟 STRICT PREVENTION OF SAFARI LONG-PRESS CONTEXT MENU 🌟 */
           .no-callout {
@@ -314,7 +304,7 @@ const LessonModal = ({ lesson, onClose, isDarkMode, completedSteps, setCompleted
                                             </div>
                                         )}
 
-                                        {/* 🌟 KEYBOARD LOCK: tabIndex="-1" permanently blocks Tab selection 🌟 */}
+                                        {/* 🌟 KEYBOARD & SELECTION LOCK: tabIndex="-1" 🌟 */}
                                         <iframe 
                                             ref={videoRef}
                                             tabIndex="-1"
@@ -329,12 +319,11 @@ const LessonModal = ({ lesson, onClose, isDarkMode, completedSteps, setCompleted
                                         />
                                         
                                         {/* 🛡️ ACTIVE TRAPDOOR SHIELDS 🛡️ */}
-                                        {/* Clicks on these trigger fullscreen instead of letting users out! */}
-
+                                        
                                         {/* 1. Top-Left: Channel Avatar & Title */}
                                         <button 
                                             onClick={(e) => { e.preventDefault(); toggleFullScreen(); }}
-                                            className="absolute top-0 left-0 w-[70%] sm:w-[calc(100%-250px)] h-[70px] z-30 bg-transparent no-callout cursor-pointer outline-none border-none" 
+                                            className="absolute top-0 left-0 w-[70%] sm:w-[calc(100%-280px)] h-[70px] z-30 bg-transparent no-callout cursor-pointer outline-none border-none" 
                                             onContextMenu={e => e.preventDefault()} 
                                             tabIndex="-1"
                                             aria-hidden="true"
@@ -343,7 +332,7 @@ const LessonModal = ({ lesson, onClose, isDarkMode, completedSteps, setCompleted
                                         {/* 2. Top-Right (Desktop/iPad PC mode): Watch Later & Share */}
                                         <button 
                                             onClick={(e) => { e.preventDefault(); toggleFullScreen(); }}
-                                            className="hidden sm:block absolute top-0 right-0 w-[250px] h-[80px] z-30 bg-transparent no-callout cursor-pointer outline-none border-none" 
+                                            className="hidden sm:block absolute top-0 right-0 w-[280px] h-[80px] z-30 bg-transparent no-callout cursor-pointer outline-none border-none" 
                                             onContextMenu={e => e.preventDefault()} 
                                             tabIndex="-1"
                                             aria-hidden="true"
@@ -520,7 +509,6 @@ const LessonModal = ({ lesson, onClose, isDarkMode, completedSteps, setCompleted
   );
 };
 
-// ... Rest of the AppContent remains unchanged ...
 const TipsSection = ({ isExpanded, onToggle, isDarkMode }) => {
     const { t, lang } = useLanguage();
     const [tipIndex, setTipIndex] = useState(0);
