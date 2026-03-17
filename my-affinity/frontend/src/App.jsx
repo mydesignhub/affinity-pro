@@ -380,13 +380,11 @@ function AppContent() {
       }
   };
 
-  // 🌟 UPDATED: Close the loophole! Prevent local premium transfer to new accounts
   const handleLogout = async () => {
       triggerHaptic();
       try {
           await signOut(auth);
           setUser(null);
-          // Instantly wipe local storage so the next logged-in user doesn't get free premium
           setPurchasedCourses({ photo: null, designer: null, publisher: null });
           localStorage.removeItem('myAffinity_purchases');
       } catch (error) {
@@ -536,7 +534,7 @@ function AppContent() {
   };
 
   return (
-    <div className={`fixed inset-0 w-full h-full flex flex-col font-khmer overflow-hidden touch-pan-x touch-pan-y transition-colors duration-500 pt-[env(safe-area-inset-top)] ${isDarkMode ? 'bg-[#0A0A0A] text-[#F1F1F1]' : 'bg-[#F4F5F7] text-[#1A1A1A]'}`}>
+    <div className={`fixed inset-0 w-full h-full flex flex-col font-khmer overflow-hidden touch-pan-x touch-pan-y transition-colors duration-500 ${isDarkMode ? 'bg-[#0A0A0A] text-[#F1F1F1]' : 'bg-[#F4F5F7] text-[#1A1A1A]'}`}>
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Kantumruy+Pro:wght@100..700&display=swap'); 
         body, html { overscroll-behavior: none; background-color: ${isDarkMode ? '#0A0A0A' : '#F4F5F7'}; transition: background-color 0.5s ease; } 
@@ -547,10 +545,12 @@ function AppContent() {
       `}</style>
       
       {activeTab !== 'tools' && activeTab !== 'ai' && (
-          <Header activeTab={activeTab} setActiveTab={(tab) => {
-              setActiveTab(tab);
-              window.history.pushState({ modalOpen: false, tab: tab, course: null }, '');
-          }} isDarkMode={isDarkMode} setIsDarkMode={setIsDarkMode} />
+          <div style={{ paddingTop: 'max(env(safe-area-inset-top), 0px)' }} className="w-full shrink-0">
+              <Header activeTab={activeTab} setActiveTab={(tab) => {
+                  setActiveTab(tab);
+                  window.history.pushState({ modalOpen: false, tab: tab, course: null }, '');
+              }} isDarkMode={isDarkMode} setIsDarkMode={setIsDarkMode} />
+          </div>
       )}
       
       {expandedLesson && (
@@ -568,9 +568,15 @@ function AppContent() {
         />
       )}
 
+      {/* 🌟 FULL SCREEN COURSE PANEL 🌟 */}
       {activeAppTab && !expandedLesson && (
-        <div className={`fixed inset-0 z-40 overflow-y-auto custom-scrollbar flex flex-col pt-[env(safe-area-inset-top)] ${isDarkMode ? 'bg-[#0A0A0A]' : 'bg-[#F4F5F7]'}`}>
-            <div className={`sticky top-0 z-50 px-4 py-3 border-b flex items-center justify-between backdrop-blur-xl ${isDarkMode ? 'border-[#2C2C2C] bg-[#0A0A0A]/90' : 'border-[#E5E7EB] bg-[#FFFFFF]/90'}`}>
+        <div className={`fixed inset-0 z-[60] overflow-y-auto custom-scrollbar flex flex-col ${isDarkMode ? 'bg-[#0A0A0A]' : 'bg-[#F4F5F7]'}`}>
+            
+            {/* Safe Area Top Padding applied safely to internal header */}
+            <div 
+                className={`sticky top-0 z-50 px-4 pb-3 border-b flex items-center justify-between backdrop-blur-xl ${isDarkMode ? 'border-[#2C2C2C] bg-[#0A0A0A]/90' : 'border-[#E5E7EB] bg-[#FFFFFF]/90'}`}
+                style={{ paddingTop: 'max(env(safe-area-inset-top), 12px)' }}
+            >
                 <button onClick={() => { setActiveAppTab(null); window.history.back(); }} className={`p-2 rounded-full transition-colors ${isDarkMode ? 'hover:bg-[#1E1E1E]' : 'hover:bg-gray-100'}`}>
                     <ChevronRight className="w-6 h-6 rotate-180" />
                 </button>
@@ -578,8 +584,11 @@ function AppContent() {
                 <div className="w-10"></div> 
             </div>
 
-            <div className="p-4 md:p-8 max-w-7xl mx-auto w-full pb-32">
-                
+            {/* Safe Area Bottom Padding applied safely to scroll content */}
+            <div 
+                className="p-4 md:p-8 max-w-7xl mx-auto w-full flex-1"
+                style={{ paddingBottom: 'max(env(safe-area-inset-bottom), 40px)' }}
+            >
                 <div className={`mb-8 border rounded-3xl overflow-hidden shadow-md ${isDarkMode ? 'bg-[#1E1E1E] border-[#2C2C2C]' : 'bg-[#FFFFFF] border-[#E5E7EB]'}`}>
                     <button 
                         onClick={() => setShowRegistration(!showRegistration)} 
@@ -916,7 +925,7 @@ function AppContent() {
       )}
       
       {activeTab !== 'ai' && !activeAppTab ? (
-        <main className="flex-1 max-w-7xl mx-auto w-full overflow-y-auto custom-scrollbar p-4 md:p-8 relative z-0">
+        <main className="flex-1 max-w-7xl mx-auto w-full overflow-y-auto custom-scrollbar p-4 md:p-8 relative z-0" style={{ paddingTop: activeTab === 'tools' ? 'max(env(safe-area-inset-top), 16px)' : undefined }}>
             {activeTab === 'learn' && (
             <div className="space-y-6 pb-24">
                 <div className="text-center py-6 mt-2 relative">
@@ -985,12 +994,12 @@ function AppContent() {
             {activeTab === 'quiz' && <Test isDarkMode={isDarkMode} />}
         </main>
       ) : (
-        <div className={`flex-1 relative w-full h-full md:pb-0 z-0 ${activeAppTab ? 'hidden' : 'block'}`}>
+        <div className={`flex-1 relative w-full h-full md:pb-0 z-0 ${activeAppTab ? 'hidden' : 'block'}`} style={{ paddingTop: 'max(env(safe-area-inset-top), 0px)' }}>
              <ChatBot messages={chatMessages} setMessages={setChatMessages} isDarkMode={isDarkMode} />
         </div>
       )}
 
-      <div className={`md:hidden absolute bottom-0 w-full p-4 z-50 pointer-events-none transition-all duration-300 ease-in-out ${isKeyboardOpen ? 'translate-y-32 opacity-0' : 'translate-y-0 opacity-100'}`}>
+      <div className={`md:hidden absolute bottom-0 w-full p-4 z-50 pointer-events-none transition-all duration-300 ease-in-out ${(isKeyboardOpen || activeAppTab) ? 'translate-y-32 opacity-0' : 'translate-y-0 opacity-100'}`}>
           <nav className={`pointer-events-auto backdrop-blur-2xl border flex justify-around p-3 pb-safe rounded-[32px] shadow-2xl transition-all duration-500 ${isDarkMode ? 'bg-[#121212]/80 border-white/10 shadow-black/80' : 'bg-white/80 border-black/5 shadow-[#0277C5]/10'}`}>
             {['learn', 'quiz', 'tools', 'ai'].map(t_id => (
                 <button key={t_id} onClick={() => { 
