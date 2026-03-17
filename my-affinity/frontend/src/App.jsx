@@ -309,46 +309,29 @@ const LessonModal = ({ lesson, onClose, isDarkMode, completedSteps, setCompleted
                                             onLoad={() => setIsVideoLoading(false)}
                                         />
                                         
-                                        {/* 🛡️ CALIBRATED PASSIVE DEAD-ZONE SHIELDS 🛡️ */}
-                                        
-                                        {/* 1. Top-Left: Channel Avatar & Title */}
+                                        {/* 🛡️ PRECISION DEAD-ZONE SHIELDS 🛡️ */}
+                                        {/* Using <div> and stopping ALL pointer events so they never trigger fullscreen! */}
+
+                                        {/* 1. Top-Left: Channel Avatar & Title. Leaves Top-Right completely open for Gear, CC, and Watch Later! */}
                                         <div 
-                                            className="absolute top-0 left-0 w-[60%] lg:w-[calc(100%-280px)] h-[80px] z-30 bg-transparent no-callout cursor-default" 
-                                            onContextMenu={e => e.preventDefault()}
+                                            className="absolute top-0 left-0 w-[calc(100%-180px)] h-[60px] z-30 bg-transparent no-callout cursor-default" 
+                                            onContextMenu={e => e.preventDefault()} 
                                             onClick={e => { e.preventDefault(); e.stopPropagation(); }}
                                             onDoubleClick={e => { e.preventDefault(); e.stopPropagation(); }}
+                                            onTouchStart={e => e.stopPropagation()}
+                                            onTouchEnd={e => e.stopPropagation()}
+                                            onPointerDown={e => e.stopPropagation()}
                                         />
 
-                                        {/* 2. Top-Right (Desktop Only): Watch Later & Share */}
+                                        {/* 2. YouTube Watermark (PC): Floats 50px above the bottom edge, leaving the entire Control Bar open for Volume, Fullscreen & Gear! */}
                                         <div 
-                                            className="hidden lg:block absolute top-0 right-0 w-[280px] h-[80px] z-30 bg-transparent no-callout cursor-default" 
-                                            onContextMenu={e => e.preventDefault()}
+                                            className="hidden sm:block absolute bottom-[50px] right-[10px] w-[90px] h-[30px] z-30 bg-transparent no-callout cursor-default" 
+                                            onContextMenu={e => e.preventDefault()} 
                                             onClick={e => { e.preventDefault(); e.stopPropagation(); }}
                                             onDoubleClick={e => { e.preventDefault(); e.stopPropagation(); }}
-                                        />
-
-                                        {/* 3. Top-Right Edge (Mobile/Landscape Phone): Blocks 3-dots, allows Gear */}
-                                        <div 
-                                            className="lg:hidden absolute top-0 right-0 w-[75px] h-[75px] z-30 bg-transparent no-callout cursor-default" 
-                                            onContextMenu={e => e.preventDefault()}
-                                            onClick={e => { e.preventDefault(); e.stopPropagation(); }}
-                                            onDoubleClick={e => { e.preventDefault(); e.stopPropagation(); }}
-                                        />
-
-                                        {/* 4. Bottom-Left (Mobile & Tablet Portrait): Blocks Mobile Share Arrow */}
-                                        <div 
-                                            className="lg:hidden absolute bottom-0 left-0 w-[160px] h-[80px] z-30 bg-transparent no-callout cursor-default" 
-                                            onContextMenu={e => e.preventDefault()}
-                                            onClick={e => { e.preventDefault(); e.stopPropagation(); }}
-                                            onDoubleClick={e => { e.preventDefault(); e.stopPropagation(); }}
-                                        />
-
-                                        {/* 5. Bottom-Right (All Devices): YouTube Logo Watermark */}
-                                        <div 
-                                            className="absolute bottom-0 right-0 w-[140px] h-[70px] z-30 bg-transparent no-callout cursor-default" 
-                                            onContextMenu={e => e.preventDefault()}
-                                            onClick={e => { e.preventDefault(); e.stopPropagation(); }}
-                                            onDoubleClick={e => { e.preventDefault(); e.stopPropagation(); }}
+                                            onTouchStart={e => e.stopPropagation()}
+                                            onTouchEnd={e => e.stopPropagation()}
+                                            onPointerDown={e => e.stopPropagation()}
                                         />
                                     </>
                                 )}
@@ -717,6 +700,12 @@ function AppContent() {
         document.removeEventListener('focusin', handleFocusIn);
         document.removeEventListener('focusout', handleFocusOut);
     };
+  }, []);
+
+  useEffect(() => {
+      if (typeof window !== 'undefined' && window.screen && window.screen.orientation && window.screen.orientation.unlock) {
+          try { window.screen.orientation.unlock(); } catch (e) {}
+      }
   }, []);
 
   const handleOpenCourse = (courseId) => {
@@ -1472,7 +1461,7 @@ function AppContent() {
                     {t_id === 'quiz' && <Award size={24} className={activeTab === t_id ? 'drop-shadow-md' : ''}/>}
                     {t_id === 'tools' && <Zap size={24} className={activeTab === t_id ? 'drop-shadow-md' : ''}/>}
                     {t_id === 'ai' && <Bot size={24} className={activeTab === t_id ? 'drop-shadow-md' : ''}/>}
-                    <span className="text-[10px] font-black uppercase tracking-widest">{t(`tab_${t_id}`)}</span>
+                    <span className="text-[9px] font-black uppercase tracking-widest">{t(`tab_${t_id}`)}</span>
                 </button>
             ))}
           </nav>
