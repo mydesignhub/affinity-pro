@@ -14,6 +14,7 @@ const LessonModal = ({ lesson, onClose, isDarkMode, completedSteps, setCompleted
   const [isVisible, setIsVisible] = useState(false);
   const [activeStep, setActiveStep] = useState(0);
   const [isVideoLoading, setIsVideoLoading] = useState(true);
+  
   const [hasStarted, setHasStarted] = useState(false);
   const [previewEnded, setPreviewEnded] = useState(false);
   const [isCssFullscreen, setIsCssFullscreen] = useState(false);
@@ -42,7 +43,9 @@ const LessonModal = ({ lesson, onClose, isDarkMode, completedSteps, setCompleted
       if (expandedItem !== null) {
           setTimeout(() => {
               const el = document.getElementById(`lesson-item-${expandedItem}`);
-              if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+              if (el) {
+                  el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+              }
           }, 150);
       }
   }, [expandedItem]);
@@ -90,9 +93,13 @@ const LessonModal = ({ lesson, onClose, isDarkMode, completedSteps, setCompleted
           const isStandardFs = document.fullscreenElement || document.webkitFullscreenElement;
           
           if (!isStandardFs && !isCssFullscreen) {
-              if (elem.requestFullscreen) await elem.requestFullscreen();
-              else if (elem.webkitRequestFullscreen) elem.webkitRequestFullscreen(); 
-              else setIsCssFullscreen(true);
+              if (elem.requestFullscreen) {
+                  await elem.requestFullscreen();
+              } else if (elem.webkitRequestFullscreen) {
+                  elem.webkitRequestFullscreen(); 
+              } else {
+                  setIsCssFullscreen(true);
+              }
               
               if (window.screen && window.screen.orientation && window.screen.orientation.lock) {
                   try { await window.screen.orientation.lock('landscape'); } catch (e) {}
@@ -116,7 +123,7 @@ const LessonModal = ({ lesson, onClose, isDarkMode, completedSteps, setCompleted
 
   const onTouchStart = (e) => {
       const scrollTop = modalRef.current?.querySelector('.scroll-content')?.scrollTop || 0;
-      if (scrollTop <= 0) dragStartY.current = e.touches[0].clientY;
+      if (scrollTop <= 0) { dragStartY.current = e.touches[0].clientY; }
   };
   const onTouchMove = (e) => {
       if (dragStartY.current === null || isCssFullscreen) return;
@@ -125,7 +132,7 @@ const LessonModal = ({ lesson, onClose, isDarkMode, completedSteps, setCompleted
   };
   const onTouchEnd = () => { 
       if (isCssFullscreen) return;
-      if (dragOffset > 150) handleClose(); else setDragOffset(0); 
+      if (dragOffset > 150) { handleClose(); } else { setDragOffset(0); } 
       dragStartY.current = null; 
   };
   
@@ -145,6 +152,7 @@ const LessonModal = ({ lesson, onClose, isDarkMode, completedSteps, setCompleted
       }
   };
 
+  // 🌟 SECURITY FIX: fs=0 forces users to use our Fullscreen button, keeping shields active
   const getVideoUrl = (url) => {
       if (!url) return '';
       const separator = url.includes('?') ? '&' : '?';
@@ -159,13 +167,6 @@ const LessonModal = ({ lesson, onClose, isDarkMode, completedSteps, setCompleted
     <div className={`fixed inset-0 z-[250] flex items-end sm:items-center justify-center p-0 sm:p-6 transition-opacity duration-300 ${isVisible ? 'opacity-100' : 'opacity-0'}`}>
       
       <div className="absolute inset-0 bg-black/60 backdrop-blur-md" style={{ opacity: Math.max(0, opacity) }} onClick={handleClose} />
-
-      <style>{`
-          .video-container:fullscreen { width: 100vw !important; height: 100dvh !important; max-width: none !important; max-height: none !important; border-radius: 0 !important; border: none !important; background: black; display: flex !important; align-items: center !important; justify-content: center !important; }
-          .video-container:-webkit-full-screen { width: 100vw !important; height: 100dvh !important; max-width: none !important; max-height: none !important; border-radius: 0 !important; border: none !important; background: black; display: flex !important; align-items: center !important; justify-content: center !important; }
-          .video-container:fullscreen iframe { width: 100% !important; height: 100% !important; object-fit: cover; }
-          .video-container:-webkit-full-screen iframe { width: 100% !important; height: 100% !important; object-fit: cover; }
-      `}</style>
 
       <div 
           ref={modalRef} 
@@ -210,7 +211,7 @@ const LessonModal = ({ lesson, onClose, isDarkMode, completedSteps, setCompleted
 
             {currentStepData && (
                 <div className={isCssFullscreen ? 'w-full h-full' : 'mb-6'}>
-                    <div ref={containerRef} className={`video-container w-full relative overflow-hidden flex flex-col items-center justify-center group shadow-lg shrink-0 bg-black transition-all duration-300
+                    <div ref={containerRef} className={`w-full relative overflow-hidden flex flex-col items-center justify-center group shadow-lg shrink-0 bg-black transition-all duration-300
                         ${isCssFullscreen 
                             ? '!fixed !top-0 !left-0 !right-0 !bottom-0 !z-[999999] !w-full !h-[100dvh] !rounded-none !border-none !m-0 !p-0' 
                             : `aspect-video rounded-2xl border ${isDarkMode ? 'border-[#2C2C2C]' : 'border-black'}`
@@ -268,46 +269,17 @@ const LessonModal = ({ lesson, onClose, isDarkMode, completedSteps, setCompleted
                                             ref={videoRef}
                                             src={getVideoUrl(currentStepData.videoUrl)}
                                             className={`w-full h-full absolute inset-0 transition-opacity duration-700 ease-in-out ${isVideoLoading ? 'opacity-0' : 'opacity-100 z-20'}`}
+                                            // 🌟 SECURITY FIX: Sandbox prevents "Watch on YouTube" links from escaping the app!
                                             sandbox="allow-scripts allow-same-origin allow-presentation"
-                                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; fullscreen" 
+                                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
                                             referrerPolicy="strict-origin-when-cross-origin"
                                             allowFullScreen
                                             title={`Step ${currentStepData.id} Video`}
                                             onLoad={() => setIsVideoLoading(false)}
-                                            style={isCssFullscreen ? { objectFit: 'cover' } : {}}
                                         />
                                         
-                                        {/* 🛡️ SIMPLE INVISIBLE SECURITY SHIELDS 🛡️ */}
-                                        
-                                        {/* 1. Top-Left: Blocks Avatar & Title */}
-                                        <div 
-                                            className="absolute top-0 left-0 w-[70%] sm:w-[calc(100%-160px)] h-[70px] z-30 bg-transparent cursor-default" 
-                                            style={{ WebkitTouchCallout: 'none' }} onContextMenu={e => e.preventDefault()} 
-                                        />
-
-                                        {/* 2. Top-Right (Desktop Only): Blocks Watch Later & Share */}
-                                        <div 
-                                            className="hidden sm:block absolute top-0 right-0 w-[160px] h-[70px] z-30 bg-transparent cursor-default" 
-                                            style={{ WebkitTouchCallout: 'none' }} onContextMenu={e => e.preventDefault()} 
-                                        />
-
-                                        {/* 3. Top-Right Edge (Mobile Only): Blocks 3-dots, allows Gear */}
-                                        <div 
-                                            className="sm:hidden absolute top-0 right-0 w-[45px] h-[60px] z-30 bg-transparent cursor-default" 
-                                            style={{ WebkitTouchCallout: 'none' }} onContextMenu={e => e.preventDefault()} 
-                                        />
-
-                                        {/* 4. Bottom-Left (Mobile Only): Blocks Share Arrow */}
-                                        <div 
-                                            className="sm:hidden absolute bottom-0 left-0 w-[70px] h-[60px] z-30 bg-transparent cursor-default" 
-                                            style={{ WebkitTouchCallout: 'none' }} onContextMenu={e => e.preventDefault()} 
-                                        />
-
-                                        {/* 5. Bottom-Right (All Devices): Blocks YouTube Logo */}
-                                        <div 
-                                            className="absolute bottom-0 right-0 w-[80px] h-[60px] z-30 bg-transparent cursor-default" 
-                                            style={{ WebkitTouchCallout: 'none' }} onContextMenu={e => e.preventDefault()} 
-                                        />
+                                        {/* 🌟 SECURITY FIX: Physical Shield strictly over the Top Bar (Share/Title) */}
+                                        <div className="absolute top-0 left-0 w-full h-[70px] z-30 bg-transparent" />
                                     </>
                                 )}
                             </>
@@ -327,6 +299,7 @@ const LessonModal = ({ lesson, onClose, isDarkMode, completedSteps, setCompleted
                                 onClick={toggleFullScreen}
                                 className={`flex-1 py-3.5 rounded-xl flex items-center justify-center gap-2 font-bold font-khmer text-[13px] sm:text-[14px] transition-all active:scale-[0.98] shadow-sm border ${isDarkMode ? 'bg-[#1E1E1E] border-[#2C2C2C] text-[#F1F1F1] hover:bg-[#2C2C2C]' : 'bg-white border-[#E5E7EB] text-[#1A1A1A] hover:bg-[#F8F9FA]'}`}
                             >
+                                {/* 🌟 DYNAMIC BUTTON TEXT & ICONS 🌟 */}
                                 {isCssFullscreen ? (
                                     <>
                                         <Minimize size={18} className={isDarkMode ? 'text-[#41B6E6]' : 'text-[#0277C5]'} />
@@ -452,3 +425,5 @@ const LessonModal = ({ lesson, onClose, isDarkMode, completedSteps, setCompleted
     </div>
   );
 };
+
+export default LessonModal;
