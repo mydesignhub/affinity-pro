@@ -310,28 +310,51 @@ const LessonModal = ({ lesson, onClose, isDarkMode, completedSteps, setCompleted
                                         />
                                         
                                         {/* 🛡️ PRECISION DEAD-ZONE SHIELDS 🛡️ */}
-                                        {/* Using <div> and stopping ALL pointer events so they never trigger fullscreen! */}
+                                        {/* Using <div> and stopping ALL pointer events so they never trigger fullscreen or interact with YouTube! */}
 
-                                        {/* 1. Top-Left: Channel Avatar & Title. Leaves Top-Right completely open for Gear, CC, and Watch Later! */}
+                                        {/* 1. Mobile Top Bar: Blocks Avatar, Title, Watch Later, Share. Leaves far-right 60px open for mobile Gear/3-dots */}
                                         <div 
-                                            className="absolute top-0 left-0 w-[calc(100%-180px)] h-[60px] z-30 bg-transparent no-callout cursor-default" 
+                                            className="lg:hidden absolute top-0 left-0 right-[60px] h-[70px] z-30 bg-transparent no-callout cursor-default" 
                                             onContextMenu={e => e.preventDefault()} 
                                             onClick={e => { e.preventDefault(); e.stopPropagation(); }}
                                             onDoubleClick={e => { e.preventDefault(); e.stopPropagation(); }}
-                                            onTouchStart={e => e.stopPropagation()}
-                                            onTouchEnd={e => e.stopPropagation()}
-                                            onPointerDown={e => e.stopPropagation()}
+                                            onTouchStart={e => e.stopPropagation()} onTouchEnd={e => e.stopPropagation()} onPointerDown={e => e.stopPropagation()}
                                         />
 
-                                        {/* 2. YouTube Watermark (PC): Floats 50px above the bottom edge, leaving the entire Control Bar open for Volume, Fullscreen & Gear! */}
+                                        {/* 2. PC Top Bar: Blocks entirely. Gear is at the bottom on PC, so we can safely block everything up top (Watch Later, Share, Title) */}
                                         <div 
-                                            className="hidden sm:block absolute bottom-[50px] right-[10px] w-[90px] h-[30px] z-30 bg-transparent no-callout cursor-default" 
+                                            className="hidden lg:block absolute top-0 left-0 w-full h-[80px] z-30 bg-transparent no-callout cursor-default" 
                                             onContextMenu={e => e.preventDefault()} 
                                             onClick={e => { e.preventDefault(); e.stopPropagation(); }}
                                             onDoubleClick={e => { e.preventDefault(); e.stopPropagation(); }}
-                                            onTouchStart={e => e.stopPropagation()}
-                                            onTouchEnd={e => e.stopPropagation()}
-                                            onPointerDown={e => e.stopPropagation()}
+                                            onTouchStart={e => e.stopPropagation()} onTouchEnd={e => e.stopPropagation()} onPointerDown={e => e.stopPropagation()}
+                                        />
+
+                                        {/* 3. Mobile Bottom-Left: Blocks Mobile Share Arrow */}
+                                        <div 
+                                            className="lg:hidden absolute bottom-0 left-0 w-[80px] h-[60px] z-30 bg-transparent no-callout cursor-default" 
+                                            onContextMenu={e => e.preventDefault()} 
+                                            onClick={e => { e.preventDefault(); e.stopPropagation(); }}
+                                            onDoubleClick={e => { e.preventDefault(); e.stopPropagation(); }}
+                                            onTouchStart={e => e.stopPropagation()} onTouchEnd={e => e.stopPropagation()} onPointerDown={e => e.stopPropagation()}
+                                        />
+
+                                        {/* 4. Mobile Bottom-Right: Blocks YouTube Logo */}
+                                        <div 
+                                            className="lg:hidden absolute bottom-0 right-0 w-[120px] h-[55px] z-30 bg-transparent no-callout cursor-default" 
+                                            onContextMenu={e => e.preventDefault()} 
+                                            onClick={e => { e.preventDefault(); e.stopPropagation(); }}
+                                            onDoubleClick={e => { e.preventDefault(); e.stopPropagation(); }}
+                                            onTouchStart={e => e.stopPropagation()} onTouchEnd={e => e.stopPropagation()} onPointerDown={e => e.stopPropagation()}
+                                        />
+
+                                        {/* 5. PC Bottom-Right (Floating Watermark): Floats 48px up to block the YouTube logo but leaves the Control Bar (Gear, Volume, CC) entirely clickable! */}
+                                        <div 
+                                            className="hidden lg:block absolute bottom-[48px] right-[10px] w-[100px] h-[40px] z-30 bg-transparent no-callout cursor-default" 
+                                            onContextMenu={e => e.preventDefault()} 
+                                            onClick={e => { e.preventDefault(); e.stopPropagation(); }}
+                                            onDoubleClick={e => { e.preventDefault(); e.stopPropagation(); }}
+                                            onTouchStart={e => e.stopPropagation()} onTouchEnd={e => e.stopPropagation()} onPointerDown={e => e.stopPropagation()}
                                         />
                                     </>
                                 )}
@@ -1451,18 +1474,18 @@ function AppContent() {
       <div className={`md:hidden absolute bottom-0 w-full p-4 z-50 pointer-events-none transition-all duration-300 ease-in-out ${(isKeyboardOpen || activeAppTab) ? 'translate-y-32 opacity-0' : 'translate-y-0 opacity-100'}`}>
           <nav className={`pointer-events-auto backdrop-blur-2xl border flex justify-around p-3 pb-safe rounded-[32px] shadow-2xl transition-all duration-500 ${isDarkMode ? 'bg-[#1C1C1E]/80 border-white/10 shadow-[0_-5px_30px_rgba(0,0,0,0.3)]' : 'bg-white/80 border-black/5 shadow-[#0277C5]/10'}`}>
             {['learn', 'quiz', 'tools', 'ai'].map(t_id => (
-                <button key={t_id} onClick={() => { 
+                <div key={t_id} onClick={() => { 
                     setActiveTab(t_id);
                     setActiveAppTab(null);
                     triggerHaptic(); 
                     window.history.pushState({ modalOpen: false, tab: t_id, course: null }, '');
-                }} className={`flex flex-col items-center gap-1.5 transition-all duration-500 ease-out ${activeTab === t_id ? (isDarkMode ? 'text-[#41B6E6] -translate-y-1.5' : 'text-[#0277C5] -translate-y-1.5') : (isDarkMode ? 'text-[#A0A0A0] hover:text-[#F1F1F1]' : 'text-[#6B7280] hover:text-[#1A1A1A]')}`}>
+                }} className={`flex flex-col items-center gap-1.5 transition-all duration-500 ease-out cursor-pointer ${activeTab === t_id ? (isDarkMode ? 'text-[#41B6E6] -translate-y-1.5' : 'text-[#0277C5] -translate-y-1.5') : (isDarkMode ? 'text-[#A0A0A0] hover:text-[#F1F1F1]' : 'text-[#6B7280] hover:text-[#1A1A1A]')}`}>
                     {t_id === 'learn' && <BookOpen size={24} className={activeTab === t_id ? 'drop-shadow-md' : ''}/>}
                     {t_id === 'quiz' && <Award size={24} className={activeTab === t_id ? 'drop-shadow-md' : ''}/>}
                     {t_id === 'tools' && <Zap size={24} className={activeTab === t_id ? 'drop-shadow-md' : ''}/>}
                     {t_id === 'ai' && <Bot size={24} className={activeTab === t_id ? 'drop-shadow-md' : ''}/>}
-                    <span className="text-[9px] font-black uppercase tracking-widest">{t(`tab_${t_id}`)}</span>
-                </button>
+                    <span className="text-[10px] font-black uppercase tracking-widest">{t(`tab_${t_id}`)}</span>
+                </div>
             ))}
           </nav>
       </div>
