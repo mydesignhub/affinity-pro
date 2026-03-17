@@ -39,7 +39,6 @@ const ONE_YEAR_MS = 365 * 24 * 60 * 60 * 1000;
 const SEVEN_DAYS_MS = 7 * 24 * 60 * 60 * 1000;
 const ADMIN_EMAIL = 'koymy.mlk@gmail.com';
 
-// 🌟 REFACTORED LESSON MODAL WITH SMART RESPONSIVE SHIELDS 🌟
 const LessonModal = ({ lesson, onClose, isDarkMode, completedSteps, setCompletedSteps, isPurchased, onUnlockDemo }) => {
   const { lang } = useLanguage();
   const [isVisible, setIsVisible] = useState(false);
@@ -123,6 +122,7 @@ const LessonModal = ({ lesson, onClose, isDarkMode, completedSteps, setCompleted
           if (!isStandardFs && !isCssFullscreen) {
               if (elem.requestFullscreen) {
                   await elem.requestFullscreen();
+                  // 🌟 ANDROID FIX: Explicitly command Chrome to unlock orientation sensors
                   try { window.screen.orientation.unlock(); } catch (e) {}
               }
               else if (elem.webkitRequestFullscreen) {
@@ -195,16 +195,9 @@ const LessonModal = ({ lesson, onClose, isDarkMode, completedSteps, setCompleted
       <style>{`
           .video-container:fullscreen { width: 100vw !important; height: 100dvh !important; max-width: none !important; max-height: none !important; border-radius: 0 !important; border: none !important; background: black; display: flex !important; align-items: center !important; justify-content: center !important; }
           .video-container:-webkit-full-screen { width: 100vw !important; height: 100dvh !important; max-width: none !important; max-height: none !important; border-radius: 0 !important; border: none !important; background: black; display: flex !important; align-items: center !important; justify-content: center !important; }
-          .video-container:fullscreen iframe { width: 100% !important; height: 100% !important; }
-          .video-container:-webkit-full-screen iframe { width: 100% !important; height: 100% !important; }
-          
-          /* 🌟 STRICT PREVENTION OF SAFARI LONG-PRESS CONTEXT MENU 🌟 */
-          .no-callout {
-              -webkit-touch-callout: none !important;
-              -webkit-user-select: none !important;
-              user-select: none !important;
-              outline: none !important;
-          }
+          .video-container:fullscreen iframe { width: 100% !important; height: 100% !important; object-fit: cover; }
+          .video-container:-webkit-full-screen iframe { width: 100% !important; height: 100% !important; object-fit: cover; }
+          .no-callout { -webkit-touch-callout: none !important; -webkit-user-select: none !important; user-select: none !important; outline: none !important; }
       `}</style>
 
       <div 
@@ -304,7 +297,6 @@ const LessonModal = ({ lesson, onClose, isDarkMode, completedSteps, setCompleted
                                             </div>
                                         )}
 
-                                        {/* 🌟 KEYBOARD & SELECTION LOCK: tabIndex="-1" 🌟 */}
                                         <iframe 
                                             ref={videoRef}
                                             tabIndex="-1"
@@ -318,51 +310,36 @@ const LessonModal = ({ lesson, onClose, isDarkMode, completedSteps, setCompleted
                                             onLoad={() => setIsVideoLoading(false)}
                                         />
                                         
-                                        {/* 🛡️ ACTIVE TRAPDOOR SHIELDS 🛡️ */}
+                                        {/* 🛡️ PASSIVE INVISIBLE SHIELDS 🛡️ */}
                                         
                                         {/* 1. Top-Left: Channel Avatar & Title */}
-                                        <button 
-                                            onClick={(e) => { e.preventDefault(); toggleFullScreen(); }}
-                                            className="absolute top-0 left-0 w-[70%] sm:w-[calc(100%-280px)] h-[70px] z-30 bg-transparent no-callout cursor-pointer outline-none border-none" 
+                                        <div 
+                                            className="absolute top-0 left-0 w-[70%] sm:w-[calc(100%-280px)] h-[70px] z-30 bg-transparent no-callout cursor-default" 
                                             onContextMenu={e => e.preventDefault()} 
-                                            tabIndex="-1"
-                                            aria-hidden="true"
                                         />
 
                                         {/* 2. Top-Right (Desktop/iPad PC mode): Watch Later & Share */}
-                                        <button 
-                                            onClick={(e) => { e.preventDefault(); toggleFullScreen(); }}
-                                            className="hidden sm:block absolute top-0 right-0 w-[280px] h-[80px] z-30 bg-transparent no-callout cursor-pointer outline-none border-none" 
+                                        <div 
+                                            className="hidden sm:block absolute top-0 right-0 w-[280px] h-[80px] z-30 bg-transparent no-callout cursor-default" 
                                             onContextMenu={e => e.preventDefault()} 
-                                            tabIndex="-1"
-                                            aria-hidden="true"
                                         />
 
                                         {/* 3. Top-Right Edge (Mobile): Blocks 3-dots, allows Gear */}
-                                        <button 
-                                            onClick={(e) => { e.preventDefault(); toggleFullScreen(); }}
-                                            className="sm:hidden absolute top-0 right-0 w-[60px] h-[60px] z-30 bg-transparent no-callout cursor-pointer outline-none border-none" 
+                                        <div 
+                                            className="sm:hidden absolute top-0 right-0 w-[60px] h-[60px] z-30 bg-transparent no-callout cursor-default" 
                                             onContextMenu={e => e.preventDefault()} 
-                                            tabIndex="-1"
-                                            aria-hidden="true"
                                         />
 
-                                        {/* 4. Bottom-Left (Mobile & Tablet Portrait): Blocks Mobile Share Arrow */}
-                                        <button 
-                                            onClick={(e) => { e.preventDefault(); toggleFullScreen(); }}
-                                            className="lg:hidden absolute bottom-0 left-0 w-[80px] h-[60px] z-30 bg-transparent no-callout cursor-pointer outline-none border-none" 
+                                        {/* 4. Bottom-Left (Mobile Only): Blocks Mobile Share Arrow */}
+                                        <div 
+                                            className="lg:hidden absolute bottom-0 left-0 w-[80px] h-[60px] z-30 bg-transparent no-callout cursor-default" 
                                             onContextMenu={e => e.preventDefault()} 
-                                            tabIndex="-1"
-                                            aria-hidden="true"
                                         />
 
                                         {/* 5. Bottom-Right (All Devices): YouTube Logo Watermark */}
-                                        <button 
-                                            onClick={(e) => { e.preventDefault(); toggleFullScreen(); }}
-                                            className="absolute bottom-0 right-0 w-[120px] h-[60px] z-30 bg-transparent no-callout cursor-pointer outline-none border-none" 
+                                        <div 
+                                            className="absolute bottom-0 right-0 w-[120px] h-[60px] z-30 bg-transparent no-callout cursor-default" 
                                             onContextMenu={e => e.preventDefault()} 
-                                            tabIndex="-1"
-                                            aria-hidden="true"
                                         />
                                     </>
                                 )}
