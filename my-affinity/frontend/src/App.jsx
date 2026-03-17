@@ -124,20 +124,12 @@ const LessonModal = ({ lesson, onClose, isDarkMode, completedSteps, setCompleted
               if (elem.requestFullscreen) await elem.requestFullscreen();
               else if (elem.webkitRequestFullscreen) elem.webkitRequestFullscreen(); 
               else setIsCssFullscreen(true);
-              
-              if (window.screen && window.screen.orientation && window.screen.orientation.lock) {
-                  try { await window.screen.orientation.lock('landscape'); } catch (e) {}
-              }
           } else {
               if (isStandardFs) {
                   if (document.exitFullscreen) await document.exitFullscreen();
                   else if (document.webkitExitFullscreen) document.webkitExitFullscreen();
               }
               setIsCssFullscreen(false);
-              
-              if (window.screen && window.screen.orientation && window.screen.orientation.unlock) {
-                  window.screen.orientation.unlock();
-              }
           }
       } catch (err) {
           console.error("Fullscreen API error:", err);
