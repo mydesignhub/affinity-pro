@@ -152,12 +152,11 @@ const LessonModal = ({ lesson, onClose, isDarkMode, completedSteps, setCompleted
       }
   };
 
-  // 🌟 SECURITY FIX: fs=0 forces users to use our Fullscreen button, keeping shields active
   const getVideoUrl = (url) => {
       if (!url) return '';
       const separator = url.includes('?') ? '&' : '?';
       return isPurchased 
-          ? `${url}${separator}autoplay=1&playsinline=1&fs=0&modestbranding=1&rel=0` 
+          ? `${url}${separator}autoplay=1&playsinline=1&fs=1&modestbranding=1&rel=0` 
           : `${url}${separator}end=20&controls=0&disablekb=1&rel=0&autoplay=1&playsinline=1&fs=0&modestbranding=1`;
   };
 
@@ -168,6 +167,7 @@ const LessonModal = ({ lesson, onClose, isDarkMode, completedSteps, setCompleted
       
       <div className="absolute inset-0 bg-black/60 backdrop-blur-md" style={{ opacity: Math.max(0, opacity) }} onClick={handleClose} />
 
+      {/* 🌟 ESCAPE HATCH: We conditionally remove transforms and blurs when fullscreen is active 🌟 */}
       <div 
           ref={modalRef} 
           className={`relative w-full h-full flex flex-col ease-spring ring-1 
@@ -184,6 +184,7 @@ const LessonModal = ({ lesson, onClose, isDarkMode, completedSteps, setCompleted
           onTouchStart={onTouchStart} onTouchMove={onTouchMove} onTouchEnd={onTouchEnd}
       >
         
+        {/* Header - Hides completely when in Custom Fullscreen */}
         {!isCssFullscreen && (
             <div className={`flex flex-col border-b sticky top-0 z-20 shrink-0 sm:rounded-t-3xl ${isDarkMode ? 'border-[#2C2C2C] bg-[#1E1E1E]/80 backdrop-blur-xl' : 'border-[#E5E7EB] bg-[#FFFFFF]/80 backdrop-blur-xl'}`} style={{ paddingTop: 'env(safe-area-inset-top)' }}>
                 <div className="w-full flex justify-center pt-3 pb-1 shrink-0 cursor-grab active:cursor-grabbing sm:hidden" onClick={handleClose}>
@@ -269,17 +270,14 @@ const LessonModal = ({ lesson, onClose, isDarkMode, completedSteps, setCompleted
                                             ref={videoRef}
                                             src={getVideoUrl(currentStepData.videoUrl)}
                                             className={`w-full h-full absolute inset-0 transition-opacity duration-700 ease-in-out ${isVideoLoading ? 'opacity-0' : 'opacity-100 z-20'}`}
-                                            // 🌟 SECURITY FIX: Sandbox prevents "Watch on YouTube" links from escaping the app!
-                                            sandbox="allow-scripts allow-same-origin allow-presentation"
-                                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; fullscreen" 
                                             referrerPolicy="strict-origin-when-cross-origin"
                                             allowFullScreen
                                             title={`Step ${currentStepData.id} Video`}
                                             onLoad={() => setIsVideoLoading(false)}
                                         />
                                         
-                                        {/* 🌟 SECURITY FIX: Physical Shield strictly over the Top Bar (Share/Title) */}
-                                        <div className="absolute top-0 left-0 w-full h-[70px] z-30 bg-transparent" />
+                                        <div className="absolute bottom-0 left-0 w-full h-[60px] z-30 bg-transparent" />
                                     </>
                                 )}
                             </>
@@ -299,18 +297,8 @@ const LessonModal = ({ lesson, onClose, isDarkMode, completedSteps, setCompleted
                                 onClick={toggleFullScreen}
                                 className={`flex-1 py-3.5 rounded-xl flex items-center justify-center gap-2 font-bold font-khmer text-[13px] sm:text-[14px] transition-all active:scale-[0.98] shadow-sm border ${isDarkMode ? 'bg-[#1E1E1E] border-[#2C2C2C] text-[#F1F1F1] hover:bg-[#2C2C2C]' : 'bg-white border-[#E5E7EB] text-[#1A1A1A] hover:bg-[#F8F9FA]'}`}
                             >
-                                {/* 🌟 DYNAMIC BUTTON TEXT & ICONS 🌟 */}
-                                {isCssFullscreen ? (
-                                    <>
-                                        <Minimize size={18} className={isDarkMode ? 'text-[#41B6E6]' : 'text-[#0277C5]'} />
-                                        {lang === 'en' ? 'Exit Fullscreen' : 'ចាកចេញពីអេក្រង់ពេញ'}
-                                    </>
-                                ) : (
-                                    <>
-                                        <Maximize size={18} className={isDarkMode ? 'text-[#41B6E6]' : 'text-[#0277C5]'} />
-                                        {lang === 'en' ? 'Watch Fullscreen' : 'មើលពេញអេក្រង់'}
-                                    </>
-                                )}
+                                <Maximize size={18} className={isDarkMode ? 'text-[#41B6E6]' : 'text-[#0277C5]'} />
+                                {lang === 'en' ? 'Rotate Fullscreen' : 'មើលពេញអេក្រង់'}
                             </button>
 
                             {!isPurchased && (
