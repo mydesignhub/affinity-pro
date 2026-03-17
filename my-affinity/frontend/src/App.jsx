@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { ChevronRight, PlayCircle, Sparkles, Zap, Facebook, Send, Globe, BookOpen, Award, Bot, Camera, PenTool, Book, Lock, KeyRound, AlertCircle, ChevronDown, RotateCcw, Crown, LogOut, Copy, ShieldCheck } from 'lucide-react';
+import { ChevronRight, PlayCircle, Sparkles, Zap, Facebook, Send, Globe, BookOpen, Award, Bot, Camera, PenTool, Book, Lock, KeyRound, AlertCircle, ChevronDown, RotateCcw, Crown, LogOut, Copy, ShieldCheck, CheckCircle } from 'lucide-react';
 
 // FIREBASE IMPORTS
 import { signInWithPopup, signOut } from 'firebase/auth';
@@ -30,7 +30,6 @@ const APP_THEMES = {
     publisher: { gradient: 'from-[#D7383D] to-[#532463]', text: 'text-[#D7383D]', bg: 'bg-[#D7383D]', border: 'border-[#D7383D]', lightBg: 'bg-[#D7383D]/10' }
 };
 
-// 🌟 UPDATED: Fallback manual codes with clear app prefixes
 const VALID_PASSCODES = {
     photo: ['PHOTO-A1B2C', 'PHOTO-X9Y8Z'],
     designer: ['DESIGN-A1B2C', 'DESIGN-X9Y8Z'],
@@ -140,8 +139,10 @@ function AppContent() {
   const isAdmin = user?.email === ADMIN_EMAIL;
 
   // ADMIN GENERATOR STATE
-  const [genAmount, setGenAmount] = useState(1);
+  const [genAmount, setGenAmount] = useState(5);
   const [generatedKeys, setGeneratedKeys] = useState('');
+  const [copiedAll, setCopiedAll] = useState(false);
+  const [copiedCode, setCopiedCode] = useState(null);
 
   const [purchasedCourses, setPurchasedCourses] = useState({ photo: null, designer: null, publisher: null });
   const [passcodeInput, setPasscodeInput] = useState('');
@@ -387,7 +388,6 @@ function AppContent() {
       }
   };
 
-  // 🌟 UPDATED: Dynamic prefix generation
   const handleGenerateAdminKeys = async () => {
       triggerHaptic();
       if (!activeAppTab) return;
@@ -426,6 +426,13 @@ function AppContent() {
       window.open(url, '_blank');
   };
 
+  const handleCopyAllCodes = () => {
+      triggerHaptic();
+      navigator.clipboard.writeText(generatedKeys);
+      setCopiedAll(true);
+      setTimeout(() => setCopiedAll(false), 2000);
+  };
+
   const currentCourseData = activeAppTab ? (courseData[activeAppTab] || []) : [];
   const totalSteps = currentCourseData.reduce((acc, lesson) => acc + (lesson.steps?.length || 0), 0);
   const progressPrefix = activeAppTab === 'photo' ? 'ph' : activeAppTab === 'designer' ? 'ds' : 'pb';
@@ -444,7 +451,6 @@ function AppContent() {
   
   const telegramUrl = `https://t.me/koymy?text=${encodeURIComponent(telegramMessage)}`;
 
-  // 🌟 UPDATED: Dynamic placeholder helper
   const getInputPlaceholder = () => {
       if (lang !== 'en') return "បញ្ចូលលេខកូដសម្ងាត់...";
       if (activeAppTab === 'photo') return "PHOTO-XXXXX";
@@ -462,8 +468,6 @@ function AppContent() {
         .no-scrollbar::-webkit-scrollbar { display: none; } 
         @keyframes fade-in-up { from { opacity: 0; transform: translateY(20px) scale(0.99); } to { opacity: 1; transform: translateY(0) scale(1); } } 
         .animate-fade-in-up { animation: fade-in-up 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
-        @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-5px); } 50% { transform: translateX(5px); } 75% { transform: translateX(-5px); } }
-        .animate-shake { animation: shake 0.4s ease-in-out; }
       `}</style>
       
       {activeTab !== 'tools' && activeTab !== 'ai' && (
@@ -538,178 +542,189 @@ function AppContent() {
                             
                             <div className="max-w-3xl mx-auto relative z-10">
                                 
-                                {/* ADMIN LOGIC */}
+                                {/* 🌟 SECURE ADMIN PANEL 🌟 */}
                                 {isAdmin ? (
-                                    <div className="space-y-6">
-                                        <h4 className="text-sm font-bold uppercase tracking-widest text-[#41B6E6] flex items-center gap-2">
-                                            <ShieldCheck size={18} /> Admin Key Generator
+                                    <div className={`p-5 sm:p-8 rounded-3xl border shadow-2xl relative overflow-hidden ${isDarkMode ? 'bg-[#1E1E1E] border-[#2C2C2C]' : 'bg-white border-[#E5E7EB]'}`}>
+                                        <div className={`absolute top-0 right-0 w-40 h-40 bg-gradient-to-br ${theme.gradient} rounded-full blur-[60px] opacity-10 pointer-events-none`}></div>
+                                        <h4 className={`text-xl font-black font-khmer flex items-center gap-3 mb-2 ${theme.text}`}>
+                                            <ShieldCheck className="w-6 h-6"/> Admin Control Panel
                                         </h4>
-                                        <div className="flex gap-4 items-center">
-                                            <div className={`p-3 rounded-xl border flex-1 ${isDarkMode ? 'bg-[#121212] border-[#2C2C2C]' : 'bg-[#F8F9FA] border-[#E5E7EB]'}`}>
-                                                <input 
-                                                    type="number" min="1" max="100" 
-                                                    value={genAmount} onChange={e => setGenAmount(e.target.value)}
-                                                    className={`w-full bg-transparent outline-none font-bold ${isDarkMode ? 'text-white' : 'text-black'}`}
-                                                    placeholder="Amount to generate"
-                                                />
-                                            </div>
-                                            <button onClick={handleGenerateAdminKeys} className={`px-6 py-3.5 rounded-xl font-bold text-white bg-gradient-to-r ${theme.gradient} hover:opacity-90 active:scale-95`}>
-                                                Generate
+                                        <p className={`text-sm mb-6 font-khmer leading-relaxed ${isDarkMode ? 'text-[#9AA0A6]' : 'text-gray-500'}`}>
+                                            Generate secure, single-use activation keys for <strong>{appDisplayName}</strong>. Keys automatically expire 7 days after generation.
+                                        </p>
+                                        
+                                        <div className="flex gap-3 mb-6">
+                                            <input 
+                                                type="number" 
+                                                value={genAmount} 
+                                                onChange={e => setGenAmount(Number(e.target.value))}
+                                                className={`w-24 p-3.5 rounded-2xl border text-center outline-none font-bold text-lg transition-colors ${isDarkMode ? 'bg-[#121212] border-[#2C2C2C] text-white focus:border-white/30' : 'bg-gray-50 border-[#E5E7EB] text-black focus:border-black/30'}`}
+                                                min="1" max="50"
+                                            />
+                                            <button onClick={handleGenerateAdminKeys} className={`flex-1 rounded-2xl font-bold font-khmer text-[15px] text-white transition-all active:scale-[0.98] shadow-lg flex items-center justify-center gap-2 bg-gradient-to-r ${theme.gradient}`}>
+                                                Generate Keys
                                             </button>
                                         </div>
 
                                         {generatedKeys && (
-                                            <div className="mt-4 animate-fade-in-up">
-                                                <textarea 
-                                                    readOnly 
-                                                    value={generatedKeys} 
-                                                    rows={5}
-                                                    className={`w-full p-4 rounded-xl border text-sm font-mono leading-relaxed resize-none ${isDarkMode ? 'bg-[#121212] border-[#2C2C2C] text-[#A0A0A0]' : 'bg-[#F8F9FA] border-[#E5E7EB] text-[#6B7280]'}`} 
-                                                />
-                                                <div className="flex gap-3 mt-3">
-                                                    <button onClick={() => {navigator.clipboard.writeText(generatedKeys); triggerHaptic('success');}} className={`flex-1 flex justify-center items-center gap-2 p-3 rounded-xl font-bold text-sm border ${isDarkMode ? 'bg-[#1E1E1E] border-[#2C2C2C] text-white hover:bg-[#2C2C2C]' : 'bg-white border-gray-200 text-black hover:bg-gray-50'}`}>
-                                                        <Copy size={16} /> Copy All
-                                                    </button>
-                                                    <button onClick={shareAdminKeysTelegram} className="flex-1 flex justify-center items-center gap-2 p-3 rounded-xl font-bold text-sm border-none text-white shadow-md active:scale-95" style={{ backgroundColor: '#2AABEE' }}>
-                                                        <Send size={16} /> Share via Telegram
+                                            <div className="mt-6 space-y-3 max-h-64 overflow-y-auto custom-scrollbar animate-fade-in-up pr-2">
+                                                <div className="flex justify-between items-center mb-3">
+                                                    <span className={`text-xs font-bold uppercase tracking-widest ${theme.text}`}>
+                                                        {generatedKeys.split('\n').length} Codes Ready
+                                                    </span>
+                                                    <button onClick={handleCopyAllCodes} className={`text-xs px-3 py-1.5 rounded-lg flex items-center gap-1.5 font-bold transition-colors ${theme.text} ${theme.lightBg} hover:opacity-80`}>
+                                                        {copiedAll ? <CheckCircle size={14}/> : <Copy size={14}/>} {copiedAll ? 'Copied' : 'Copy All'}
                                                     </button>
                                                 </div>
+                                                {generatedKeys.split('\n').map(c => (
+                                                    <div key={c} className={`p-3.5 rounded-xl border flex items-center justify-between shadow-sm transition-colors ${isDarkMode ? 'bg-[#121212] border-[#2C2C2C]' : 'bg-[#F8F9FA] border-[#E5E7EB]'}`}>
+                                                        <span className={`font-mono font-bold tracking-widest text-sm ${isDarkMode ? 'text-white' : 'text-black'}`}>{c}</span>
+                                                        <div className="flex gap-2">
+                                                            <button 
+                                                                onClick={() => { 
+                                                                    navigator.clipboard.writeText(c); 
+                                                                    setCopiedCode(c); 
+                                                                    triggerHaptic();
+                                                                    setTimeout(() => setCopiedCode(null), 2000); 
+                                                                }} 
+                                                                className={`p-2 rounded-lg transition-colors ${isDarkMode ? 'bg-white/5 hover:bg-white/10' : 'bg-black/5 hover:bg-black/10'}`}
+                                                            >
+                                                                {copiedCode === c ? <CheckCircle size={18} className="text-green-500"/> : <Copy size={18} className={isDarkMode ? 'text-gray-300' : 'text-gray-700'} />}
+                                                            </button>
+                                                            <button onClick={shareAdminKeysTelegram} className={`p-2 rounded-lg transition-colors shadow-sm text-white bg-gradient-to-r ${theme.gradient}`}>
+                                                                <Send size={18} />
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                ))}
                                             </div>
                                         )}
 
-                                        <div className={`w-full h-px my-8 ${isDarkMode ? 'bg-[#2C2C2C]' : 'bg-[#E5E7EB]'}`}></div>
-                                        <button onClick={handleSignOutDevice} className="flex items-center gap-2 text-sm font-bold text-red-500 hover:text-red-400 transition-colors">
-                                            <LogOut size={16} /> Sign Out Device
+                                        <div className={`w-full h-px my-6 ${isDarkMode ? 'bg-[#2C2C2C]' : 'bg-[#E5E7EB]'}`}></div>
+                                        <button onClick={handleSignOutDevice} className="w-full py-3.5 rounded-xl border font-bold font-khmer text-sm active:scale-[0.98] transition-colors flex items-center justify-center gap-2 text-red-500 hover:bg-red-500/10 border-red-500/20">
+                                            <LogOut size={18} /> Sign Out Device
                                         </button>
                                     </div>
 
                                 ) : isCoursePurchased ? (
                                     
-                                    /* PREMIUM LOGIC */
-                                    <div className="space-y-8">
-                                        <div className={`p-6 rounded-2xl border shadow-sm flex items-center justify-between ${isDarkMode ? 'bg-[#121212] border-[#2C2C2C]' : 'bg-[#F8F9FA] border-[#E5E7EB]'}`}>
-                                            <div>
-                                                <p className={`text-xs font-bold uppercase tracking-widest mb-1 ${isDarkMode ? 'text-[#A0A0A0]' : 'text-[#6B7280]'}`}>Member Plan</p>
-                                                <p className={`text-xl font-black ${theme.text}`}>Full Access (1-Year)</p>
-                                                <p className={`text-sm mt-1 ${isDarkMode ? 'text-[#A0A0A0]' : 'text-[#6B7280]'}`}>
-                                                    Expires: {new Date(purchasedCourses[activeAppTab].expiry).toLocaleDateString()}
+                                    /* 🌟 PREMIUM ACCOUNT DASHBOARD 🌟 */
+                                    <div className="space-y-8 max-w-md mx-auto">
+                                        <div className={`p-6 sm:p-8 rounded-3xl border shadow-xl flex items-center justify-between relative overflow-hidden ${isDarkMode ? 'bg-[#1E1E1E] border-[#2C2C2C]' : 'bg-white border-[#E5E7EB]'}`}>
+                                            <div className={`absolute top-0 right-0 w-32 h-32 rounded-full blur-[50px] opacity-20 pointer-events-none bg-gradient-to-br ${theme.gradient}`}></div>
+                                            <div className="relative z-10">
+                                                <p className={`text-xs font-bold uppercase tracking-widest mb-1 opacity-70 ${isDarkMode ? 'text-[#9AA0A6]' : 'text-gray-500'}`}>Member Plan</p>
+                                                <p className={`text-2xl font-black mb-1 ${theme.text}`}>Full Access</p>
+                                                <p className={`text-sm font-medium ${isDarkMode ? 'text-[#A0A0A0]' : 'text-gray-600'}`}>
+                                                    Valid until: <span className="font-bold">{new Date(purchasedCourses[activeAppTab].expiry).toLocaleDateString()}</span>
                                                 </p>
                                             </div>
-                                            <Crown size={40} className={`opacity-20 ${theme.text}`} />
+                                            <Crown size={48} className={`opacity-20 relative z-10 ${theme.text}`} />
                                         </div>
 
-                                        <div>
-                                            <p className={`text-sm font-bold mb-3 ${isDarkMode ? 'text-[#F1F1F1]' : 'text-[#1A1A1A]'}`}>Need Help?</p>
-                                            <a href="https://t.me/+d9YiokUaUtZiNTZl" target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl font-black text-sm transition-all active:scale-95 shadow-md hover:-translate-y-1 text-white" style={{ backgroundColor: '#2AABEE' }}>
-                                                <Send size={18} /> Support Team
+                                        <div className="text-center">
+                                            <p className={`text-sm font-bold mb-3 ${isDarkMode ? 'text-[#F1F1F1]' : 'text-[#1A1A1A]'}`}>Need Help with your purchase?</p>
+                                            <a href="https://t.me/+d9YiokUaUtZiNTZl" target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center gap-2 px-8 py-4 rounded-2xl font-black text-sm transition-all active:scale-[0.98] shadow-lg hover:-translate-y-1 text-white" style={{ backgroundColor: '#2AABEE' }}>
+                                                <Send size={18} /> Contact Support Team
                                             </a>
                                         </div>
 
-                                        <div className="space-y-3">
-                                            <p className={`text-sm font-bold ${isDarkMode ? 'text-[#F1F1F1]' : 'text-[#1A1A1A]'}`}>Update Key Code</p>
-                                            <div className={`flex flex-col sm:flex-row gap-3 p-2 rounded-2xl border ${isDarkMode ? 'bg-[#121212] border-[#2C2C2C]' : 'bg-[#F8F9FA] border-[#E5E7EB]'}`}>
-                                                <input 
-                                                    type="text" value={passcodeInput} onChange={(e) => setPasscodeInput(e.target.value.toUpperCase())}
-                                                    placeholder="Enter new code..."
-                                                    className={`flex-1 bg-transparent outline-none px-4 font-bold tracking-widest placeholder:tracking-normal ${isDarkMode ? 'text-white' : 'text-black'}`}
-                                                />
-                                                <button onClick={handleVerifyPasscode} disabled={!passcodeInput.trim() || isVerifying} className={`px-6 py-3 rounded-xl font-bold text-[13px] transition-all ${!passcodeInput.trim() ? 'opacity-50' : 'active:scale-95 text-white bg-gradient-to-r ' + theme.gradient}`}>
-                                                    {isVerifying ? 'Verifying...' : 'Update'}
-                                                </button>
-                                            </div>
-                                            {passcodeError && (
-                                                <p className="text-red-500 text-[11px] font-bold tracking-wide mt-2 flex items-center justify-start gap-1">
-                                                    <AlertCircle size={12} /> {passcodeError}
-                                                </p>
-                                            )}
-                                        </div>
-
                                         <div className={`w-full h-px my-6 ${isDarkMode ? 'bg-[#2C2C2C]' : 'bg-[#E5E7EB]'}`}></div>
-                                        <button onClick={handleSignOutDevice} className="flex items-center gap-2 text-sm font-bold text-red-500 hover:text-red-400 transition-colors">
-                                            <LogOut size={16} /> Sign Out Device
+                                        <button onClick={handleSignOutDevice} className="w-full py-4 rounded-xl font-bold font-khmer text-sm active:scale-[0.98] transition-colors flex items-center justify-center gap-2 text-red-500 hover:bg-red-500/10">
+                                            <LogOut size={18} /> Sign Out Device
                                         </button>
                                     </div>
 
                                 ) : (
-                                    /* UNPURCHASED LOGIC REORDERED */
-                                    <>
-                                        {/* STEP 1: PAYMENT */}
-                                        <div className="mb-10">
-                                            <h4 className={`text-sm font-bold uppercase tracking-widest mb-6 flex items-center gap-2 ${theme.text}`}>
-                                                <span className={`text-white w-5 h-5 flex items-center justify-center rounded-full text-[10px] ${theme.bg}`}>1</span> 
-                                                {lang === 'en' ? "Get Access Code" : 'បង់ប្រាក់ & យកលេខកូដ'}
-                                            </h4>
-                                            <div className="flex flex-col md:flex-row gap-8 relative z-10 items-center md:items-start">
-                                                <div className="flex flex-col items-center shrink-0 w-full md:w-auto">
-                                                    <div className="p-3 bg-white rounded-3xl shadow-lg border border-gray-100 mb-4">
-                                                        <img src="/aba-khqr.png" alt="ABA KHQR" className={`w-48 h-48 object-contain rounded-xl shadow-sm border ${isDarkMode ? 'border-[#2C2C2C]' : 'border-gray-200'}`} />
-                                                    </div>
-                                                    <h3 className={`text-2xl font-black font-khmer ${isDarkMode ? 'text-[#F1F1F1]' : 'text-[#1A1A1A]'}`}>$20.00</h3>
-                                                    <p className={`text-xs font-bold uppercase tracking-widest mt-1 ${isDarkMode ? 'text-[#A0A0A0]' : 'text-[#6B7280]'}`}>Full 1-Year Access</p>
-                                                </div>
-
-                                                <div className="flex-1 w-full text-center md:text-left flex flex-col justify-center h-full pt-2 md:pt-10">
-                                                    <p className={`text-[14px] leading-relaxed font-khmer mb-6 ${isDarkMode ? 'text-[#A0A0A0]' : 'text-[#6B7280]'}`}>
-                                                        {lang === 'en' 
-                                                            ? `Scan the KHQR to pay $20. Send the payment screenshot to our Telegram to receive your Key Code.` 
-                                                            : `ស្កេន KHQR ដើម្បីបង់ប្រាក់ $20 រួចផ្ញើវិក្កយបត្រមក Telegram ដើម្បីទទួលបានលេខកូដដោះសោសម្ងាត់។`}
-                                                    </p>
-                                                    <a href={telegramUrl} target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center gap-2 px-6 py-3.5 w-full md:w-auto rounded-xl font-black font-khmer text-[14px] transition-all active:scale-95 shadow-lg hover:-translate-y-1 mb-6 text-white" style={{ backgroundColor: '#2AABEE' }}>
-                                                        <Send size={18} /> {lang === 'en' ? 'Send Screenshot to Telegram' : 'ផ្ញើវិក្កយបត្រទៅ Telegram'}
-                                                    </a>
-                                                </div>
+                                    /* 🌟 UNPURCHASED LOGIC (Redesigned Flow) 🌟 */
+                                    <div className="flex flex-col items-center animate-fade-in-up">
+                                        
+                                        {/* STEP 1: PAYMENT HEADER */}
+                                        <div className="text-center mb-8">
+                                            <div className={`inline-flex items-center justify-center p-4 rounded-3xl mb-4 ${theme.lightBg}`}>
+                                                <Crown className={`w-10 h-10 ${theme.text}`} />
+                                            </div>
+                                            <h3 className={`text-3xl font-black font-khmer tracking-tight mb-2 ${isDarkMode ? 'text-white' : 'text-black'}`}>
+                                                {lang === 'en' ? 'Pro Masterclass' : 'ចុះឈ្មោះវគ្គបច្ចេកទេសជំនាញ'}
+                                            </h3>
+                                            <p className={`text-sm font-medium ${isDarkMode ? 'text-[#9AA0A6]' : 'text-gray-500'}`}>
+                                                {lang === 'en' ? 'One-time payment. One year full access.' : 'បង់ប្រាក់ម្ដង ប្រើប្រាស់បានពេញ១ឆ្នាំ'}
+                                            </p>
+                                            <div className="mt-4 flex items-baseline justify-center gap-1">
+                                                <span className={`text-4xl font-black ${isDarkMode ? 'text-white' : 'text-black'}`}>$20</span>
+                                                <span className={`text-sm font-bold uppercase tracking-widest ${isDarkMode ? 'text-[#9AA0A6]' : 'text-gray-400'}`}>/ {lang === 'en' ? 'YEAR' : 'ឆ្នាំ'}</span>
                                             </div>
                                         </div>
 
-                                        <div className={`w-full h-px mb-10 ${isDarkMode ? 'bg-[#2C2C2C]' : 'bg-[#E5E7EB]'}`}></div>
-
-                                        {/* STEP 2: KEY CODE */}
-                                        <div className="mb-10">
-                                            <h4 className={`text-sm font-bold uppercase tracking-widest mb-4 flex items-center gap-2 ${theme.text}`}>
-                                                <span className={`text-white w-5 h-5 flex items-center justify-center rounded-full text-[10px] ${theme.bg}`}>2</span> 
-                                                {lang === 'en' ? 'Enter Key Code' : 'បញ្ចូលលេខកូដ'}
-                                            </h4>
-                                            <div className={`flex flex-col sm:flex-row gap-3 p-4 rounded-2xl border ${passcodeError ? 'border-red-500 animate-shake bg-red-500/5' : (isDarkMode ? 'bg-[#121212] border-[#2C2C2C]' : 'bg-[#F8F9FA] border-[#E5E7EB]')}`}>
-                                                <div className="flex-1 flex items-center gap-3">
-                                                    <KeyRound size={20} className={passcodeError ? 'text-red-500' : (isDarkMode ? 'text-[#A0A0A0]' : 'text-[#6B7280]')} />
-                                                    <input 
-                                                        type="text" 
-                                                        value={passcodeInput}
-                                                        onChange={(e) => {
-                                                            setPasscodeInput(e.target.value.toUpperCase());
-                                                            setPasscodeError('');
-                                                        }}
-                                                        placeholder={getInputPlaceholder()}
-                                                        className={`w-full bg-transparent outline-none font-bold text-center sm:text-left tracking-widest placeholder:tracking-normal ${isDarkMode ? 'text-white' : 'text-black'}`}
-                                                    />
+                                        {/* UNIFIED PAYMENT CARD */}
+                                        <div className={`w-full max-w-md mx-auto rounded-3xl p-6 sm:p-8 mb-8 border backdrop-blur-md shadow-xl flex flex-col items-center gap-6 ${isDarkMode ? 'bg-[#1E1E1E]/80 border-[#2C2C2C]' : 'bg-white/80 border-[#E5E7EB] shadow-black/5'}`}>
+                                            <div className="flex flex-col items-center gap-3">
+                                                <div className="w-44 h-44 bg-white rounded-3xl p-3 shadow-md border border-gray-100 flex items-center justify-center">
+                                                    <img src="/aba-khqr.png" alt="ABA KHQR" className="w-full h-full object-contain rounded-xl" />
                                                 </div>
+                                                <span className={`text-xs font-bold tracking-widest uppercase ${theme.text}`}>SCAN TO PAY</span>
+                                            </div>
+                                            
+                                            <div className="w-full flex items-center gap-4 opacity-50">
+                                                <div className={`h-px flex-1 ${isDarkMode ? 'bg-white/20' : 'bg-black/10'}`}></div>
+                                                <span className={`text-[10px] font-bold tracking-widest uppercase ${isDarkMode ? 'text-white/50' : 'text-black/40'}`}>THEN</span>
+                                                <div className={`h-px flex-1 ${isDarkMode ? 'bg-white/20' : 'bg-black/10'}`}></div>
+                                            </div>
+                                            
+                                            <div className="w-full text-center">
+                                                <p className={`text-[13px] font-khmer mb-4 leading-relaxed ${isDarkMode ? 'text-[#E3E3E3]' : 'text-gray-600'}`}>
+                                                    {lang === 'en' ? 'Send your receipt via Telegram to get your activation key.' : 'ផ្ញើវិក័យប័ត្រតាម Telegram ដើម្បីទទួលបានលេខកូដ។'}
+                                                </p>
+                                                <a href={telegramUrl} target="_blank" rel="noopener noreferrer" className={`w-full py-4 rounded-2xl flex items-center justify-center gap-2 font-bold font-khmer transition-all active:scale-[0.98] shadow-lg text-white bg-gradient-to-r ${theme.gradient}`}>
+                                                    <Send className="w-5 h-5" />
+                                                    {lang === 'en' ? 'Send Receipt to Telegram' : 'ផ្ញើវិក័យប័ត្រទីនេះ'}
+                                                </a>
+                                            </div>
+                                        </div>
+
+                                        {/* STEP 2: INLINE KEY CODE */}
+                                        <div className="w-full max-w-md mx-auto mb-10">
+                                            <label className={`block text-[11px] font-bold uppercase tracking-widest mb-3 pl-1 ${isDarkMode ? 'text-[#9AA0A6]' : 'text-gray-500'}`}>
+                                                {lang === 'en' ? 'Activation Key' : 'លេខកូដសម្ងាត់'}
+                                            </label>
+                                            <div className={`relative flex items-center p-1.5 rounded-2xl border transition-colors shadow-sm ${isDarkMode ? 'bg-[#121212] border-[#2C2C2C] focus-within:border-[#41B6E6]' : 'bg-white border-[#E5E7EB] focus-within:border-[#0277C5]'}`}>
+                                                <KeyRound className={`absolute left-4 w-5 h-5 ${isDarkMode ? 'text-[#9AA0A6]' : 'text-gray-400'}`} />
+                                                <input 
+                                                    type="text" 
+                                                    value={passcodeInput}
+                                                    onChange={(e) => {
+                                                        setPasscodeInput(e.target.value.toUpperCase());
+                                                        setPasscodeError('');
+                                                    }}
+                                                    placeholder={getInputPlaceholder()}
+                                                    className={`flex-1 bg-transparent py-3 pl-12 pr-2 outline-none font-bold tracking-widest uppercase text-sm w-full ${isDarkMode ? 'text-white' : 'text-black'}`}
+                                                />
                                                 <button 
                                                     onClick={handleVerifyPasscode}
                                                     disabled={!passcodeInput.trim() || isVerifying}
-                                                    className={`px-6 py-3 rounded-xl font-bold font-khmer text-[13px] transition-all active:scale-95 ${!passcodeInput.trim() ? 'opacity-50 cursor-not-allowed bg-gray-500' : `shadow-md hover:-translate-y-1 text-white bg-gradient-to-r ${theme.gradient}`}`}
+                                                    className={`px-6 py-3 rounded-xl text-white font-bold font-khmer text-sm active:scale-[0.95] transition-all flex items-center justify-center shrink-0 ${(isVerifying || !passcodeInput.trim()) ? 'opacity-50 cursor-not-allowed bg-gray-500' : `shadow-md bg-gradient-to-r ${theme.gradient}`}`}
                                                 >
-                                                    {isVerifying ? 'Checking...' : (lang === 'en' ? 'Unlock Now' : 'ដោះសោឥឡូវនេះ')}
+                                                    {isVerifying ? 'Checking...' : (lang === 'en' ? 'Unlock' : 'បញ្ជាក់')}
                                                 </button>
                                             </div>
                                             {passcodeError && (
-                                                <p className="text-red-500 text-[11px] font-bold tracking-wide mt-2 flex items-center justify-center md:justify-start gap-1">
-                                                    <AlertCircle size={12} /> {passcodeError}
+                                                <p className="text-red-500 text-[11px] font-bold tracking-wide mt-3 flex items-center justify-center gap-1">
+                                                    <AlertCircle size={14} /> {passcodeError}
                                                 </p>
                                             )}
                                         </div>
 
-                                        <div className={`w-full h-px mb-10 ${isDarkMode ? 'bg-[#2C2C2C]' : 'bg-[#E5E7EB]'}`}></div>
+                                        {/* STEP 3: ACCOUNT SYNC */}
+                                        <div className="w-full flex items-center gap-4 opacity-50 max-w-md mx-auto mb-8">
+                                            <div className={`h-px flex-1 ${isDarkMode ? 'bg-white/20' : 'bg-black/10'}`}></div>
+                                            <span className={`text-[10px] font-bold tracking-widest uppercase ${isDarkMode ? 'text-white/50' : 'text-black/40'}`}>ACCOUNT SYNC</span>
+                                            <div className={`h-px flex-1 ${isDarkMode ? 'bg-white/20' : 'bg-black/10'}`}></div>
+                                        </div>
 
-                                        {/* STEP 3: SECURE ACCOUNT (Google Only) */}
-                                        <div className="mb-4">
-                                            <h4 className={`text-sm font-bold uppercase tracking-widest mb-4 flex items-center gap-2 ${theme.text}`}>
-                                                <span className={`text-white w-5 h-5 flex items-center justify-center rounded-full text-[10px] ${theme.bg}`}>3</span> 
-                                                {lang === 'en' ? (user ? 'Account Linked' : 'Secure Account') : (user ? 'គណនីបានភ្ជាប់' : 'ភ្ជាប់គណនី')}
-                                            </h4>
-                                            
+                                        <div className="w-full max-w-md mx-auto">
                                             {user ? (
-                                                <div className={`p-4 rounded-xl border flex items-center justify-between shadow-sm animate-fade-in-up ${isDarkMode ? 'bg-[#121212] border-[#2C2C2C]' : 'bg-[#F8F9FA] border-[#E5E7EB]'}`}>
-                                                    <div className="flex items-center gap-3">
+                                                <div className={`p-4 rounded-2xl border flex items-center justify-between shadow-sm animate-fade-in-up ${isDarkMode ? 'bg-[#1E1E1E] border-[#2C2C2C]' : 'bg-[#F8F9FA] border-[#E5E7EB]'}`}>
+                                                    <div className="flex items-center gap-4">
                                                         {user.photoURL ? (
                                                             <img src={user.photoURL} alt="Profile" className={`w-12 h-12 rounded-full border-2 ${theme.border}`} />
                                                         ) : (
@@ -722,24 +737,24 @@ function AppContent() {
                                                             <p className={`text-xs ${isDarkMode ? 'text-[#A0A0A0]' : 'text-[#6B7280]'}`}>{user.email}</p>
                                                         </div>
                                                     </div>
-                                                    <button onClick={handleLogout} className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-colors ${isDarkMode ? 'bg-[#2C2C2C] hover:bg-[#3C3C3C]' : 'bg-[#E5E7EB] hover:bg-[#D1D5DB]'}`}>
+                                                    <button onClick={handleLogout} className={`px-4 py-2 rounded-xl text-xs font-bold transition-colors ${isDarkMode ? 'bg-[#2C2C2C] hover:bg-[#3C3C3C]' : 'bg-[#E5E7EB] hover:bg-[#D1D5DB]'}`}>
                                                         Logout
                                                     </button>
                                                 </div>
                                             ) : (
-                                                <div className="max-w-sm">
-                                                    <button onClick={handleGoogleLogin} className={`w-full flex items-center justify-center gap-3 p-4 rounded-xl font-bold text-sm border transition-all active:scale-95 shadow-sm hover:shadow-md ${isDarkMode ? 'bg-[#121212] border-[#2C2C2C] text-white hover:bg-[#1A1A1A]' : 'bg-white border-gray-200 text-black hover:bg-gray-50'}`}>
+                                                <div className="text-center">
+                                                    <button onClick={handleGoogleLogin} className={`w-full flex items-center justify-center gap-3 p-4 rounded-2xl font-bold text-sm border transition-all active:scale-[0.98] shadow-sm hover:shadow-md ${isDarkMode ? 'bg-[#1E1E1E] border-[#2C2C2C] text-white hover:bg-[#2C2C2C]' : 'bg-white border-gray-200 text-black hover:bg-gray-50'}`}>
                                                         <svg className="w-5 h-5" viewBox="0 0 24 24"><path fill="currentColor" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" /><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" /><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" /><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" /></svg>
                                                         Continue with Google
                                                     </button>
-                                                    <p className={`text-xs mt-3 font-bold ${isDarkMode ? 'text-orange-400' : 'text-orange-600'}`}>
+                                                    <p className={`text-xs mt-4 font-bold ${isDarkMode ? 'text-orange-400' : 'text-orange-600'}`}>
                                                         <Sparkles size={12} className="inline mr-1" />
-                                                        Recommend: Link your account to secure your access.
+                                                        {lang === 'en' ? 'Secure your purchase by linking an account.' : 'សូមភ្ជាប់គណនីដើម្បីការពារការទិញរបស់អ្នក។'}
                                                     </p>
                                                 </div>
                                             )}
                                         </div>
-                                    </>
+                                    </div>
                                 )}
                             </div>
                         </div>
