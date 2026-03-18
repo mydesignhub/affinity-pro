@@ -251,7 +251,7 @@ const LessonModal = ({ lesson, onClose, isDarkMode, completedSteps, setCompleted
                         }`}
                     >
                         
-                        {/* 🌟 NEW APPLE SAFE-AREA PADDING WRAPPER 🌟 */}
+                        {/* 🌟 APPLE SAFE-AREA PADDING WRAPPER 🌟 */}
                         <div className="absolute inset-0 w-full h-full flex flex-col"
                              style={isCssFullscreen ? {
                                  paddingTop: 'env(safe-area-inset-top)',
@@ -260,7 +260,6 @@ const LessonModal = ({ lesson, onClose, isDarkMode, completedSteps, setCompleted
                                  paddingRight: 'env(safe-area-inset-right)'
                              } : {}}
                         >
-                            {/* Inner Relative Container: Iframe & Shields attach to this! */}
                             <div className={`relative w-full h-full flex-1 flex flex-col items-center justify-center overflow-hidden group ${isCssFullscreen ? '' : 'rounded-[inherit]'}`}>
                                 
                                 {isCssFullscreen && (
@@ -324,26 +323,25 @@ const LessonModal = ({ lesson, onClose, isDarkMode, completedSteps, setCompleted
                                                 />
                                                 
                                                 {/* 🛡️ PRECISION DEAD-ZONE SHIELDS 🛡️ */}
-                                                
-                                                {/* 1. Mobile Top Bar: Blocks Avatar, Title, Watch Later, Share. Leaves far-right 60px open for mobile Gear/3-dots */}
+
                                                 <div 
-                                                    className="lg:hidden absolute top-0 left-0 right-[60px] h-[70px] z-30 bg-transparent no-callout cursor-default" 
+                                                    className={`lg:hidden absolute top-0 left-0 h-[70px] z-30 bg-transparent no-callout cursor-default ${isCssFullscreen ? 'right-[60px]' : 'w-full'}`} 
                                                     onContextMenu={e => e.preventDefault()} 
                                                     onClick={e => { e.preventDefault(); e.stopPropagation(); }}
                                                     onDoubleClick={e => { e.preventDefault(); e.stopPropagation(); }}
                                                     onTouchStart={e => e.stopPropagation()} onTouchEnd={e => e.stopPropagation()} onPointerDown={e => e.stopPropagation()}
                                                 />
 
-                                                {/* 2. PC Top Bar: Blocks entirely. Gear is at the bottom on PC, so we can safely block everything up top (Watch Later, Share, Title) */}
-                                                <div 
-                                                    className="hidden lg:block absolute top-0 left-0 w-full h-[80px] z-30 bg-transparent no-callout cursor-default" 
-                                                    onContextMenu={e => e.preventDefault()} 
-                                                    onClick={e => { e.preventDefault(); e.stopPropagation(); }}
-                                                    onDoubleClick={e => { e.preventDefault(); e.stopPropagation(); }}
-                                                    onTouchStart={e => e.stopPropagation()} onTouchEnd={e => e.stopPropagation()} onPointerDown={e => e.stopPropagation()}
-                                                />
+                                                {isCssFullscreen && (
+                                                    <div 
+                                                        className="hidden lg:block absolute top-0 left-0 w-full h-[80px] z-30 bg-transparent no-callout cursor-default" 
+                                                        onContextMenu={e => e.preventDefault()} 
+                                                        onClick={e => { e.preventDefault(); e.stopPropagation(); }}
+                                                        onDoubleClick={e => { e.preventDefault(); e.stopPropagation(); }}
+                                                        onTouchStart={e => e.stopPropagation()} onTouchEnd={e => e.stopPropagation()} onPointerDown={e => e.stopPropagation()}
+                                                    />
+                                                )}
 
-                                                {/* 3. Mobile Bottom-Left: Blocks Mobile Share Arrow */}
                                                 <div 
                                                     className="lg:hidden absolute bottom-0 left-0 w-[80px] h-[60px] z-30 bg-transparent no-callout cursor-default" 
                                                     onContextMenu={e => e.preventDefault()} 
@@ -352,7 +350,6 @@ const LessonModal = ({ lesson, onClose, isDarkMode, completedSteps, setCompleted
                                                     onTouchStart={e => e.stopPropagation()} onTouchEnd={e => e.stopPropagation()} onPointerDown={e => e.stopPropagation()}
                                                 />
 
-                                                {/* 4. Mobile Bottom-Right: Blocks YouTube Logo */}
                                                 <div 
                                                     className="lg:hidden absolute bottom-0 right-0 w-[120px] h-[55px] z-30 bg-transparent no-callout cursor-default" 
                                                     onContextMenu={e => e.preventDefault()} 
@@ -361,7 +358,6 @@ const LessonModal = ({ lesson, onClose, isDarkMode, completedSteps, setCompleted
                                                     onTouchStart={e => e.stopPropagation()} onTouchEnd={e => e.stopPropagation()} onPointerDown={e => e.stopPropagation()}
                                                 />
 
-                                                {/* 5. PC Bottom-Right (Floating Watermark): Floats 48px up to block the YouTube logo but leaves the Control Bar (Gear, Volume, CC) entirely clickable! */}
                                                 <div 
                                                     className="hidden lg:block absolute bottom-[48px] right-[10px] w-[100px] h-[40px] z-30 bg-transparent no-callout cursor-default" 
                                                     onContextMenu={e => e.preventDefault()} 
