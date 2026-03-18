@@ -5,43 +5,43 @@
 export const SUGGESTED_QUESTIONS = [
     "របៀបរចនា Poster ឱ្យទាក់ទាញ? 🖼️",
     "តិចនិកប្រើ Affinity Personas 🚀",
-    "របៀបប្តូរថ្ងៃទៅយប់ (Day to Night) 🌙",
-    "របៀបបង្កើតស្រមោលឱ្យពិតៗ 👥",
+    "របៀបធ្វើស្បែករលោង (Frequency Separation) ✨",
+    "តិចនិក Power Duplicate 🔄",
     "តើ Live Filters ក្នុង Affinity ជាអ្វី?",
     "របៀបប្រើ Affinity លើ iPad 📱",
-    "តើទំហំ Poster ស្តង់ដារមានអ្វីខ្លះ? 📏",
+    "តើ ច្បាប់ពណ៌ 60-30-10 គឺជាអ្វី? 🎨",
     "តើ Dodge និង Burn គឺជាអ្វី?",
-    "តើ គោលការណ៍រចនា មានអ្វីខ្លះ?", 
-    "ពណ៌ចៃដន្យ 🎨", 
+    "តើ Rasterize មានន័យថាម៉េច?", 
+    "របៀបលុបមនុស្សចេញពីរូបភាព 🧹", 
     "របៀបលក់ Digital Assets 💰", 
     "តើ Affinity Photo និង Designer ខុសគ្នាម៉េច?", 
-    "អ្វីទៅជា Typography?"
+    "ពន្យល់ពី Blend Modes ទាំងអស់ 🌈"
 ];
 
 export const SUGGESTED_QUESTIONS_EN = [
     "How to design an effective Poster? 🖼️",
     "Tips for Affinity Personas 🚀",
-    "How to turn Day into Night? 🌙",
-    "How to master realistic shadows? 👥",
+    "Pro Skin Retouch (Frequency Separation) ✨",
+    "The Power Duplicate trick 🔄",
     "What are Live Filters in Affinity?",
     "Affinity iPad Gestures 📱",
-    "Standard Poster Sizes & Layouts? 📏",
+    "The 60-30-10 Color Rule? 🎨",
     "What is Dodge and Burn?",
-    "Core Design Principles?", 
-    "Random Color 🎨", 
+    "What does Rasterize mean?", 
+    "How to erase objects (Inpainting)? 🧹", 
     "How to sell Digital Assets? 💰", 
     "Affinity Photo vs Designer?", 
-    "What is Typography?"
+    "Explain all Blend Modes 🌈"
 ];
 
 export const GREETINGS = [
     "បាទ សួស្ដី! 👋 ខ្ញុំគឺ **Design Master** ជាជំនួយការផ្ទាល់ខ្លួនដ៏រីករាយរបស់អ្នក។ តើថ្ងៃនេះអ្នកចង់រៀនពីអ្វីដែរ? ខ្ញុំត្រៀមខ្លួនរួចរាល់ហើយ! 🎨✨",
-    "បាទ ស្វាគមន៍មកកាន់ពិភពសិល្បៈ! 🎨 ខ្ញុំនៅទីនេះដើម្បីជួយបង្រៀនអ្នកពីការ Design, ការរៀបចំគំនិត និងការប្រើប្រាស់កម្មវិធី។ តើមានអ្វីឱ្យខ្ញុំជួយទេថ្ងៃនេះ?"
+    "បាទ ស្វាគមន៍មកកាន់ពិភពសិល្បៈ! 🎨 ខ្ញុំនៅទីនេះដើម្បីជួយបង្រៀនអ្នកពីការ Design, ការរៀបចំគំនិត និងការប្រើប្រាស់កម្មវិធី Affinity។ តើមានអ្វីឱ្យខ្ញុំជួយទេថ្ងៃនេះ?"
 ];
 
 export const GREETINGS_EN = [
     "Hello! 👋 I am **Design Master**, your friendly personal Graphic Design AI assistant. What are we creating today? I'm ready when you are! 🎨✨",
-    "Welcome to the creative zone! 🎨 I am here to help you master design theory, software, and layouts. How can I brighten your day?"
+    "Welcome to the creative zone! 🎨 I am here to help you master design theory, Affinity software, and layouts. How can I brighten your day?"
 ];
 
 export const SMART_GREETINGS = ["បាទ សួស្តីម្តងទៀត! 👋 ថ្ងៃមុនយើងបានជជែកគ្នាពី **{topic}**។ តើថ្ងៃនេះចង់រៀនពីវាបន្ត ឬចង់ប្តូរប្រធានបទថ្មី? 😊"];
@@ -148,7 +148,7 @@ export const KNOWLEDGE_BASE = [
     },
 
     // ------------------------------------------
-    // 3. AFFINITY MASTERCLASS (NEW!)
+    // 3. AFFINITY MASTERCLASS
     // ------------------------------------------
     {
         primaryKeys: ['តិចនិកប្រើ Affinity Personas', 'affinity personas'],
@@ -190,7 +190,7 @@ export const KNOWLEDGE_BASE = [
         primaryKeys: ['Clipping និង Masking ក្នុង Affinity', 'clipping vs masking affinity'],
         keys: ['clipping', 'masking', 'layer panel', 'affinity mask'],
         regex: ['clipping.*masking', 'affinity mask', 'layer drag'],
-        answer: "បាទ **នៅក្នុង Affinity, ការធ្វើ Clipping និង Masking គឺផ្អែកលើរបៀបដែលអ្នកអូស (Drag) នៅក្នុង Layer Panel៖**\n\n✂️ **Clipping (កាត់តម្រឹមចូលរូប):** អូស Layer រូបភាព ទៅទម្លាក់ **\"ចំកណ្តាល\"** នៃ Layer អក្សរ។ រូបភាពនោះនឹងបង្ហាញតែនៅក្នុងសាច់អក្សរប៉ុណ្ណោះ (ល្អសម្រាប់ដាក់រូបចូលអក្សរ)។\n🎭 **Masking (លាក់/បង្ហាញ):** អូស Layer ទៅទម្លាក់ **\"ចំលើរូបតូច (Thumbnail)\"** នៃ Layer មួយទៀត។ វាដើរតួជា Mask ដើម្បីលាក់បាំងផ្នែកខ្លះនៃរូបភាព។",
+        answer: "បាទ **នៅក្នុង Affinity, ការធ្វើ Clipping និង Masking គឺផ្អែកលើរបៀបដែលអ្នកអូស (Drag) នៅក្នុង Layer Panel៖**\n\n✂️ **Clipping (កាត់តម្រឹមចូលរូប):** អូស Layer រូបភាព ទៅទម្លាក់ **\"ចំកណ្តាលអក្សរឈ្មោះ\"** នៃ Layer មួយទៀត។ រូបភាពនោះនឹងបង្ហាញតែនៅក្នុងសាច់វត្ថុនោះទេ (ល្អសម្រាប់ដាក់រូបចូលអក្សរ)។\n🎭 **Masking (លាក់/បង្ហាញ):** អូស Layer ទៅទម្លាក់ **\"ចំលើរូបតូច (Thumbnail)\"** នៃ Layer មួយទៀត។ វាដើរតួជា Mask ដើម្បីលាក់បាំងផ្នែកខ្លះនៃរូបភាព។",
         answer_en: "**In Affinity, Clipping vs Masking is entirely determined by exactly where you Drag & Drop in the Layers Panel:**\n\n✂️ **Clipping:** Drag an image layer and drop it **directly on the TEXT/NAME** of another layer. The image will be constrained strictly inside that shape or text.\n🎭 **Masking:** Drag a layer and drop it **directly on the THUMBNAIL icon** of another layer. It will now act as a mask to hide or reveal parts of the parent layer.",
         chips: ["តើ Live Filters ក្នុង Affinity ជាអ្វី?", "អ្វីទៅជា Vector និង Raster?"],
         chips_en: ["What are Live Filters in Affinity?", "Vector vs Raster?"]
@@ -240,8 +240,8 @@ export const KNOWLEDGE_BASE = [
         answer: "បាទ តោះ! អ្នកអាចធ្វើតេស្តសមត្ថភាព Graphic Design របស់អ្នកបាន។ ចុចប៊ូតុងខាងក្រោមដើម្បីទៅកាន់ទំព័រតេស្ត៖",
         answer_en: "Let's go! You can test your Graphic Design knowledge right now. Click the button below to start:",
         actionButton: { label: "ទៅកាន់ការធ្វើតេស្ត 🎯", label_en: "Go to Quiz 🎯", actionToTrigger: "quiz" },
-        chips: ["កាត់តរូប (Photomanipulation) ឱ្យដូចពិត?", "Color Theory"],
-        chips_en: ["Secrets of realistic Photomanipulation?", "Color Theory"]
+        chips: ["កាត់តរូបភាព (Photomanipulation)", "Color Theory"],
+        chips_en: ["Photomanipulation workflows", "Color Theory"]
     },
     {
         primaryKeys: ['ឧបករណ៍', 'tools'],
@@ -359,15 +359,6 @@ export const KNOWLEDGE_BASE = [
         answer_en: "**The professional workflow to turn any object (statues, cars, clothing) into realistic Gold or Silver:**\n\nMetallic surfaces are defined by their extreme, sharp contrast and reflections.\n1. **Desaturate:** Remove all original color to make the object pure Black & White.\n2. **High Contrast Curves:** Apply a severe 'S-Curve' adjustment. You want the bright highlights to clip to pure white, and the shadows to crush to deep black. This simulates a shiny, highly reflective metallic surface.\n3. **Gradient Map:** Apply a Gradient Map layer.\n   - **For Gold:** Map the gradient colors from `Dark Brown -> Orange -> Yellow -> Pure White`.\n   - **For Silver:** Map the gradient colors from `Dark Slate Grey -> Light Grey -> Pure White`.",
         chips: ["តើ Blend Modes ដំណើរការយ៉ាងម៉េច?", "របៀបបង្កើត Text Effects ស្អាតៗ ✨"],
         chips_en: ["How do Blend Modes work?", "How to create premium Text Effects ✨"]
-    },
-    {
-        primaryKeys: ['Affinity Photo v3 មានអ្វីថ្មី?', 'affinity photo v3 updates'],
-        keys: ['affinity v3', 'affinity 3', 'affinity photo 3', 'new affinity', 'update'],
-        regex: ['affinity v3', 'affinity 3', 'affinity photo 3'],
-        answer: "បាទ **Affinity Photo (និង Designer) V3** ផ្តោតសំខាន់លើល្បឿន និងបច្ចេកវិទ្យា Non-destructive ជំនាន់ថ្មី៖\n\n១. **Live Masks ឆ្លាតវៃជាងមុន:** អ្នកអាចប្រើ Luminosity Mask ដើម្បីប្រាប់កម្មវិធីឱ្យកាត់យកតែពន្លឺព្រះអាទិត្យ ដោយមិនប៉ះពាល់វត្ថុជុំវិញ ហើយវានឹងអាប់ដេតស្វ័យប្រវត្តិបើអ្នកផ្លាស់ប្តូររូបភាពដើម។\n២. **Non-Destructive RAW:** ការទាញពណ៌រូបភាព RAW ឥឡូវនេះអាចបកទៅកែប្រែឡើងវិញបានគ្រប់ពេល មិនមែន Save ជាប់ស្លាប់ដូចជំនាន់មុនទេ។\n៣. **Macro Studio:** ការកត់ត្រាសកម្មភាពកាត់ត (Action) កាន់តែមានស្ថិរភាព និងងាយស្រួលរៀបចំជាកញ្ចប់ដើម្បីយកទៅលក់ (Sell Digital Assets)។",
-        answer_en: "**Affinity Photo V3** heavily prioritizes speed and next-generation non-destructive workflows:\n\n1. **Advanced Live Masks:** You can now create a Luminosity Mask that targets strictly the highlights of an image. If you swap the underlying photo, the mask dynamically recalculates in real-time!\n2. **Non-Destructive RAW:** The RAW develop persona is no longer baked-in. You can return to adjust the baseline exposure of a RAW file at any point in your editing process.\n3. **Macro Studio Improvements:** Recording repetitive tasks (Macros) is vastly more stable, making it incredibly easy to batch process images or export Macro Packs to sell as Digital Assets.",
-        chips: ["របៀបលក់ Digital Assets 💰", "របៀបប្រើប្រាស់ Macros និង Brushes?"],
-        chips_en: ["How to sell Digital Assets? 💰", "How to use Macros and Brushes?"]
     },
 
     // ------------------------------------------
@@ -529,8 +520,8 @@ export const KNOWLEDGE_BASE = [
         regex: ['kerning', 'tracking', 'leading'],
         answer: "បាទ **ការរៀបចំគម្លាតអក្សរ (Typesetting) មាន ៣ យ៉ាង៖**\n\n១. **Kerning:** ការសារ៉េចន្លោះរវាងអក្សរតែ **\"២តួ\"** ប៉ុណ្ណោះ ឱ្យមើលទៅសមាមាត្រភ្នែក។\n២. **Tracking:** ការទាញគម្លាតអក្សរ **\"ទាំងមូល\"** ក្នុងពាក្យឱ្យឃ្លាតស្មើៗគ្នា។ 💡 **ឧទាហរណ៍៖** ប្រើ Tracking ទូលាយៗជាមួយអក្សរធំ UPPERCASE មើលទៅ Premium ណាស់។\n៣. **Leading:** ចន្លោះពី **\"បន្ទាត់មួយទៅបន្ទាត់មួយ\"** (Line-height)។ បើអត្ថបទវែង គួរដាក់ Leading អោយទូលាយបន្តិចទើបស្រួលអាន។", 
         answer_en: "**Typesetting involves 3 crucial spacing techniques:**\n\n1. **Kerning:** Adjusting the space between exactly **TWO individual characters** so they look visually balanced.\n2. **Tracking:** Uniformly adjusting the spacing across an **entire word**. 💡 **Example:** Widely tracked UPPERCASE text looks very premium for subheadings.\n3. **Leading:** The vertical space between **lines of text** (Line-height). Don't squish paragraphs together!",
-        chips: ["របៀបតម្រៀប Font ឱ្យស្អាត?", "អ្វីទៅជា Hierarchy?"],
-        chips_en: ["How to pair fonts?", "Visual Hierarchy"]
+        chips: ["តើ Optical Kerning ជាអ្វី?", "អ្វីទៅជា Hierarchy?"],
+        chips_en: ["Optical vs Metric Kerning?", "Visual Hierarchy"]
     },
 
     // ------------------------------------------
@@ -605,8 +596,8 @@ export const KNOWLEDGE_BASE = [
         regex: ['shortcut', 'ផ្លូវកាត់', 'key', 'keyboard shortcut'],
         answer: "បាទ នេះគឺជា **Shortcut ផ្លូវកាត់** ដែលអ្នករចនាអាជីពតែងតែប្រើប្រាស់ (សម្រាប់កម្មវិធី Affinity)៖\n\n- **V:** Move Tool (រំកិលវត្ថុ)\n- **T:** Text Tool (សរសេរអក្សរ)\n- **Ctrl / Cmd + Z:** Undo (ថយក្រោយ)\n- **Ctrl / Cmd + T:** Free Transform (ពង្រីក/បង្រួមរូប)\n- **Ctrl / Cmd + J:** Duplicate Layer (ចម្លង Layer បន្ថែម)\n- **Spacebar (សង្កត់):** Hand Tool (ទាញរំកិលផ្ទៃការងារ)\n- **Ctrl / Cmd + S:** Save (ត្រូវតែចុចឱ្យបានញឹកញាប់!)", 
         answer_en: "**Here are the essential Keyboard Shortcuts** every professional Affinity designer uses:\n\n- **V:** Move Tool\n- **T:** Type Tool\n- **Ctrl / Cmd + Z:** Undo\n- **Ctrl / Cmd + T:** Free Transform (Scale/Rotate)\n- **Ctrl / Cmd + J:** Duplicate Layer\n- **Hold Spacebar:** Hand Tool (Pan around the canvas)\n- **Ctrl / Cmd + S:** Save (Press this constantly!)",
-        chips: ["តើ Smart Object ជាអ្វី?", "របៀបប្រើ Affinity លើ iPad 📱"],
-        chips_en: ["What is a Smart Object?", "Affinity iPad Gestures 📱"]
+        chips: ["តិចនិក Power Duplicate 🔄", "របៀបប្រើ Affinity លើ iPad 📱"],
+        chips_en: ["The Power Duplicate trick 🔄", "Affinity iPad Gestures 📱"]
     },
 
     // ------------------------------------------
@@ -636,8 +627,8 @@ export const KNOWLEDGE_BASE = [
         regex: ['hierarchy', 'focal point', 'ឋានានុក្រម'],
         answer: "បាទ **Visual Hierarchy (ឋានានុក្រមទស្សនីយភាព)** គឺជាការរៀបចំដើម្បីដឹកនាំភ្នែកអ្នកមើល ឱ្យដឹងថាត្រូវមើលអ្វីមុន អ្វីក្រោយ។\n\nបើយើងធ្វើឱ្យគ្រប់យ៉ាងធំប៉ុនៗគ្នា នោះគ្មានអ្វីលេចធ្លោទេ! គេបង្កើត Hierarchy តាមរយៈ៖\n១. **ទំហំ (Scale):** ដាក់ចំណងជើងឱ្យធំជាងអត្ថបទធម្មតា។\n២. **ពណ៌ (Color):** ប្រើពណ៌ឆើតសម្រាប់ប៊ូតុង ឬចំណុចសំខាន់ (Focal Point)។\n៣. **កម្រាស់ (Weight):** ប្រើអក្សរ Bold សម្រាប់ទាញភ្នែកមុនគេ។", 
         answer_en: "**Visual Hierarchy** is the arrangement of elements to logically guide the viewer's eye on what to look at first, second, and third.\n\nIf everything stands out, nothing stands out! You create hierarchy through:\n1. **Scale:** Making headlines significantly larger than body text.\n2. **Color:** Using bright accent colors for buttons or the main Focal Point.\n3. **Weight:** Using bold fonts to demand immediate attention over regular text.",
-        chips: ["តើ Contrast ជាអ្វី?", "អ្វីទៅជា White Space?"],
-        chips_en: ["What is Contrast?", "White Space"]
+        chips: ["តើ បច្ចេកទេស Squint Test ជាអ្វី?", "អ្វីទៅជា White Space?"],
+        chips_en: ["What is the Squint Test?", "White Space"]
     },
     { 
         primaryKeys: ['តើ Rule of Thirds គឺជាអ្វី?', 'what is the rule of thirds'],
@@ -673,10 +664,10 @@ export const KNOWLEDGE_BASE = [
     },
     { 
         primaryKeys: ['តើ Bleed គឺជាអ្វី?', 'what is a bleed'],
-        keys: ['bleed', 'margin', 'die line', 'die-line', 'គែមសុវត្ថិភាព'],
-        regex: ['bleed', 'margin', 'die line', 'die-line'],
-        answer: "បាទ **ពាក្យបច្ចេកទេសសម្រាប់ការបោះពុម្ព (Print Production) ដែលអ្នកត្រូវដឹង៖**\n\n✂️ **Bleed (គែមបម្រុង):** ការពង្រីកផ្ទៃ Background ឱ្យហៀរចេញក្រៅទំហំកាត់ (ជាទូទៅ 3mm)។ 💡 *ហេតុអ្វី?* ព្រោះកាំបិតរោងពុម្ពកាត់មិនត្រឹមត្រូវ ១០០% ទេ បើអត់ដាក់ Bleed អាចនឹងសល់គែមពណ៌ស។\n📏 **Margin (គែមសុវត្ថិភាព):** ចន្លោះខាងក្នុងដែលហាមដាក់អក្សរ ការពារកុំឱ្យកាត់ដាច់ចូលសាច់អត្ថបទសំខាន់ៗ។", 
-        answer_en: "**Essential Print Production Terminology:**\n\n✂️ **Bleed:** Extending the background colors or images slightly beyond the actual document edge (usually by 3mm). 💡 *Why?* Because printing guillotine blades aren't 100% precise. Bleeds prevent accidental white borders on the final cut.\n📏 **Safe Margin:** An invisible inner boundary. Crucial text and logos must stay inside this line so they don't risk getting chopped off.",
+        keys: ['bleed', 'margin', 'die line', 'die-line', 'គែមសុវត្ថិភាព', 'slug'],
+        regex: ['bleed', 'margin', 'die line', 'die-line', 'slug'],
+        answer: "បាទ **ពាក្យបច្ចេកទេសសម្រាប់ការបោះពុម្ព (Print Production) ដែលអ្នកត្រូវដឹង៖**\n\n✂️ **Bleed (គែមបម្រុង):** ការពង្រីកផ្ទៃ Background ឱ្យហៀរចេញក្រៅទំហំកាត់ (ជាទូទៅ 3mm)។ 💡 *ហេតុអ្វី?* ព្រោះកាំបិតរោងពុម្ពកាត់មិនត្រឹមត្រូវ ១០០% ទេ បើអត់ដាក់ Bleed អាចនឹងសល់គែមពណ៌ស។\n📏 **Margin (គែមសុវត្ថិភាព):** ចន្លោះខាងក្នុងដែលហាមដាក់អក្សរ ការពារកុំឱ្យកាត់ដាច់ចូលសាច់អត្ថបទសំខាន់ៗ។\n📝 **Slug:** ជាទំហំក្រៅ Bleed បន្តិចទៀត ទុកសម្រាប់សរសេរកំណត់ចំណាំប្រាប់ជាងពុម្ព (មិនព្រីនចេញមកទេ)។", 
+        answer_en: "**Essential Print Production Terminology:**\n\n✂️ **Bleed:** Extending the background colors or images slightly beyond the actual document edge (usually by 3mm). 💡 *Why?* Because printing guillotine blades aren't 100% precise. Bleeds prevent accidental white borders on the final cut.\n📏 **Safe Margin:** An invisible inner boundary. Crucial text and logos must stay inside this line so they don't risk getting chopped off.\n📝 **Slug:** The area completely outside the bleed. Used strictly to leave printed notes or instructions for the print operator.",
         chips: ["តើ Resolution (PPI) ប៉ុន្មាន?", "តើ RGB និង CMYK ខុសគ្នាម៉េច?"],
         chips_en: ["Best Resolution for printing?", "RGB vs CMYK difference?"]
     },
@@ -752,13 +743,13 @@ export const KNOWLEDGE_BASE = [
         chips_en: ["Margin vs Padding?", "Visual Hierarchy"]
     },
     { 
-        primaryKeys: ['របៀបកែពន្លឺ', 'how to edit light'],
+        primaryKeys: ['របៀបកែពន្លឺ ក្នុង Affinity', 'how to edit light in affinity'],
         keys: ['edit light', 'កែពន្លឺ', 'brightness', 'exposure', 'លេងពន្លឺ'],
         regex: ['edit light', 'កែពន្លឺ', 'brightness', 'exposure', 'លេងពន្លឺ'],
         answer: "បាទ **ការកែពន្លឺ (Exposure/Lighting) គឺជាជំហានដំបូងបំផុតមុននឹងលេងពណ៌!**\n\n១. **Curves:** ប្រើខ្សែកោង Curves ដើម្បីទាញ Highlight (ពន្លឺខ្លាំង) ឡើងលើបន្តិច និងទាញ Shadows (ស្រមោល) ចុះក្រោមបន្តិច ដើម្បីបង្កើត S-Curve ដែលផ្តល់នូវ Contrast យ៉ាងស្រស់ស្អាត។\n២. **Shadows & Highlights:** បើរូបថតងងឹតមុខតួអង្គ សូមទាញ Shadows ឡើងបន្តិច។ បើមេឃសក្បុសពេក សូមទាញ Highlights ចុះ។", 
         answer_en: "**Correcting lighting is always the very first step before you touch any colors!**\n\n1. **Curves Tool:** Pull the top of the curve up slightly for brighter highlights, and pull the bottom down slightly for darker shadows. This creates the legendary 'S-Curve' for instant professional contrast.\n2. **Shadows & Highlights:** If your subject's face is dark, boost the 'Shadows' slider. If the sky is blown out, lower the 'Highlights' slider.",
-        chips: ["ពណ៌ Cinematic", "តើ Blend Modes ដំណើរការយ៉ាងម៉េច?"],
-        chips_en: ["Cinematic Color", "How do Blend Modes work?"]
+        chips: ["ពណ៌ Cinematic", "ពន្យល់ពី Affinity Adjustments"],
+        chips_en: ["Cinematic Color", "Affinity Adjustments explained"]
     },
     { 
         primaryKeys: ['ពណ៌ Cinematic', 'cinematic color'],
@@ -766,12 +757,12 @@ export const KNOWLEDGE_BASE = [
         regex: ['cinematic', 'teal and orange', 'ពណ៌កុន', 'color grading'],
         answer: "បាទ **ពណ៌បែប Cinematic (ពណ៌រោងកុន) ភាគច្រើនប្រើក្បួន Teal & Orange!**\n\nហេតុអ្វី? ព្រោះស្បែកមនុស្សយើងស្ថិតនៅក្នុងតំបន់ពណ៌ទឹកក្រូច (Orange) ចំណែកឯពណ៌ផ្ទុយរបស់វាគឺពណ៌ខៀវបៃតង (Teal)។ ពេលអ្នកដាក់ពណ៌ Teal ទៅក្នុងផ្ទៃខាងក្រោយ (Background/Shadows) វាធ្វើឱ្យតួអង្គលេចធ្លោខ្លាំង និងផ្តល់អារម្មណ៍ដូចកំពុងមើលកុនហូលីវូដ។\n\n💡 **របៀបធ្វើ៖** ប្រើ Color Grading (ឬ Color Balance) រួចរុញ Shadows ទៅរកពណ៌ខៀវ (Blue/Cyan) និងរុញ Highlights ទៅរកពណ៌លឿងទឹកក្រូច។", 
         answer_en: "**The classic 'Cinematic Look' relies heavily on the Teal & Orange color harmony!**\n\nWhy? Because human skin tones naturally fall into the Orange spectrum. Its exact opposite on the color wheel is Teal/Cyan. Pushing Teal into the shadows creates massive color contrast that makes the subject pop off the screen like a Hollywood movie.\n\n💡 **How to do it:** Open the Color Grading (or Color Balance) tool. Push your Shadows toward Cyan/Blue, and your Highlights toward Orange/Yellow.",
-        chips: ["របៀបកែពន្លឺ", "តើ Blend Modes ដំណើរការយ៉ាងម៉េច?"],
-        chips_en: ["How to edit light", "How do Blend Modes work?"]
+        chips: ["របៀបកែពន្លឺ ក្នុង Affinity", "តើ LUTs ជាអ្វី?"],
+        chips_en: ["How to edit light in Affinity", "What are LUTs?"]
     },
 
     // ------------------------------------------
-    // 16. BASIC CONVERSATION CATCH-ALL & ENGLISH-KHMER LOAN WORDS
+    // 16. BASIC CONVERSATION CATCH-ALL
     // ------------------------------------------
     {
         primaryKeys: ['សួស្តី', 'hello'],
@@ -788,8 +779,8 @@ export const KNOWLEDGE_BASE = [
         regex: ['^(ok|okay|អូខេ|អូខេស|បាទ|ចាស|យល់ហើយ)'],
         answer: "បាទ តើមានអ្វីឱ្យខ្ញុំជួយបន្តទៀតទេ? អ្នកអាចសួរខ្ញុំពីរបៀបកាត់តរូបភាព (Photomanipulation) ឬទ្រឹស្តីរចនាផ្សេងៗបាន។ ✨",
         answer_en: "Great! Let me know if you want to explore any other design topics like realistic photomanipulation. ✨",
-        chips: ["កាត់តរូប (Photomanipulation) ឱ្យដូចពិត?", "តើទំហំ Poster ស្តង់ដារមានអ្វីខ្លះ? 📏"],
-        chips_en: ["Secrets of realistic Photomanipulation?", "Standard Poster Sizes & Layouts? 📏"]
+        chips: ["កាត់តរូបភាព (Photomanipulation)", "តើទំហំ Poster ស្តង់ដារមានអ្វីខ្លះ? 📏"],
+        chips_en: ["Photomanipulation techniques", "Standard Poster Sizes & Layouts? 📏"]
     },
     {
         primaryKeys: ['សុំទោស', 'sorry'],
@@ -808,5 +799,193 @@ export const KNOWLEDGE_BASE = [
         answer_en: "You are very welcome! 😊 Whenever you have another design question or need layout feedback, I'll be right here waiting to help! 🚀",
         chips: ["របៀបលក់ Digital Assets 💰", "Color Theory"],
         chips_en: ["How to sell Digital Assets? 💰", "Color Theory"]
+    },
+
+    // ==========================================
+    // 17. AFFINITY MASTER DICTIONARY
+    // ==========================================
+    {
+        primaryKeys: ['ឧបករណ៍កាត់តនិងកែសម្ផស្ស (Retouching Tools)', 'affinity retouching tools'],
+        keys: ['retouching tools', 'healing brush', 'blemish', 'patch tool', 'clone brush', 'លុបមុន'],
+        regex: ['retouching', 'healing brush', 'blemish', 'patch tool', 'clone brush', 'លុបមុន'],
+        answer: "បាទ **ឧបករណ៍ Retouch (កែសម្ផស្ស និងលុបស្នាម) ក្នុង Affinity Photo៖**\n\n១. **Healing Brush:** លុបស្នាមដោយយកសាច់រូបជិតៗមកលាយបញ្ចូលគ្នាឱ្យរលោង (ល្អសម្រាប់ស្បែកមុខ)។\n២. **Blemish Removal Tool:** ចុចមួយឆ្វាច់បាត់មុន ឬស្នាមតូចៗភ្លាមៗដោយមិនបាច់រើសសាច់រូបជាមុន។\n៣. **Patch Tool:** គូសវង់ជុំវិញកន្លែងខូច រួចទាញវាទៅដាក់លើកន្លែងស្អាត ដើម្បីដោះដូរសាច់រូបភាព។\n៤. **Clone Brush:** កូពីសាច់រូបពីកន្លែងមួយទៅបិទពីលើកន្លែងមួយទៀត (១០០% ដូចដើម អត់មានលាយពណ៌ចូលគ្នាទេ ល្អសម្រាប់លុបគែមរឹងៗ)។\n៥. **Inpainting Brush:** លុបមនុស្ស ឬវត្ថុធំៗដោយស្វ័យប្រវត្តិ (AI ប៉ះប៉ូវកន្លែងប្រហោង)។",
+        answer_en: "**Essential Retouching Tools in Affinity Photo:**\n\n1. **Healing Brush:** Erases marks by seamlessly blending texture and color from a target area (Perfect for skin). \n2. **Blemish Removal Tool:** A one-click spot healer that automatically fixes tiny marks like acne without needing a target point.\n3. **Patch Tool:** Draw a lasso around a bad area and drag it to a clean area to swap the texture.\n4. **Clone Brush:** Copies exact pixels from one spot to another (100% clone, no blending. Best for hard edges).\n5. **Inpainting Brush:** The AI content-aware tool to magically erase entire tourists or large objects.",
+        chips: ["របៀបលុបមនុស្សចេញពីរូបភាព 🧹", "តើ Masking ជាអ្វី?"],
+        chips_en: ["How to erase objects (Inpainting)? 🧹", "What is Masking?"]
+    },
+    {
+        primaryKeys: ['ឧបករណ៍ជ្រើសរើស (Selection Tools)', 'affinity selection tools'],
+        keys: ['selection tools', 'magic wand', 'flood fill', 'marquee', 'lasso', 'របៀបរើសរូប'],
+        regex: ['selection', 'magic wand', 'flood fill', 'marquee', 'lasso', 'រើសរូប'],
+        answer: "បាទ **ឧបករណ៍ជ្រើសរើស (Selection Tools) ក្នុង Affinity មាន៖**\n\n១. **Selection Brush:** ឆ្លាតវៃបំផុត! យកជក់ទៅផាត់លើវត្ថុ វានឹងស្វែងរកគែមវត្ថុដោយស្វ័យប្រវត្តិ (ល្អសម្រាប់រើសសក់មនុស្ស)។\n២. **Flood Select (Magic Wand):** ចុចមួយឆ្វាច់ រើសយកពណ៌ ឬពន្លឺដែលដូចគ្នាទាំងអស់។\n៣. **Marquee Tools:** រើសរូបជារាងធរណីមាត្រ (ការ៉េ ឬរង្វង់ត្រង់ភ្លឹង)។\n៤. **Freehand (Lasso Tool):** គូសសេរីជុំវិញវត្ថុ (មានប្រភេទ Magnetic ជួយចាប់គែមរូបផងដែរ)។",
+        answer_en: "**Affinity offers powerful Selection Tools:**\n\n1. **Selection Brush:** The smartest tool! Paint over an object and it automatically snaps to the edges (Great for hair and complex shapes).\n2. **Flood Select (Magic Wand):** One click selects an entire area of similar color or brightness.\n3. **Marquee Tools:** Selects perfectly geometric shapes (Rectangles or Ellipses).\n4. **Freehand Selection (Lasso):** Draw custom freehand shapes around an object. (Includes a Magnetic mode that snaps to edges!).",
+        chips: ["របៀបកាត់សក់ឬ Background ឱ្យស្អាត", "អ្វីទៅជា Vector និង Raster?"],
+        chips_en: ["Precise background removal", "Vector vs Raster?"]
+    },
+    {
+        primaryKeys: ['ប្រភេទ Blur Filters', 'affinity blur filters'],
+        keys: ['blur filters', 'motion blur', 'radial blur', 'zoom blur', 'depth of field'],
+        regex: ['blur', 'motion blur', 'radial blur', 'zoom blur', 'depth of field'],
+        answer: "បាទ **ប្រភេទ Blur Filters (ធ្វើឱ្យព្រិល) សំខាន់ៗក្នុង Affinity៖**\n\n💨 **Motion Blur:** ធ្វើឱ្យព្រិលជាខ្សែៗ បង្កើតអារម្មណ៍ថាកំពុងរត់លឿន (ដូចឡានកំពុងបើក)។\n🌀 **Radial Blur:** ព្រិលជារង្វង់វិលជុំវិញចំណុចកណ្តាល (ដូចកង់ឡានកំពុងវិល ឬកង្ហារ)។\n🚀 **Zoom Blur:** ព្រិលបាញ់ចេញពីកណ្តាល ដូចកំពុងហោះក្នុងល្បឿនពន្លឺ។\n📷 **Depth of Field:** ព្រិល Background ដូចថតចេញពីកាមេរ៉ាអាជីព ដោយរក្សាភាពច្បាស់នៅកណ្តាល និងបង្កើតគ្រាប់ពន្លឺ (Bokeh) យ៉ាងស្អាត។",
+        answer_en: "**Affinity has amazing Blur Filters for cinematic effects:**\n\n💨 **Motion Blur:** Creates a directional blur to simulate high-speed movement (e.g., a fast-moving car).\n🌀 **Radial Blur:** Creates a spinning effect around a central point (e.g., spinning car tires or fan blades).\n🚀 **Zoom Blur:** Creates a 'rushing forward' hyper-speed effect originating from the center.\n📷 **Depth of Field Blur:** Mimics high-end camera lenses. Keeps the focal point sharp while blurring the background and generating realistic light Bokeh.",
+        chips: ["ព្រិល Background (Depth of Field)", "តើ Live Filters ក្នុង Affinity ជាអ្វី?"],
+        chips_en: ["Depth of Field (Blur)", "What are Live Filters?"]
+    },
+    {
+        primaryKeys: ['ប្រភេទ Distortion & Noise Filters', 'distortion and noise filters'],
+        keys: ['distortion', 'noise', 'twirl', 'ripple', 'add noise', 'denoise'],
+        regex: ['distortion', 'noise', 'twirl', 'ripple', 'add noise', 'denoise'],
+        answer: "បាទ **Filters សម្រាប់បំប្លែងរូបរាង (Distortion) និងគ្រាប់អុចៗ (Noise)៖**\n\n💧 **Twirl / Ripple / Wave:** ធ្វើឱ្យរូបភាពរួញ កោង ឬមានរលក ដូចរូបឆ្លុះក្នុងទឹក។\n📺 **Add Noise:** បន្ថែមគ្រាប់អុចៗចូលទៅក្នុងរូបភាព ដើម្បីបង្កើតពណ៌បែបកុនបុរាណ (Vintage Film Grain) ធ្វើឱ្យរូបមើលទៅរឹងមាំ និងមានអារម្មណ៍ពិតៗ។\n✨ **Denoise:** ផ្ទុយពី Add Noise! វាជួយជម្រះគ្រាប់អុចៗដែលកើតឡើងដោយសារថតរូបពេលយប់ (ISO ខ្ពស់) ធ្វើឱ្យសាច់រូបរលោងស្អាតវិញ។",
+        answer_en: "**Distortion and Noise Filters in Affinity:**\n\n💧 **Twirl / Ripple / Wave:** Distorts the image to create wavy, bending, or swirling liquid water effects.\n📺 **Add Noise:** Injects tiny random pixels. Essential for creating a Vintage Film Grain look, breaking up digital banding, and making digital art feel like a real physical painting.\n✨ **Denoise:** The exact opposite! It smooths out the ugly, multi-colored grain caused by shooting photos in the dark with high ISO settings.",
+        chips: ["ពន្យល់ពី Affinity Filters សំខាន់ៗ", "កាត់តរូបភាព (Photomanipulation)"],
+        chips_en: ["Explain Affinity Filters", "Photomanipulation techniques"]
+    },
+    {
+        primaryKeys: ['Advanced Adjustments (Levels, Channel Mixer, Vibrance)', 'advanced affinity adjustments'],
+        keys: ['levels adjustment', 'channel mixer', 'vibrance', 'saturation'],
+        regex: ['levels', 'channel mixer', 'vibrance', 'saturation'],
+        answer: "បាទ **ការកែពណ៌កម្រិតខ្ពស់ (Advanced Adjustments)៖**\n\n📈 **Levels:** គ្រប់គ្រងចំណុចខ្មៅ ចំណុចស និងចំណុចកណ្តាល (Gamma/Midtones) ដើម្បីធ្វើឱ្យរូបច្បាស់ដិត។\n🎛️ **Channel Mixer:** ឧបករណ៍ពិសេស! វាអនុញ្ញាតឱ្យអ្នកប្តូរពណ៌យ៉ាងស៊ីជម្រៅ ដោយលាយពណ៌ក្រហម ខៀវ បៃតង (RGB Channels)។ ល្អបំផុតសម្រាប់ធ្វើពណ៌ស្លឹកឈើក្រហមរដូវស្លឹកឈើជ្រុះ (Infrared Look)។\n🌈 **Vibrance vs Saturation:** *Saturation* បង្កើនពណ៌ទាំងអស់ (ធ្វើឱ្យស្បែកមនុស្សឡើងលឿងឆ្អិនឆ្អៅ)។ តែ *Vibrance* ឆ្លាតជាង វានឹងបង្កើនតែពណ៌ណាដែលស្លេក ហើយ **ការពារពណ៌ស្បែកមនុស្ស** មិនឱ្យខូចទេ!",
+        answer_en: "**Advanced Color Adjustments:**\n\n📈 **Levels:** Precisely controls the Black point, White point, and Gamma (Midtones). Essential for fixing flat, washed-out photos.\n🎛️ **Channel Mixer:** A pro tool! It allows you to deeply manipulate the core Red, Green, and Blue channels. Famous for turning green forests into vibrant red autumn scenes (The Infrared Look).\n🌈 **Vibrance vs Saturation:** *Saturation* boosts all colors equally (which makes human skin look fake and orange). *Vibrance* is smart—it only boosts dull colors and **protects skin tones**!",
+        chips: ["របៀបកែពន្លឺ ក្នុង Affinity", "ពណ៌ Cinematic"],
+        chips_en: ["How to edit light in Affinity", "Cinematic Color"]
+    },
+    {
+        primaryKeys: ['Geometry Operations (Add, Subtract, Intersect)', 'affinity boolean geometry'],
+        keys: ['boolean', 'geometry', 'add', 'subtract', 'intersect', 'xor', 'divide', 'បញ្ចូល shape'],
+        regex: ['boolean', 'geometry', 'add', 'subtract', 'intersect', 'xor', 'divide'],
+        answer: "បាទ **ពាក្យបច្ចេកទេស Geometry / Boolean (កាត់/បញ្ចូល Shape ក្នុង Designer)៖**\n\n➕ **Add (បូកបញ្ចូល):** រំលាយ Shape ២ ឬច្រើន ចូលគ្នាឱ្យក្លាយជា Shape តែមួយ។\n➖ **Subtract (ដកចេញ):** យក Shape ដែលនៅខាងលើ ទៅកាត់ក្បោះ Shape ខាងក្រោម (ដូចយកពុម្ពទៅកាត់នំ)។\n✂️ **Intersect (ប្រសព្វ):** លុបចោលទាំងអស់ ទុកតែផ្នែកកណ្តាលដែល Shape ទាំង២ ត្រួតស៊ីគ្នាប៉ុណ្ណោះ។\n❌ **Xor (ដកចំណុចប្រសព្វ):** ផ្ទុយពី Intersect! វាលុបចោលផ្នែកដែលត្រួតស៊ីគ្នា រួចទុកផ្នែកខាងក្រៅ។\n➗ **Divide (បំបែក):** កាត់ Shape ជាបំណែកៗ (ដូចកាត់នំខេក) តាមខ្សែបន្ទាត់ដែលវាកាត់ខ្វែងគ្នា។",
+        answer_en: "**Affinity Designer Terminology: Boolean Geometry Operations (Merging shapes):**\n\n➕ **Add:** Combines multiple overlapping shapes into one single, solid vector path.\n➖ **Subtract:** Uses the top shape as a cookie-cutter to punch a hole out of the bottom shape.\n✂️ **Intersect:** Deletes everything EXCEPT the exact area where the shapes overlap.\n❌ **Xor (Exclude):** The exact opposite! It punches out the overlapping center and keeps the outside pieces.\n➗ **Divide:** Slices the shapes into individual puzzle pieces wherever their paths cross.",
+        chips: ["តើ Shape Builder Tool ប្រើធ្វើអី? 🔲", "អ្វីទៅជា Vector និង Raster?"],
+        chips_en: ["What is the Shape Builder Tool? 🔲", "Vector vs Raster?"]
+    },
+    {
+        primaryKeys: ['Image Layer vs Pixel Layer', 'image layer vs pixel layer'],
+        keys: ['image layer', 'pixel layer', 'rasterize'],
+        regex: ['image layer', 'pixel layer'],
+        answer: "បាទ **ពាក្យបច្ចេកទេសសំខាន់បំផុត៖ Image Layer vs Pixel Layer**\n\n🖼️ **Image Layer:** នៅពេលអ្នកទាញរូបថតចូលក្នុង Affinity វានឹងក្លាយជា Image Layer។ វារក្សាគុណភាពដើមជានិច្ច (ដូច Smart Object)។ អ្នក **មិនអាច** យកជក់ (Brush) ទៅផាត់ ឬលុប (Erase) លើវាផ្ទាល់បានទេ។\n👾 **Pixel Layer:** ជារូបភាពដែលត្រូវបំប្លែងទៅជាភីកសែលធម្មតា (Rasterized)។ ពេលនេះ អ្នកអាចលុប ផាត់ពណ៌ និងប្រើ Tools គ្រប់យ៉ាងលើវាបាន។\n\n💡 **វិធីបំប្លែង:** ចុច Right-click លើ Image Layer រួចជ្រើសរើសយកពាក្យ **Rasterize**។",
+        answer_en: "**Crucial Terminology: Image Layer vs Pixel Layer**\n\n🖼️ **Image Layer:** When you drag a photo into Affinity, it is placed as an Image Layer. It retains its original raw resolution and bounding box (like a Smart Object). You CANNOT use pixel brushes or erasers directly on it.\n👾 **Pixel Layer:** A flattened raster layer. You can freely paint, clone, and erase directly on the pixels.\n\n💡 **How to convert:** Right-click the Image Layer and select **Rasterize** to convert it into an editable Pixel Layer.",
+        chips: ["តើ Rasterize មានន័យថាម៉េច?", "តើ Smart Object ជាអ្វី?"],
+        chips_en: ["What does rasterize mean?", "What is a Smart Object?"]
+    },
+    {
+        primaryKeys: ['Stroke vs Fill', 'stroke vs fill affinity'],
+        keys: ['stroke', 'fill', 'expand stroke', 'ស៊ុម', 'ពណ៌ក្នុង'],
+        regex: ['stroke', 'fill', 'expand stroke'],
+        answer: "បាទ **ពាក្យបច្ចេកទេសគូរ Vector: Stroke និង Fill**\n\n🎨 **Fill (ពណ៌សាច់):** គឺជាពណ៌ដែលចាក់បំពេញផ្ទៃខាងក្នុងរបស់ Shape មួយ។\n➖ **Stroke (ពណ៌ស៊ុម):** គឺជាខ្សែបន្ទាត់ ឬស៊ុមដែលរុំព័ទ្ធជុំវិញ Shape នោះ។ អ្នកអាចសារ៉េកម្រាស់ (Width) របស់វាបាន។\n\n🪄 **Expand Stroke (មុខងារមាស):** គឺជាការបំប្លែងខ្សែបន្ទាត់ (Stroke) ឱ្យក្លាយទៅជាសាច់ Shape ពេញលេញ (Fill)។ នេះជាក្បួនដាច់ខាតដែលអ្នកត្រូវធ្វើ មុននឹងយកវត្ថុនោះទៅកាត់បញ្ចូលគ្នាដោយប្រើ Shape Builder ដើម្បីធ្វើ Logo កុំឱ្យវាខូចទ្រង់ទ្រាយ!",
+        answer_en: "**Affinity Vector Terminology: Stroke and Fill**\n\n🎨 **Fill:** The solid color painted inside the boundaries of a shape.\n➖ **Stroke:** The outline or border drawn around the edge of the shape. You can dynamically adjust its thickness.\n\n🪄 **Expand Stroke:** A critically important command! It permanently converts a basic outline (Stroke) into a solid 2D Shape (Fill). You absolutely MUST do this before trying to cut, subtract, or merge custom logo paths using the Shape Builder Tool!",
+        chips: ["Geometry Operations (Add, Subtract, Intersect)", "តើ Shape Builder Tool ប្រើធ្វើអី? 🔲"],
+        chips_en: ["Affinity Boolean Geometry", "What is the Shape Builder Tool? 🔲"]
+    },
+    {
+        primaryKeys: ['Designer Persona vs Pixel Persona', 'designer persona vs pixel persona'],
+        keys: ['designer persona', 'pixel persona', 'vector persona', 'affinity designer'],
+        regex: ['designer persona', 'pixel persona'],
+        answer: "បាទ **ពាក្យបច្ចេកទេសក្នុងកម្មវិធី Affinity Designer: Designer Persona vs Pixel Persona**\n\n📐 **Designer Persona:** ទីធ្លាសម្រាប់គូរ Vector សុទ្ធ (មុតស្រួច មិនបែកគ្រាប់)។ អ្នកប្រើ Pen Tool គូររាង និងអក្សរនៅទីនេះ។\n🖌️ **Pixel Persona:** ប្តូរកម្មវិធី Designer ទៅជាកម្មវិធីកាត់តរូបភាពភ្លាមៗ! អ្នកអាចយកជក់ (Pixel Brushes) ទៅផាត់ស្រមោល លុបរូប ឬដាក់ Texture ក្រើមៗ បញ្ចូលក្នុងរូប Vector របស់អ្នកបានយ៉ាងងាយស្រួល ដោយមិនបាច់ប្តូរកម្មវិធីឡើយ!",
+        answer_en: "**Affinity Designer Terminology: Designer Persona vs Pixel Persona**\n\n📐 **Designer Persona:** The pure vector workspace. You use the Pen tool, draw crisp mathematical shapes, and scale logos infinitely here.\n🖌️ **Pixel Persona:** Instantly turns Designer into a mini-photo editor! You can use raster pixel brushes to paint textures, shading, and glowing lights directly inside your crisp vector shapes without ever leaving the app!",
+        chips: ["តិចនិកប្រើ Affinity Personas 🚀", "អ្វីទៅជា Vector និង Raster?"],
+        chips_en: ["Tips for Affinity Personas 🚀", "Vector vs Raster?"]
+    },
+    {
+        primaryKeys: ['Screen vs Linear Dodge (Add)', 'screen vs linear dodge add'],
+        keys: ['screen', 'linear dodge', 'add', 'ធ្វើភ្លើង glow', 'glow effect'],
+        regex: ['screen', 'linear dodge', 'add', 'glow'],
+        answer: "បាទ **គន្លឹះ Blend Modes ដើម្បីធ្វើពន្លឺភ្លើង (Glow Effects): Screen vs Linear Dodge (Add)**\n\nទាំង២នេះលុបពណ៌ខ្មៅចោលដូចគ្នា តែមានលទ្ធផលខុសគ្នាស្រឡះ៖\n🤍 **Screen:** ផ្តល់ពន្លឺទន់ៗ និងធម្មជាតិ (ល្អបំផុតសម្រាប់ធ្វើផ្សែង អ័ព្ទ ឬពន្លឺថ្ងៃព្រិលៗ)។\n✨ **Linear Dodge (Add):** វាបូកបញ្ចូលតម្លៃពន្លឺបញ្ជូលគ្នា ធ្វើឱ្យពន្លឺឆេះខ្លាំង និងដិតខ្លាំងមែនទែន! បើចង់ធ្វើភ្លើង Neon, ភ្លើងវេទមន្ត, ដាវពន្លឺ (Lightsaber) ឬផ្កាយរស្មី ត្រូវតែប្រើ Blend Mode មួយនេះដាច់ខាត!",
+        answer_en: "**Pro Tip for Blend Modes: Screen vs Linear Dodge (Add)**\n\nBoth remove black pixels, but they act very differently!\n🤍 **Screen:** Creates a soft, natural, and realistic glow (Great for fog, mist, or soft window light).\n✨ **Linear Dodge (Add):** Physically adds the math values of the pixels together, creating extremely bright, blown-out, intense glows! If you want to create Cyberpunk Neon lights, magic spells, or glowing Lightsabers, you absolutely MUST use Linear Dodge (Add)!",
+        chips: ["ពន្យល់ពី Blend Modes ទាំងអស់ 🌈", "ពណ៌ Cinematic"],
+        chips_en: ["Explain all Blend Modes 🌈", "Cinematic Color"]
+    },
+
+    // ==========================================
+    // 18. PRO SECRETS & WORLDWIDE TRICKS (NEW!)
+    // ==========================================
+    {
+        primaryKeys: ['របៀបធ្វើស្បែករលោង (Frequency Separation)', 'frequency separation skin retouching'],
+        keys: ['frequency separation', 'ស្បែករលោង', 'កែមុខ', 'smooth skin', 'retouch skin', 'ធ្វើឱ្យស្បែករលោង'],
+        regex: ['frequency separation', 'ស្បែករលោង', 'smooth skin', 'retouch skin'],
+        answer: "បាទ **Frequency Separation** គឺជាក្បួនកែស្បែកមុខកម្រិតកំពូល ដែលអ្នកថតរូបទស្សនាវដ្តីប្រើ!\n\nវាបំបែករូបភាពជា ២ ស្រទាប់ (Layers) ផ្សេងគ្នា៖\n១. **ស្រទាប់ពណ៌ (Low Frequency):** មានតែពណ៌និងពន្លឺស្បែក។ អ្នកអាចយកជក់ទៅផាត់បំបាត់ភាពក្រហម ឬស្នាមជាំបាន ដោយមិនធ្វើឱ្យបាត់រន្ធញើស។\n២. **ស្រទាប់ផ្ទៃ (High Frequency):** មានតែរន្ធញើសនិងសាច់ក្រណាត់។ អ្នកអាចលុបមុន ឬស្នាមជ្រួញបានយ៉ាងស្អាត ដោយមិនធ្វើឱ្យខូចពណ៌ស្បែកទាល់តែសោះ។\n\n💡 **នៅក្នុង Affinity Photo:** អ្នកគ្រាន់តែចូលទៅកាន់ `Filters > Frequency Separation` គឺវាធ្វើរឿងនេះដោយស្វ័យប្រវត្តិ!",
+        answer_en: "**Frequency Separation** is the ultimate, high-end skin retouching secret used by magazine retouchers!\n\nIt mathematically splits your image into 2 separate layers:\n1. **Color/Tone Layer (Low Frequency):** Contains only the colors and lighting. You can paint away redness and uneven skin tones without destroying the skin's texture.\n2. **Texture Layer (High Frequency):** Contains only pores, wrinkles, and acne. You can use the healing brush to remove a pimple without ruining the underlying skin color.\n\n💡 **In Affinity Photo:** Simply go to `Filters > Frequency Separation` and it sets up the entire process for you instantly!",
+        chips: ["ឧបករណ៍កាត់តនិងកែសម្ផស្ស (Retouching Tools)", "កាត់តរូបភាព (Photomanipulation)"],
+        chips_en: ["Affinity retouching tools", "Photomanipulation techniques"]
+    },
+    {
+        primaryKeys: ['តិចនិក Power Duplicate', 'power duplicate shortcut'],
+        keys: ['power duplicate', 'copy rotate', 'duplicate', 'cmd j'],
+        regex: ['power duplicate', 'copy rotate', 'cmd j'],
+        answer: "បាទ **Power Duplicate (Cmd/Ctrl + J)** គឺជាវេទមន្តដ៏អស្ចារ្យបំផុតសម្រាប់ការរចនាប្លង់ ឬគូរ Mandala ក្នុងកម្មវិធី Affinity!\n\n💡 **របៀបធ្វើ៖**\n១. គូររាងមួយ រួចចុច `Cmd+J` (ឬ `Ctrl+J`) ដើម្បីកូពីវា។\n២. ទាញវត្ថុថ្មីនោះឱ្យរំកិលទៅមុខ និង បង្វិលវាបន្តិច។\n៣. ចុច `Cmd+J` ទៀត... កម្មវិធីនឹង **កូពីបូកជាមួយការបង្វិលនោះ** ធ្វើឡើងវិញដោយស្វ័យប្រវត្តិ! ចុចផ្ទួនៗ វានឹងបង្កើតជារង្វង់ផ្កា ឬកាំរស្មីព្រះអាទិត្យដ៏ល្អឥតខ្ចោះក្នុងពេល ២ វិនាទី!",
+        answer_en: "**Power Duplicate (Cmd/Ctrl + J)** is absolute magic for creating geometric patterns, mandalas, or sunbursts in Affinity!\n\n💡 **How it works:**\n1. Draw a shape, then press `Cmd+J` (or `Ctrl+J`) to duplicate it.\n2. Move the new shape slightly and rotate it a few degrees.\n3. Press `Cmd+J` again... Affinity will automatically **duplicate AND repeat the rotation/movement**! Press it repeatedly to generate a perfect sunburst or spiral in 2 seconds!",
+        chips: ["Shortcut ផ្លូវកាត់សំខាន់ៗមានអ្វីខ្លះ?", "Geometry Operations (Add, Subtract, Intersect)"],
+        chips_en: ["Essential Keyboard Shortcuts", "Affinity Boolean Geometry"]
+    },
+    {
+        primaryKeys: ['តើ ច្បាប់ពណ៌ 60-30-10 គឺជាអ្វី?', '60-30-10 color rule'],
+        keys: ['60-30-10', 'color ratio', 'ច្បាប់ពណ៌', 'របៀបប្រើពណ៌'],
+        regex: ['60-30-10', 'color ratio', 'ច្បាប់ពណ៌'],
+        answer: "បាទ **ច្បាប់ពណ៌ 60-30-10** គឺជាក្បួនចេញពីអ្នករចនាផ្ទៃខាងក្នុង (Interior Design) ដែលត្រូវគេយកមកអនុវត្តយ៉ាងជោគជ័យក្នុងការធ្វើ UI/UX និង Poster ឱ្យមើលទៅថ្លៃថ្នូរ៖\n\n- **៦០% (ពណ៌ចម្បង):** ជាពណ៌ផ្ទៃខាងក្រោយភាគច្រើន (Neutral color) ដែលមិនធ្វើឱ្យឈឺភ្នែក។\n- **៣០% (ពណ៌បន្ទាប់បន្សំ):** ជាពណ៌សម្រាប់រំលេចស៊ុម ប្រអប់ ឬអត្ថបទសំខាន់ៗ (ជួយទប់លំនឹង)។\n- **១០% (ពណ៌ឆើត Accent):** ពណ៌រំលេច! ប្រើសម្រាប់តែចំណុចសំខាន់បំផុតដូចជា ប៊ូតុងទិញ ឬចំណងជើងធំ។ នេះជាកន្លែងដែលភ្នែកមនុស្សរត់ទៅមុនគេ!",
+        answer_en: "**The 60-30-10 Rule** is a timeless Interior Design secret that works flawlessly for UI/UX and Poster design to create perfectly balanced aesthetics:\n\n- **60% (Primary Color):** The dominant background color. Usually neutral so it doesn't fatigue the eyes.\n- **30% (Secondary Color):** Used for cards, shapes, or supporting text to create structure.\n- **10% (Accent Color):** The brightest, boldest color. Strictly reserved for 'Call to Action' buttons or major focal points. This is where the eye naturally looks first!",
+        chips: ["Color Theory", "អ្វីទៅជា Hierarchy?"],
+        chips_en: ["Color Theory", "Visual Hierarchy"]
+    },
+    {
+        primaryKeys: ['Blend Ranges (លាក់ពណ៌លឿនបំផុត)', 'affinity blend ranges'],
+        keys: ['blend ranges', 'blend if', 'លាក់ពណ៌ស', 'remove white background'],
+        regex: ['blend range', 'blend if', 'លាក់ពណ៌ស'],
+        answer: "បាទ នៅក្នុង Affinity មានមុខងារលាក់កំបាំងមួយហៅថា **Blend Ranges** (ស្រដៀង 'Blend If' ក្នុង Photoshop)។\n\nប្រសិនបើអ្នកទាញ Logo ដែលជាប់ Background ស ហើយអ្នកចង់លុបវាចោលភ្លាមៗ ដោយមិនបាច់អង្គុយប្រើ Magic Wand កាត់៖\n១. ចុចសញ្ញា **កង់ធ្មេញ (Gear Icon)** នៅលើ Layer នោះ។\n២. នៅត្រង់ក្រាហ្វ 'Source Layer Ranges' គ្រាន់តែទាញចំណុចខាងស្តាំ (Highlights) ចុះមកបាតក្រោម។\n💥 ពណ៌សទាំងអស់នឹងរលាយបាត់ភ្លាមៗ (Transparent) យ៉ាងស្អាត និង Non-destructive!",
+        answer_en: "Affinity has a hidden super-feature called **Blend Ranges** (identical to 'Blend If' in Photoshop).\n\nIf you drop in a JPG Logo that has a solid white background, and you want to remove the white instantly without using the Magic Wand:\n1. Click the **Gear Icon** on that layer in the Layers panel.\n2. On the 'Source Layer Ranges' graph, grab the node on the far right (the Highlights) and drag it straight down to the bottom.\n💥 All the white will instantly become 100% transparent, leaving perfectly clean, non-destructive edges!",
+        chips: ["តើ Blend Modes ដំណើរការយ៉ាងម៉េច?", "របៀបកាត់សក់ឬ Background ឱ្យស្អាត"],
+        chips_en: ["How do Blend Modes work?", "Precise background removal"]
+    },
+    {
+        primaryKeys: ['តើ Optical Kerning ជាអ្វី?', 'optical vs metric kerning'],
+        keys: ['optical kerning', 'metric', 'គម្លាតអក្សរ', 'kerning optical'],
+        regex: ['optical kerning', 'metric', 'គម្លាតអក្សរ'],
+        answer: "បាទ នេះជាគន្លឹះ Typography ដែលមានតែអ្នកជំនាញទេទើបដឹង៖ **Metric vs Optical Kerning**\n\n📏 **Metric Kerning:** ជាគម្លាតគណិតវិទ្យាដែលអ្នកបង្កើតហ្វុនសរសេរកូដទុក។ វាល្អសម្រាប់អត្ថបទតូចៗវែងៗ (Body Text)។\n👁️ **Optical Kerning:** កម្មវិធីរចនានឹងយក AI មកវាស់រូបរាងអក្សរនីមួយៗ (ឧទាហរណ៍អក្សរ V និង A មានគែមបញ្ឆិត) រួចរុញវាចូលគ្នាឱ្យសមាមាត្រភ្នែកមើល។ \n\n💡 **គន្លឹះ:** តែងតែប្តូរទៅប្រើ **Optical Kerning** សម្រាប់ចំណងជើង (Headlines) ឬ Logo ធំៗ នោះអក្សររបស់អ្នកនឹងមើលទៅស្មើគ្នាស្អាតឥតខ្ចោះ!",
+        answer_en: "Here is a Typography secret known only to top designers: **Metric vs Optical Kerning**\n\n📏 **Metric Kerning:** Uses the default spacing math coded into the font file by its creator. Best for long paragraphs of body text.\n👁️ **Optical Kerning:** The software calculates the physical shape of adjacent letters (like the angled edges of 'V' and 'A') and visually nudges them together so they look balanced to the human eye.\n\n💡 **Pro Tip:** Always switch to **Optical Kerning** for massive Headlines, Titles, and Logos. It instantly fixes awkward, gaping holes between letters!",
+        chips: ["Kerning និង Tracking ខុសគ្នាម៉េច?", "អ្វីទៅជា Typography?"],
+        chips_en: ["Kerning vs Tracking?", "What is Typography?"]
+    },
+    {
+        primaryKeys: ['Global Colors (ប្តូរពណ៌ម្តងទាំងអស់)', 'affinity global colors swatches'],
+        keys: ['global color', 'swatches', 'ដូរពណ៌ម្តងទាំងអស់', 'color palette'],
+        regex: ['global color', 'swatches', 'ដូរពណ៌'],
+        answer: "បាទ ការប្រើប្រាស់ **Global Colors** គឺជាវិធីសន្សំពេលដ៏ឆ្លាតវៃពេលធ្វើ UI Design ឬ Branding!\n\nជំនួសឱ្យការចាក់ពណ៌ធម្មតា អ្នកត្រូវ Add ពណ៌នោះចូល Swatches Panel រួចចុចគ្រីសយកពាក្យ **'Global'**។\n\n💡 **មន្តអាគម៖** បើអ្នកប្រើពណ៌ Global នោះទៅលើប៊ូតុងចំនួន ៥០ កន្លែង។ ថ្ងៃក្រោយបើភ្ញៀវចង់ប្តូរពីពណ៌ខៀវ ទៅពណ៌បៃតង អ្នកគ្រាន់តែចុចកែពណ៌ Global នោះមួយ នោះប៊ូតុងទាំង ៥០ នឹងដូរពណ៌ទៅជាបៃតងព្រមគ្នាក្នុងពេល ១ វិនាទី!",
+        answer_en: "Using **Global Colors** is the smartest workflow secret for UI/UX and Brand Design!\n\nInstead of just picking a color from the wheel, add it to your Swatches panel and check the box for **'Global'**.\n\n💡 **The Magic:** If you apply that Global Color to 50 different buttons across your document... and later the client says, 'Make them green instead of blue,' you simply edit the single Global Swatch. All 50 buttons will instantly change to green simultaneously!",
+        chips: ["Affinity Symbols គឺអ្វី?", "Color Theory"],
+        chips_en: ["What are Affinity Symbols?", "Color Theory"]
+    },
+    {
+        primaryKeys: ['តើ បច្ចេកទេស Squint Test ជាអ្វី?', 'what is the squint test hierarchy'],
+        keys: ['squint test', 'ធ្មេចភ្នែក', 'hierarchy check', 'មើលឱ្យព្រិល'],
+        regex: ['squint test', 'ធ្មេចភ្នែក', 'hierarchy'],
+        answer: "បាទ **Squint Test (តិចនិកព្រិលភ្នែក)** គឺជាក្បួនតេស្តត្រួតពិនិត្យ Visual Hierarchy ដ៏មានប្រសិទ្ធភាពបំផុតនៅលើលោក!\n\nពេលអ្នកឌីហ្សាញចប់ សូមថយក្រោយបន្តិច រួច **ធ្មេចភ្នែកឱ្យព្រិលៗ (Squint your eyes)** រហូតដល់មើលអក្សរលែងដាច់។\n\n💡 **លទ្ធផល៖** តើវត្ថុណាដែលអ្នកនៅតែអាចមើលឃើញមុនគេពេលភ្នែកព្រិល? បើវាជាវត្ថុ ឬចំណងជើងដែលអ្នកចង់ឱ្យគេចាប់អារម្មណ៍មែន នោះបានន័យថា Contrast និង Hierarchy របស់អ្នកជោគជ័យហើយ! បើមើលទៅឃើញរញ៉េរញ៉ៃ អ្នកត្រូវបន្ថយទំហំរបស់រង និងតម្លើងពន្លឺវត្ថុគោល។",
+        answer_en: "**The Squint Test** is the oldest and most flawless trick to instantly check your Visual Hierarchy!\n\nWhen you finish a design, lean back and **squint your eyes** until the image becomes totally blurry and you can't read the words anymore.\n\n💡 **The Result:** What is the very first shape or color blob that grabs your attention through the blur? If it's your main subject or headline, your contrast is perfect! If your eye goes to an unimportant logo in the corner, your hierarchy is broken and you need to fix your scaling.",
+        chips: ["អ្វីទៅជា Hierarchy?", "តើ Contrast ជាអ្វី?"],
+        chips_en: ["Visual Hierarchy", "What is Contrast?"]
+    },
+    {
+        primaryKeys: ['សរសេរអក្សរតាមខ្សែកោង', 'text on a path affinity'],
+        keys: ['text on path', 'អក្សរកោង', 'curve text', 'សរសេរកោង'],
+        regex: ['text on path', 'អក្សរកោង', 'curve text'],
+        answer: "បាទ ការធ្វើ **Text on a Path (អក្សររត់តាមខ្សែកោង)** ក្នុង Affinity គឺស្រួលណាស់៖\n\n១. ប្រើ **Pen Tool** ឬឧបករណ៍គូររង្វង់ (Ellipse Tool) ដើម្បីគូសខ្សែបន្ទាត់ ឬរាងដែលអ្នកចង់បាន។\n២. ជ្រើសរើស **Artistic Text Tool (អក្សរ A)**។\n៣. យកកណ្ដុរទៅដាក់លើខ្សែបន្ទាត់នោះ រហូតដល់ឃើញសញ្ញាអក្សរ 'A' ដូរជារាងកោង (អក្សរ T មានរលក)។\n៤. ចុចមួយឆ្វាច់! ពេលនេះអ្នកអាចសរសេរអក្សរ ហើយវានឹងរត់ពត់ពេនទៅតាមខ្សែកោងនោះយ៉ាងស្រស់ស្អាត (ល្អបំផុតសម្រាប់ធ្វើ Logo រាងរង្វង់មូល ត្រា ឬបដា)។",
+        answer_en: "Creating **Text on a Path** in Affinity is incredibly easy and essential for badges and logos:\n\n1. Use the **Pen Tool** or Ellipse Tool to draw the exact vector line or circle you want.\n2. Select the **Artistic Text Tool (A)**.\n3. Hover your cursor directly over the vector line you just drew until the cursor icon changes to a 'T' with a curvy wave underneath it.\n4. Click! You can now type, and the letters will perfectly follow the physical curve of the path. You can even grab the green triangles to slide the text around the curve!",
+        chips: ["តើ Pen Tool ប្រើធ្វើអ្វី?", "ក្បួនរចនាឡូហ្គោ (Logo Design)"],
+        chips_en: ["How to use the Pen Tool?", "Rules of Logo Design"]
+    },
+    {
+        primaryKeys: ['Copy Effect ពី Layer មួយទៅមួយទៀត', 'paste fx layer styles affinity'],
+        keys: ['paste fx', 'copy style', 'កូពី effect', 'copy layer style'],
+        regex: ['paste fx', 'copy style', 'កូពី effect'],
+        answer: "បាទ **នេះជាគន្លឹះធ្វើការលឿនរហ័ស៖ Paste FX (ចម្លង Layer Styles)**\n\nបងមិនបាច់ចំណាយពេលអង្គុយសារ៉េកម្រាស់ Drop Shadow ឬកម្រិតពន្លឺ Outer Glow ឱ្យដូចគ្នាម្តងមួយៗនោះទេ!\n១. ជ្រើសរើស Layer ដែលមាន Effect ស្អាតស្រាប់ រួចចុច Copy (`Cmd/Ctrl + C`)។\n២. ជ្រើសរើស Layer ថ្មីដែលបងចង់ដាក់ Effect នោះចូល។\n៣. ចូលទៅកាន់ `Edit > Paste FX` (ផ្លូវកាត់ `Cmd/Ctrl + Shift + V`)។\n\n💥 កម្មវិធីនឹងកូពីតែ Effects យកមកបិទបញ្ជូល ដោយមិនកូពីសាច់រូប ឬអក្សរនោះទេ!",
+        answer_en: "**Ultimate Speed Workflow: Paste FX (Copying Layer Styles)**\n\nYou never need to manually match Drop Shadow angles or Glow radiuses between different elements!\n1. Select the layer that has the perfect Effects applied and Copy it (`Cmd/Ctrl + C`).\n2. Select the new, blank layer you want to apply those effects to.\n3. Go to `Edit > Paste FX` (Shortcut: `Cmd/Ctrl + Shift + V`).\n\n💥 Affinity will instantly paste ONLY the Layer Styles (Shadows, Glows, Bevels) without overwriting your actual text or image contents!",
+        chips: ["របៀបបង្កើត Text Effects ស្អាតៗ ✨", "Shortcut ផ្លូវកាត់សំខាន់ៗមានអ្វីខ្លះ?"],
+        chips_en: ["How to create premium Text Effects ✨", "Essential Keyboard Shortcuts"]
+    },
+    {
+        primaryKeys: ['តើ LUTs ជាអ្វី?', 'what are luts lookup tables'],
+        keys: ['lut', 'luts', 'color lookup', 'ពណ៌កុន', 'filter'],
+        regex: ['lut', 'luts', 'color lookup'],
+        answer: "បាទ **LUTs (Color Look-Up Tables)** គឺជាអាវុធសម្ងាត់ដែលឧស្សាហកម្មភាពយន្តហូលីវូដប្រើដើម្បីកែពណ៌វីដេអូ!\n\nនៅក្នុង Affinity Photo អ្នកអាចអូសយកឯកសារ LUTs (ទម្រង់ .cube ឬ .3dl) មកដាក់លើរូបថតរបស់អ្នក។ វាជាការកែប្រែពណ៌ដ៏ស្មុគស្មាញ (ផ្លាស់ប្តូរទាំងកម្រិតពណ៌ ពន្លឺ និងស្រមោលក្នុងពេលតែមួយ) ត្រឹមតែមួយឃ្លីក (1-Click) ប៉ុណ្ណោះ។\n\n💡 **របៀបប្រើ៖** បង្កើត Adjustment Layer ដែលមានឈ្មោះថា **LUT** រួច Load ឯកសារ LUTs ដែលអ្នកទាញយកពីអ៊ីនធឺណិតចូល។ រូបថតធម្មតារបស់អ្នកនឹងប្រែក្លាយទៅជាមានសាច់ពណ៌បែប Cinematic ភ្លាមៗ។",
+        answer_en: "**LUTs (Color Look-Up Tables)** are the secret color-grading files used by Hollywood colorists to give movies their distinct vibe!\n\nIn Affinity Photo, you can apply LUT files (.cube or .3dl) to your photos. A LUT is essentially a hyper-advanced filter that mathematically remaps the colors, contrast, and shadows of your image in a single click.\n\n💡 **How to use them:** Create a **LUT** Adjustment Layer, then click 'Load' to select a cinematic LUT you downloaded from the internet. Your flat photo will instantly look like a movie still!",
+        chips: ["ពណ៌ Cinematic", "ពន្យល់ពី Affinity Adjustments"],
+        chips_en: ["Cinematic Color", "Affinity Adjustments explained"]
     }
 ];
