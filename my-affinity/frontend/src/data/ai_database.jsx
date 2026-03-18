@@ -92,8 +92,8 @@ export const KNOWLEDGE_BASE = [
         primaryKeys: ['ហត់', 'tired'],
         keys: ['stress', 'ស្ត្រេស', 'ពិបាក', 'ឈឺក្បាល', 'stressed', 'exhausted'],
         regex: ['tired', 'stress', 'ហត់', 'ស្ត្រេស', 'ឈឺក្បាល', 'ពិបាក', 'exhausted'],
-        answer: "បាទ អូ! សម្រាកសិនទៅបង! ☕ ការសម្លឹងអេក្រង់យូរអាចធ្វើឱ្យស្ត្រេសនិងឈឺភ្នែក ថែមទាំងគិតអ្វីលែងចេញទៀត (Creative Block)។ \n\n💡 **សាកល្បងក្បួន 20-20-20៖** រៀងរាល់ ២០នាទី មើលទៅកន្លែងឆ្ងាយ២០ហ្វីត រយៈពេល២០វិនាទី។ \n\nទៅផឹកទឹក និងស្តាប់ចម្រៀងបន្តិចទៅ ចាំមក Design បន្ត! ខ្ញុំរង់ចាំនៅទីនេះជានិច្ច! 💙",
-        answer_en: "Oh no, please take a break! ☕ Staring at a canvas for too long causes 'Creative Block' and terrible eye strain. \n\n💡 **Try the 20-20-20 rule:** Every 20 mins, look 20 feet away for 20 seconds. \n\nGo grab some water and listen to your favorite song. Your designs will be waiting for you when you get back! 💙",
+        answer: "បាទ អូ! សម្រាកសិនទៅបង! ☕ ការសម្លឹងអេក្រង់យូរអាចធ្វើឱ្យស្ត្រេសនិងឈឺភ្នែក ថែមទាំងគិតអ្វីលែងចេញទៀត (Creative Block)។ \n\n💡 **គន្លឹះអាជីព (20-20-20 Rule)៖** រៀងរាល់ ២០នាទី មើលទៅកន្លែងឆ្ងាយ២០ហ្វីត រយៈពេល២០វិនាទី។ \n\nទៅផឹកទឹក និងស្តាប់ចម្រៀងបន្តិចទៅ ចាំមក Design បន្ត! ខ្ញុំរង់ចាំនៅទីនេះជានិច្ច! 💙",
+        answer_en: "Oh no, please take a break! ☕ Staring at a canvas for too long causes 'Creative Block' and terrible eye strain. \n\n💡 **Pro Tip (The 20-20-20 Rule):** Every 20 mins, look 20 feet away for 20 seconds. \n\nGo grab some water and listen to your favorite song. Your designs will be waiting for you when you get back! 💙",
         chips: ["ចង់ស្តាប់រឿងកំប្លែង 😆", "ពណ៌ចៃដន្យ 🎨"],
         chips_en: ["Tell me a joke 😆", "Random Color 🎨"]
     },
@@ -123,32 +123,32 @@ export const KNOWLEDGE_BASE = [
         primaryKeys: ['របៀបលក់ Digital Assets', 'selling digital assets'],
         keys: ['លក់', 'digital asset', 'រកលុយ', 'sell', 'gumroad', 'passive income', 'លក់គំរូ'],
         regex: ['sell.*asset', 'លក់', 'digital asset', 'gumroad', 'passive income', 'រកលុយ'],
-        answer: "បាទ ការបង្កើតនិងលក់ Digital Assets (Passive Income) គឺជាវិធីដ៏ឆ្លាតវៃសម្រាប់ Designer! 💸\n\nអ្វីដែលអ្នកអាចលក់បាន៖\n១. **Text Effects & Layer Styles:** បង្កើតស្រមោល ឬពន្លឺអក្សរស្អាតៗ (Glassmorphism, Retro, Neon) ហើយ Save ជា File ទុកលក់។\n២. **Brushes & Macros:** បង្កើតជក់គូររូបប្លែកៗ ឬ Action កាត់តរូបស្វ័យប្រវត្តិ។\n៣. **Templates:** គំរូប្លង់ Poster, UI Kits, ឬ Social Media Posts។\n\n💡 **គន្លឹះ៖** អ្នកអាចវេចខ្ចប់វាជាកញ្ចប់ (Bundle) ហើយដាក់លក់នៅលើវេបសាយដូចជា Gumroad, Etsy, ឬ Creative Market រួចប្រូម៉ូតតាមទំព័ររបស់អ្នក!",
-        answer_en: "Creating and selling Digital Assets is a massive source of passive income for modern designers! 💸\n\nWhat you can sell:\n1. **Text Effects & Styles:** Premium typography layer styles (Neon, 3D, Glassmorphism).\n2. **Brushes & Macros:** Custom brush packs or one-click automated editing actions.\n3. **Templates:** High-quality Poster files, UI kits, or Social Media grids.\n\n💡 **Tip:** Package them into beautiful 'Bundles' and sell them on platforms like Gumroad, Etsy, or Creative Market. Market them using high-quality mockup previews!",
+        answer: "បាទ ការបង្កើតនិងលក់ Digital Assets (Passive Income) គឺជាវិធីដ៏ឆ្លាតវៃសម្រាប់ Designer! 💸\n\n**អ្វីដែលអ្នកអាចលក់បាន៖**\n១. **Text Effects & Layer Styles:** បង្កើតស្រមោល ឬពន្លឺអក្សរស្អាតៗ (Glassmorphism, Retro, Neon)។\n២. **Brushes & Macros:** បង្កើតជក់គូររូបប្លែកៗ ឬ Action កាត់តរូបស្វ័យប្រវត្តិ។\n៣. **Templates:** គំរូប្លង់ Poster, UI Kits, ឬ Social Media Posts។\n\n💡 **គន្លឹះអាជីព៖** វេចខ្ចប់វាជាកញ្ចប់ (Bundle) ហើយដាក់លក់នៅលើវេបសាយដូចជា Gumroad, Etsy, ឬ Creative Market រួចប្រូម៉ូតតាមទំព័ររបស់អ្នកដោយប្រើប្រាស់ Mockups គុណភាពខ្ពស់!",
+        answer_en: "Creating and selling Digital Assets is a massive source of passive income for modern designers! 💸\n\n**What you can sell:**\n1. **Text Effects & Styles:** Premium typography layer styles (Neon, 3D, Glassmorphism).\n2. **Brushes & Macros:** Custom brush packs or one-click automated editing actions.\n3. **Templates:** High-quality Poster files, UI kits, or Social Media grids.\n\n💡 **Pro Tip:** Package them into beautiful 'Bundles' and sell them on platforms like Gumroad, Etsy, or Creative Market. Market them using high-quality mockup previews!",
         chips: ["របៀបប្រើប្រាស់ Macros និង Brushes?", "របៀបរក្សាទុកក្នុង Assets Panel 📦"],
         chips_en: ["How to use Macros and Brushes?", "How to use the Assets Panel 📦"]
     },
     {
         primaryKeys: ['របៀបប្រើប្រាស់ Macros និង Brushes', 'macros and brushes'],
         keys: ['macro', 'brush', 'affinity', 'ជក់', 'សកម្មភាព'],
-        regex: ['macro', 'brush', 'affinity', 'ជក់'],
-        answer: "បាទ **Macros និង Custom Brushes** គឺជាអាវុធសម្ងាត់ដែលជួយសន្សំពេលវេលាអ្នកបានច្រើនបំផុត! 🚀\n\n🪄 **Macros (ឬ Actions):** គឺជាការថតទុកនូវសកម្មភាពដែលអ្នកចុចកែរូប (ឧទាហរណ៍៖ ទាញពន្លឺ បន្ថែមភាពច្បាស់ និងប្តូរពណ៌)។ ពេលក្រោយ បើចង់កែរូបផ្សេងទៀត អ្នកគ្រាន់តែចុច Play វានឹងកែដោយស្វ័យប្រវត្តិក្នុង១វិនាទី! (ល្អខ្លាំងណាស់ក្នុងកម្មវិធី Affinity Photo)។\n🖌️ **Brushes:** អ្នកអាចបង្កើតជក់ផ្ទាល់ខ្លួនដែលមានទម្រង់ជាពពក ផ្សែង ឬពន្លឺភ្លើង ដើម្បីគូរផ្ទាល់ដោយមិនបាច់កាត់តរូបខាងក្រៅចូល។",
-        answer_en: "**Macros and Custom Brushes** are your ultimate time-saving secret weapons! 🚀\n\n🪄 **Macros (Actions):** They record your exact editing steps (e.g., boosting contrast, adding sharpening, color grading). Next time, you just click 'Play' and it edits a new photo automatically in one second! (Incredible for Affinity Photo workflows).\n🖌️ **Custom Brushes:** Instead of masking external images, you can create or use brushes shaped like clouds, smoke, or light flares to paint effects directly onto your canvas.",
+        regex: ['macro', 'brush', 'affinity', 'ជក់', 'សកម្មភាព'],
+        answer: "បាទ **Macros និង Custom Brushes** គឺជាអាវុធសម្ងាត់ដែលជួយសន្សំពេលវេលាអ្នកបានច្រើនបំផុត! 🚀\n\n🪄 **Macros (ឬ Actions):** គឺជាការថតទុកនូវសកម្មភាពដែលអ្នកចុចកែរូប (ឧទាហរណ៍៖ ទាញពន្លឺ បន្ថែមភាពច្បាស់ និងប្តូរពណ៌)។ ពេលក្រោយ បើចង់កែរូបផ្សេងទៀត អ្នកគ្រាន់តែចុច Play វានឹងកែដោយស្វ័យប្រវត្តិក្នុង១វិនាទី!\n🖌️ **Brushes:** អ្នកអាចបង្កើតជក់ផ្ទាល់ខ្លួនដែលមានទម្រង់ជាពពក ផ្សែង ឬពន្លឺភ្លើង ដើម្បីគូរផ្ទាល់ដោយមិនបាច់កាត់តរូបខាងក្រៅចូល។\n\n💡 **គន្លឹះអាជីព៖** នៅក្នុង Affinity Photo អ្នកអាច Export Macros របស់អ្នកជាឯកសារ `.afmacro` ដើម្បីចែករំលែក ឬលក់បន្តបាន!",
+        answer_en: "**Macros and Custom Brushes** are your ultimate time-saving secret weapons! 🚀\n\n🪄 **Macros (Actions):** They record your exact editing steps (e.g., boosting contrast, adding sharpening, color grading). Next time, you just click 'Play' and it edits a new photo automatically in one second!\n🖌️ **Custom Brushes:** Instead of masking external images, you can create or use brushes shaped like clouds, smoke, or light flares to paint effects directly onto your canvas.\n\n💡 **Pro Tip:** In Affinity Photo, you can batch Export your Macros as an `.afmacro` file to sell as a digital product!",
         chips: ["របៀបលក់ Digital Assets 💰", "Affinity Photo v3 មានអ្វីថ្មី?"],
         chips_en: ["How to sell Digital Assets? 💰", "Affinity Photo v3 Updates?"]
     },
     {
         primaryKeys: ['របៀបបង្កើត Text Effects', 'text effects'],
-        keys: ['text effect', 'អក្សរផុស', '3d text', 'neon text', 'អក្សរ'],
+        keys: ['text effect', 'អក្សរផុស', '3d text', 'neon text', 'អក្សរ', 'glow text'],
         regex: ['text effect', 'អក្សរផុស', '3d text', 'neon text', 'glow'],
-        answer: "បាទ ការបង្កើត **Text Effects (បែបផែនអក្សរ)** ឱ្យមើលទៅ High-End គឺត្រូវការការរៀបចំ Layer Styles ត្រួតគ្នា៖\n\n✨ **Glassmorphism (អក្សរកញ្ចក់):** ទាញ Fill មក 0% រួចប្រើ Inner Glow ពណ៌សស្តើងៗ ទម្លាក់ Drop Shadow ធំៗដែលទន់ព្រិល និងដាក់ Background Blur បន្តិចពីក្រោយ។\n🚥 **Neon Glow (អក្សរភ្លើងនីអុង):** កុំប្រើតែ Drop Shadow មួយ! ត្រូវដាក់ Drop Shadow ៣-៤ ជាន់ ពីតូចមុត ទៅធំព្រិលៗ ដើម្បីបង្កើតពន្លឺជះចេញមកក្រៅពិតៗ។\n🪨 **3D & Bevel:** ប្រើ Bevel & Emboss លាយជាមួយ Inner Shadow ដើម្បីធ្វើឱ្យអក្សរមើលទៅលេចធ្លោដូចលោហៈធាតុ ឬប្លាស្ទិកក្រាស់។",
-        answer_en: "Creating High-End **Text Effects** is all about expertly layering multiple Layer Styles:\n\n✨ **Glassmorphism:** Drop the layer 'Fill' to 0%. Add a soft white 'Inner Glow', a large diffuse 'Drop Shadow', and place a blurred shape behind the text to mimic frosted glass.\n🚥 **Neon Glow:** Never use just one Drop Shadow! Stack 3 or 4 Drop Shadows, starting from a small sharp glow and ending with a huge, soft blur to mimic real light decay.\n🪨 **3D Metallic:** Combine 'Bevel & Emboss' with a sharp 'Inner Shadow' to create striking, thick textures that look like real metal or plastic.",
+        answer: "បាទ ការបង្កើត **Text Effects (បែបផែនអក្សរ)** ឱ្យមើលទៅ High-End គឺត្រូវការការរៀបចំ Layer Styles ត្រួតគ្នា៖\n\n✨ **Glassmorphism (អក្សរកញ្ចក់):** ទាញ Fill មក 0% រួចប្រើ Inner Glow ពណ៌សស្តើងៗ ទម្លាក់ Drop Shadow ធំៗដែលទន់ព្រិល និងដាក់ Background Blur បន្តិចពីក្រោយ។\n🚥 **Neon Glow (អក្សរភ្លើងនីអុង):** កុំប្រើតែ Drop Shadow មួយ! ត្រូវដាក់ Drop Shadow ៣-៤ ជាន់ ពីតូចមុត ទៅធំព្រិលៗ ដើម្បីបង្កើតពន្លឺជះចេញមកក្រៅពិតៗ។\n🪨 **3D & Bevel:** ប្រើ Bevel & Emboss លាយជាមួយ Inner Shadow ដើម្បីធ្វើឱ្យអក្សរមើលទៅលេចធ្លោដូចលោហៈធាតុ ឬប្លាស្ទិកក្រាស់។\n\n💡 **គន្លឹះអាជីព៖** រក្សាទុក Text Effects របស់អ្នកទៅក្នុង Styles Panel ដើម្បីចុចប្រើលើកក្រោយដោយមិនបាច់អង្គុយសារ៉េថ្មី!",
+        answer_en: "Creating High-End **Text Effects** is all about expertly layering multiple Layer Styles:\n\n✨ **Glassmorphism:** Drop the layer 'Fill' to 0%. Add a soft white 'Inner Glow', a large diffuse 'Drop Shadow', and place a blurred shape behind the text to mimic frosted glass.\n🚥 **Neon Glow:** Never use just one Drop Shadow! Stack 3 or 4 Drop Shadows, starting from a small sharp glow and ending with a huge, soft blur to mimic real light decay.\n🪨 **3D Metallic:** Combine 'Bevel & Emboss' with a sharp 'Inner Shadow' to create striking, thick textures that look like real metal or plastic.\n\n💡 **Pro Tip:** Save your finished layer stack into the 'Styles' panel so you can apply it to any text in the future with just one click!",
         chips: ["ប្តូរវត្ថុទៅជាមាស (Gold Effect) ✨", "Opacity និង Fill ខុសគ្នាម៉េច?"],
         chips_en: ["Turn anything into Gold ✨", "Opacity vs Fill?"]
     },
 
     // ------------------------------------------
-    // 3. AFFINITY MASTERCLASS
+    // 3. AFFINITY MASTERCLASS & IPAD WORKFLOW
     // ------------------------------------------
     {
         primaryKeys: ['តិចនិកប្រើ Affinity Personas', 'affinity personas'],
@@ -158,6 +158,15 @@ export const KNOWLEDGE_BASE = [
         answer_en: "**In Affinity apps, Personas are dedicated workspaces that completely change your UI based on the task:**\n\n1. **Photo/Designer Persona:** The main workspace for core editing and drawing.\n2. **Liquify Persona:** A dedicated studio for warping and reshaping pixels (great for portrait retouching).\n3. **Develop Persona:** For advanced RAW file color grading.\n4. **Export Persona:** Incredible for UI/UX designers! It allows you to slice up components and export them in multiple resolutions (1x, 2x, 3x) with a single click!",
         chips: ["តើ Live Filters ក្នុង Affinity ជាអ្វី?", "របៀបរក្សាទុកក្នុង Assets Panel 📦"],
         chips_en: ["What are Live Filters in Affinity?", "How to use the Assets Panel 📦"]
+    },
+    {
+        primaryKeys: ['របៀបរៀបចំ Studio Panels លើ iPad', 'managing ipad studio panels'],
+        keys: ['ipad panels', 'studio panels', 'លាក់ផ្ទាំង', 'hide panels', 'workspace ipad'],
+        regex: ['ipad panel', 'studio panel', 'workspace ipad', 'លាក់ផ្ទាំង'],
+        answer: "បាទ **ការគ្រប់គ្រង Studio Panels នៅលើអេក្រង់ iPad គឺសំខាន់ណាស់ដើម្បីកុំឱ្យចង្អៀតផ្ទាំងការងារ៖**\n\n👆 **ទាញចេញ (Tear-off):** អ្នកអាចយកម្រាមដៃសង្កត់លើរូបតំណាង Panel ណាមួយ (ឧទាហរណ៍ Color ឬ Layers) រួចអូសវាចេញមកកណ្តាលអេក្រង់ដើម្បីឱ្យវាអណ្តែត (Floating Panel)។\n🗂️ **បិទដោយស្វ័យប្រវត្តិ (Auto-close):** តាមលំនាំដើម ពេលអ្នកចុចលើផ្ទាំងការងារ Panel នឹងបិទទៅវិញ។ បើចង់ឱ្យវាបើករហូត សូមចុចសញ្ញា 📌 (Pin) នៅជ្រុងខាងលើនៃ Panel នោះ។\n\n💡 **គន្លឹះអាជីព៖** ដើម្បីមើលរូបភាពឱ្យពេញអេក្រង់ (Full Screen) ដោយគ្មានឧបករណ៍រំខាន សូមចុចសញ្ញាព្រួញ ៤ ទិសនៅជ្រុងអេក្រង់!",
+        answer_en: "**Managing Studio Panels on the iPad is crucial to keeping your canvas clean:**\n\n👆 **Tear-off Panels:** You can press and hold any Studio icon (like Colors or Layers) and drag it out into the center of the screen to make it a Floating Panel.\n🗂️ **Pinning:** By default, panels auto-close when you tap the canvas. To keep a panel open permanently while you work, tap the 📌 (Pin) icon at the top right of the panel.\n\n💡 **Pro Tip:** Need a distraction-free view? Tap the 'Hide UI' icon (four outward-pointing arrows) in the corner to view your artwork in glorious full-screen mode!",
+        chips: ["របៀបប្រើ Affinity លើ iPad 📱", "Shortcut ផ្លូវកាត់សំខាន់ៗមានអ្វីខ្លះ?"],
+        chips_en: ["Affinity iPad Gestures 📱", "Essential Keyboard Shortcuts"]
     },
     {
         primaryKeys: ['តើ Live Filters ក្នុង Affinity ជាអ្វី?', 'affinity live filters'],
@@ -172,8 +181,8 @@ export const KNOWLEDGE_BASE = [
         primaryKeys: ['របៀបរក្សាទុកក្នុង Assets Panel', 'affinity assets panel'],
         keys: ['assets panel', 'រក្សាទុករូប', 'save element', 'asset', 'រក្សាទុក', 'assets'],
         regex: ['asset', 'រក្សាទុក.*asset', 'save element'],
-        answer: "បាទ **Assets Panel នៅក្នុង Affinity គឺជាកន្លែងសន្សំពេលវេលាដ៏អស្ចារ្យសម្រាប់ Creators!**\n\nប្រសិនបើអ្នកបានបង្កើត Text Effect ដ៏ស្រស់ស្អាតមួយ ឬគូរ Logo មួយដែលត្រូវប្រើញឹកញាប់ អ្នកគ្រាន់តែទាញវា (Drag) បញ្ចូលទៅក្នុង **Assets Panel**។\n\nនៅពេលក្រោយ ទោះបីជាអ្នកបើក Project ថ្មីក៏ដោយ អ្នកគ្រាន់តែអូសវាចេញពី Assets Panel មកដាក់លើផ្ទាំងការងារ នោះវានឹងចេញមកជាមួយនឹង Layer និង Effects ដើមទាំងអស់។ ល្អបំផុតសម្រាប់អ្នកចូលចិត្តបង្កើត Digital Assets លក់!",
-        answer_en: "**The Assets Panel in Affinity is a massive time-saver for creators!**\n\nIf you spend an hour building a beautiful Text Effect or a complex UI button, simply drag that layer into the **Assets Panel**.\n\nMonths later, in a completely new document, you can just drag it out of the panel and drop it onto your canvas. It will instantly appear with all its original layers and effects perfectly intact. It's a game-changer for selling Digital Assets!",
+        answer: "បាទ **Assets Panel នៅក្នុង Affinity គឺជាកន្លែងសន្សំពេលវេលាដ៏អស្ចារ្យសម្រាប់ Creators!**\n\nប្រសិនបើអ្នកបានបង្កើត Text Effect ដ៏ស្រស់ស្អាតមួយ ឬគូរ Logo មួយដែលត្រូវប្រើញឹកញាប់ អ្នកគ្រាន់តែទាញវា (Drag) បញ្ចូលទៅក្នុង **Assets Panel**។\n\nនៅពេលក្រោយ ទោះបីជាអ្នកបើក Project ថ្មីក៏ដោយ អ្នកគ្រាន់តែអូសវាចេញពី Assets Panel មកដាក់លើផ្ទាំងការងារ នោះវានឹងចេញមកជាមួយនឹង Layer និង Effects ដើមទាំងអស់។\n\n💡 **គន្លឹះអាជីព៖** នេះគឺជាមុខងារល្អបំផុតសម្រាប់អ្នកចូលចិត្តបង្កើត Digital Assets លក់! អ្នកអាចវេចខ្ចប់វាជាឯកសារ `.afassets`។",
+        answer_en: "**The Assets Panel in Affinity is a massive time-saver for creators!**\n\nIf you spend an hour building a beautiful Text Effect or a complex UI button, simply drag that layer into the **Assets Panel**.\n\nMonths later, in a completely new document, you can just drag it out of the panel and drop it onto your canvas. It will instantly appear with all its original layers and effects perfectly intact.\n\n💡 **Pro Tip:** This is the ultimate tool for selling Digital Assets! You can export entire categories as an `.afassets` file.",
         chips: ["របៀបលក់ Digital Assets 💰", "របៀបប្រើប្រាស់ Macros និង Brushes?"],
         chips_en: ["How to sell Digital Assets? 💰", "How to use Macros and Brushes?"]
     },
@@ -181,10 +190,10 @@ export const KNOWLEDGE_BASE = [
         primaryKeys: ['របៀបប្រើ Affinity លើ iPad', 'affinity ipad gestures'],
         keys: ['ipad gesture', 'affinity ipad', 'កាយវិការ ipad', 'ipad', 'apple pencil'],
         regex: ['ipad', 'gesture', 'apple pencil'],
-        answer: "បាទ **ការប្រើប្រាស់ Affinity Photo / Designer លើ iPad ត្រូវការដឹងពីកាយវិការ (Gestures) ទាំងនេះ៖**\n\n👆 **Two-Finger Tap (គោះម្រាម២):** Undo (ថយក្រោយ)។\n☝️ **Three-Finger Tap (គោះម្រាម៣):** Redo (ទៅមុខវិញ)។\n🖐️ **One-Finger Hold (សង្កត់ម្រាម១):** ពេលកំពុងទាញរូប បើសង្កត់ម្រាមដៃ១លើអេក្រង់ វាដើរតួដូចជាប៊ូតុង `Shift` ដើម្បីរក្សាទំហំឱ្យស្មើគ្នា (Constrain Proportions)។\n✌️ **Two-Finger Hold (សង្កត់ម្រាម២):** ដើរតួដូចប៊ូតុង `Alt/Option` ដើម្បី Copy វត្ថុពេលកំពុងទាញរំកិល។",
-        answer_en: "**Mastering Affinity Photo / Designer on the iPad requires knowing these multi-touch gestures:**\n\n👆 **Two-Finger Tap:** Undo.\n☝️ **Three-Finger Tap:** Redo.\n🖐️ **One-Finger Hold:** While scaling an object, holding one finger on the screen acts like the `Shift` key to constrain proportions.\n✌️ **Two-Finger Hold:** Acts like the `Alt/Option` key. Use this while dragging an object to instantly duplicate it.",
-        chips: ["តិចនិកប្រើ Affinity Personas 🚀", "តើ Masking ជាអ្វី?"],
-        chips_en: ["Tips for Affinity Personas 🚀", "What is Masking?"]
+        answer: "បាទ **ការប្រើប្រាស់ Affinity Photo / Designer លើ iPad ត្រូវការដឹងពីកាយវិការ (Gestures) ទាំងនេះ៖**\n\n👆 **Two-Finger Tap (គោះម្រាម២):** Undo (ថយក្រោយ)។\n☝️ **Three-Finger Tap (គោះម្រាម៣):** Redo (ទៅមុខវិញ)។\n🖐️ **One-Finger Hold (សង្កត់ម្រាម១):** ពេលកំពុងទាញរូប បើសង្កត់ម្រាមដៃ១លើអេក្រង់ វាដើរតួដូចជាប៊ូតុង `Shift` ដើម្បីរក្សាទំហំឱ្យស្មើគ្នា (Constrain Proportions)។\n✌️ **Two-Finger Hold (សង្កត់ម្រាម២):** ដើរតួដូចប៊ូតុង `Alt/Option` ដើម្បី Copy វត្ថុពេលកំពុងទាញរំកិល។\n\n💡 **គន្លឹះ Apple Pencil៖** ចុចត្រង់ចុងខ្មៅដៃពីរដង (Double-tap) ដើម្បីប្តូរទៅជាជ័រលុបបានយ៉ាងលឿន!",
+        answer_en: "**Mastering Affinity Photo / Designer on the iPad requires knowing these multi-touch gestures:**\n\n👆 **Two-Finger Tap:** Undo.\n☝️ **Three-Finger Tap:** Redo.\n🖐️ **One-Finger Hold:** While scaling an object, holding one finger on the screen acts like the `Shift` key to constrain proportions.\n✌️ **Two-Finger Hold:** Acts like the `Alt/Option` key. Use this while dragging an object to instantly duplicate it.\n\n💡 **Apple Pencil Tip:** Double-tap the side of your Pencil 2 to instantly switch to the Eraser tool!",
+        chips: ["របៀបរៀបចំ Studio Panels លើ iPad", "តិចនិកប្រើ Affinity Personas 🚀"],
+        chips_en: ["Managing iPad Studio Panels", "Tips for Affinity Personas 🚀"]
     },
     {
         primaryKeys: ['Clipping និង Masking ក្នុង Affinity', 'clipping vs masking affinity'],
@@ -199,8 +208,8 @@ export const KNOWLEDGE_BASE = [
         primaryKeys: ['Affinity Symbols គឺអ្វី?', 'affinity symbols'],
         keys: ['symbol', 'និមិត្តសញ្ញា', 'affinity designer symbol'],
         regex: ['symbol', 'និមិត្តសញ្ញា'],
-        answer: "បាទ **Symbols នៅក្នុង Affinity Designer គឺស្រដៀងនឹង Smart Objects ប៉ុន្តែខ្លាំងជាងសម្រាប់ UI Design!**\n\nនៅពេលអ្នកបង្កើតឡូហ្គោ ឬប៊ូតុងជា **Symbol** រួចកូពីវាទៅដាក់១០កន្លែងផ្សេងគ្នា... ប្រសិនបើអ្នកប្តូរពណ៌ប៊ូតុងមួយ នោះប៊ូតុងទាំង ៩ ទៀតនឹងដូរពណ៌តាមព្រមគ្នាក្នុងពេលតែមួយវិនាទី! វាជួយសន្សំពេលបានច្រើនមែនទែនសម្រាប់ការរចនា Website ឬកាតដែលមានទម្រង់ដដែលៗ។",
-        answer_en: "**Symbols in Affinity Designer are like super-charged Smart Objects designed for UI workflows!**\n\nWhen you create a button or logo as a **Symbol** and copy it 10 times across your canvas... if you change the color or text of just ONE of those symbols, all the other 9 will update instantly in real-time! It is essential for web design and repeating patterns.",
+        answer: "បាទ **Symbols នៅក្នុង Affinity Designer គឺស្រដៀងនឹង Smart Objects ប៉ុន្តែខ្លាំងជាងសម្រាប់ UI Design!**\n\nនៅពេលអ្នកបង្កើតឡូហ្គោ ឬប៊ូតុងជា **Symbol** រួចកូពីវាទៅដាក់១០កន្លែងផ្សេងគ្នា... ប្រសិនបើអ្នកប្តូរពណ៌ប៊ូតុងមួយ នោះប៊ូតុងទាំង ៩ ទៀតនឹងដូរពណ៌តាមព្រមគ្នាក្នុងពេលតែមួយវិនាទី! វាជួយសន្សំពេលបានច្រើនមែនទែនសម្រាប់ការរចនា Website ឬកាតដែលមានទម្រង់ដដែលៗ។\n\n💡 **គន្លឹះអាជីព៖** នៅក្នុង Panel Symbols អ្នកអាចបិទប៊ូតុង 'Sync' បណ្ដោះអាសន្ន ដើម្បីកែប្រែ Symbol តែមួយដោយមិនប៉ះពាល់ដល់អ្នកដទៃ។",
+        answer_en: "**Symbols in Affinity Designer are like super-charged Smart Objects designed for UI workflows!**\n\nWhen you create a button or logo as a **Symbol** and copy it 10 times across your canvas... if you change the color or text of just ONE of those symbols, all the other 9 will update instantly in real-time! It is essential for web design and repeating patterns.\n\n💡 **Pro Tip:** In the Symbols panel, you can temporarily turn off the 'Sync' button to modify a single symbol instance without affecting the rest of the group.",
         chips: ["តិចនិកប្រើ Affinity Personas 🚀", "របៀបរក្សាទុកក្នុង Assets Panel 📦"],
         chips_en: ["Tips for Affinity Personas 🚀", "How to use the Assets Panel 📦"]
     },
@@ -261,8 +270,8 @@ export const KNOWLEDGE_BASE = [
         primaryKeys: ['របៀបរចនា Poster', 'poster design'],
         keys: ['poster', 'ផ្ទាំងផ្សព្វផ្សាយ', 'រចនា poster'],
         regex: ['poster design', 'រចនា poster', 'ផ្ទាំងផ្សព្វផ្សាយ', 'របៀបធ្វើ poster'],
-        answer: "បាទ សម្រាប់ការរចនា Poster ឱ្យទាក់ទាញ និងមានប្រសិទ្ធភាព ត្រូវមាន ៤ ចំណុចធំៗ (Anatomy of a Poster)៖\n\n១. **ចំណងជើង (Headline):** ត្រូវធំ ដាច់ ងាយអានពីចម្ងាយ (ទាក់ទាញចំណាប់អារម្មណ៍)។\n២. **រូបភាព (Visual/Hero Image):** យករូបដែលពាក់ព័ន្ធ និងទាក់ទាញអារម្មណ៍បំផុតមកដាក់ជា Focal Point។\n៣. **ព័ត៌មាន (Details):** ដាក់តែអ្វីដែលសំខាន់ (ថ្ងៃខែ ម៉ោង ទីកន្លែង) កុំសរសេរវែងពេក មើលទៅរញ៉េរញ៉ៃ។\n៤. **Call to Action (CTA):** ប្រាប់គេឱ្យច្បាស់ថាត្រូវធ្វើអ្វីបន្ត (ឧ. ទិញឥឡូវនេះ, តេមកលេខ..., Scan QR Code)។",
-        answer_en: "For a highly effective Poster design, you need to master these 4 core elements:\n\n1. **Headline:** Must be massive, bold, and readable from a distance to hook attention.\n2. **Visual (Hero Image):** A striking image or graphic that connects emotionally with the viewer.\n3. **Details:** Only include the absolute necessary info (Time, Date, Location). Don't clutter it with long paragraphs!\n4. **Call to Action (CTA):** Tell them exactly what to do next (e.g., 'Buy Now', 'Call Us', 'Scan QR').",
+        answer: "បាទ សម្រាប់ការរចនា Poster ឱ្យទាក់ទាញ និងមានប្រសិទ្ធភាព ត្រូវមាន ៤ ចំណុចធំៗ (Anatomy of a Poster)៖\n\n១. **ចំណងជើង (Headline):** ត្រូវធំ ដាច់ ងាយអានពីចម្ងាយ (ទាក់ទាញចំណាប់អារម្មណ៍)។\n២. **រូបភាព (Visual/Hero Image):** យករូបដែលពាក់ព័ន្ធ និងទាក់ទាញអារម្មណ៍បំផុតមកដាក់ជា Focal Point។\n៣. **ព័ត៌មាន (Details):** ដាក់តែអ្វីដែលសំខាន់ (ថ្ងៃខែ ម៉ោង ទីកន្លែង) កុំសរសេរវែងពេក មើលទៅរញ៉េរញ៉ៃ។\n៤. **Call to Action (CTA):** ប្រាប់គេឱ្យច្បាស់ថាត្រូវធ្វើអ្វីបន្ត (ឧ. ទិញឥឡូវនេះ, តេមកលេខ..., Scan QR Code)។\n\n💡 **គន្លឹះអាជីព៖** ប្រើ White Space ឱ្យបានច្រើនជុំវិញអត្ថបទ ដើម្បីកុំឱ្យមើលទៅចង្អៀត!",
+        answer_en: "For a highly effective Poster design, you need to master these 4 core elements:\n\n1. **Headline:** Must be massive, bold, and readable from a distance to hook attention.\n2. **Visual (Hero Image):** A striking image or graphic that connects emotionally with the viewer.\n3. **Details:** Only include the absolute necessary info (Time, Date, Location). Don't clutter it with long paragraphs!\n4. **Call to Action (CTA):** Tell them exactly what to do next (e.g., 'Buy Now', 'Call Us', 'Scan QR').\n\n💡 **Pro Tip:** Embrace White Space around your text blocks to give the viewer's eyes room to breathe!",
         chips: ["តើទំហំ Poster ស្តង់ដារមានអ្វីខ្លះ? 📏", "អ្វីទៅជា Hierarchy?"],
         chips_en: ["Standard Poster Sizes & Layouts? 📏", "Visual Hierarchy"]
     },
@@ -310,8 +319,8 @@ export const KNOWLEDGE_BASE = [
         primaryKeys: ['កាត់តរូបភាព', 'photomanipulation'],
         keys: ['កាត់តរូប', 'តរូប', 'blend image', 'match color', 'shadow', 'កាត់ត'],
         regex: ['photomanipulation', 'កាត់តរូប', 'តរូប', 'blend image', 'match color'],
-        answer: "បាទ អាថ៌កំបាំងនៃការកាត់តរូប (Photomanipulation) ឱ្យមើលទៅពិតៗ ស៊ីសាច់តែមួយ គឺត្រូវយកចិត្តទុកដាក់លើ ៣ចំណុចនេះ៖\n\n១. **ពន្លឺ (Matching Light):** ពន្លឺត្រូវតែមកពីទិសដៅតែមួយ។ បើ Background ពន្លឺមកពីឆ្វេង រូបមនុស្សក៏ត្រូវមានពន្លឺពីឆ្វេងដែរ។\n២. **ស្រមោល (Contact Shadow):** កន្លែងដែលជើង ឬវត្ថុប៉ះផ្ទាល់ជាមួយដី ស្រមោលត្រូវតែដិតខ្លាំង (Darkest) រួចទើបព្រិលទៅចុង។\n៣. **ពណ៌ (Color Grading):** ប្រើ Color Balance ឬ Gradient Map ដើម្បីចាក់ពណ៌ស្តើងៗពីលើរូបទាំងអស់ ឱ្យវាមើលទៅស្ថិតក្នុងបរិយាកាសតែមួយពិតៗ។",
-        answer_en: "The absolute secret to seamless, realistic Photomanipulation lies in these 3 steps:\n\n1. **Matching Light Source:** The lighting must make sense. If the background sun is on the left, your subject must have highlights on their left side.\n2. **Contact Shadows:** The tiny area where an object physically touches the ground must be extremely dark, fading out softly.\n3. **Global Color Grading:** Use a Gradient Map or Color Balance layer over the *entire* artwork to unify the tones and make it feel like one single environment.",
+        answer: "បាទ អាថ៌កំបាំងនៃការកាត់តរូប (Photomanipulation) ឱ្យមើលទៅពិតៗ ស៊ីសាច់តែមួយ គឺត្រូវយកចិត្តទុកដាក់លើ ៣ចំណុចនេះ៖\n\n១. **ពន្លឺ (Matching Light):** ពន្លឺត្រូវតែមកពីទិសដៅតែមួយ។ បើ Background ពន្លឺមកពីឆ្វេង រូបមនុស្សក៏ត្រូវមានពន្លឺពីឆ្វេងដែរ។\n២. **ស្រមោល (Contact Shadow):** កន្លែងដែលជើង ឬវត្ថុប៉ះផ្ទាល់ជាមួយដី ស្រមោលត្រូវតែដិតខ្លាំង (Darkest) រួចទើបព្រិលទៅចុង។\n៣. **ពណ៌ (Color Grading):** ប្រើ Color Balance ឬ Gradient Map ដើម្បីចាក់ពណ៌ស្តើងៗពីលើរូបទាំងអស់ ឱ្យវាមើលទៅស្ថិតក្នុងបរិយាកាសតែមួយពិតៗ។\n\n💡 **គន្លឹះអាជីព៖** ត្រូវប្រាកដថា Resolution នៃរូបតួអង្គ និងផ្ទៃខាងក្រោយមានភាពស្រដៀងគ្នា ដើម្បីកុំឱ្យមើលទៅក្លែងក្លាយ។",
+        answer_en: "The absolute secret to seamless, realistic Photomanipulation lies in these 3 steps:\n\n1. **Matching Light Source:** The lighting must make sense. If the background sun is on the left, your subject must have highlights on their left side.\n2. **Contact Shadows:** The tiny area where an object physically touches the ground must be extremely dark, fading out softly.\n3. **Global Color Grading:** Use a Gradient Map or Color Balance layer over the *entire* artwork to unify the tones and make it feel like one single environment.\n\n💡 **Pro Tip:** Ensure the resolution and pixel sharpness of your subject matches the background closely, otherwise it will instantly look like a fake cutout.",
         chips: ["រលាយវត្ថុនិង Background បញ្ចូលគ្នា 🌪️", "របៀបបង្កើតស្រមោលឱ្យពិតៗ 👥"],
         chips_en: ["How to seamlessly blend subjects 🌪️", "Mastering realistic shadows 👥"]
     },
@@ -321,8 +330,17 @@ export const KNOWLEDGE_BASE = [
         regex: ['រលាយ', 'blend', 'ស៊ីគ្នា', 'ស៊ីសាច់', 'blend subject', 'match subject'],
         answer: "បាទ **វិធីធ្វើឱ្យរូបកាត់ត (Subject) រលាយចូល Background ១០០%៖**\n\n១. **Match Luminosity (កម្រិតពន្លឺ):** ប្រើកែវយឹត (Levels) ធានាថាចំណុចខ្មៅបំផុតនៃវត្ថុ គឺមានពណ៌ខ្មៅស្មើនឹងចំណុចខ្មៅបំផុតនៃ Background។ (បើតួអង្គខ្មៅដិតពេក តែ Background ស្រអាប់ វានឹងមើលទៅអណ្តែតមិនចូលគ្នាទេ)។\n២. **Match Color (កម្រិតពណ៌):** ប្រើ Color Balance ដើម្បីរុញពណ៌តួអង្គឱ្យស្របទៅតាមពណ៌បរិយាកាស (ឧ. បើកាត់តចូលព្រៃ ត្រូវថែមពណ៌បៃតង/លឿងលើតួអង្គបន្តិច)។\n៣. **Atmospheric Wrap (រុំបរិយាកាស):** បង្កើត Layer ថ្មីមួយ បូមពណ៌ពី Background មកផាត់ស្តើងៗ (Opacity 10%) ជុំវិញគែមតួអង្គ។ វាបង្កើតជាពន្លឺចាំងផ្លាត (Light Wrap) ធ្វើឱ្យរូបមើលទៅស៊ីសាច់តែមួយ!",
         answer_en: "**The Masterclass workflow for seamlessly blending a cut-out subject into a new background:**\n\n1. **Match Luminosity:** Use a Levels adjustment to ensure the darkest black point on your subject perfectly matches the darkest black point on the background. (If your subject is pure black but the background is faded grey, it will look like a fake sticker).\n2. **Match Color Tone:** Use Color Balance to inject ambient color into the subject. (If placing them in a forest, add slight greens and yellows to their midtones).\n3. **Atmospheric Light Wrap:** Create a new layer above the subject. Sample a bright color from the background and softly paint it over the subject's edges at 10% opacity. This mimics real-world light wrapping around the object!",
-        chips: ["របៀបប្តូរថ្ងៃទៅយប់ (Day to Night) 🌙", "របៀបបង្កើតស្រមោលឱ្យពិតៗ 👥"],
-        chips_en: ["How to turn Day into Night? 🌙", "Mastering realistic shadows 👥"]
+        chips: ["របៀបប្តូរថ្ងៃទៅយប់ (Day to Night) 🌙", "ការធ្វើឱ្យរូបស្លេកៗ (Fading) 🌫️"],
+        chips_en: ["How to turn Day into Night? 🌙", "How to fade images properly 🌫️"]
+    },
+    {
+        primaryKeys: ['ការធ្វើឱ្យរូបស្លេកៗ (Fading)', 'how to fade images properly'],
+        keys: ['ស្លេក', 'រូបស្លេកៗ', 'fade image', 'opacity fade', 'ធ្វើឱ្យស្លេក'],
+        regex: ['ស្លេក', 'រូបស្លេកៗ', 'fade', 'opacity fade'],
+        answer: "បាទ **បច្ចេកទេសធ្វើឱ្យរូបភាពមានសភាពស្លេកចូលគ្នា (Fading / Blending Edges)៖**\n\nដើម្បីធ្វើឱ្យ **រូបស្លេកៗ** រលាយចូលទៅក្នុងផ្ទៃខាងក្រោយ ឬពណ៌ណាមួយ អ្នកមិនគួរប្រើជ័រលុប (Eraser Tool) ទេ! ត្រូវអនុវត្តតាមក្បួននេះ៖\n\n១. **ប្រើ Layer Mask:** បង្កើត Mask នៅលើរូបភាពរបស់អ្នក។\n២. **ប្រើ Gradient Tool (G):** ជ្រើសរើសពណ៌ខ្មៅ និងស រួចអូសទាញលើ Mask ចាប់ពីគែមរូបភាពចូលមកក្នុង។ កន្លែងពណ៌ខ្មៅនឹងលាក់រូបភាព ធ្វើឱ្យវាក្លាយជា **រូបស្លេកៗ** បន្តិចម្តងៗយ៉ាងទន់ភ្លន់ និងប្រណីតបំផុត (Non-destructive)។\n\n💡 **គន្លឹះអាជីព៖** ការប្រើបច្ចេកទេសរូបស្លេកៗនេះ ល្អបំផុតសម្រាប់ការរចនា Poster ដែលបញ្ចូលរូបភាពមនុស្សទៅក្នុងផ្ទៃមេឃ ឬទេសភាពធំៗ។",
+        answer_en: "**The professional technique for fading images (Blending Edges):**\n\nTo make an image progressively fade into a background or solid color, you should NEVER use the standard Eraser Tool! Follow this workflow:\n\n1. **Use a Layer Mask:** Apply a mask to your image layer.\n2. **Use the Gradient Tool (G):** Choose a Black-to-White gradient and drag it across the mask from the edge inwards. The black areas will hide the pixels, creating a buttery-smooth, fainted/faded transition that is completely non-destructive.\n\n💡 **Pro Tip:** This fading technique is essential for movie posters when blending a giant portrait into a landscape or sky.",
+        chips: ["តើ Masking ជាអ្វី?", "របៀបបង្កើតស្រមោលឱ្យពិតៗ 👥"],
+        chips_en: ["What is Masking?", "Mastering realistic shadows 👥"]
     },
     {
         primaryKeys: ['របៀបប្តូរថ្ងៃទៅយប់ (Day to Night)', 'day to night editing'],
@@ -500,8 +518,8 @@ export const KNOWLEDGE_BASE = [
         primaryKeys: ['អ្វីទៅជា Typography?', 'what is typography'],
         keys: ['typography', 'ប្រភេទ font', 'រៀបអក្សរ', 'font', 'serif', 'sans-serif'],
         regex: ['typography', 'ប្រភេទ font', 'រៀបអក្សរ', 'font', 'serif', 'sans-serif'],
-        answer: "បាទ **Typography** គឺជាសិល្បៈនៃការរៀបចំតួអក្សរ។ 🔤\n\nប្រភេទ Font ធំៗ៣មាន៖\n- **Serif (មានកន្ទុយ):** ផ្លូវការ (ឧ. Times New Roman, Kantumruy)។ ល្អសម្រាប់សៀវភៅ។\n- **Sans-Serif (គ្មានកន្ទុយ):** ទំនើប ស្រឡះ (ឧ. Arial, Suwannaphum)។ ល្អសម្រាប់អេក្រង់ទូរស័ព្ទ។\n- **Script (អក្សរផ្ចង់):** ល្អសម្រាប់ធៀបការ។ \n💡 **ហាមដាច់ខាត៖** កុំប្រើអក្សរផ្ចង់យកមកសរសេរអត្ថបទវែងៗ ឬដាក់ជាអក្សរធំទាំងអស់ (ALL CAPS)!", 
-        answer_en: "**Typography** is the art of arranging text beautifully. 🔤\n\nMain Font Categories:\n- **Serif (with feet):** Traditional, formal (e.g., Times New Roman). Great for printed books.\n- **Sans-Serif (no feet):** Modern, clean (e.g., Arial, Helvetica). The best choice for digital screens.\n- **Script (Cursive):** Elegant and personal. \n💡 **Strict Rule:** Never use Script fonts for long body paragraphs or write them in ALL CAPS!",
+        answer: "បាទ **Typography** គឺជាសិល្បៈនៃការរៀបចំតួអក្សរ។ 🔤\n\nប្រភេទ Font ធំៗ៣មាន៖\n- **Serif (មានកន្ទុយ):** ផ្លូវការ (ឧ. Times New Roman, Kantumruy)។ ល្អសម្រាប់សៀវភៅ។\n- **Sans-Serif (គ្មានកន្ទុយ):** ទំនើប ស្រឡះ (ឧ. Arial, Suwannaphum)។ ល្អសម្រាប់អេក្រង់ទូរស័ព្ទ។\n- **Script (អក្សរផ្ចង់):** ល្អសម្រាប់ធៀបការ។ \n\n💡 **ហាមដាច់ខាត៖** កុំប្រើអក្សរផ្ចង់យកមកសរសេរអត្ថបទវែងៗ ឬដាក់ជាអក្សរធំទាំងអស់ (ALL CAPS)!", 
+        answer_en: "**Typography** is the art of arranging text beautifully. 🔤\n\nMain Font Categories:\n- **Serif (with feet):** Traditional, formal (e.g., Times New Roman). Great for printed books.\n- **Sans-Serif (no feet):** Modern, clean (e.g., Arial, Helvetica). The best choice for digital screens.\n- **Script (Cursive):** Elegant and personal. \n\n💡 **Strict Rule:** Never use Script fonts for long body paragraphs or write them in ALL CAPS!",
         chips: ["របៀបតម្រៀប Font ឱ្យស្អាត?", "Kerning និង Tracking ខុសគ្នាម៉េច?"],
         chips_en: ["How to pair fonts?", "Kerning vs Tracking?"]
     },
@@ -567,8 +585,8 @@ export const KNOWLEDGE_BASE = [
         primaryKeys: ['តើ Pen Tool ប្រើធ្វើអ្វី?', 'how to use the pen tool'],
         keys: ['pen tool', 'របៀបកាត់រូប', 'កាត់ background'],
         regex: ['pen tool', 'របៀបកាត់រូប', 'កាត់ background'],
-        answer: "បាទ **Pen Tool (សញ្ញាប៊ិច ✒️)** គឺជាឧបករណ៍ដ៏មានឥទ្ធិពលបំផុត៖\n\n១. **កាត់ Background:** នៅក្នុងកម្មវិធី Photo Editor វាត្រូវបានប្រើដើម្បីកាត់តាមគែមវត្ថុ (Clipping Path) បានយ៉ាងស្អាត មុត និងលម្អិត។\n២. **គូររូប (Vector):** នៅក្នុងកម្មវិធី Vector វាប្រើសម្រាប់គូរ Logo ឬ Trace រូបចាស់ៗឡើងវិញជាទម្រង់ Vector។", 
-        answer_en: "**The Pen Tool ✒️** is arguably the most powerful tool in any designer's arsenal:\n\n1. **Precise Masking:** In Photo Editors, it creates a 'Clipping Path' to trace the exact outline of complex objects to remove backgrounds flawlessly.\n2. **Vector Drawing:** In Vector software, it is the primary tool for creating custom logos or manually tracing sketches.",
+        answer: "បាទ **Pen Tool (សញ្ញាប៊ិច ✒️)** គឺជាឧបករណ៍ដ៏មានឥទ្ធិពលបំផុត៖\n\n១. **កាត់ Background:** នៅក្នុងកម្មវិធី Photo Editor វាត្រូវបានប្រើដើម្បីកាត់តាមគែមវត្ថុ (Clipping Path) បានយ៉ាងស្អាត មុត និងលម្អិត។\n២. **គូររូប (Vector):** នៅក្នុងកម្មវិធី Vector វាប្រើសម្រាប់គូរ Logo ឬ Trace រូបចាស់ៗឡើងវិញជាទម្រង់ Vector។\n\n💡 **គន្លឹះអាជីព៖** ប្រើ Pen Tool ជានិច្ចសម្រាប់ការកាត់រូបផលិតផល (Product Photography) ដែលមានគែមត្រង់និងរឹង ដើម្បីទទួលបានគុណភាពស្តង់ដារពាណិជ្ជកម្ម។", 
+        answer_en: "**The Pen Tool ✒️** is arguably the most powerful tool in any designer's arsenal:\n\n1. **Precise Masking:** In Photo Editors, it creates a 'Clipping Path' to trace the exact outline of complex objects to remove backgrounds flawlessly.\n2. **Vector Drawing:** In Vector software, it is the primary tool for creating custom logos or manually tracing sketches.\n\n💡 **Pro Tip:** Always use the Pen Tool for masking product photography with hard edges to ensure commercial-grade crispness.",
         chips: ["របៀបកាត់សក់ឬ Background ឱ្យស្អាត", "អ្វីទៅជា Vector និង Raster?"],
         chips_en: ["Precise background removal", "Vector vs Raster?"]
     },
@@ -578,8 +596,8 @@ export const KNOWLEDGE_BASE = [
         regex: ['mask', 'masking', 'layer mask', 'clipping mask'],
         answer: "បាទ **ការប្រើប្រាស់ Mask គឺដើម្បីលាក់ផ្នែកខ្លះនៃរូបភាពដោយមិនលុបសាច់រូបចោល (Non-destructive)៖**\n\n🎭 **Layer Mask:** លាបពណ៌ខ្មៅ (Black) លើ Mask ដើម្បីលាក់រូបភាព និងពណ៌ស (White) ដើម្បីឱ្យរូបភាពលេចចេញមកវិញ។\n🖼️ **Clipping Mask:** យករូបភាពមួយទៅបង្ហាញតែនៅក្នុងទំហំនៃរូបរាង (Shape) ឬអក្សរដែលនៅខាងក្រោមវាប៉ុណ្ណោះ។\n\n💡 **ឧទាហរណ៍៖** ចង់ដាក់រូបភាពទេសភាពចូលទៅក្នុងអក្សរធំៗ គឺគេប្រើ Clipping Mask នេះឯង!", 
         answer_en: "**Masks are used to hide parts of an image without permanently deleting pixels (Non-destructive editing):**\n\n🎭 **Layer Mask:** Paint 'Black' on the mask to hide pixels, and paint 'White' to reveal them again.\n🖼️ **Clipping Mask:** Constrains an image to only show within the boundaries of the shape or text directly beneath it.\n\n💡 **Example:** If you want a nature photo to only show inside bold text, you use a Clipping Mask!",
-        chips: ["Clipping និង Masking ក្នុង Affinity", "តើ Smart Object ជាអ្វី?"],
-        chips_en: ["Clipping vs Masking in Affinity", "What is a Smart Object?"]
+        chips: ["Clipping និង Masking ក្នុង Affinity", "ការធ្វើឱ្យរូបស្លេកៗ (Fading) 🌫️"],
+        chips_en: ["Clipping vs Masking in Affinity", "How to fade images properly 🌫️"]
     },
     { 
         primaryKeys: ['តើ Smart Object ជាអ្វី?', 'what is a smart object'],
@@ -688,8 +706,8 @@ export const KNOWLEDGE_BASE = [
         primaryKeys: ['របៀបគិតលុយអតិថិជន? 💰', 'how to price my work? 💰'],
         keys: ['pricing', 'charge', 'គិតលុយម៉េច', 'តម្លៃ'],
         regex: ['pricing', 'charge', 'គិតលុយម៉េច', 'តម្លៃ'],
-        answer: "បាទ **របៀបគិតតម្លៃសេវាកម្ម Design (Pricing Strategies) មាន៣ធំៗ៖**\n\n១. **គិតជាម៉ោង (Hourly Rate):** ល្អសម្រាប់គម្រោងដែលមិនច្បាស់លាស់ តែវាធ្វើឱ្យអ្នកខាតបើអ្នកធ្វើការលឿននិងពូកែ។\n២. **គិតជាគម្រោង (Project-Based):** វាយតម្លៃផ្អែកលើទំហំការងារ (ឧ. គូរឡូហ្គោមួយ ១៥០$)។ នេះជារបៀបពេញនិយមបំផុត។\n៣. **គិតតាមតម្លៃអតិថិជនទទួលបាន (Value-Based):** បើឡូហ្គោអ្នកធ្វើឱ្យក្រុមហ៊ុនគេចំណេញលុយរាប់លាន អ្នកគួរយកថ្លៃខ្ពស់ជាងតម្លៃធម្មតា។", 
-        answer_en: "**There are 3 main Pricing Strategies for Freelance Designers:**\n\n1. **Hourly Rate:** Good for undefined projects, but it punishes you for being fast and efficient.\n2. **Project-Based:** Charging a flat fee for the whole deliverable (e.g., $150 for a logo). This is the most common and standard way.\n3. **Value-Based:** Pricing based on how much value the design brings to the client. If your branding helps a huge corporation make millions, you charge them significantly more than a local coffee shop.",
+        answer: "បាទ **របៀបគិតតម្លៃសេវាកម្ម Design (Pricing Strategies) មាន៣ធំៗ៖**\n\n១. **គិតជាម៉ោង (Hourly Rate):** ល្អសម្រាប់គម្រោងដែលមិនច្បាស់លាស់ តែវាធ្វើឱ្យអ្នកខាតបើអ្នកធ្វើការលឿននិងពូកែ។\n២. **គិតជាគម្រោង (Project-Based):** វាយតម្លៃផ្អែកលើទំហំការងារ (ឧ. គូរឡូហ្គោមួយ ១៥០$)។ នេះជារបៀបពេញនិយមបំផុត។\n៣. **គិតតាមតម្លៃអតិថិជនទទួលបាន (Value-Based):** បើឡូហ្គោអ្នកធ្វើឱ្យក្រុមហ៊ុនគេចំណេញលុយរាប់លាន អ្នកគួរយកថ្លៃខ្ពស់ជាងតម្លៃធម្មតា។\n\n💡 **គន្លឹះអាជីព៖** តែងតែទារប្រាក់កក់ (Deposit) យ៉ាងហោចណាស់ 30% មុនពេលចាប់ផ្តើមការងារ!", 
+        answer_en: "**There are 3 main Pricing Strategies for Freelance Designers:**\n\n1. **Hourly Rate:** Good for undefined projects, but it punishes you for being fast and efficient.\n2. **Project-Based:** Charging a flat fee for the whole deliverable (e.g., $150 for a logo). This is the most common and standard way.\n3. **Value-Based:** Pricing based on how much value the design brings to the client. If your branding helps a huge corporation make millions, you charge them significantly more than a local coffee shop.\n\n💡 **Pro Tip:** Always require a non-refundable deposit of at least 30% before you sketch a single idea!",
         chips: ["របៀបដោះស្រាយភ្ញៀវរអ៊ូ?", "របៀបរៀបចំ Portfolio?"],
         chips_en: ["Dealing with difficult clients?", "How to build a Portfolio?"]
     },
