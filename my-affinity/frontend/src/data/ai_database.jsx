@@ -14,7 +14,7 @@ export const SUGGESTED_QUESTIONS = [
     "តើ គោលការណ៍រចនា មានអ្វីខ្លះ?", 
     "ពណ៌ចៃដន្យ 🎨", 
     "របៀបលក់ Digital Assets 💰", 
-    "តើ Photoshop និង Illustrator ខុសគ្នាម៉េច?", 
+    "តើ Affinity Photo និង Designer ខុសគ្នាម៉េច?", 
     "អ្វីទៅជា Typography?"
 ];
 
@@ -30,7 +30,7 @@ export const SUGGESTED_QUESTIONS_EN = [
     "Core Design Principles?", 
     "Random Color 🎨", 
     "How to sell Digital Assets? 💰", 
-    "Photoshop vs Illustrator?", 
+    "Affinity Photo vs Designer?", 
     "What is Typography?"
 ];
 
@@ -132,8 +132,8 @@ export const KNOWLEDGE_BASE = [
         primaryKeys: ['របៀបប្រើប្រាស់ Macros និង Brushes', 'macros and brushes'],
         keys: ['macro', 'brush', 'affinity', 'ជក់', 'សកម្មភាព'],
         regex: ['macro', 'brush', 'affinity', 'ជក់'],
-        answer: "បាទ **Macros និង Custom Brushes** គឺជាអាវុធសម្ងាត់ដែលជួយសន្សំពេលវេលាអ្នកបានច្រើនបំផុត! 🚀\n\n🪄 **Macros (ឬ Actions):** គឺជាការថតទុកនូវសកម្មភាពដែលអ្នកចុចកែរូប (ឧទាហរណ៍៖ ទាញពន្លឺ បន្ថែមភាពច្បាស់ និងប្តូរពណ៌)។ ពេលក្រោយ បើចង់កែរូបផ្សេងទៀត អ្នកគ្រាន់តែចុច Play វានឹងកែដោយស្វ័យប្រវត្តិក្នុង១វិនាទី! (ល្អខ្លាំងណាស់ក្នុងកម្មវិធី Affinity Photo ឬ Photoshop)។\n🖌️ **Brushes:** អ្នកអាចបង្កើតជក់ផ្ទាល់ខ្លួនដែលមានទម្រង់ជាពពក ផ្សែង ឬពន្លឺភ្លើង ដើម្បីគូរផ្ទាល់ដោយមិនបាច់កាត់តរូបខាងក្រៅចូល។",
-        answer_en: "**Macros and Custom Brushes** are your ultimate time-saving secret weapons! 🚀\n\n🪄 **Macros (Actions):** They record your exact editing steps (e.g., boosting contrast, adding sharpening, color grading). Next time, you just click 'Play' and it edits a new photo automatically in one second! (Incredible for Affinity Photo and Photoshop workflows).\n🖌️ **Custom Brushes:** Instead of masking external images, you can create or use brushes shaped like clouds, smoke, or light flares to paint effects directly onto your canvas.",
+        answer: "បាទ **Macros និង Custom Brushes** គឺជាអាវុធសម្ងាត់ដែលជួយសន្សំពេលវេលាអ្នកបានច្រើនបំផុត! 🚀\n\n🪄 **Macros (ឬ Actions):** គឺជាការថតទុកនូវសកម្មភាពដែលអ្នកចុចកែរូប (ឧទាហរណ៍៖ ទាញពន្លឺ បន្ថែមភាពច្បាស់ និងប្តូរពណ៌)។ ពេលក្រោយ បើចង់កែរូបផ្សេងទៀត អ្នកគ្រាន់តែចុច Play វានឹងកែដោយស្វ័យប្រវត្តិក្នុង១វិនាទី! (ល្អខ្លាំងណាស់ក្នុងកម្មវិធី Affinity Photo)។\n🖌️ **Brushes:** អ្នកអាចបង្កើតជក់ផ្ទាល់ខ្លួនដែលមានទម្រង់ជាពពក ផ្សែង ឬពន្លឺភ្លើង ដើម្បីគូរផ្ទាល់ដោយមិនបាច់កាត់តរូបខាងក្រៅចូល។",
+        answer_en: "**Macros and Custom Brushes** are your ultimate time-saving secret weapons! 🚀\n\n🪄 **Macros (Actions):** They record your exact editing steps (e.g., boosting contrast, adding sharpening, color grading). Next time, you just click 'Play' and it edits a new photo automatically in one second! (Incredible for Affinity Photo workflows).\n🖌️ **Custom Brushes:** Instead of masking external images, you can create or use brushes shaped like clouds, smoke, or light flares to paint effects directly onto your canvas.",
         chips: ["របៀបលក់ Digital Assets 💰", "Affinity Photo v3 មានអ្វីថ្មី?"],
         chips_en: ["How to sell Digital Assets? 💰", "Affinity Photo v3 Updates?"]
     },
@@ -325,7 +325,7 @@ export const KNOWLEDGE_BASE = [
         chips_en: ["How to turn Day into Night? 🌙", "Mastering realistic shadows 👥"]
     },
     {
-        primaryKeys: ['របៀបប្តូរថ្ងៃទៅយប់ (Day to Night)', 'day to night photoshop'],
+        primaryKeys: ['របៀបប្តូរថ្ងៃទៅយប់ (Day to Night)', 'day to night editing'],
         keys: ['ថ្ងៃទៅយប់', 'យប់', 'day to night', 'turn to night', 'ធ្វើឱ្យយប់'],
         regex: ['ថ្ងៃទៅយប់', 'យប់', 'day to night', 'turn to night'],
         answer: "បាទ **ការកាត់តរូបភាពពីថ្ងៃ ទៅយប់ (Day to Night) ទាមទារក្បួន៣ជំហាន៖**\n\n១. **បន្ថយពន្លឺ និងផ្លាស់ប្តូរពណ៌ខៀវ (Cooling):** ប្រើ Color Lookup (LUTs) យក 'Moonlight' ឬ 'NightFromDay' រួចប្រើ Curves ទាញបន្ថយ Midtones ឱ្យងងឹត។ ពេលយប់ ពន្លឺព្រះច័ន្ទផ្តល់ពណ៌ខៀវ(Cyan/Blue) ទៅលើបរិយាកាសទាំងមូល។\n២. **លុបស្រមោលថ្ងៃត្រង់:** បើរូបដើមមានពន្លឺថ្ងៃខ្លាំង អ្នកត្រូវប្រើ Clone Stamp ឬ Healing Brush ដើម្បីលុបស្រមោលស្រួចៗចោល។ ពេលយប់ ស្រមោលជាទូទៅព្រិលខ្លាំងណាស់។\n៣. **បន្ថែមភ្លើងសិប្បនិម្មិត (Artificial Lights):** ប្រើ Brush ពណ៌លឿង ឬទឹកក្រូច ផាត់លើបង្អួច ចង្កៀង ឬភ្លើងឡាន។ បន្ទាប់មកប្តូរ Blend Mode ទៅជា **Screen** ឬ **Linear Dodge (Add)** រួចប្រើ Layer Style 'Outer Glow' ដើម្បីឱ្យភ្លើងជះពន្លឺពិតៗ។",
@@ -346,8 +346,8 @@ export const KNOWLEDGE_BASE = [
         primaryKeys: ['របៀបកាត់សក់ឬ Background ឱ្យស្អាត', 'precise background removal'],
         keys: ['កាត់ background', 'remove bg', 'លុបផ្ទៃខាងក្រោយ', 'refine edge', 'កាត់សក់', 'cut out'],
         regex: ['កាត់.*background', 'remove bg', 'លុបផ្ទៃខាងក្រោយ', 'refine edge', 'កាត់សក់', 'cut out'],
-        answer: "បាទ **ការកាត់ Background ត្រូវប្រើឧបករណ៍ទៅតាមប្រភេទវត្ថុ៖**\n\n១. **វត្ថុមានគែមរឹង (Hard Edges):** ដូចជា ឡាន ទូរស័ព្ទ កែវ។ អ្នក **ត្រូវតែប្រើ Pen Tool** ដើម្បីគូសតាមគែមវា។ ការប្រើឧបករណ៍ស្វ័យប្រវត្តិនឹងធ្វើឱ្យគែមវាមើលទៅមិនស្មើគ្នា ឬឆែបៗ។\n២. **សក់ មែកឈើ ឬរោមសត្វ (Soft/Complex Edges):** ប្រើ Selection Brush Tool ជ្រើសរើសរូបជាមុន រួចចុចប៊ូតុង **Refine Edge**។ យកជក់ផាត់តាមគែមសក់ កម្មវិធីនឹងគណនាបំបែកសរសៃសក់ចេញពីផ្ទៃខាងក្រោយយ៉ាងឆ្លាតវៃ។\n\n💡 **គន្លឹះ Affinity v3 / Photoshop៖** តែងតែ Output ឯកសារដែលកាត់រួចជា 'Layer Mask' ជានិច្ច ជៀសវាងការលុបសាច់រូបចោល (Destructive) ទើបយើងអាចកែសម្រួលគែមសក់ពេលក្រោយបាន។",
-        answer_en: "**Precise Background Removal depends entirely on what you are cutting out:**\n\n1. **Hard Edges (Cars, Phones, Buildings):** You **must use the Pen Tool** to create a sharp Vector Clipping Path. Magic selection tools will leave jagged, amateur edges on hard products.\n2. **Soft/Complex Edges (Hair, Fur, Trees):** Use the Selection Brush to get the main body, then click **Refine Edge**. Paint over the flyaway hairs, and the software will mathematically separate the tiny hair strands from the background.\n\n💡 **Affinity v3 / PS Tip:** Always Output your selection as a 'Layer Mask'. This is non-destructive, meaning if the AI cut off part of an ear, you can easily paint it back later using white on the mask.",
+        answer: "បាទ **ការកាត់ Background ត្រូវប្រើឧបករណ៍ទៅតាមប្រភេទវត្ថុ៖**\n\n១. **វត្ថុមានគែមរឹង (Hard Edges):** ដូចជា ឡាន ទូរស័ព្ទ កែវ។ អ្នក **ត្រូវតែប្រើ Pen Tool** ដើម្បីគូសតាមគែមវា។ ការប្រើឧបករណ៍ស្វ័យប្រវត្តិនឹងធ្វើឱ្យគែមវាមើលទៅមិនស្មើគ្នា ឬឆែបៗ។\n២. **សក់ មែកឈើ ឬរោមសត្វ (Soft/Complex Edges):** ប្រើ Selection Brush Tool ជ្រើសរើសរូបជាមុន រួចចុចប៊ូតុង **Refine Edge**។ យកជក់ផាត់តាមគែមសក់ កម្មវិធីនឹងគណនាបំបែកសរសៃសក់ចេញពីផ្ទៃខាងក្រោយយ៉ាងឆ្លាតវៃ។\n\n💡 **គន្លឹះ Affinity v3៖** តែងតែ Output ឯកសារដែលកាត់រួចជា 'Layer Mask' ជានិច្ច ជៀសវាងការលុបសាច់រូបចោល (Destructive) ទើបយើងអាចកែសម្រួលគែមសក់ពេលក្រោយបាន។",
+        answer_en: "**Precise Background Removal depends entirely on what you are cutting out:**\n\n1. **Hard Edges (Cars, Phones, Buildings):** You **must use the Pen Tool** to create a sharp Vector Clipping Path. Magic selection tools will leave jagged, amateur edges on hard products.\n2. **Soft/Complex Edges (Hair, Fur, Trees):** Use the Selection Brush to get the main body, then click **Refine Edge**. Paint over the flyaway hairs, and the software will mathematically separate the tiny hair strands from the background.\n\n💡 **Affinity v3 Tip:** Always Output your selection as a 'Layer Mask'. This is non-destructive, meaning if the AI cut off part of an ear, you can easily paint it back later using white on the mask.",
         chips: ["តើ Pen Tool ប្រើធ្វើអ្វី?", "តើ Masking ជាអ្វី?"],
         chips_en: ["How to use the Pen Tool?", "What is Masking?"]
     },
@@ -379,8 +379,8 @@ export const KNOWLEDGE_BASE = [
         regex: ['dodge and burn', 'dodge & burn', 'បង្កើតពន្លឺ', 'ធ្វើឱ្យរូបលេច'],
         answer: "បាទ **Dodge & Burn** គឺជាបច្ចេកទេសដ៏មានឥទ្ធិពលបំផុត ដើម្បីជួយឱ្យរូបភាពរាបស្មើ ២D មើលទៅមានជម្រៅ (3D) និងលេចធ្លោជាងមុន។\n\n☀️ **Dodge:** ប្រើសម្រាប់គូរលើកន្លែងដែលត្រូវពន្លឺ (Highlights) ឱ្យវាកាន់តែភ្លឺ។\n🌑 **Burn:** ប្រើសម្រាប់គូរលើកន្លែងស្រមោល (Shadows) ឱ្យវាកាន់តែងងឹត។\n\n💡 **គន្លឹះ Professional៖** កុំប្រើ Tool នេះផ្ទាល់លើរូប! ត្រូវបង្កើត Layer ថ្មីមួយ ចាក់ពណ៌ប្រផេះ 50% (50% Gray) រួចប្តូរ Blend Mode ទៅជា Soft Light ឬ Overlay ទើបគូរលុបងាយស្រួល និងមិនខូចសាច់រូប (Non-destructive)។",
         answer_en: "**Dodge & Burn** is a magical retouching technique used to sculpt light and shadow, giving flat 2D images incredible 3D depth and pop.\n\n☀️ **Dodge:** Lightens the highlights.\n🌑 **Burn:** Darkens the shadows.\n\n💡 **Pro Tip:** Never dodge and burn directly on your photo layer! Create a new layer, fill it with 50% Gray, set the Blend Mode to Soft Light or Overlay, and paint with black/white on that. It's completely non-destructive!",
-        chips: ["របៀបបង្កើតស្រមោលឱ្យពិតៗ 👥", "Healing Brush និង Clone Stamp ខុសគ្នាម៉េច?"],
-        chips_en: ["Mastering realistic shadows 👥", "Healing Brush vs Clone Stamp?"]
+        chips: ["របៀបបង្កើតស្រមោលឱ្យពិតៗ 👥", "តើ Masking ជាអ្វី?"],
+        chips_en: ["Mastering realistic shadows 👥", "What is Masking?"]
     },
     {
         primaryKeys: ['ព្រិល Background', 'depth of field'],
@@ -537,11 +537,11 @@ export const KNOWLEDGE_BASE = [
     // 11. SOFTWARE TOOLS & EDITING
     // ------------------------------------------
     { 
-        primaryKeys: ['តើ Photoshop និង Illustrator ខុសគ្នាម៉េច?', 'photoshop vs illustrator'],
-        keys: ['ps vs ai', 'photoshop', 'illustrator', 'affinity'],
-        regex: ['photoshop.*illustrator', 'illustrator.*photoshop', 'ps vs ai', 'affinity photo', 'affinity designer'],
-        answer: "បាទ **កម្មវិធីនីមួយៗមានតួនាទីខុសគ្នាដាច់៖**\n\n🟦 **Photoshop / Affinity Photo (Raster):** ប្រើសម្រាប់កាត់តរូបភាពពិតៗ កែពណ៌ លុប Background។ (ពង្រីកធំបែកគ្រាប់)។\n🟧 **Illustrator / Affinity Designer (Vector):** ប្រើសម្រាប់គូរ Logo, Icon, ឬគំនូរ Illustration។ ទោះពង្រីកធំប៉ុណ្ណាក៏**មិនបែក**ដែរ។\n\n💡 **ឧទាហរណ៍៖** កាត់រូបមនុស្សដាក់ក្នុង Poster ប្រើ PS។ គូរ Logo ឱ្យក្រុមហ៊ុន ត្រូវតែប្រើ AI (ឬ Affinity Designer)!", 
-        answer_en: "**Each software is built for a completely different purpose:**\n\n🟦 **Photoshop / Affinity Photo (Raster):** Built for editing actual photos and masking backgrounds. (Pixels will blur if scaled up).\n🟧 **Illustrator / Affinity Designer (Vector):** Built for creating logos, icons, and typography. You can scale artwork infinitely without losing quality.\n\n💡 **Example:** Masking a person for a poster? Use Photoshop. Creating a client's core Logo? Use Illustrator!",
+        primaryKeys: ['តើ Affinity Photo និង Designer ខុសគ្នាម៉េច?', 'affinity photo vs designer'],
+        keys: ['photo vs designer', 'affinity photo', 'affinity designer', 'affinity'],
+        regex: ['affinity photo.*designer', 'affinity designer.*photo', 'photo vs designer'],
+        answer: "បាទ **កម្មវិធីនីមួយៗមានតួនាទីខុសគ្នាដាច់៖**\n\n🟦 **Affinity Photo (Raster):** ប្រើសម្រាប់កាត់តរូបភាពពិតៗ កែពណ៌ លុប Background។ (ពង្រីកធំបែកគ្រាប់)។\n🟧 **Affinity Designer (Vector):** ប្រើសម្រាប់គូរ Logo, Icon, ឬគំនូរ Illustration។ ទោះពង្រីកធំប៉ុណ្ណាក៏**មិនបែក**ដែរ។\n\n💡 **ឧទាហរណ៍៖** កាត់រូបមនុស្សដាក់ក្នុង Poster ប្រើ Photo។ គូរ Logo ឱ្យក្រុមហ៊ុន ត្រូវតែប្រើ Designer!", 
+        answer_en: "**Each software is built for a completely different purpose:**\n\n🟦 **Affinity Photo (Raster):** Built for editing actual photos and masking backgrounds. (Pixels will blur if scaled up).\n🟧 **Affinity Designer (Vector):** Built for creating logos, icons, and typography. You can scale artwork infinitely without losing quality.\n\n💡 **Example:** Masking a person for a poster? Use Photo. Creating a client's core Logo? Use Designer!",
         chips: ["អ្វីទៅជា Vector និង Raster?", "តើ Smart Object ជាអ្វី?"],
         chips_en: ["Vector vs Raster?", "What is a Smart Object?"]
     },
@@ -551,14 +551,14 @@ export const KNOWLEDGE_BASE = [
         regex: ['vector', 'raster'],
         answer: "បាទ **Vector និង Raster គឺជាប្រភេទក្រាហ្វិក២ផ្សេងគ្នា៖**\n\n🖼️ **Raster (Pixels):** រូបភាពផ្សំពីគ្រាប់ការ៉េតូចៗ។ 💡 **ឧទាហរណ៍៖** រូបថតចេញពីកាមេរ៉ា, JPG, PNG។ បើពង្រីកខ្លាំង វានឹងបែកគ្រាប់។\n\n📐 **Vector (Math):** រូបភាពបង្កើតដោយបន្ទាត់និងចំណុចតាមរូបមន្តគណិតវិទ្យា។ 💡 **ឧទាហរណ៍៖** ឡូហ្គោ, SVG, AI។ ពង្រីកប៉ុណ្ណាក៏នៅតែមុតស្រួច ១០០%! ", 
         answer_en: "**Vector and Raster are the two main structures of digital graphics:**\n\n🖼️ **Raster (Pixels):** Images made up of a grid of tiny colored squares. 💡 **Example:** Photographs, JPGs. If you zoom in heavily, you see jagged pixels.\n\n📐 **Vector (Math):** Graphics created using mathematical paths. 💡 **Example:** Logos, Icons, SVGs. They can scale to the size of a building without losing quality! ",
-        chips: ["ប្រភេទ File", "តើ Photoshop និង Illustrator ខុសគ្នាម៉េច?"],
-        chips_en: ["File Formats", "Photoshop vs Illustrator?"]
+        chips: ["ប្រភេទ File", "តើ Affinity Photo និង Designer ខុសគ្នាម៉េច?"],
+        chips_en: ["File Formats", "Affinity Photo vs Designer?"]
     },
     { 
         primaryKeys: ['Opacity និង Fill ខុសគ្នាម៉េច?', 'opacity vs fill'],
         keys: ['opacity', 'fill', 'ភាពថ្លា'],
         regex: ['opacity', 'fill', 'opacity.*fill'],
-        answer: "បាទ **នៅក្នុងកម្មវិធីរចនា, Opacity និង Fill ធ្វើការខុសគ្នា៖**\n\n👻 **Opacity:** បន្ថយភាពច្បាស់នៃ Layer ទាំងមូល រួមទាំង Effects ផងដែរ (ដូចជា Drop Shadow ជាដើម)។\n🎨 **Fill:** បន្ថយភាពច្បាស់តែទៅលើ \"សាច់ពណ៌ដើម\" របស់ Layer ប៉ុណ្ណោះ ប៉ុន្តែវារក្សា Effects ឱ្យនៅច្បាស់ដដែល ១០០%។\n\n💡 **ឧទាហរណ៍៖** បើអ្នកចង់បង្កើតអក្សរកញ្ចក់ (Glass text) ដែលមានតែស្រមោល (Shadow) អ្នកត្រូវទាញ Fill មក 0%។", 
+        answer: "បាទ **នៅក្នុងកម្មវិធីរចនា, Opacity និង Fill ធ្វើការខុសគ្នា៖**\n\n👻 **Opacity:** បន្ថយភាពច្បាស់នៃ Layer ទាំងមូល រួចទាំង Effects ផងដែរ (ដូចជា Drop Shadow ជាដើម)។\n🎨 **Fill:** បន្ថយភាពច្បាស់តែទៅលើ \"សាច់ពណ៌ដើម\" របស់ Layer ប៉ុណ្ណោះ ប៉ុន្តែវារក្សា Effects ឱ្យនៅច្បាស់ដដែល ១០០%។\n\n💡 **ឧទាហរណ៍៖** បើអ្នកចង់បង្កើតអក្សរកញ្ចក់ (Glass text) ដែលមានតែស្រមោល (Shadow) អ្នកត្រូវទាញ Fill មក 0%។", 
         answer_en: "**In design software, Opacity and Fill behave differently with Layer Styles:**\n\n👻 **Opacity:** Lowers the transparency of the ENTIRE layer, including any active effects (Drop Shadows, Strokes).\n🎨 **Fill:** Lowers the transparency of the actual pixel contents ONLY. It leaves all Layer Effects fully visible.\n\n💡 **Example:** To create a transparent \"Glass\" button that still has a visible drop shadow, you drop the Fill to 0%, but leave Opacity at 100%.",
         chips: ["តើ Blend Modes ដំណើរការយ៉ាងម៉េច?", "តើ Masking ជាអ្វី?"],
         chips_en: ["How do Blend Modes work?", "What is Masking?"]
@@ -578,8 +578,8 @@ export const KNOWLEDGE_BASE = [
         regex: ['pen tool', 'របៀបកាត់រូប', 'កាត់ background'],
         answer: "បាទ **Pen Tool (សញ្ញាប៊ិច ✒️)** គឺជាឧបករណ៍ដ៏មានឥទ្ធិពលបំផុត៖\n\n១. **កាត់ Background:** នៅក្នុងកម្មវិធី Photo Editor វាត្រូវបានប្រើដើម្បីកាត់តាមគែមវត្ថុ (Clipping Path) បានយ៉ាងស្អាត មុត និងលម្អិត។\n២. **គូររូប (Vector):** នៅក្នុងកម្មវិធី Vector វាប្រើសម្រាប់គូរ Logo ឬ Trace រូបចាស់ៗឡើងវិញជាទម្រង់ Vector។", 
         answer_en: "**The Pen Tool ✒️** is arguably the most powerful tool in any designer's arsenal:\n\n1. **Precise Masking:** In Photo Editors, it creates a 'Clipping Path' to trace the exact outline of complex objects to remove backgrounds flawlessly.\n2. **Vector Drawing:** In Vector software, it is the primary tool for creating custom logos or manually tracing sketches.",
-        chips: ["របៀបកាត់សក់ឬ Background ឱ្យស្អាត ✂️", "អ្វីទៅជា Vector និង Raster?"],
-        chips_en: ["Precise hair and background removal ✂️", "Vector vs Raster?"]
+        chips: ["របៀបកាត់សក់ឬ Background ឱ្យស្អាត", "អ្វីទៅជា Vector និង Raster?"],
+        chips_en: ["Precise background removal", "Vector vs Raster?"]
     },
     { 
         primaryKeys: ['តើ Masking ជាអ្វី?', 'what is masking'],
@@ -587,8 +587,8 @@ export const KNOWLEDGE_BASE = [
         regex: ['mask', 'masking', 'layer mask', 'clipping mask'],
         answer: "បាទ **ការប្រើប្រាស់ Mask គឺដើម្បីលាក់ផ្នែកខ្លះនៃរូបភាពដោយមិនលុបសាច់រូបចោល (Non-destructive)៖**\n\n🎭 **Layer Mask:** លាបពណ៌ខ្មៅ (Black) លើ Mask ដើម្បីលាក់រូបភាព និងពណ៌ស (White) ដើម្បីឱ្យរូបភាពលេចចេញមកវិញ។\n🖼️ **Clipping Mask:** យករូបភាពមួយទៅបង្ហាញតែនៅក្នុងទំហំនៃរូបរាង (Shape) ឬអក្សរដែលនៅខាងក្រោមវាប៉ុណ្ណោះ។\n\n💡 **ឧទាហរណ៍៖** ចង់ដាក់រូបភាពទេសភាពចូលទៅក្នុងអក្សរធំៗ គឺគេប្រើ Clipping Mask នេះឯង!", 
         answer_en: "**Masks are used to hide parts of an image without permanently deleting pixels (Non-destructive editing):**\n\n🎭 **Layer Mask:** Paint 'Black' on the mask to hide pixels, and paint 'White' to reveal them again.\n🖼️ **Clipping Mask:** Constrains an image to only show within the boundaries of the shape or text directly beneath it.\n\n💡 **Example:** If you want a nature photo to only show inside bold text, you use a Clipping Mask!",
-        chips: ["Clipping និង Masking ក្នុង Affinity", "Healing Brush និង Clone Stamp ខុសគ្នាម៉េច?"],
-        chips_en: ["Clipping vs Masking in Affinity", "Healing Brush vs Clone Stamp?"]
+        chips: ["Clipping និង Masking ក្នុង Affinity", "តើ Smart Object ជាអ្វី?"],
+        chips_en: ["Clipping vs Masking in Affinity", "What is a Smart Object?"]
     },
     { 
         primaryKeys: ['តើ Smart Object ជាអ្វី?', 'what is a smart object'],
@@ -603,8 +603,8 @@ export const KNOWLEDGE_BASE = [
         primaryKeys: ['Shortcut ផ្លូវកាត់សំខាន់ៗមានអ្វីខ្លះ?', 'keyboard shortcuts'],
         keys: ['shortcut', 'ផ្លូវកាត់', 'key', 'keyboard shortcut'],
         regex: ['shortcut', 'ផ្លូវកាត់', 'key', 'keyboard shortcut'],
-        answer: "បាទ នេះគឺជា **Shortcut ផ្លូវកាត់** ដែលអ្នករចនាអាជីពតែងតែប្រើប្រាស់ (សម្រាប់ Photoshop/Illustrator/Affinity)៖\n\n- **V:** Move Tool (រំកិលវត្ថុ)\n- **T:** Text Tool (សរសេរអក្សរ)\n- **Ctrl / Cmd + Z:** Undo (ថយក្រោយ)\n- **Ctrl / Cmd + T:** Free Transform (ពង្រីក/បង្រួមរូប)\n- **Ctrl / Cmd + J:** Duplicate Layer (ចម្លង Layer បន្ថែម)\n- **Spacebar (សង្កត់):** Hand Tool (ទាញរំកិលផ្ទៃការងារ)\n- **Ctrl / Cmd + S:** Save (ត្រូវតែចុចឱ្យបានញឹកញាប់!)", 
-        answer_en: "**Here are the essential Keyboard Shortcuts** every professional designer uses:\n\n- **V:** Move Tool\n- **T:** Type Tool\n- **Ctrl / Cmd + Z:** Undo\n- **Ctrl / Cmd + T:** Free Transform (Scale/Rotate)\n- **Ctrl / Cmd + J:** Duplicate Layer\n- **Hold Spacebar:** Hand Tool (Pan around the canvas)\n- **Ctrl / Cmd + S:** Save (Press this constantly!)",
+        answer: "បាទ នេះគឺជា **Shortcut ផ្លូវកាត់** ដែលអ្នករចនាអាជីពតែងតែប្រើប្រាស់ (សម្រាប់កម្មវិធី Affinity)៖\n\n- **V:** Move Tool (រំកិលវត្ថុ)\n- **T:** Text Tool (សរសេរអក្សរ)\n- **Ctrl / Cmd + Z:** Undo (ថយក្រោយ)\n- **Ctrl / Cmd + T:** Free Transform (ពង្រីក/បង្រួមរូប)\n- **Ctrl / Cmd + J:** Duplicate Layer (ចម្លង Layer បន្ថែម)\n- **Spacebar (សង្កត់):** Hand Tool (ទាញរំកិលផ្ទៃការងារ)\n- **Ctrl / Cmd + S:** Save (ត្រូវតែចុចឱ្យបានញឹកញាប់!)", 
+        answer_en: "**Here are the essential Keyboard Shortcuts** every professional Affinity designer uses:\n\n- **V:** Move Tool\n- **T:** Type Tool\n- **Ctrl / Cmd + Z:** Undo\n- **Ctrl / Cmd + T:** Free Transform (Scale/Rotate)\n- **Ctrl / Cmd + J:** Duplicate Layer\n- **Hold Spacebar:** Hand Tool (Pan around the canvas)\n- **Ctrl / Cmd + S:** Save (Press this constantly!)",
         chips: ["តើ Smart Object ជាអ្វី?", "របៀបប្រើ Affinity លើ iPad 📱"],
         chips_en: ["What is a Smart Object?", "Affinity iPad Gestures 📱"]
     },
@@ -757,8 +757,8 @@ export const KNOWLEDGE_BASE = [
         regex: ['edit light', 'កែពន្លឺ', 'brightness', 'exposure', 'លេងពន្លឺ'],
         answer: "បាទ **ការកែពន្លឺ (Exposure/Lighting) គឺជាជំហានដំបូងបំផុតមុននឹងលេងពណ៌!**\n\n១. **Curves:** ប្រើខ្សែកោង Curves ដើម្បីទាញ Highlight (ពន្លឺខ្លាំង) ឡើងលើបន្តិច និងទាញ Shadows (ស្រមោល) ចុះក្រោមបន្តិច ដើម្បីបង្កើត S-Curve ដែលផ្តល់នូវ Contrast យ៉ាងស្រស់ស្អាត។\n២. **Shadows & Highlights:** បើរូបថតងងឹតមុខតួអង្គ សូមទាញ Shadows ឡើងបន្តិច។ បើមេឃសក្បុសពេក សូមទាញ Highlights ចុះ។", 
         answer_en: "**Correcting lighting is always the very first step before you touch any colors!**\n\n1. **Curves Tool:** Pull the top of the curve up slightly for brighter highlights, and pull the bottom down slightly for darker shadows. This creates the legendary 'S-Curve' for instant professional contrast.\n2. **Shadows & Highlights:** If your subject's face is dark, boost the 'Shadows' slider. If the sky is blown out, lower the 'Highlights' slider.",
-        chips: ["ពណ៌ Cinematic", "គន្លឹះកែពណ៌ក្នុង Lightroom Mobile 📱"],
-        chips_en: ["Cinematic Color", "Lightroom Mobile color grading 📱"]
+        chips: ["ពណ៌ Cinematic", "តើ Blend Modes ដំណើរការយ៉ាងម៉េច?"],
+        chips_en: ["Cinematic Color", "How do Blend Modes work?"]
     },
     { 
         primaryKeys: ['ពណ៌ Cinematic', 'cinematic color'],
@@ -766,8 +766,8 @@ export const KNOWLEDGE_BASE = [
         regex: ['cinematic', 'teal and orange', 'ពណ៌កុន', 'color grading'],
         answer: "បាទ **ពណ៌បែប Cinematic (ពណ៌រោងកុន) ភាគច្រើនប្រើក្បួន Teal & Orange!**\n\nហេតុអ្វី? ព្រោះស្បែកមនុស្សយើងស្ថិតនៅក្នុងតំបន់ពណ៌ទឹកក្រូច (Orange) ចំណែកឯពណ៌ផ្ទុយរបស់វាគឺពណ៌ខៀវបៃតង (Teal)។ ពេលអ្នកដាក់ពណ៌ Teal ទៅក្នុងផ្ទៃខាងក្រោយ (Background/Shadows) វាធ្វើឱ្យតួអង្គលេចធ្លោខ្លាំង និងផ្តល់អារម្មណ៍ដូចកំពុងមើលកុនហូលីវូដ។\n\n💡 **របៀបធ្វើ៖** ប្រើ Color Grading (ឬ Color Balance) រួចរុញ Shadows ទៅរកពណ៌ខៀវ (Blue/Cyan) និងរុញ Highlights ទៅរកពណ៌លឿងទឹកក្រូច។", 
         answer_en: "**The classic 'Cinematic Look' relies heavily on the Teal & Orange color harmony!**\n\nWhy? Because human skin tones naturally fall into the Orange spectrum. Its exact opposite on the color wheel is Teal/Cyan. Pushing Teal into the shadows creates massive color contrast that makes the subject pop off the screen like a Hollywood movie.\n\n💡 **How to do it:** Open the Color Grading (or Color Balance) tool. Push your Shadows toward Cyan/Blue, and your Highlights toward Orange/Yellow.",
-        chips: ["គន្លឹះកែពណ៌ក្នុង Lightroom Mobile 📱", "តើ Blend Modes ដំណើរការយ៉ាងម៉េច?"],
-        chips_en: ["Lightroom Mobile color grading 📱", "How do Blend Modes work?"]
+        chips: ["របៀបកែពន្លឺ", "តើ Blend Modes ដំណើរការយ៉ាងម៉េច?"],
+        chips_en: ["How to edit light", "How do Blend Modes work?"]
     },
 
     // ------------------------------------------
