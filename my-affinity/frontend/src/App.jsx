@@ -242,12 +242,10 @@ const LessonModal = ({ lesson, onClose, isDarkMode, completedSteps, setCompleted
 
             {currentStepData && (
                 <div className={isCssFullscreen ? 'w-full h-full' : 'mb-6'}>
-                    
-                    {/* 🌟 RESTRUCTURED OUTER CONTAINER 🌟 */}
-                    <div ref={containerRef} className={`video-container w-full shadow-lg shrink-0 bg-black transition-all duration-300
+                    <div ref={containerRef} className={`video-container w-full relative overflow-hidden flex flex-col items-center justify-center group shadow-lg shrink-0 bg-black transition-all duration-300
                         ${isCssFullscreen 
                             ? '!fixed !top-0 !left-0 !right-0 !bottom-0 !z-[999999] !w-full !h-[100dvh] !rounded-none !border-none !m-0 !p-0' 
-                            : `relative aspect-video rounded-2xl border overflow-hidden ${isDarkMode ? 'border-[#2C2C2C]' : 'border-black'}`
+                            : `aspect-video rounded-2xl border ${isDarkMode ? 'border-[#2C2C2C]' : 'border-black'}`
                         }`}
                     >
                         
@@ -1012,7 +1010,10 @@ function AppContent() {
   };
 
   return (
-    <div className={`fixed inset-0 w-full h-full flex flex-col font-khmer overflow-hidden touch-pan-x touch-pan-y transition-colors duration-500 ${isDarkMode ? 'bg-[#0A0A0A] text-[#F1F1F1]' : 'bg-[#F4F5F7] text-[#1A1A1A]'}`}>
+    <div 
+        className={`fixed inset-0 w-full h-full flex flex-col font-khmer overflow-hidden touch-pan-x touch-pan-y transition-colors duration-500 ${isDarkMode ? 'bg-[#0A0A0A] text-[#F1F1F1]' : 'bg-[#F4F5F7] text-[#1A1A1A]'}`}
+        onContextMenu={(e) => e.preventDefault()}
+    >
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Kantumruy+Pro:wght@100..700&display=swap'); 
         body, html { overscroll-behavior: none; background-color: ${isDarkMode ? '#0A0A0A' : '#F4F5F7'}; transition: background-color 0.5s ease; } 
