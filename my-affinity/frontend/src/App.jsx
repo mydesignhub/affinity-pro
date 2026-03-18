@@ -242,131 +242,146 @@ const LessonModal = ({ lesson, onClose, isDarkMode, completedSteps, setCompleted
 
             {currentStepData && (
                 <div className={isCssFullscreen ? 'w-full h-full' : 'mb-6'}>
-                    <div ref={containerRef} className={`video-container w-full relative overflow-hidden flex flex-col items-center justify-center group shadow-lg shrink-0 bg-black transition-all duration-300
+                    
+                    {/* 🌟 RESTRUCTURED OUTER CONTAINER 🌟 */}
+                    <div ref={containerRef} className={`video-container w-full shadow-lg shrink-0 bg-black transition-all duration-300
                         ${isCssFullscreen 
                             ? '!fixed !top-0 !left-0 !right-0 !bottom-0 !z-[999999] !w-full !h-[100dvh] !rounded-none !border-none !m-0 !p-0' 
-                            : `aspect-video rounded-2xl border ${isDarkMode ? 'border-[#2C2C2C]' : 'border-black'}`
+                            : `relative aspect-video rounded-2xl border overflow-hidden ${isDarkMode ? 'border-[#2C2C2C]' : 'border-black'}`
                         }`}
                     >
                         
-                        {isCssFullscreen && (
-                            <button 
-                                onClick={toggleFullScreen}
-                                className="absolute z-[60] p-3 sm:p-4 bg-black/60 text-white rounded-full backdrop-blur-md shadow-2xl active:scale-90 transition-transform"
-                                style={{ top: 'max(env(safe-area-inset-top), 16px)', left: 'max(env(safe-area-inset-left), 16px)' }}
-                            >
-                                <Minimize size={24} />
-                            </button>
-                        )}
-
-                        {!isPurchased && !previewEnded && (
-                            <div className="absolute top-4 right-4 z-40 bg-[#C5B002] text-white px-3 py-1.5 rounded-full font-bold text-[10px] tracking-widest uppercase shadow-lg flex items-center gap-1.5 animate-pulse pointer-events-none">
-                                <Clock size={12} /> 20s PREVIEW
-                            </div>
-                        )}
-
-                        {currentStepData.videoUrl ? (
-                            <>
-                                {!hasStarted ? (
-                                    <div onClick={handlePlayClick} className="absolute inset-0 flex flex-col items-center justify-center bg-black/60 cursor-pointer z-50 hover:bg-black/50 transition-colors">
-                                        <PlayCircle size={64} className="text-[#C5B002] mb-3 drop-shadow-lg" />
-                                        <span className="font-bold font-khmer text-white tracking-wide drop-shadow-md">
-                                            {isPurchased ? (lang === 'en' ? 'Play Video' : 'ចាក់វីដេអូ') : (lang === 'en' ? 'Play 20s Free Preview' : 'ចាក់មើលសាកល្បង ២០ វិនាទី')}
-                                        </span>
-                                    </div>
-                                ) : previewEnded && !isPurchased ? (
-                                    <div className="absolute inset-0 flex flex-col items-center justify-center bg-[#0A0A0A] z-50 p-6 text-center border-2 border-[#C5B002]/30 rounded-2xl animate-fade-in-up">
-                                        <Lock size={40} className="text-[#C5B002] mb-4 animate-bounce" />
-                                        <h4 className="text-white font-black font-khmer text-lg sm:text-xl mb-2">
-                                            {lang === 'en' ? 'Preview Finished!' : 'ការមើលសាកល្បងត្រូវបានបញ្ចប់!'}
-                                        </h4>
-                                        <p className="text-[#A0A0A0] text-[13px] sm:text-sm font-khmer mb-6 max-w-sm mx-auto">
-                                            {lang === 'en' ? 'Unlock the full course to watch the rest of this lesson and access all features.' : 'ដោះសោវគ្គសិក្សាដើម្បីបន្តមើលមេរៀននេះ និងទទួលបានឯកសារអនុវត្ត។'}
-                                        </p>
-                                        <button onClick={() => { handleClose(); setTimeout(onUnlockDemo, 300); }} className="px-8 py-3 bg-[#C5B002] text-white font-black font-khmer rounded-xl text-[13px] active:scale-95 shadow-lg shadow-[#C5B002]/20">
-                                            {lang === 'en' ? 'Unlock Full Access' : 'ដោះសោសិទ្ធិពេញលេញ'}
-                                        </button>
-                                    </div>
-                                ) : (
-                                    <>
-                                        {isVideoLoading && (
-                                            <div className="absolute inset-0 flex flex-col items-center justify-center z-10">
-                                                <Loader2 size={36} className={`animate-spin mb-3 ${isDarkMode ? 'text-[#41B6E6]' : 'text-[#0277C5]'}`} />
-                                                <span className={`text-[11px] font-bold uppercase tracking-widest ${isDarkMode ? 'text-[#A0A0A0]' : 'text-[#6B7280]'}`}>Loading</span>
-                                            </div>
-                                        )}
-
-                                        <iframe 
-                                            ref={videoRef}
-                                            tabIndex="-1"
-                                            src={getVideoUrl(currentStepData.videoUrl)}
-                                            className={`w-full h-full absolute inset-0 transition-opacity duration-700 ease-in-out no-callout ${isVideoLoading ? 'opacity-0' : 'opacity-100 z-20'}`}
-                                            sandbox="allow-scripts allow-same-origin allow-presentation"
-                                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; fullscreen" 
-                                            referrerPolicy="strict-origin-when-cross-origin"
-                                            allowFullScreen
-                                            title={`Step ${currentStepData.id} Video`}
-                                            onLoad={() => setIsVideoLoading(false)}
-                                        />
-                                        
-                                        {/* 🛡️ PRECISION DEAD-ZONE SHIELDS 🛡️ */}
-                                        {/* Using <div> and stopping ALL pointer events so they never trigger fullscreen or interact with YouTube! */}
-
-                                        {/* 1. Mobile Top Bar: Blocks Avatar, Title, Watch Later, Share. Leaves far-right 60px open for mobile Gear/3-dots */}
-                                        <div 
-                                            className="lg:hidden absolute top-0 left-0 right-[60px] h-[70px] z-30 bg-transparent no-callout cursor-default" 
-                                            onContextMenu={e => e.preventDefault()} 
-                                            onClick={e => { e.preventDefault(); e.stopPropagation(); }}
-                                            onDoubleClick={e => { e.preventDefault(); e.stopPropagation(); }}
-                                            onTouchStart={e => e.stopPropagation()} onTouchEnd={e => e.stopPropagation()} onPointerDown={e => e.stopPropagation()}
-                                        />
-
-                                        {/* 2. PC Top Bar: Blocks entirely. Gear is at the bottom on PC, so we can safely block everything up top (Watch Later, Share, Title) */}
-                                        <div 
-                                            className="hidden lg:block absolute top-0 left-0 w-full h-[80px] z-30 bg-transparent no-callout cursor-default" 
-                                            onContextMenu={e => e.preventDefault()} 
-                                            onClick={e => { e.preventDefault(); e.stopPropagation(); }}
-                                            onDoubleClick={e => { e.preventDefault(); e.stopPropagation(); }}
-                                            onTouchStart={e => e.stopPropagation()} onTouchEnd={e => e.stopPropagation()} onPointerDown={e => e.stopPropagation()}
-                                        />
-
-                                        {/* 3. Mobile Bottom-Left: Blocks Mobile Share Arrow */}
-                                        <div 
-                                            className="lg:hidden absolute bottom-0 left-0 w-[80px] h-[60px] z-30 bg-transparent no-callout cursor-default" 
-                                            onContextMenu={e => e.preventDefault()} 
-                                            onClick={e => { e.preventDefault(); e.stopPropagation(); }}
-                                            onDoubleClick={e => { e.preventDefault(); e.stopPropagation(); }}
-                                            onTouchStart={e => e.stopPropagation()} onTouchEnd={e => e.stopPropagation()} onPointerDown={e => e.stopPropagation()}
-                                        />
-
-                                        {/* 4. Mobile Bottom-Right: Blocks YouTube Logo */}
-                                        <div 
-                                            className="lg:hidden absolute bottom-0 right-0 w-[120px] h-[55px] z-30 bg-transparent no-callout cursor-default" 
-                                            onContextMenu={e => e.preventDefault()} 
-                                            onClick={e => { e.preventDefault(); e.stopPropagation(); }}
-                                            onDoubleClick={e => { e.preventDefault(); e.stopPropagation(); }}
-                                            onTouchStart={e => e.stopPropagation()} onTouchEnd={e => e.stopPropagation()} onPointerDown={e => e.stopPropagation()}
-                                        />
-
-                                        {/* 5. PC Bottom-Right (Floating Watermark): Floats 48px up to block the YouTube logo but leaves the Control Bar (Gear, Volume, CC) entirely clickable! */}
-                                        <div 
-                                            className="hidden lg:block absolute bottom-[48px] right-[10px] w-[100px] h-[40px] z-30 bg-transparent no-callout cursor-default" 
-                                            onContextMenu={e => e.preventDefault()} 
-                                            onClick={e => { e.preventDefault(); e.stopPropagation(); }}
-                                            onDoubleClick={e => { e.preventDefault(); e.stopPropagation(); }}
-                                            onTouchStart={e => e.stopPropagation()} onTouchEnd={e => e.stopPropagation()} onPointerDown={e => e.stopPropagation()}
-                                        />
-                                    </>
+                        {/* 🌟 NEW APPLE SAFE-AREA PADDING WRAPPER 🌟 */}
+                        <div className="absolute inset-0 w-full h-full flex flex-col"
+                             style={isCssFullscreen ? {
+                                 paddingTop: 'env(safe-area-inset-top)',
+                                 paddingBottom: 'env(safe-area-inset-bottom)',
+                                 paddingLeft: 'env(safe-area-inset-left)',
+                                 paddingRight: 'env(safe-area-inset-right)'
+                             } : {}}
+                        >
+                            {/* Inner Relative Container: Iframe & Shields attach to this! */}
+                            <div className={`relative w-full h-full flex-1 flex flex-col items-center justify-center overflow-hidden group ${isCssFullscreen ? '' : 'rounded-[inherit]'}`}>
+                                
+                                {isCssFullscreen && (
+                                    <button 
+                                        onClick={toggleFullScreen}
+                                        className="absolute z-[60] p-3 sm:p-4 bg-black/60 text-white rounded-full backdrop-blur-md shadow-2xl active:scale-90 transition-transform"
+                                        style={{ top: '16px', left: '16px' }}
+                                    >
+                                        <Minimize size={24} />
+                                    </button>
                                 )}
-                            </>
-                        ) : (
-                            <div className="text-center text-white/50 p-4">
-                                <PlayCircle size={48} className="mx-auto mb-3 opacity-50 group-hover:opacity-100 transition-opacity text-[#41B6E6]" />
-                                <p className="font-khmer font-bold tracking-wide">
-                                    {lang === 'en' ? `STEP ${currentStepData.id} COMING SOON` : `វីដេអូទី ${currentStepData.id} កំពុងរៀបចំ`}
-                                </p>
+
+                                {!isPurchased && !previewEnded && (
+                                    <div className="absolute top-4 right-4 z-40 bg-[#C5B002] text-white px-3 py-1.5 rounded-full font-bold text-[10px] tracking-widest uppercase shadow-lg flex items-center gap-1.5 animate-pulse pointer-events-none">
+                                        <Clock size={12} /> 20s PREVIEW
+                                    </div>
+                                )}
+
+                                {currentStepData.videoUrl ? (
+                                    <>
+                                        {!hasStarted ? (
+                                            <div onClick={handlePlayClick} className="absolute inset-0 flex flex-col items-center justify-center bg-black/60 cursor-pointer z-50 hover:bg-black/50 transition-colors">
+                                                <PlayCircle size={64} className="text-[#C5B002] mb-3 drop-shadow-lg" />
+                                                <span className="font-bold font-khmer text-white tracking-wide drop-shadow-md">
+                                                    {isPurchased ? (lang === 'en' ? 'Play Video' : 'ចាក់វីដេអូ') : (lang === 'en' ? 'Play 20s Free Preview' : 'ចាក់មើលសាកល្បង ២០ វិនាទី')}
+                                                </span>
+                                            </div>
+                                        ) : previewEnded && !isPurchased ? (
+                                            <div className="absolute inset-0 flex flex-col items-center justify-center bg-[#0A0A0A] z-50 p-6 text-center border-2 border-[#C5B002]/30 rounded-2xl animate-fade-in-up">
+                                                <Lock size={40} className="text-[#C5B002] mb-4 animate-bounce" />
+                                                <h4 className="text-white font-black font-khmer text-lg sm:text-xl mb-2">
+                                                    {lang === 'en' ? 'Preview Finished!' : 'ការមើលសាកល្បងត្រូវបានបញ្ចប់!'}
+                                                </h4>
+                                                <p className="text-[#A0A0A0] text-[13px] sm:text-sm font-khmer mb-6 max-w-sm mx-auto">
+                                                    {lang === 'en' ? 'Unlock the full course to watch the rest of this lesson and access all features.' : 'ដោះសោវគ្គសិក្សាដើម្បីបន្តមើលមេរៀននេះ និងទទួលបានឯកសារអនុវត្ត។'}
+                                                </p>
+                                                <button onClick={() => { handleClose(); setTimeout(onUnlockDemo, 300); }} className="px-8 py-3 bg-[#C5B002] text-white font-black font-khmer rounded-xl text-[13px] active:scale-95 shadow-lg shadow-[#C5B002]/20">
+                                                    {lang === 'en' ? 'Unlock Full Access' : 'ដោះសោសិទ្ធិពេញលេញ'}
+                                                </button>
+                                            </div>
+                                        ) : (
+                                            <>
+                                                {isVideoLoading && (
+                                                    <div className="absolute inset-0 flex flex-col items-center justify-center z-10">
+                                                        <Loader2 size={36} className={`animate-spin mb-3 ${isDarkMode ? 'text-[#41B6E6]' : 'text-[#0277C5]'}`} />
+                                                        <span className={`text-[11px] font-bold uppercase tracking-widest ${isDarkMode ? 'text-[#A0A0A0]' : 'text-[#6B7280]'}`}>Loading</span>
+                                                    </div>
+                                                )}
+
+                                                <iframe 
+                                                    ref={videoRef}
+                                                    tabIndex="-1"
+                                                    src={getVideoUrl(currentStepData.videoUrl)}
+                                                    className={`w-full h-full absolute inset-0 transition-opacity duration-700 ease-in-out no-callout ${isVideoLoading ? 'opacity-0' : 'opacity-100 z-20'}`}
+                                                    sandbox="allow-scripts allow-same-origin allow-presentation"
+                                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; fullscreen" 
+                                                    referrerPolicy="strict-origin-when-cross-origin"
+                                                    allowFullScreen
+                                                    title={`Step ${currentStepData.id} Video`}
+                                                    onLoad={() => setIsVideoLoading(false)}
+                                                />
+                                                
+                                                {/* 🛡️ PRECISION DEAD-ZONE SHIELDS 🛡️ */}
+                                                
+                                                {/* 1. Mobile Top Bar: Blocks Avatar, Title, Watch Later, Share. Leaves far-right 60px open for mobile Gear/3-dots */}
+                                                <div 
+                                                    className="lg:hidden absolute top-0 left-0 right-[60px] h-[70px] z-30 bg-transparent no-callout cursor-default" 
+                                                    onContextMenu={e => e.preventDefault()} 
+                                                    onClick={e => { e.preventDefault(); e.stopPropagation(); }}
+                                                    onDoubleClick={e => { e.preventDefault(); e.stopPropagation(); }}
+                                                    onTouchStart={e => e.stopPropagation()} onTouchEnd={e => e.stopPropagation()} onPointerDown={e => e.stopPropagation()}
+                                                />
+
+                                                {/* 2. PC Top Bar: Blocks entirely. Gear is at the bottom on PC, so we can safely block everything up top (Watch Later, Share, Title) */}
+                                                <div 
+                                                    className="hidden lg:block absolute top-0 left-0 w-full h-[80px] z-30 bg-transparent no-callout cursor-default" 
+                                                    onContextMenu={e => e.preventDefault()} 
+                                                    onClick={e => { e.preventDefault(); e.stopPropagation(); }}
+                                                    onDoubleClick={e => { e.preventDefault(); e.stopPropagation(); }}
+                                                    onTouchStart={e => e.stopPropagation()} onTouchEnd={e => e.stopPropagation()} onPointerDown={e => e.stopPropagation()}
+                                                />
+
+                                                {/* 3. Mobile Bottom-Left: Blocks Mobile Share Arrow */}
+                                                <div 
+                                                    className="lg:hidden absolute bottom-0 left-0 w-[80px] h-[60px] z-30 bg-transparent no-callout cursor-default" 
+                                                    onContextMenu={e => e.preventDefault()} 
+                                                    onClick={e => { e.preventDefault(); e.stopPropagation(); }}
+                                                    onDoubleClick={e => { e.preventDefault(); e.stopPropagation(); }}
+                                                    onTouchStart={e => e.stopPropagation()} onTouchEnd={e => e.stopPropagation()} onPointerDown={e => e.stopPropagation()}
+                                                />
+
+                                                {/* 4. Mobile Bottom-Right: Blocks YouTube Logo */}
+                                                <div 
+                                                    className="lg:hidden absolute bottom-0 right-0 w-[120px] h-[55px] z-30 bg-transparent no-callout cursor-default" 
+                                                    onContextMenu={e => e.preventDefault()} 
+                                                    onClick={e => { e.preventDefault(); e.stopPropagation(); }}
+                                                    onDoubleClick={e => { e.preventDefault(); e.stopPropagation(); }}
+                                                    onTouchStart={e => e.stopPropagation()} onTouchEnd={e => e.stopPropagation()} onPointerDown={e => e.stopPropagation()}
+                                                />
+
+                                                {/* 5. PC Bottom-Right (Floating Watermark): Floats 48px up to block the YouTube logo but leaves the Control Bar (Gear, Volume, CC) entirely clickable! */}
+                                                <div 
+                                                    className="hidden lg:block absolute bottom-[48px] right-[10px] w-[100px] h-[40px] z-30 bg-transparent no-callout cursor-default" 
+                                                    onContextMenu={e => e.preventDefault()} 
+                                                    onClick={e => { e.preventDefault(); e.stopPropagation(); }}
+                                                    onDoubleClick={e => { e.preventDefault(); e.stopPropagation(); }}
+                                                    onTouchStart={e => e.stopPropagation()} onTouchEnd={e => e.stopPropagation()} onPointerDown={e => e.stopPropagation()}
+                                                />
+                                            </>
+                                        )}
+                                    </>
+                                ) : (
+                                    <div className="text-center text-white/50 p-4">
+                                        <PlayCircle size={48} className="mx-auto mb-3 opacity-50 group-hover:opacity-100 transition-opacity text-[#41B6E6]" />
+                                        <p className="font-khmer font-bold tracking-wide">
+                                            {lang === 'en' ? `STEP ${currentStepData.id} COMING SOON` : `វីដេអូទី ${currentStepData.id} កំពុងរៀបចំ`}
+                                        </p>
+                                    </div>
+                                )}
                             </div>
-                        )}
+                        </div>
                     </div>
                     
                     {!isCssFullscreen && currentStepData.videoUrl && (
