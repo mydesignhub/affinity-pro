@@ -18,6 +18,8 @@ import {
   REPEAT_RESPONSES_EN,
   API_FALLBACK_RESPONSES,
   API_FALLBACK_RESPONSES_EN,
+  QUIZ_INVITATIONS,
+  QUIZ_INVITATIONS_EN,
   KNOWLEDGE_BASE 
 } from '../../../data/ai_database';
 
@@ -31,6 +33,13 @@ const getRandomItems = (arr, count) => {
     if (!arr || !arr.length) return [];
     const shuffled = [...arr].sort(() => 0.5 - Math.random());
     return shuffled.slice(0, count);
+};
+
+const getRandomQuizInvitation = (language = 'kh') => {
+    const invitations = language === 'en' ? QUIZ_INVITATIONS_EN : QUIZ_INVITATIONS;
+    if (!invitations || invitations.length === 0) return '';
+    const randomIndex = Math.floor(Math.random() * invitations.length);
+    return invitations[randomIndex];
 };
 
 // ============================================================================
@@ -94,7 +103,7 @@ const ChatBot = ({ messages, setMessages, isDarkMode }) => {
   const [showHeader, setShowHeader] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
   
-  // 🌟 ANDROID/IOS KEYBOARD FIX: Explicit Dynamic Viewport Height & Keyboard Tracking
+  // 🌟 ANDROID/IOS KEYBOARD FIX
   const [viewportHeight, setViewportHeight] = useState('100%');
   const [keyboardHeight, setKeyboardHeight] = useState(0);
   
@@ -103,6 +112,7 @@ const ChatBot = ({ messages, setMessages, isDarkMode }) => {
   const scrollContainerRef = useRef(null);
   const isInitialMount = useRef(true); 
   const isAutoScrolling = useRef(false);
+  const idleTimerRef = useRef(null); 
   
   const [currentSuggestions, setCurrentSuggestions] = useState([]);
   const [isAnimating, setIsAnimating] = useState(false);
@@ -114,19 +124,46 @@ const ChatBot = ({ messages, setMessages, isDarkMode }) => {
 
   const { lang, t } = useLanguage();
 
-  const getSuggestList = () => lang === 'en' ? SUGGESTED_QUESTIONS_EN : SUGGESTED_QUESTIONS;
+  // 🌟 UPGRADE 3: SMART CHIP FILTERING (No duplicate questions from history)
+  const getSuggestList = () => {
+      const fullList = lang === 'en' ? SUGGESTED_QUESTIONS_EN : SUGGESTED_QUESTIONS;
+      const userAskedQuestions = messages
+          .filter(m => m.role === 'user')
+          .map(m => strictClean(m.text));
+
+      const freshQuestions = fullList.filter(q => !userAskedQuestions.includes(strictClean(q)));
+      return freshQuestions.length >= 3 ? freshQuestions : fullList;
+  };
 
   const generateSmartGreeting = () => {
       const interests = JSON.parse(localStorage.getItem('myDesign_user_interests') || '[]');
-      const greetList = lang === 'en' ? GREETINGS_EN : GREETINGS;
-      const smartList = lang === 'en' ? SMART_GREETINGS_EN : SMART_GREETINGS;
       const suggestList = getSuggestList();
       
-      let greetingMsg = getRandomItems(greetList, 1)[0] || GREETINGS[0];
+      // 🌟 UPGRADE 2: TIME-AWARE INTELLIGENCE
+      const hour = new Date().getHours();
+      let timeGreetingKh = "បាទ សួស្ដី! 👋";
+      let timeGreetingEn = "Hello! 👋";
+
+      if (hour >= 5 && hour < 12) {
+          timeGreetingKh = "បាទ អរុណសួស្តី! 🌅 ចាប់ផ្តើមព្រឹកព្រលឹមជាមួយគំនិតច្នៃប្រឌិតថ្មីៗ!";
+          timeGreetingEn = "Good morning! 🌅 Ready to start the day with some fresh designs?";
+      } else if (hour >= 12 && hour < 17) {
+          timeGreetingKh = "បាទ ទិវាសួស្តី! ☀️ សង្ឃឹមថាការងារថ្ងៃនេះរលូនល្អ។";
+          timeGreetingEn = "Good afternoon! ☀️ Hope your creative workflow is going smoothly.";
+      } else if (hour >= 17 && hour < 22) {
+          timeGreetingKh = "បាទ សាយន្តសួស្តី! 🌇 សម្រាកញ៉ាំទឹកបន្តិចមុននឹងបន្ត Design ទៀតណា៎។";
+          timeGreetingEn = "Good evening! 🌇 Don't forget to rest your eyes while designing.";
+      } else {
+          timeGreetingKh = "បាទ រាត្រីសួស្តី! 🌙 យប់ជ្រៅហើយនៅប្រឹងទៀតកូនជាង! ត្រូវការអោយខ្ញុំជួយអីទេ?";
+          timeGreetingEn = "Working late? 🌙 I'm wide awake and ready to assist you with your night owl designs!";
+      }
+
+      let greetingMsg = `${lang === 'en' ? timeGreetingEn : timeGreetingKh} ${lang === 'en' ? "I am **Design Master**, your AI assistant. What are we creating today? 🎨✨" : "ខ្ញុំគឺ **Design Master**។ តើថ្ងៃនេះចង់ឱ្យខ្ញុំជួយអ្វីខ្លះ? 🎨✨"}`;
       let defaultChips = getRandomItems(suggestList, 3);
 
       if (interests.length > 0) {
           const lastInterest = interests[interests.length - 1];
+          const smartList = lang === 'en' ? SMART_GREETINGS_EN : SMART_GREETINGS;
           const smartMsgTemplate = getRandomItems(smartList, 1)[0];
           if (smartMsgTemplate) {
               greetingMsg = smartMsgTemplate.replace('{topic}', lastInterest);
@@ -135,6 +172,28 @@ const ChatBot = ({ messages, setMessages, isDarkMode }) => {
       }
 
       setMessages([{ role: 'model', text: greetingMsg, chips: defaultChips }]);
+  };
+
+  const triggerIdleQuiz = () => {
+      setMessages(prev => {
+          if (prev.length === 0) return prev;
+          
+          const lastMsg = prev[prev.length - 1];
+          const allInvitations = [...QUIZ_INVITATIONS, ...QUIZ_INVITATIONS_EN];
+          if (lastMsg.role === 'model' && allInvitations.includes(lastMsg.text)) {
+              return prev;
+          }
+
+          const nextChips = getRandomItems(getSuggestList(), 3);
+          const inviteMsg = getRandomQuizInvitation(lang);
+          
+          return [...prev, { role: 'model', text: inviteMsg, chips: nextChips }];
+      });
+  };
+
+  const resetIdleTimer = () => {
+      if (idleTimerRef.current) clearTimeout(idleTimerRef.current);
+      idleTimerRef.current = setTimeout(triggerIdleQuiz, 120000); 
   };
 
   useEffect(() => {
@@ -150,6 +209,13 @@ const ChatBot = ({ messages, setMessages, isDarkMode }) => {
       return () => clearInterval(interval);
       // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [lang]);
+
+  useEffect(() => {
+      resetIdleTimer();
+      return () => {
+          if (idleTimerRef.current) clearTimeout(idleTimerRef.current);
+      };
+  }, [messages, input, lang]); 
 
   useEffect(() => {
       if (messages.length > 0) localStorage.setItem('myDesign_chat_history', JSON.stringify(messages));
@@ -211,6 +277,92 @@ const ChatBot = ({ messages, setMessages, isDarkMode }) => {
       const rawInput = inputTxt.trim();
       const cleanInput = strictClean(rawInput); 
 
+      // 🌟 MOVED UP: MASSIVELY EXPANDED LEARNING RABBIT HOLE (For both Yes & Next triggers)
+      const FOLLOW_UP_MAP = {
+          // 1. FOUNDATIONS FLOW
+          'តើអ្វីទៅជា Graphic Design?': 'ធាតុផ្សំមូលដ្ឋានទាំង ៦',
+          'what is graphic design': 'the 6 elements of design',
+          'ធាតុផ្សំមូលដ្ឋានទាំង ៦': 'គោលការណ៍រចនា',
+          'the 6 elements of design': 'design principles',
+          'គោលការណ៍រចនា': 'ឋានានុក្រមទស្សនីយភាព',
+          'design principles': 'visual hierarchy',
+          
+          // 2. LAYOUT & COMPOSITION FLOW
+          'ឋានានុក្រមទស្សនីយភាព': 'តើ Contrast ជាអ្វី?',
+          'visual hierarchy': 'what is contrast',
+          'តើ Contrast ជាអ្វី?': 'តើ Alignment ជាអ្វី?',
+          'what is contrast': 'what is alignment',
+          'តើ Alignment ជាអ្វី?': 'តើ Proximity ជាអ្វី?',
+          'what is alignment': 'what is proximity',
+          'តើ Proximity ជាអ្វី?': 'អ្វីទៅជា White Space?',
+          'what is proximity': 'what is white space',
+          'អ្វីទៅជា White Space?': 'Rule of Thirds ជាអ្វី?',
+          'what is white space': 'what is the rule of thirds',
+          'Rule of Thirds ជាអ្វី?': 'Grid System ជាអ្វី?',
+          'what is the rule of thirds': 'what is a grid system',
+          'Grid System ជាអ្វី?': 'Margin និង Padding ខុសគ្នាម៉េច?',
+          'what is a grid system': 'margin vs padding',
+          
+          // 3. TYPOGRAPHY FLOW
+          'អ្វីទៅជា Typography?': 'កាយវិភាគវិទ្យាអក្សរ',
+          'what is typography': 'type anatomy',
+          'កាយវិភាគវិទ្យាអក្សរ': 'របៀបតម្រៀប Font ឱ្យស្អាត?',
+          'type anatomy': 'how to pair fonts',
+          'របៀបតម្រៀប Font ឱ្យស្អាត?': 'Kerning និង Tracking ខុសគ្នាម៉េច?',
+          'how to pair fonts': 'kerning vs tracking',
+          'Kerning និង Tracking ខុសគ្នាម៉េច?': 'Variable Fonts',
+          'kerning vs tracking': 'what are variable fonts',
+          
+          // 4. COLOR THEORY FLOW
+          'Color Theory': 'អត្ថន័យនៃពណ៌ (Color Psychology)',
+          'color theory': 'color psychology',
+          'អត្ថន័យនៃពណ៌ (Color Psychology)': 'ក្បួនពណ៌ UI ៦០-៣០-១០',
+          'color psychology': 'the 60-30-10 rule',
+          'ក្បួនពណ៌ UI ៦០-៣០-១០': 'តើ HSL គឺជាអ្វី?',
+          'the 60-30-10 rule': 'what is hsl',
+          'តើ HSL គឺជាអ្វី?': 'RGB និង CMYK ខុសគ្នាម៉េច?',
+          'what is hsl': 'rgb vs cmyk',
+          
+          // 5. SOFTWARE & TECHNICAL FLOW
+          'អ្វីទៅជា Vector និង Raster?': 'តើ Photoshop និង Illustrator ខុសគ្នាម៉េច?',
+          'vector vs raster': 'photoshop vs illustrator',
+          'តើ Photoshop និង Illustrator ខុសគ្នាម៉េច?': 'របៀបប្រើ Pen Tool',
+          'photoshop vs illustrator': 'how to use the pen tool',
+          'របៀបប្រើ Pen Tool': 'បញ្ញាសិប្បនិម្មិត (AI in Design)',
+          'how to use the pen tool': 'ai in design',
+          
+          // 6. PHOTO MANIPULATION FLOW
+          'កាត់តរូបភាព': 'តើ Dodge និង Burn គឺជាអ្វី?',
+          'photomanipulation': 'dodge and burn',
+          'តើ Dodge និង Burn គឺជាអ្វី?': 'ព្រិល Background',
+          'dodge and burn': 'depth of field',
+          'ព្រិល Background': 'Smart Object ជាអ្វី?',
+          'depth of field': 'what is a smart object',
+          'Smart Object ជាអ្វី?': 'តើ Blend Modes ដំណើរការយ៉ាងម៉េច?',
+          'what is a smart object': 'how do blend modes work',
+          'តើ Blend Modes ដំណើរការយ៉ាងម៉េច?': 'Opacity និង Fill ខុសគ្នាម៉េច?',
+          'how do blend modes work': 'opacity vs fill',
+
+          // 7. BUSINESS & FREELANCE FLOW
+          'របៀបគិតលុយអតិថិជន? 💰': 'Value-Based Pricing',
+          'how to price my work? 💰': 'value based pricing',
+          'Value-Based Pricing': 'របៀបដោះស្រាយភ្ញៀវរអ៊ូ?',
+          'value based pricing': 'dealing with difficult clients?',
+          'របៀបដោះស្រាយភ្ញៀវរអ៊ូ?': 'របៀបរៀបចំ Portfolio?',
+          'dealing with difficult clients?': 'how to build a portfolio',
+          'របៀបរៀបចំ Portfolio?': 'ក្រមសីលធម៌ កម្មសិទ្ធិបញ្ញា',
+          'how to build a portfolio': 'design copyright and ethics',
+      };
+
+      const boredomWords = ['អផ្សុក', 'មិនដឹងសួរអី', 'សួរអី', 'bored', 'whattoask', 'play', 'លេង', 'សួរអីគេ'].map(strictClean);
+      if (boredomWords.some(w => cleanInput.includes(w))) {
+          return { 
+              answer: getRandomQuizInvitation(lang), 
+              chips: getRandomItems(getSuggestList(), 3), 
+              needsBackend: false 
+          };
+      }
+
       let repeatCount = 0;
       for (let i = history.length - 1; i >= 0; i--) {
           if (history[i].role === 'user') {
@@ -247,11 +399,9 @@ const ChatBot = ({ messages, setMessages, isDarkMode }) => {
 
       if (isNegative) {
           setCurrentTopic(null);
-          // If it's a local disambiguation question ("Did you mean X?"), answer locally
           if (lastBotMsg && (lastBotMsg.text.includes('មែនទេ') || lastBotMsg.text.includes('Did you want to learn about'))) {
               return { answer: lang === 'en' ? "No problem! What else would you like to learn about? 😊" : "បាទ មិនអីទេ! តើមានអ្វីផ្សេងទៀតដែលបងចង់ស្វែងយល់ទេ? 😊", chips: getRandomItems(getSuggestList(), 3), needsBackend: false };
           }
-          // Otherwise, pass to Backend AI to handle the rejection contextually
           return { needsBackend: true, query: rawInput }; 
       }
 
@@ -262,7 +412,6 @@ const ChatBot = ({ messages, setMessages, isDarkMode }) => {
           if (isBackendActive) return { needsBackend: true, query: rawInput }; 
           
           if (lastBotMsg) {
-              // Local disambiguation answer check
               if (lastBotMsg.text.includes('មែនទេ') || lastBotMsg.text.includes('Did you want to learn about')) {
                   if (currentTopic) return findAIResponse(currentTopic, history); 
               }
@@ -289,83 +438,6 @@ const ChatBot = ({ messages, setMessages, isDarkMode }) => {
               }
 
               if (currentTopic) {
-                  // 🌟 MASSIVELY EXPANDED LEARNING RABBIT HOLE 🌟
-                  const FOLLOW_UP_MAP = {
-                      // 1. FOUNDATIONS FLOW
-                      'តើអ្វីទៅជា Graphic Design?': 'ធាតុផ្សំមូលដ្ឋានទាំង ៦',
-                      'what is graphic design': 'the 6 elements of design',
-                      'ធាតុផ្សំមូលដ្ឋានទាំង ៦': 'គោលការណ៍រចនា',
-                      'the 6 elements of design': 'design principles',
-                      'គោលការណ៍រចនា': 'ឋានានុក្រមទស្សនីយភាព',
-                      'design principles': 'visual hierarchy',
-                      
-                      // 2. LAYOUT & COMPOSITION FLOW
-                      'ឋានានុក្រមទស្សនីយភាព': 'តើ Contrast ជាអ្វី?',
-                      'visual hierarchy': 'what is contrast',
-                      'តើ Contrast ជាអ្វី?': 'តើ Alignment ជាអ្វី?',
-                      'what is contrast': 'what is alignment',
-                      'តើ Alignment ជាអ្វី?': 'តើ Proximity ជាអ្វី?',
-                      'what is alignment': 'what is proximity',
-                      'តើ Proximity ជាអ្វី?': 'អ្វីទៅជា White Space?',
-                      'what is proximity': 'what is white space',
-                      'អ្វីទៅជា White Space?': 'Rule of Thirds ជាអ្វី?',
-                      'what is white space': 'what is the rule of thirds',
-                      'Rule of Thirds ជាអ្វី?': 'Grid System ជាអ្វី?',
-                      'what is the rule of thirds': 'what is a grid system',
-                      'Grid System ជាអ្វី?': 'Margin និង Padding ខុសគ្នាម៉េច?',
-                      'what is a grid system': 'margin vs padding',
-                      
-                      // 3. TYPOGRAPHY FLOW
-                      'អ្វីទៅជា Typography?': 'កាយវិភាគវិទ្យាអក្សរ',
-                      'what is typography': 'type anatomy',
-                      'កាយវិភាគវិទ្យាអក្សរ': 'របៀបតម្រៀប Font ឱ្យស្អាត?',
-                      'type anatomy': 'how to pair fonts',
-                      'របៀបតម្រៀប Font ឱ្យស្អាត?': 'Kerning និង Tracking ខុសគ្នាម៉េច?',
-                      'how to pair fonts': 'kerning vs tracking',
-                      'Kerning និង Tracking ខុសគ្នាម៉េច?': 'Variable Fonts',
-                      'kerning vs tracking': 'what are variable fonts',
-                      
-                      // 4. COLOR THEORY FLOW
-                      'Color Theory': 'អត្ថន័យនៃពណ៌ (Color Psychology)',
-                      'color theory': 'color psychology',
-                      'អត្ថន័យនៃពណ៌ (Color Psychology)': 'ក្បួនពណ៌ UI ៦០-៣០-១០',
-                      'color psychology': 'the 60-30-10 rule',
-                      'ក្បួនពណ៌ UI ៦០-៣០-១០': 'តើ HSL គឺជាអ្វី?',
-                      'the 60-30-10 rule': 'what is hsl',
-                      'តើ HSL គឺជាអ្វី?': 'RGB និង CMYK ខុសគ្នាម៉េច?',
-                      'what is hsl': 'rgb vs cmyk',
-                      
-                      // 5. SOFTWARE & TECHNICAL FLOW
-                      'អ្វីទៅជា Vector និង Raster?': 'តើ Photoshop និង Illustrator ខុសគ្នាម៉េច?',
-                      'vector vs raster': 'photoshop vs illustrator',
-                      'តើ Photoshop និង Illustrator ខុសគ្នាម៉េច?': 'របៀបប្រើ Pen Tool',
-                      'photoshop vs illustrator': 'how to use the pen tool',
-                      'របៀបប្រើ Pen Tool': 'បញ្ញាសិប្បនិម្មិត (AI in Design)',
-                      'how to use the pen tool': 'ai in design',
-                      
-                      // 6. PHOTO MANIPULATION FLOW
-                      'កាត់តរូបភាព': 'តើ Dodge និង Burn គឺជាអ្វី?',
-                      'photomanipulation': 'dodge and burn',
-                      'តើ Dodge និង Burn គឺជាអ្វី?': 'ព្រិល Background',
-                      'dodge and burn': 'depth of field',
-                      'ព្រិល Background': 'Smart Object ជាអ្វី?',
-                      'depth of field': 'what is a smart object',
-                      'Smart Object ជាអ្វី?': 'តើ Blend Modes ដំណើរការយ៉ាងម៉េច?',
-                      'what is a smart object': 'how do blend modes work',
-                      'តើ Blend Modes ដំណើរការយ៉ាងម៉េច?': 'Opacity និង Fill ខុសគ្នាម៉េច?',
-                      'how do blend modes work': 'opacity vs fill',
-
-                      // 7. BUSINESS & FREELANCE FLOW
-                      'របៀបគិតលុយអតិថិជន? 💰': 'Value-Based Pricing',
-                      'how to price my work? 💰': 'value based pricing',
-                      'Value-Based Pricing': 'របៀបដោះស្រាយភ្ញៀវរអ៊ូ?',
-                      'value based pricing': 'dealing with difficult clients?',
-                      'របៀបដោះស្រាយភ្ញៀវរអ៊ូ?': 'របៀបរៀបចំ Portfolio?',
-                      'dealing with difficult clients?': 'how to build a portfolio',
-                      'របៀបរៀបចំ Portfolio?': 'ក្រមសីលធម៌ កម្មសិទ្ធិបញ្ញា',
-                      'how to build a portfolio': 'design copyright and ethics',
-                  };
-                  
                   const topicData = KNOWLEDGE_BASE.find(item => [...(item.primaryKeys || []), ...(item.keys || [])].map(strictClean).includes(strictClean(currentTopic)));
                   if (topicData && topicData.primaryKeys) {
                       const pk = topicData.primaryKeys[0];
@@ -374,12 +446,33 @@ const ChatBot = ({ messages, setMessages, isDarkMode }) => {
                   }
               }
           }
-          // 🌟 THE FIX: If no offline map matches, let the real AI take over!
           return { needsBackend: true, query: rawInput };
       }
 
+      // 🌟 UPGRADE 1: "TELL ME MORE" / AUTO-PROGRESSION
+      const exactMore = ['ទៀត', 'more', 'next', 'បន្ត', 'ប្រាប់ទៀត', 'តទៀត', 'continue', 'go on'].map(strictClean);
+      const isAskingForMore = exactMore.includes(cleanInput) || cleanInput.endsWith('ទៀត');
+
+      if (isAskingForMore && currentTopic) {
+          const topicData = KNOWLEDGE_BASE.find(item => [...(item.primaryKeys || []), ...(item.keys || [])].map(strictClean).includes(strictClean(currentTopic)));
+          
+          if (topicData && topicData.primaryKeys) {
+              const pk = topicData.primaryKeys[0];
+              const nextTopic = FOLLOW_UP_MAP[pk] || FOLLOW_UP_MAP[strictClean(pk)];
+              
+              if (nextTopic) {
+                  return findAIResponse(nextTopic, history); 
+              } else {
+                  return { 
+                      answer: lang === 'en' ? "That covers the basics of this topic! 🎨 What would you like to explore next?" : "បាទ សម្រាប់ប្រធានបទនេះគឺអស់ត្រឹមនេះហើយ! 🎨 តើបងចង់រៀនពីរឿងអ្វីបន្ទាប់ទៀត?", 
+                      chips: getRandomItems(getSuggestList(), 3), 
+                      needsBackend: false 
+                  };
+              }
+          }
+      }
+
       // 🌟 WH- QUESTION & INTENT CLEANER 🌟
-      // This strips out the question framing so the AI searches the database for the actual topic!
       const questionWords = [
           'តើ', 'ជាអ្វី', 'អ្វីទៅជា', 'អ្វីទៅ', 'ស្អីគេ', 'ស្អី', 'គឺជាអ្វី', 
           'នៅឯណា', 'នៅណា', 'កន្លែងណា', 'ត្រង់ណា', 
@@ -586,26 +679,21 @@ const ChatBot = ({ messages, setMessages, isDarkMode }) => {
       }
   };
 
-  // 🌟 THE FIX: Replace 'scrollIntoView' with strict 'scrollTop' on initial load to prevent spring push up
-  // AND use the isAutoScrolling lock so the header doesn't hide when it snaps to bottom!
   useEffect(() => {
       const container = scrollContainerRef.current;
       if (!container) return;
 
       const scrollToBottom = (behavior) => {
-          isAutoScrolling.current = true; // 🌟 LOCKS THE HEADER LISTENER
+          isAutoScrolling.current = true; 
           
           if (behavior === 'auto') {
-              // Zero-jump instant snap to bottom
               container.scrollTop = container.scrollHeight;
           } else {
-              // Smooth scroll for active typing
               if (messagesEndRef.current) {
                   messagesEndRef.current.scrollIntoView({ behavior: 'smooth', block: "end" });
               }
           }
 
-          // Unlock listener after scrolling finishes
           setTimeout(() => {
               isAutoScrolling.current = false;
               if (container) setLastScrollY(container.scrollTop);
@@ -613,7 +701,7 @@ const ChatBot = ({ messages, setMessages, isDarkMode }) => {
       };
       
       if (isInitialMount.current) {
-          setShowHeader(true); // Force header visible on startup
+          setShowHeader(true); 
           scrollToBottom('auto');
           
           const timeoutId = setTimeout(() => {
@@ -626,10 +714,9 @@ const ChatBot = ({ messages, setMessages, isDarkMode }) => {
       }
   }, [messages, loading]);
 
-  // 🌟 Handle Scroll to Hide/Show Header
   useEffect(() => {
       const handleScroll = () => {
-          if (isAutoScrolling.current) return; // 🌟 IGNORE AUTOMATIC SCROLLS
+          if (isAutoScrolling.current) return; 
 
           if (!scrollContainerRef.current) return;
           const currentScrollY = scrollContainerRef.current.scrollTop;
@@ -654,7 +741,6 @@ const ChatBot = ({ messages, setMessages, isDarkMode }) => {
       };
   }, [lastScrollY]);
 
-  // 🌟 ANDROID/IOS KEYBOARD FIX: Visual Viewport Tracker
   useEffect(() => {
       const updateViewport = () => {
           if (window.visualViewport) {
@@ -693,7 +779,6 @@ const ChatBot = ({ messages, setMessages, isDarkMode }) => {
       };
   }, []);
 
-  // Global Focus Listener to flag when keyboard is open
   useEffect(() => {
       const handleFocusIn = (e) => {
           const tag = e.target.tagName;
@@ -735,7 +820,6 @@ const ChatBot = ({ messages, setMessages, isDarkMode }) => {
         style={{ height: '100%', paddingBottom: `${keyboardHeight}px` }}
     >
       
-      {/* Animated Scroll Header */}
       <div className={`absolute top-0 left-0 w-full z-30 transition-transform duration-300 ease-in-out ${showHeader ? 'translate-y-0' : '-translate-y-full'}`}>
           <div className={`flex items-center justify-between px-4 py-3 backdrop-blur-md border-b shadow-sm ${isDarkMode ? 'bg-[#121212]/80 border-white/5 shadow-black/20' : 'bg-white/80 border-black/5 shadow-[#0277C5]/5'}`}>
               <div className="flex items-center gap-3">
