@@ -21,7 +21,7 @@ export const designData = [
     {
         primaryKeys: ['Symmetry និង Asymmetry', 'symmetry vs asymmetry'],
         keys: ['symmetry', 'asymmetry', 'តុល្យភាព', 'balance', 'ភាពស៊ីមេទ្រី'],
-        regex: ['symmetry', 'asymmetry', 'តុល្យភាព', 'balance'],
+        regex: ['symmetry', 'asymmetry', 'តុល្យភាព'], // Removed 'balance' to avoid color balance
         answer: "បាទ **តុល្យភាព (Balance) ក្នុងប្លង់មាន ២ ប្រភេទធំៗ៖**\n\n⚖️ **Symmetrical (ស៊ីមេទ្រី):** ឆ្វេងនិងស្តាំមានទម្ងន់ស្មើគ្នា ១០០%។ វាផ្តល់អារម្មណ៍ស្ងប់ស្ងាត់ ផ្លូវការ និងប្រណីត (ល្អសម្រាប់ធៀបការ ឬឡូហ្គោម៉ាកល្បីៗ)។\n🌪️ **Asymmetrical (អស៊ីមេទ្រី):** ឆ្វេងនិងស្តាំមិនស្មើគ្នាទេ តែមានតុល្យភាពដោយប្រើទំហំ ឬពណ៌ (ឧ. រូបធំមួយនៅខាងស្តាំ ទូទាត់ជាមួយអក្សរតូចៗច្រើននៅខាងឆ្វេង)។ វាផ្តល់អារម្មណ៍សកម្ម ទំនើប និងមានថាមពល!\n\n💡 **គន្លឹះអាជីព៖** Poster ភាគច្រើនប្រើ Asymmetrical Balance ដើម្បីបង្កើតភាពទាក់ទាញ និងកុំឱ្យមើលទៅគួរឱ្យធុញ។",
         answer_en: "**In layout design, Balance comes in two main forms:**\n\n⚖️ **Symmetrical Balance:** The left and right sides are perfect mirrors. It feels formal, calm, and luxurious (Great for wedding invitations and high-end branding).\n🌪️ **Asymmetrical Balance:** The sides are different, but visually balanced using visual weight (e.g., a massive image on the right balanced by a large block of text on the left). It feels dynamic, modern, and energetic!\n\n💡 **Pro Tip:** Most modern posters use Asymmetrical balance because it creates visual tension and keeps the viewer's eye moving.",
         chips: ["តើ Rule of Thirds គឺជាអ្វី?", "តើ Contrast ជាអ្វី?"],
@@ -48,7 +48,7 @@ export const designData = [
     {
         primaryKeys: ['តើ Proximity ជាអ្វី?', 'what is proximity'],
         keys: ['proximity', 'ភាពកៀកគ្នា', 'គម្លាត'],
-        regex: ['proximity', 'ភាពកៀកគ្នា', 'គម្លាត'],
+        regex: ['proximity', 'ភាពកៀកគ្នា'],
         answer: "បាទ **Proximity (ភាពកៀកគ្នា)** គឺជាការរៀបចំរបស់ដែលទាក់ទងគ្នា ឱ្យនៅជិតគ្នា ដើម្បីឱ្យខួរក្បាលងាយចាប់បានថាវាជាក្រុមតែមួយ។\n\n💡 **ឧទាហរណ៍៖** នៅក្នុងនាមប័ណ្ណ (Business Card) ឈ្មោះនិងតួនាទីគួរនៅកៀកគ្នា។ ចំណែកឯលេខទូរស័ព្ទ និងអ៊ីមែល គួរនៅកៀកគ្នាជាក្រុមមួយទៀត ដែលនៅឆ្ងាយពីឈ្មោះបន្តិច។",
         answer_en: "**Proximity** means grouping related items close together so the brain automatically perceives them as a single unit.\n\n💡 **Example:** On a Business Card, the person's Name and Job Title should be placed close together. Their Phone Number and Email should be grouped together elsewhere. This chunking makes it instantly scannable.",
         chips: ["អ្វីទៅជា White Space?", "អ្វីទៅជា Hierarchy?"],
@@ -68,7 +68,7 @@ export const designData = [
     {
         primaryKeys: ['ក្បួនផ្គូផ្គងពណ៌ (Color Harmonies)', 'color harmonies'],
         keys: ['color harmony', 'ក្បួនពណ៌', 'ច្បាប់ពណ៌', 'complementary', 'analogous', 'triadic', 'tetradic', 'monochromatic'],
-        regex: ['color harmony', 'ក្បួនពណ៌', 'ច្បាប់ពណ៌', 'complementary', 'analogous', 'triadic', 'tetradic', 'monochromatic'],
+        regex: ['color harmony', 'ក្បួនពណ៌', 'ច្បាប់ពណ៌', 'analogous', 'triadic', 'tetradic', 'monochromatic'], // STRIOT: Removed complementary so it doesn't fight generator
         answer: "បាទ យោងតាមក្បួន Canva Color Wheel ក្បួនផ្គូផ្គងពណ៌ (Color Harmonies) មាន ៥ ប្រភេទធំៗ៖\n\n១. **Complementary (ពណ៌ផ្ទុយ):** ពណ៌២នៅទល់មុខគ្នា។ ផ្តល់ Contrast ខ្ពស់ ធ្វើឱ្យពណ៌មើលទៅភ្លឺ និងលេចធ្លោខ្លាំង។\n២. **Monochromatic (ពណ៌ឯកកោ):** ការប្រើប្រាស់ Shades, Tints, និង Tones នៃពណ៌តែមួយ។ ងាយស្រួលប្រើ និងមើលទៅស៊ីសង្វាក់គ្នា។\n៣. **Analogous (ពណ៌ក្បែរគ្នា):** ពណ៌៣នៅជាប់គ្នា។ ត្រូវរើសពណ៌១ជាគោល (Dominant) និងពណ៌ផ្សេងទៀតគ្រាន់តែជារបស់បន្ទាប់បន្សំ។\n៤. **Triadic (ពណ៌ត្រីកោណសម័ង្ស):** ពណ៌៣ឃ្លាតស្មើគ្នាក្នុងរង្វង់ពណ៌។ ផ្តល់ភាពរស់រវើក និងរឹងមាំ ទោះបីជាមិនសូវ Contrast ខ្លាំងដូច Complementary ក្តី។\n៥. **Tetradic (ពណ៌ចតុកោណ):** ពណ៌៤ឃ្លាតស្មើគ្នា។ ក្បួននេះមានថាមពលខ្លាំង តែពិបាកថ្លឹងថ្លែងណាស់ លុះត្រាតែអ្នកឱ្យពណ៌មួយលេចធ្លោជាងគេ។",
         answer_en: "**According to Canva's Color Wheel, there are 5 core Color Harmonies:**\n\n1. **Complementary:** Two colors on opposite sides. Provides high contrast and impact; colors appear brighter together.\n2. **Monochromatic:** Three shades, tones, and tints of one base color. Very versatile and creates a harmonious look.\n3. **Analogous:** Three colors side-by-side. Versatile but can be overwhelming; balance it by choosing ONE dominant color and using the rest as accents.\n4. **Triadic:** Three colors evenly spaced. Creates bold, vibrant palettes with slightly less contrast than Complementary, making it versatile.\n5. **Tetradic:** Four colors evenly spaced. Bold but difficult to balance; works best if you let one color dominate.",
         actionButton: { label: "បង្កើតពណ៌ 🎨", label_en: "Open Color Generator 🎨", actionToTrigger: "tools", subTab: "color" },
@@ -135,7 +135,7 @@ export const designData = [
     { 
         primaryKeys: ['អ្វីទៅជា Typography?', 'what is typography'],
         keys: ['typography', 'ប្រភេទ font', 'រៀបអក្សរ', 'font', 'serif', 'sans-serif'],
-        regex: ['typography', 'ប្រភេទ font', 'រៀបអក្សរ', 'font', 'serif', 'sans-serif'],
+        regex: ['typography', 'ប្រភេទ font', 'រៀបអក្សរ', 'serif', 'sans-serif'], // Removed raw 'font'
         answer: "បាទ **Typography** គឺជាសិល្បៈនៃការរៀបចំតួអក្សរ។ 🔤\n\nប្រភេទ Font ធំៗ៣មាន៖\n- **Serif (មានកន្ទុយ):** ផ្លូវការ (ឧ. Times New Roman, Kantumruy)។ ល្អសម្រាប់សៀវភៅ។\n- **Sans-Serif (គ្មានកន្ទុយ):** ទំនើប ស្រឡះ (ឧ. Arial, Suwannaphum)។ ល្អសម្រាប់អេក្រង់ទូរស័ព្ទ។\n- **Script (អក្សរផ្ចង់):** ល្អសម្រាប់ធៀបការ។ \n\n💡 **ហាមដាច់ខាត៖** កុំប្រើអក្សរផ្ចង់យកមកសរសេរអត្ថបទវែងៗ ឬដាក់ជាអក្សរធំទាំងអស់ (ALL CAPS)!", 
         answer_en: "**Typography** is the art of arranging text beautifully. 🔤\n\nMain Font Categories:\n- **Serif (with feet):** Traditional, formal (e.g., Times New Roman). Great for printed books.\n- **Sans-Serif (no feet):** Modern, clean (e.g., Arial, Helvetica). The best choice for digital screens.\n- **Script (Cursive):** Elegant and personal. \n\n💡 **Strict Rule:** Never use Script fonts for long body paragraphs or write them in ALL CAPS!",
         chips: ["របៀបតម្រៀប Font ឱ្យស្អាត?", "Kerning និង Tracking ខុសគ្នាម៉េច?"],
@@ -162,7 +162,7 @@ export const designData = [
     { 
         primaryKeys: ['Kerning និង Tracking ខុសគ្នាម៉េច?', 'kerning vs tracking'],
         keys: ['kerning', 'tracking', 'leading', 'គម្លាតអក្សរ'],
-        regex: ['kerning', 'tracking', 'leading'],
+        regex: ['tracking', 'leading', 'គម្លាតអក្សរ'], // Removed 'kerning' to prevent optical kerning collision
         answer: "បាទ **ការរៀបចំគម្លាតអក្សរ (Typesetting) មាន ៣ យ៉ាង៖**\n\n១. **Kerning:** ការសារ៉េចន្លោះរវាងអក្សរតែ **\"២តួ\"** ប៉ុណ្ណោះ ឱ្យមើលទៅសមាមាត្រភ្នែក។\n២. **Tracking:** ការទាញគម្លាតអក្សរ **\"ទាំងមូល\"** ក្នុងពាក្យឱ្យឃ្លាតស្មើៗគ្នា។ 💡 **ឧទាហរណ៍៖** ប្រើ Tracking ទូលាយៗជាមួយអក្សរធំ UPPERCASE មើលទៅ Premium ណាស់។\n៣. **Leading:** ចន្លោះពី **\"បន្ទាត់មួយទៅបន្ទាត់មួយ\"** (Line-height)។ បើអត្ថបទវែង គួរដាក់ Leading អោយទូលាយបន្តិចទើបស្រួលអាន។", 
         answer_en: "**Typesetting involves 3 crucial spacing techniques:**\n\n1. **Kerning:** Adjusting the space between exactly **TWO individual characters** so they look visually balanced.\n2. **Tracking:** Uniformly adjusting the spacing across an **entire word**. 💡 **Example:** Widely tracked UPPERCASE text looks very premium for subheadings.\n3. **Leading:** The vertical space between **lines of text** (Line-height). Don't squish paragraphs together!",
         chips: ["តើ Optical Kerning ជាអ្វី?", "អ្វីទៅជា Hierarchy?"],
@@ -171,7 +171,7 @@ export const designData = [
     {
         primaryKeys: ['តើ Optical Kerning ជាអ្វី?', 'optical vs metric kerning'],
         keys: ['optical kerning', 'metric', 'គម្លាតអក្សរ', 'kerning optical'],
-        regex: ['optical kerning', 'metric', 'គម្លាតអក្សរ'],
+        regex: ['optical kerning', 'metric kerning'], // strict
         answer: "បាទ នេះជាគន្លឹះ Typography ដែលមានតែអ្នកជំនាញទេទើបដឹង៖ **Metric vs Optical Kerning**\n\n📏 **Metric Kerning:** ជាគម្លាតគណិតវិទ្យាដែលអ្នកបង្កើតហ្វុនសរសេរកូដទុក។ វាល្អសម្រាប់អត្ថបទតូចៗវែងៗ (Body Text)។\n👁️ **Optical Kerning:** កម្មវិធីរចនានឹងយក AI មកវាស់រូបរាងអក្សរនីមួយៗ (ឧទាហរណ៍អក្សរ V និង A មានគែមបញ្ឆិត) រួចរុញវាចូលគ្នាឱ្យសមាមាត្រភ្នែកមើល។ \n\n💡 **គន្លឹះអាជីព:** តែងតែប្តូរទៅប្រើ **Optical Kerning** សម្រាប់ចំណងជើង (Headlines) ឬ Logo ធំៗ នោះអក្សររបស់អ្នកនឹងមើលទៅស្មើគ្នាស្អាតឥតខ្ចោះ!",
         answer_en: "Here is a Typography secret known only to top designers: **Metric vs Optical Kerning**\n\n📏 **Metric Kerning:** Uses the default spacing math coded into the font file by its creator. Best for long paragraphs of body text.\n👁️ **Optical Kerning:** The software calculates the physical shape of adjacent letters (like the angled edges of 'V' and 'A') and visually nudges them together so they look balanced to the human eye.\n\n💡 **Pro Tip:** Always switch to **Optical Kerning** for massive Headlines, Titles, and Logos. It instantly fixes awkward, gaping holes between letters!",
         chips: ["Kerning និង Tracking ខុសគ្នាម៉េច?", "អ្វីទៅជា Typography?"],
@@ -191,7 +191,7 @@ export const designData = [
     {
         primaryKeys: ['តើទំហំ Poster ស្តង់ដារមានអ្វីខ្លះ?', 'poster sizes and layouts'],
         keys: ['ទំហំ poster', 'poster size', 'ខ្នាត poster', 'a4', 'a3', 'social media size', 'layout'],
-        regex: ['ទំហំ.*poster', 'poster size', 'ខ្នាត.*poster', 'social media size', 'layout'],
+        regex: ['ទំហំ.*poster', 'poster size', 'ខ្នាត.*poster', 'social media size'], // Removed 'layout'
         answer: "បាទ **ទំហំ និងប្លង់ (Sizes & Layouts) របស់ Poster ត្រូវបានបែងចែកជា ២ ប្រភេទធំៗ៖**\n\n🖨️ **សម្រាប់បោះពុម្ព (Print):**\n- **A4 (210 x 297mm) / A3 (297 x 420mm):** ប្រើសម្រាប់បិទប្រកាសខ្នាតតូច តាមសាលា ឬហាង។\n- **24 x 36 អាញ់ (Inch):** ខ្នាតស្តង់ដារអន្តរជាតិសម្រាប់ Poster រឿងកុន (Movie Posters) ធំៗ។\n*(កុំភ្លេចប្រើពណ៌ CMYK និង 300 PPI!)*\n\n📱 **សម្រាប់បណ្តាញសង្គម (Digital - 72 PPI, RGB):**\n- **Instagram Portrait (1080 x 1350px):** ជាទំហំល្អបំផុតព្រោះវាពេញអេក្រង់ទូរស័ព្ទ។\n- **Facebook Square (1080 x 1080px):** ស្តង់ដារទូទៅ។\n- **Story/Reels (1080 x 1920px):** សម្រាប់វីដេអូខ្លី។\n\n📐 **ក្បួនរៀបប្លង់ (Layout Structures):**\n- **Z-Pattern:** ល្អសម្រាប់ Poster ដែលមានអក្សរនិងរូបភាពឆ្លាស់គ្នា (ភ្នែកអ្នកមើលរត់ជារាងអក្សរ Z)។\n- **Rule of Thirds:** ចែកប្លង់ជា៩ក្រឡា ដាក់តួអង្គនៅចំណុចប្រសព្វដើម្បីភាពទាក់ទាញ។",
         answer_en: "**Poster Sizes & Layouts are broken down into two main categories:**\n\n🖨️ **Physical Print Sizes:**\n- **A4 (210 x 297mm) / A3 (297 x 420mm):** Standard for local event flyers, shop windows, and schools.\n- **24 x 36 Inches:** The global standard for large, theatrical Movie Posters.\n*(Always use CMYK and 300 PPI for these!)*\n\n📱 **Digital Social Media (72 PPI, RGB):**\n- **Instagram Portrait (1080 x 1350px):** The absolute best size because it takes up the maximum vertical screen space on phones.\n- **Square (1080 x 1080px):** The universal safe standard.\n- **Story (1080 x 1920px):** For full-screen vertical viewing.\n\n📐 **Top Layout Structures:**\n- **Z-Pattern:** Best for posters with balanced text and images (the eye naturally traces a 'Z' from top left to bottom right).\n- **Rule of Thirds:** Placing your main subject off-center on the grid intersections for dynamic energy.",
         chips: ["តើ Leading Lines ជាអ្វី?", "តើ Rule of Thirds គឺជាអ្វី?"],
@@ -200,7 +200,7 @@ export const designData = [
     {
         primaryKeys: ['តើ Leading Lines ជាអ្វី?', 'leading lines'],
         keys: ['leading lines', 'បន្ទាត់នាំភ្នែក', 'composition lines'],
-        regex: ['leading line', 'បន្ទាត់នាំភ្នែក', 'composition line'],
+        regex: ['leading line', 'បន្ទាត់នាំភ្នែក'],
         answer: "បាទ **Leading Lines (បន្ទាត់នាំភ្នែក)** គឺជាក្បួន Composition កម្រិតខ្ពស់មួយ។\n\nវាគឺជាការប្រើប្រាស់បន្ទាត់ដែលមានស្រាប់នៅក្នុងរូបភាព (ដូចជា ផ្លូវថ្នល់ ជួរឈើ ស្ពាន ឬទម្រង់អគារ) ដើម្បីចង្អុលនាំភ្នែករបស់អ្នកមើល ឱ្យរត់ត្រង់ទៅរកវត្ថុគោល (Main Subject) តែម្តង។ វាជួយឱ្យរូបភាពមានជម្រៅ និងកម្លាំងទាក់ទាញយ៉ាងខ្លាំង!",
         answer_en: "**Leading Lines** is a powerful advanced composition technique.\n\nIt involves using natural lines within an image (like roads, fences, tree lines, or architecture) to physically point the viewer's eye directly toward your main subject or focal point. It creates massive depth and visual interest!",
         chips: ["តើ Rule of Thirds គឺជាអ្វី?", "តើ Framing ជាអ្វី?"],
@@ -245,7 +245,7 @@ export const designData = [
     { 
         primaryKeys: ['តើ Rule of Thirds គឺជាអ្វី?', 'what is the rule of thirds'],
         keys: ['rule of thirds', 'golden ratio', 'grid', 'ប្លង់', 'layout'],
-        regex: ['rule of third', 'golden ratio', 'grid', 'ប្លង់', 'layout'],
+        regex: ['rule of third', 'golden ratio', 'grid'], // Removed 'layout'
         answer: "បាទ **បច្ចេកទេសរៀបចំប្លង់ (Layout Grids) សំខាន់ៗមាន៖**\n\n📐 **Rule of Thirds (ច្បាប់ភាគបី):** បែងចែករូបភាពជា ៩ ប្រអប់។ វត្ថុគួរដាក់នៅត្រង់ចំណុចប្រសព្វទាំង ៤ ដើម្បីទាក់ទាញភ្នែកជាជាងដាក់នៅកណ្តាលចំ។\n🌀 **Golden Ratio:** សមាមាត្រមាសដែលស្រស់ស្អាតបំផុតតាមបែបធម្មជាតិ (1:1.618)។ ឡូហ្គោល្បីៗសុទ្ធតែគូសតាមទម្រង់នេះ។\n🧱 **Grid System:** ប្រើបន្ទាត់ក្រឡាដើម្បីជួយឱ្យការរចនាមានតុល្យភាព (ដូចជា 12-Column Grid សម្រាប់ Web Design)។\n\n💡 អ្នកអាចចូលមើលឧទាហរណ៍នៃប្លង់ទាំងនេះដោយផ្ទាល់នៅក្នុងប្រអប់ឧបករណ៍របស់យើង៖", 
         answer_en: "**Core Layout Techniques:**\n\n📐 **Rule of Thirds:** Divides the canvas into 9 equal blocks. Placing focal points at the 4 intersecting lines creates more visual interest than dead-center placement.\n🌀 **Golden Ratio:** The most naturally pleasing aesthetic proportion (1:1.618). Famous logos are mathematically drawn using this.\n🧱 **Grid Systems:** Using invisible columns (like a 12-column grid for UI) to ensure perfect alignment.\n\n💡 You can visually explore these layouts inside our built-in Design Tools:",
         actionButton: { label: "មើលគំរូប្លង់ 📐", label_en: "View Layout Grids 📐", actionToTrigger: "tools", subTab: "layout" },
@@ -255,7 +255,7 @@ export const designData = [
     {
         primaryKeys: ['តើ បច្ចេកទេស Squint Test ជាអ្វី?', 'what is the squint test hierarchy'],
         keys: ['squint test', 'ធ្មេចភ្នែក', 'hierarchy check', 'មើលឱ្យព្រិល'],
-        regex: ['squint test', 'ធ្មេចភ្នែក', 'hierarchy'],
+        regex: ['squint test', 'ធ្មេចភ្នែក'],
         answer: "បាទ **Squint Test (តិចនិកព្រិលភ្នែក)** គឺជាក្បួនតេស្តត្រួតពិនិត្យ Visual Hierarchy ដ៏មានប្រសិទ្ធភាពបំផុតនៅលើលោក!\n\nពេលអ្នកឌីហ្សាញចប់ សូមថយក្រោយបន្តិច រួច **ធ្មេចភ្នែកឱ្យព្រិលៗ (Squint your eyes)** រហូតដល់មើលអក្សរលែងដាច់។\n\n💡 **លទ្ធផល៖** តើវត្ថុណាដែលអ្នកនៅតែអាចមើលឃើញមុនគេពេលភ្នែកព្រិល? បើវាជាវត្ថុ ឬចំណងជើងដែលអ្នកចង់ឱ្យគេចាប់អារម្មណ៍មែន នោះបានន័យថា Contrast និង Hierarchy របស់អ្នកជោគជ័យហើយ! បើមើលទៅឃើញរញ៉េរញ៉ៃ អ្នកត្រូវបន្ថយទំហំរបស់រង និងតម្លើងពន្លឺវត្ថុគោល។",
         answer_en: "**The Squint Test** is the oldest and most flawless trick to instantly check your Visual Hierarchy!\n\nWhen you finish a design, lean back and **squint your eyes** until the image becomes totally blurry and you can't read the words anymore.\n\n💡 **The Result:** What is the very first shape or color blob that grabs your attention through the blur? If it's your main subject or headline, your contrast is perfect! If your eye goes to an unimportant logo in the corner, your hierarchy is broken and you need to fix your scaling.",
         chips: ["អ្វីទៅជា Hierarchy?", "តើ Contrast ជាអ្វី?"],
@@ -264,7 +264,7 @@ export const designData = [
     { 
         primaryKeys: ['តើ UI និង UX ជាអ្វី?', 'what are ui and ux?'],
         keys: ['ui', 'ux', 'ui/ux', 'user interface', 'user experience'],
-        regex: ['ui', 'ux', 'ui/ux', 'user interface', 'user experience'],
+        regex: ['ui/ux', 'user interface', 'user experience'], // Strict UI/UX
         answer: "បាទ **UI និង UX គឺជាកូនភ្លោះដែលមិនអាចខ្វះគ្នាបានក្នុងការរចនា App និង Website៖**\n\n📱 **UI (User Interface):** គឺជារូបរាងខាងក្រៅ (សម្រស់)។ វាទាក់ទងនឹងការរើសពណ៌ ការប្រើ Font ភាពកោងនៃប៊ូតុង និងគម្លាត Margin/Padding ជាដើម។\n🧠 **UX (User Experience):** គឺជាបទពិសោធន៍ប្រើប្រាស់ (ភាពងាយស្រួល)។ វាទាក់ទងនឹងការរៀបចំតក្កវិជ្ជា តើអ្នកប្រើចុចទីនេះហើយទៅណាទៀត? តើវាលឿននិងងាយយល់ទេ?\n\n💡 **ឧទាហរណ៍៖** UI គឺជាថ្នាំលាបពណ៌ដ៏ស្រស់ស្អាតរបស់រថយន្ត ចំណែក UX គឺជាម៉ាស៊ីននិងចង្កូតដែលធ្វើឱ្យរថយន្តនោះងាយស្រួលបើកបរ!", 
         answer_en: "**UI and UX are the inseparable twins of digital product design:**\n\n📱 **UI (User Interface):** Focuses on the Visuals (Beauty). It deals with color palettes, typography, button shapes, and perfect spacing.\n🧠 **UX (User Experience):** Focuses on the Logic (Brain). It dictates how the app feels, how users navigate from screen to screen, and how easy it is to achieve their goals.\n\n💡 **Example:** UI is the beautiful paint job on a sports car. UX is how smoothly the car actually drives!",
         chips: ["Margin និង Padding ខុសគ្នាម៉េច?", "អ្វីទៅជា Hierarchy?"],
@@ -275,7 +275,7 @@ export const designData = [
     { 
         primaryKeys: ['ក្បួនរចនាឡូហ្គោ (Logo Design)', 'rules of logo design'],
         keys: ['logo design', 'គូរឡូហ្គោ', 'ក្បួនឡូហ្គោ', 'how to design a logo'],
-        regex: ['logo design', 'គូរឡូហ្គោ', 'ក្បួនឡូហ្គោ', 'how to design a logo'],
+        regex: ['logo design', 'គូរឡូហ្គោ', 'ក្បួនឡូហ្គោ'],
         answer: "បាទ **ដើម្បីគូរ Logo មួយឱ្យទទួលបានជោគជ័យ ត្រូវគោរពតាមក្បួនទាំង ៥ នេះ៖**\n\n១. **Simple (សាមញ្ញ):** ងាយចាំ មិនញ៉េរញ៉ៃ (ឧ. Apple, Nike)។\n២. **Memorable (គួរឱ្យចងចាំ):** មើលតែមួយភ្លែតក៏ចាំជាប់ខួរក្បាល។\n៣. **Timeless (មិនហួសសម័យ):** កុំរចនាតាម Trend មួយឆាវៗ វាត្រូវតែស្អាតទោះបីជា ១០ ឆ្នាំក្រោយក៏ដោយ។\n៤. **Versatile (បត់បែន):** ត្រូវតែមើលទៅស្អាតទោះជាបោះពុម្ពពណ៌សខ្មៅ ទំហំធំប៉ុនប៉ាណូ ឬតូចប៉ុនត្រា។\n៥. **Appropriate (ស័ក្តិសម):** ពណ៌និងទម្រង់ត្រូវស៊ីនឹងប្រភេទអាជីវកម្ម (ឧ. មន្ទីរពេទ្យមិនគួរប្រើឡូហ្គោពណ៌ខ្មៅរាងស្រួចៗទេ)។", 
         answer_en: "**To create a successful Logo, it must follow these 5 golden rules:**\n\n1. **Simple:** Easy to recognize, not overly detailed (e.g., Apple, Nike).\n2. **Memorable:** Sticks in the viewer's brain after just one glance.\n3. **Timeless:** Doesn't follow quick trends; it should still look great in 10 years.\n4. **Versatile:** It must look good whether it's printed in pure black & white, on a giant billboard, or as a tiny app icon.\n5. **Appropriate:** The vibe and colors must match the industry (e.g., a hospital shouldn't use a sharp, aggressive black logo).",
         chips: ["តើ RGB និង CMYK ខុសគ្នាម៉េច?", "ប្រភេទ File"],
@@ -284,7 +284,7 @@ export const designData = [
     { 
         primaryKeys: ['តើ RGB និង CMYK ខុសគ្នាម៉េច?', 'rgb vs cmyk'],
         keys: ['rgb', 'cmyk', 'ប្រព័ន្ធពណ៌', 'pantone', 'pms'],
-        regex: ['rgb', 'cmyk', 'ប្រព័ន្ធពណ៌', 'pantone', 'pms'],
+        regex: ['cmyk', 'ប្រព័ន្ធពណ៌', 'pantone', 'pms'], // Removed RGB to not clash with RGB wheel
         answer: "បាទ **ប្រព័ន្ធពណ៌សំខាន់ៗដែលអ្នកត្រូវដឹង៖**\n\n💻 **RGB (Red, Green, Blue):** ជាពណ៌ប្រើដោយពន្លឺអេក្រង់។ ប្រើវាសម្រាប់រចនា Website, Facebook Post ឬ Video។\n🖨️ **CMYK (Cyan, Magenta, Yellow, Black):** ជាពណ៌ទឹកថ្នាំម៉ាស៊ីនព្រីន។ ប្រើវាសម្រាប់រចនានាមប័ណ្ណ ខិត្តប័ណ្ណ។\n🎨 **Pantone (PMS):** ជាកូដពណ៌ទឹកថ្នាំពិសេស (Spot Colors) ដែលរោងពុម្ពលាយទុកមុន ធានាថាព្រីនចេញមកពណ៌ដូចដើម ១០០% (ច្រើនប្រើលើ Logo)។\n\n⚠️ **បំរាម៖** កុំយក File RGB ទៅព្រីន ព្រោះពណ៌នឹងចេញមកស្រអាប់ខុសពីមើលលើកុំព្យូទ័រ!", 
         answer_en: "**The Critical Color Profiles:**\n\n💻 **RGB (Red, Green, Blue):** Emitted light. Use this strictly for Digital Screens (UI, Social Media, Web).\n🖨️ **CMYK (Cyan, Magenta, Yellow, Key/Black):** Physical ink. Use this for standard Physical Printing (Flyers, Posters).\n🎨 **Pantone (PMS):** Pre-mixed spot colors used in high-end printing to ensure absolute color consistency for brand logos.\n\n⚠️ **Warning:** Never print an RGB file directly; the incredibly bright screen colors will look heavily washed out when translated to CMYK ink!",
         chips: ["តើ Resolution (PPI) ប៉ុន្មាន?", "Color Theory"],
@@ -293,7 +293,7 @@ export const designData = [
     { 
         primaryKeys: ['តើ Bleed គឺជាអ្វី?', 'what is a bleed'],
         keys: ['bleed', 'margin', 'die line', 'die-line', 'គែមសុវត្ថិភាព', 'slug'],
-        regex: ['bleed', 'margin', 'die line', 'die-line', 'slug'],
+        regex: ['bleed', 'die line', 'die-line', 'slug'], // removed 'margin'
         answer: "បាទ **ពាក្យបច្ចេកទេសសម្រាប់ការបោះពុម្ព (Print Production) ដែលអ្នកត្រូវដឹង៖**\n\n✂️ **Bleed (គែមបម្រុង):** ការពង្រីកផ្ទៃ Background ឱ្យហៀរចេញក្រៅទំហំកាត់ (ជាទូទៅ 3mm)។ 💡 *ហេតុអ្វី?* ព្រោះកាំបិតរោងពុម្ពកាត់មិនត្រឹមត្រូវ ១០០% ទេ បើអត់ដាក់ Bleed អាចនឹងសល់គែមពណ៌ស។\n📏 **Margin (គែមសុវត្ថិភាព):** ចន្លោះខាងក្នុងដែលហាមដាក់អក្សរ ការពារកុំឱ្យកាត់ដាច់ចូលសាច់អត្ថបទសំខាន់ៗ។\n📝 **Slug:** ជាទំហំក្រៅ Bleed បន្តិចទៀត ទុកសម្រាប់សរសេរកំណត់ចំណាំប្រាប់ជាងពុម្ព (មិនព្រីនចេញមកទេ)។", 
         answer_en: "**Essential Print Production Terminology:**\n\n✂️ **Bleed:** Extending the background colors or images slightly beyond the actual document edge (usually by 3mm). 💡 *Why?* Because printing guillotine blades aren't 100% precise. Bleeds prevent accidental white borders on the final cut.\n📏 **Safe Margin:** An invisible inner boundary. Crucial text and logos must stay inside this line so they don't risk getting chopped off.\n📝 **Slug:** The area completely outside the bleed. Used strictly to leave printed notes or instructions for the print operator.",
         chips: ["តើ Resolution (PPI) ប៉ុន្មាន?", "តើ RGB និង CMYK ខុសគ្នាម៉េច?"],
@@ -302,7 +302,7 @@ export const designData = [
     { 
         primaryKeys: ['ប្រភេទ File', 'file formats'],
         keys: ['file format', 'jpg', 'png', 'svg', 'pdf'],
-        regex: ['file format', 'ប្រភេទ file', 'jpg', 'png', 'svg', 'pdf'],
+        regex: ['ប្រភេទ file', 'jpg', 'png', 'svg', 'pdf'],
         answer: "បាទ **ប្រភេទ File នីមួយៗមានគោលដៅប្រើផ្សេងគ្នា៖**\n\n📷 **JPG / JPEG:** សម្រាប់រូបថតទូទៅ។ វាមានទំហំស្រាល ប៉ុន្តែ**អត់អាចធ្វើ Background ថ្លាបានទេ**។\n✂️ **PNG:** សម្រាប់រូបដែលត្រូវការ Background ថ្លា (Transparent) ដូចជាឡូហ្គោ ឬរូបកាត់ផ្ទៃខាងក្រោយ។\n📐 **SVG:** ជា File Vector សម្រាប់ Website។ ទំហំស្រាលមែនទែន ហើយពង្រីកប៉ុណ្ណាក៏មិនបែកគ្រាប់។\n🖨️ **PDF:** ជា File ស្តង់ដារបំផុត សម្រាប់រក្សាទុករូបភាព ឬប្លង់ ដើម្បីបញ្ជូនទៅរោងពុម្ព ដោយមិនខ្លាចវរអក្សរ។", 
         answer_en: "**Different Image File Formats and when to use them:**\n\n📷 **JPG / JPEG:** Best for complex photographs. It compresses files to be smaller but **cannot support transparent backgrounds**.\n✂️ **PNG:** Used when you need a transparent background (like placing a logo over an image without a white box behind it).\n📐 **SVG:** A Vector format for Web Design. It is incredibly lightweight and scales infinitely without pixelating.\n🖨️ **PDF:** The universal professional standard for sending finished, high-quality designs to a physical printer.",
         chips: ["តើ Resolution (PPI) ប៉ុន្មាន?", "តើ RGB និង CMYK ខុសគ្នាម៉េច?"],

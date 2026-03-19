@@ -5,7 +5,7 @@ export const affinityIpadData = [
     {
         primaryKeys: ['របៀបប្រើ Affinity លើ iPad', 'affinity ipad gestures'],
         keys: ['ipad gesture', 'affinity ipad', 'កាយវិការ ipad', 'ipad', 'apple pencil', 'touch gesture'],
-        regex: ['ipad', 'gesture', 'apple pencil'],
+        regex: ['gesture', 'apple pencil'], // Removed raw 'ipad'
         answer: "បាទ **ការប្រើប្រាស់ Affinity Photo / Designer លើ iPad ត្រូវការដឹងពីកាយវិការ (Multi-touch Gestures) ទាំងនេះ៖**\n\n👆 **Two-Finger Tap (គោះម្រាម២):** Undo (ថយក្រោយ)។\n☝️ **Three-Finger Tap (គោះម្រាម៣):** Redo (ទៅមុខវិញ)។\n🖐️ **One-Finger Hold (សង្កត់ម្រាម១):** ពេលកំពុងទាញរូប បើសង្កត់ម្រាមដៃ១លើអេក្រង់ វាដើរតួដូចជាប៊ូតុង `Shift` ដើម្បីរក្សាទំហំឱ្យស្មើគ្នា (Constrain Proportions)។\n✌️ **Two-Finger Hold (សង្កត់ម្រាម២):** ដើរតួដូចប៊ូតុង `Alt/Option` ដើម្បី Copy វត្ថុពេលកំពុងទាញរំកិល។\n\n💡 **គន្លឹះ Apple Pencil៖** ចុចត្រង់ចុងខ្មៅដៃពីរដង (Double-tap) ដើម្បីប្តូរទៅជាជ័រលុបបានយ៉ាងលឿន!",
         answer_en: "**Mastering Affinity Photo / Designer on the iPad requires knowing these multi-touch gestures:**\n\n👆 **Two-Finger Tap:** Undo.\n☝️ **Three-Finger Tap:** Redo.\n🖐️ **One-Finger Hold:** While scaling an object, holding one finger on the screen acts like the `Shift` key to constrain proportions.\n✌️ **Two-Finger Hold:** Acts like the `Alt/Option` key. Use this while dragging an object to instantly duplicate it.\n\n💡 **Apple Pencil Tip:** Double-tap the side of your Pencil 2 to instantly switch to the Eraser tool!",
         chips: ["Affinity Command Controller 🎛️", "របៀបរៀបចំ Studio Panels លើ iPad"],
@@ -32,7 +32,7 @@ export const affinityIpadData = [
     {
         primaryKeys: ['របៀបរៀបចំ Studio Panels លើ iPad', 'managing ipad studio panels'],
         keys: ['ipad panels', 'studio panels', 'លាក់ផ្ទាំង', 'hide panels', 'workspace ipad'],
-        regex: ['ipad panel', 'studio panel', 'workspace ipad', 'លាក់ផ្ទាំង'],
+        regex: ['studio panel', 'លាក់ផ្ទាំង', 'hide panel'],
         answer: "បាទ **ការគ្រប់គ្រង Studio Panels នៅលើអេក្រង់ iPad គឺសំខាន់ណាស់ដើម្បីកុំឱ្យចង្អៀតផ្ទាំងការងារ៖**\n\n👆 **ទាញចេញ (Tear-off):** អ្នកអាចយកម្រាមដៃសង្កត់លើរូបតំណាង Panel ណាមួយ (ឧទាហរណ៍ Color ឬ Layers) រួចអូសវាចេញមកកណ្តាលអេក្រង់ដើម្បីឱ្យវាអណ្តែត (Floating Panel)។\n🗂️ **បិទដោយស្វ័យប្រវត្តិ (Auto-close):** តាមលំនាំដើម ពេលអ្នកចុចលើផ្ទាំងការងារ Panel នឹងបិទទៅវិញ។ បើចង់ឱ្យវាបើករហូត សូមចុចសញ្ញា 📌 (Pin) នៅជ្រុងខាងលើនៃ Panel នោះ។\n\n💡 **គន្លឹះអាជីព៖** ដើម្បីមើលរូបភាពឱ្យពេញអេក្រង់ (Full Screen) ដោយគ្មានឧបករណ៍រំខាន សូមចុចសញ្ញាព្រួញ ៤ ទិសនៅជ្រុងអេក្រង់ (Hide UI)!",
         answer_en: "**Managing Studio Panels on the iPad is crucial to keeping your canvas clean:**\n\n👆 **Tear-off Panels:** You can press and hold any Studio icon (like Colors or Layers) and drag it out into the center of the screen to make it a Floating Panel.\n🗂️ **Pinning:** By default, panels auto-close when you tap the canvas. To keep a panel open permanently while you work, tap the 📌 (Pin) icon at the top right of the panel.\n\n💡 **Pro Tip:** Need a distraction-free view? Tap the 'Hide UI' icon (four outward-pointing arrows) in the corner to view your artwork in glorious full-screen mode!",
         chips: ["របៀបប្រើ Affinity លើ iPad 📱", "មុខងារ Quick Menu លើ iPad"],
@@ -54,7 +54,7 @@ export const affinityIpadData = [
     {
         primaryKeys: ['របៀបប្រើប្រាស់ Macros និង Brushes', 'macros and brushes'],
         keys: ['macro', 'brush', 'affinity', 'ជក់', 'សកម្មភាព'],
-        regex: ['macro', 'brush', 'affinity', 'ជក់', 'សកម្មភាព'],
+        regex: ['macro', 'brush', 'ជក់', 'សកម្មភាព'],
         answer: "បាទ **Macros និង Custom Brushes** គឺជាអាវុធសម្ងាត់ដែលជួយសន្សំពេលវេលាអ្នកបានច្រើនបំផុត! 🚀\n\n🪄 **Macros (ឬ Actions):** គឺជាការថតទុកនូវសកម្មភាពដែលអ្នកចុចកែរូប (ឧទាហរណ៍៖ ទាញពន្លឺ បន្ថែមភាពច្បាស់ និងប្តូរពណ៌)។ ពេលក្រោយ បើចង់កែរូបផ្សេងទៀត អ្នកគ្រាន់តែចុច Play វានឹងកែដោយស្វ័យប្រវត្តិក្នុង១វិនាទី!\n🖌️ **Brushes:** អ្នកអាចបង្កើតជក់ផ្ទាល់ខ្លួនដែលមានទម្រង់ជាពពក ផ្សែង ឬពន្លឺភ្លើង ដើម្បីគូរផ្ទាល់ដោយមិនបាច់កាត់តរូបខាងក្រៅចូល។\n\n💡 **គន្លឹះអាជីព៖** នៅក្នុង Affinity Photo អ្នកអាច Export Macros របស់អ្នកជាឯកសារ `.afmacro` ដើម្បីចែករំលែក ឬលក់បន្តបាន!",
         answer_en: "**Macros and Custom Brushes** are your ultimate time-saving secret weapons! 🚀\n\n🪄 **Macros (Actions):** They record your exact editing steps (e.g., boosting contrast, adding sharpening, color grading). Next time, you just click 'Play' and it edits a new photo automatically in one second!\n🖌️ **Custom Brushes:** Instead of masking external images, you can create or use brushes shaped like clouds, smoke, or light flares to paint effects directly onto your canvas.\n\n💡 **Pro Tip:** In Affinity Photo, you can batch Export your Macros as an `.afmacro` file to sell as a digital product!",
         chips: ["របៀបរក្សាទុកក្នុង Assets Panel 📦", "Affinity Photo v3 មានអ្វីថ្មី?"],
@@ -63,7 +63,7 @@ export const affinityIpadData = [
     {
         primaryKeys: ['របៀបរក្សាទុកក្នុង Assets Panel', 'affinity assets panel'],
         keys: ['assets panel', 'រក្សាទុករូប', 'save element', 'asset', 'រក្សាទុក', 'assets'],
-        regex: ['asset', 'រក្សាទុក.*asset', 'save element'],
+        regex: ['asset panel', 'រក្សាទុករូប', 'save element'], // Removed raw 'asset'
         answer: "បាទ **Assets Panel នៅក្នុង Affinity គឺជាកន្លែងសន្សំពេលវេលាដ៏អស្ចារ្យសម្រាប់ Creators!**\n\nប្រសិនបើអ្នកបានបង្កើត Text Effect ដ៏ស្រស់ស្អាតមួយ ឬគូរ Logo មួយដែលត្រូវប្រើញឹកញាប់ អ្នកគ្រាន់តែទាញវា (Drag) បញ្ចូលទៅក្នុង **Assets Panel**។\n\nនៅពេលក្រោយ ទោះបីជាអ្នកបើក Project ថ្មីក៏ដោយ អ្នកគ្រាន់តែអូសវាចេញពី Assets Panel មកដាក់លើផ្ទាំងការងារ នោះវានឹងចេញមកជាមួយនឹង Layer និង Effects ដើមទាំងអស់។\n\n💡 **គន្លឹះអាជីព៖** នេះគឺជាមុខងារល្អបំផុតសម្រាប់អ្នកចូលចិត្តបង្កើត Digital Assets លក់! អ្នកអាចវេចខ្ចប់វាជាឯកសារ `.afassets`។",
         answer_en: "**The Assets Panel in Affinity is a massive time-saver for creators!**\n\nIf you spend an hour building a beautiful Text Effect or a complex UI button, simply drag that layer into the **Assets Panel**.\n\nMonths later, in a completely new document, you can just drag it out of the panel and drop it onto your canvas. It will instantly appear with all its original layers and effects perfectly intact.\n\n💡 **Pro Tip:** This is the ultimate tool for selling Digital Assets! You can export entire categories as an `.afassets` file.",
         chips: ["របៀបលក់ Digital Assets 💰", "របៀបប្រើប្រាស់ Macros និង Brushes?"],
@@ -76,7 +76,7 @@ export const affinityIpadData = [
     {
         primaryKeys: ['តិចនិកប្រើ Affinity Personas', 'affinity personas'],
         keys: ['persona', 'affinity interface', 'មុខងារជំនាញ', 'workspace', 'export persona'],
-        regex: ['persona', 'affinity interface', 'export persona'],
+        regex: ['តិចនិកប្រើ.*persona', 'affinity interface', 'ប្រភេទ persona'],
         answer: "បាទ **នៅក្នុងកម្មវិធី Affinity, Personas គឺជាការផ្លាស់ប្តូរមុខងារកាត់តទាំងមូលទៅតាមតម្រូវការ៖**\n\n១. **Photo/Designer Persona:** ជាកន្លែងសម្រាប់គូររូប និងកាត់តទូទៅ (ប្រើច្រើនជាងគេ)។\n២. **Liquify Persona:** ប្តូរ UI ទាំងមូលទៅជាកន្លែងសម្រាប់កែទម្រង់រូបរាងសុទ្ធសាធ (បង្រួមមុខ ពង្រីកភ្នែក ទាញរាង)។\n៣. **Develop Persona:** សម្រាប់កែពណ៌រូបភាព RAW កម្រិតខ្ពស់។\n៤. **Export Persona:** ពិសេសបំផុតសម្រាប់អ្នករចនា UI/UX! វាអនុញ្ញាតឱ្យអ្នកកាត់រូបជាចំណែកៗ (Slices) រួច Save ចេញជាច្រើនទំហំ (1x, 2x, 3x) ក្នុងពេលតែមួយចុច!",
         answer_en: "**In Affinity apps, Personas are dedicated workspaces that completely change your UI based on the task:**\n\n1. **Photo/Designer Persona:** The main workspace for core editing and drawing.\n2. **Liquify Persona:** A dedicated studio for warping and reshaping pixels (great for portrait retouching).\n3. **Develop Persona:** For advanced RAW file color grading.\n4. **Export Persona:** Incredible for UI/UX designers! It allows you to slice up components and export them in multiple resolutions (1x, 2x, 3x) with a single click!",
         chips: ["តើ Live Filters ក្នុង Affinity ជាអ្វី?", "Designer Persona vs Pixel Persona"],
@@ -88,8 +88,8 @@ export const affinityIpadData = [
         regex: ['artboard', 'ផ្ទាំងច្រើន'],
         answer: "បាទ **Artboards នៅក្នុង Affinity Designer** អនុញ្ញាតឱ្យអ្នកមានផ្ទាំងការងារ (Canvas) ច្រើននៅក្នុង File តែមួយ!\n\nនេះមានប្រយោជន៍ខ្លាំងណាស់សម្រាប់អ្នកធ្វើ UI/UX ឬរចនាខិត្តប័ណ្ណច្រើនទំព័រ។ អ្នកអាចបង្កើត Artboard មួយសម្រាប់ទូរស័ព្ទ (Mobile) និងមួយទៀតសម្រាប់កុំព្យូទ័រ (Desktop) នៅក្បែរគ្នា។\n\n💡 **គន្លឹះអាជីព៖** អ្នកអាច Export (Save) Artboards ទាំងអស់ចេញជារូបភាពដាច់ដោយឡែកពីគ្នាក្នុងពេលតែមួយ ដោយប្រើប្រាស់ Export Persona!",
         answer_en: "**Artboards in Affinity Designer** allow you to have multiple canvases within a single document!\n\nThis is incredibly useful for UI/UX or brand identity design. You can create one Artboard for a Mobile screen and another for Desktop right next to each other.\n\n💡 **Pro Tip:** You can instantly export all your Artboards as completely separate image files simultaneously using the Export Persona!",
-        chips: ["តិចនិកប្រើ Affinity Personas 🚀", "Affinity Symbols គឺអ្វី?"],
-        chips_en: ["Tips for Affinity Personas 🚀", "What are Affinity Symbols?"]
+        chips: ["ការកាត់រូប Export (Slices) ✂️", "Affinity Symbols គឺអ្វី?"],
+        chips_en: ["How to use Export Slices ✂️", "What are Affinity Symbols?"]
     },
     {
         primaryKeys: ['Snapping ក្នុង Affinity', 'snapping tool affinity'],
@@ -125,7 +125,7 @@ export const affinityIpadData = [
     {
         primaryKeys: ['Clipping និង Masking ក្នុង Affinity', 'clipping vs masking affinity'],
         keys: ['clipping', 'masking', 'layer panel', 'affinity mask'],
-        regex: ['clipping.*masking', 'affinity mask', 'layer drag'],
+        regex: ['clipping', 'affinity mask'], // Separated 'masking' out
         answer: "បាទ **នៅក្នុង Affinity, ការធ្វើ Clipping និង Masking គឺផ្អែកលើរបៀបដែលអ្នកអូស (Drag) នៅក្នុង Layer Panel៖**\n\n✂️ **Clipping (កាត់តម្រឹមចូលរូប):** អូស Layer រូបភាព ទៅទម្លាក់ **\"ចំកណ្តាលអក្សរឈ្មោះ\"** នៃ Layer មួយទៀត។ រូបភាពនោះនឹងបង្ហាញតែនៅក្នុងសាច់វត្ថុនោះទេ (ល្អសម្រាប់ដាក់រូបចូលអក្សរ)។\n🎭 **Masking (លាក់/បង្ហាញ):** អូស Layer ទៅទម្លាក់ **\"ចំលើរូបតូច (Thumbnail)\"** នៃ Layer មួយទៀត។ វាដើរតួជា Mask ដើម្បីលាក់បាំងផ្នែកខ្លះនៃរូបភាព។",
         answer_en: "**In Affinity, Clipping vs Masking is entirely determined by exactly where you Drag & Drop in the Layers Panel:**\n\n✂️ **Clipping:** Drag an image layer and drop it **directly on the TEXT/NAME** of another layer. The image will be constrained strictly inside that shape or text.\n🎭 **Masking:** Drag a layer and drop it **directly on the THUMBNAIL icon** of another layer. It will now act as a mask to hide or reveal parts of the parent layer.",
         chips: ["តើ Live Filters ក្នុង Affinity ជាអ្វី?", "Image Layer vs Pixel Layer"],
@@ -143,7 +143,7 @@ export const affinityIpadData = [
     { 
         primaryKeys: ['តើ Affinity Photo និង Designer ខុសគ្នាម៉េច?', 'affinity photo vs designer'],
         keys: ['photo vs designer', 'affinity photo', 'affinity designer', 'affinity', 'publisher vs designer'],
-        regex: ['affinity photo.*designer', 'affinity designer.*photo', 'photo vs designer', 'publisher vs designer'],
+        regex: ['photo vs designer', 'publisher vs designer', 'ខុសគ្នាម៉េច'],
         answer: "បាទ **កម្មវិធីនីមួយៗរបស់ Affinity (Trinity) មានតួនាទីខុសគ្នាដាច់៖**\n\n🟦 **Affinity Photo (Raster):** ប្រើសម្រាប់កាត់តរូបភាពពិតៗ កែពណ៌ លុប Background។ (ពង្រីកធំបែកគ្រាប់)។\n🟧 **Affinity Designer (Vector):** ប្រើសម្រាប់គូរ Logo, Icon, ឬគំនូរ Illustration។ ទោះពង្រីកធំប៉ុណ្ណាក៏**មិនបែក**ដែរ។\n🟥 **Affinity Publisher (Layout):** ប្រើសម្រាប់រៀបចំសៀវភៅ ទស្សនាវដ្តី ឬខិត្តប័ណ្ណច្រើនទំព័រ (ដូច Adobe InDesign)។\n\n💡 **គន្លឹះអាជីព៖** កម្មវិធីទាំង៣នេះអាចធ្វើការរួមគ្នាបាន (StudioLink)។ អ្នកអាចបើកមុខងារ Photo នៅក្នុង Publisher បានដោយមិនបាច់បិទកម្មវិធី!", 
         answer_en: "**The Affinity Trinity: Each software is built for a completely different purpose:**\n\n🟦 **Affinity Photo (Raster):** Built for editing actual photos and masking backgrounds. (Pixels will blur if scaled up).\n🟧 **Affinity Designer (Vector):** Built for creating logos, icons, and typography. You can scale artwork infinitely without losing quality.\n🟥 **Affinity Publisher (Layout):** Built for multi-page layouts, magazines, and books (Adobe InDesign alternative).\n\n💡 **Pro Tip:** They share the exact same file format! With StudioLink, you can literally open Photo editing tools inside Publisher without switching apps!",
         chips: ["អ្វីទៅជា Vector និង Raster?", "តើ Smart Object ជាអ្វី?"],
@@ -156,7 +156,7 @@ export const affinityIpadData = [
     {
         primaryKeys: ['តើ Shape Builder Tool ប្រើធ្វើអី? 🔲', 'shape builder tool'],
         keys: ['shape builder', 'កាត់ shape', 'រួម shape', 'បូក shape', 'shape tool'],
-        regex: ['shape builder'], 
+        regex: ['shape builder'], // 🌟 FIX: Super strict to avoid "tool" collision
         answer: "បាទ **Shape Builder Tool** គឺជាឧបករណ៍ដ៏អស្ចារ្យសម្រាប់ការគូរឡូហ្គោ និងកាត់តរូបរាង Vector!\n\nជំនួសឱ្យការប្រើ Geometry (Add/Subtract) ដែលស្មុគស្មាញ អ្នកគ្រាន់តែជ្រើសរើសវត្ថុទាំងអស់ រួចប្រើ Shape Builder Tool គូសអូសពីលើបំណែកដែលអ្នកចង់បូកបញ្ចូលគ្នា ឬជ្រើសយកសញ្ញាដក (Subtract Mode) ហើយចុចលើបំណែកដែលអ្នកចង់លុបចោល។\n\n💡 **គន្លឹះអាជីព៖** វាជួយឱ្យការបង្កើតឡូហ្គោស្មុគស្មាញ (ដូចជារូបសត្វ ឬអក្សរត្រួតគ្នា) លឿនជាងមុន ១០ ដង!",
         answer_en: "**The Shape Builder Tool** is an absolute game-changer for logo design and vector manipulation!\n\nInstead of using complex Boolean Geometry (Add/Subtract), you simply select all your intersecting shapes, grab the Shape Builder Tool, and click-and-drag across the pieces you want to merge. Switch to Subtract mode to delete pieces with a tap!\n\n💡 **Pro Tip:** This makes creating complex overlapping logos or mascots 10x faster and more intuitive!",
         chips: ["Geometry Operations (Add, Subtract, Intersect)", "Stroke vs Fill"],
@@ -165,7 +165,7 @@ export const affinityIpadData = [
     {
         primaryKeys: ['Geometry Operations (Add, Subtract, Intersect)', 'affinity boolean geometry'],
         keys: ['boolean', 'geometry', 'add', 'subtract', 'intersect', 'xor', 'divide', 'បញ្ចូល shape'],
-        regex: ['boolean', 'geometry', 'add', 'subtract', 'intersect', 'xor', 'divide'],
+        regex: ['boolean', 'geometry', 'add shape', 'subtract shape', 'intersect', 'xor', 'divide shape', 'បញ្ចូល shape'], // Specific
         answer: "បាទ **ពាក្យបច្ចេកទេស Geometry / Boolean (កាត់/បញ្ចូល Shape ក្នុង Designer)៖**\n\n➕ **Add (បូកបញ្ចូល):** រំលាយ Shape ២ ឬច្រើន ចូលគ្នាឱ្យក្លាយជា Shape តែមួយ។\n➖ **Subtract (ដកចេញ):** យក Shape ដែលនៅខាងលើ ទៅកាត់ក្បោះ Shape ខាងក្រោម (ដូចយកពុម្ពទៅកាត់នំ)។\n✂️ **Intersect (ប្រសព្វ):** លុបចោលទាំងអស់ ទុកតែផ្នែកកណ្តាលដែល Shape ទាំង២ ត្រួតស៊ីគ្នាប៉ុណ្ណោះ។\n❌ **Xor (ដកចំណុចប្រសព្វ):** ផ្ទុយពី Intersect! វាលុបចោលផ្នែកដែលត្រួតស៊ីគ្នា រួចទុកផ្នែកខាងក្រៅ។\n➗ **Divide (បំបែក):** កាត់ Shape ជាបំណែកៗ (ដូចកាត់នំខេក) តាមខ្សែបន្ទាត់ដែលវាកាត់ខ្វែងគ្នា។",
         answer_en: "**Affinity Designer Terminology: Boolean Geometry Operations (Merging shapes):**\n\n➕ **Add:** Combines multiple overlapping shapes into one single, solid vector path.\n➖ **Subtract:** Uses the top shape as a cookie-cutter to punch a hole out of the bottom shape.\n✂️ **Intersect:** Deletes everything EXCEPT the exact area where the shapes overlap.\n❌ **Xor (Exclude):** The exact opposite! It punches out the overlapping center and keeps the outside pieces.\n➗ **Divide:** Slices the shapes into individual puzzle pieces wherever their paths cross.",
         chips: ["តើ Shape Builder Tool ប្រើធ្វើអី? 🔲", "អ្វីទៅជា Vector និង Raster?"],
@@ -173,8 +173,8 @@ export const affinityIpadData = [
     },
     {
         primaryKeys: ['តើ Rasterize មានន័យថាម៉េច?', 'what does rasterize mean'],
-        keys: ['rasterize', 'pixel layer', 'image layer', 'បំប្លែងរូប'],
-        regex: ['rasterize', 'image layer', 'pixel layer'], 
+        keys: ['rasterize', 'បំប្លែងរូប'],
+        regex: ['rasterize', 'បំប្លែងរូប'], // 🌟 FIX: Removed image layer/pixel layer
         answer: "បាទ **Rasterize** គឺជាការបំប្លែងទិន្នន័យរូបភាព (ដូចជា Vector, Text, ឬ Image Layer) ឱ្យក្លាយទៅជា **Pixel Layer (សាច់ភីកសែលធម្មតា)**។\n\nពេលអ្នកទាញរូបថតចូលក្នុង Affinity វានឹងក្លាយជា Image Layer ដែលរក្សាគុណភាពដើម១០០% តែអ្នកមិនអាចយកជ័រលុប (Eraser) ឬជក់ (Brush) ទៅផាត់លើវាផ្ទាល់បានទេ។ អ្នកត្រូវតែ ចុច Right-click រួចជ្រើសរើស **Rasterize** សិន ទើបអាចលុប ឬកាត់តសាច់រូបនោះបាន!",
         answer_en: "**Rasterize** means converting an object (like Vector, Text, or an Image Layer) into a flat **Pixel Layer**.\n\nWhen you drag a photo into Affinity, it's protected as an Image Layer. You cannot use the Eraser or Paint Brushes directly on it. You must Right-click the layer and select **Rasterize** first to flatten it into editable pixels!",
         chips: ["អ្វីទៅជា Vector និង Raster?", "Image Layer vs Pixel Layer"],
@@ -195,8 +195,8 @@ export const affinityIpadData = [
         regex: ['stroke', 'fill', 'expand stroke'],
         answer: "បាទ **ពាក្យបច្ចេកទេសគូរ Vector: Stroke និង Fill**\n\n🎨 **Fill (ពណ៌សាច់):** គឺជាពណ៌ដែលចាក់បំពេញផ្ទៃខាងក្នុងរបស់ Shape មួយ។\n➖ **Stroke (ពណ៌ស៊ុម):** គឺជាខ្សែបន្ទាត់ ឬស៊ុមដែលរុំព័ទ្ធជុំវិញ Shape នោះ។ អ្នកអាចសារ៉េកម្រាស់ (Width) របស់វាបាន។\n\n🪄 **Expand Stroke (មុខងារមាស):** គឺជាការបំប្លែងខ្សែបន្ទាត់ (Stroke) ឱ្យក្លាយទៅជាសាច់ Shape ពេញលេញ (Fill)។ នេះជាក្បួនដាច់ខាតដែលអ្នកត្រូវធ្វើ មុននឹងយកវត្ថុនោះទៅកាត់បញ្ចូលគ្នាដោយប្រើ Shape Builder ដើម្បីធ្វើ Logo កុំឱ្យវាខូចទ្រង់ទ្រាយ!",
         answer_en: "**Affinity Vector Terminology: Stroke and Fill**\n\n🎨 **Fill:** The solid color painted inside the boundaries of a shape.\n➖ **Stroke:** The outline or border drawn around the edge of the shape. You can dynamically adjust its thickness.\n\n🪄 **Expand Stroke:** A critically important command! It permanently converts a basic outline (Stroke) into a solid 2D Shape (Fill). You absolutely MUST do this before trying to cut, subtract, or merge custom logo paths using the Shape Builder Tool!",
-        chips: ["Geometry Operations (Add, Subtract, Intersect)", "តើ Shape Builder Tool ប្រើធ្វើអី? 🔲"],
-        chips_en: ["Affinity Boolean Geometry", "What is the Shape Builder Tool? 🔲"]
+        chips: ["Geometry Operations (Add, Subtract, Intersect)", "តើ Pen Tool ប្រើធ្វើអ្វី?"],
+        chips_en: ["Affinity Boolean Geometry", "How to use the Pen Tool?"]
     },
     {
         primaryKeys: ['Designer Persona vs Pixel Persona', 'designer persona vs pixel persona'],
@@ -210,7 +210,7 @@ export const affinityIpadData = [
     {
         primaryKeys: ['Artistic Text vs Frame Text', 'artistic text vs frame text'],
         keys: ['frame text', 'artistic text', 'text tool', 'សរសេរអក្សរ'],
-        regex: ['frame text', 'artistic text', 'text tool'],
+        regex: ['frame text', 'artistic text'], // strict
         answer: "បាទ **នៅក្នុង Affinity មាន Tool សរសេរអក្សរ ២ យ៉ាងដែលប្រើខុសគ្នាដាច់៖**\n\n🅰️ **Artistic Text Tool:** ប្រើសម្រាប់សរសេរចំណងជើង (Headlines) ឬឡូហ្គោ។ នៅពេលអ្នកទាញប្រអប់របស់វា អក្សរនឹងរីកធំតាមទំហំប្រអប់នោះ!\n📄 **Frame Text Tool:** ប្រើសម្រាប់សរសេរអត្ថបទវែងៗ (Paragraphs)។ នៅពេលអ្នកទាញប្រអប់វា វាគ្រាន់តែប្តូររាងប្រអប់ ហើយអក្សរនឹងរត់ចុះបន្ទាត់ដោយស្វ័យប្រវត្តិ (អក្សរអត់រីកធំតាមទេ)។",
         answer_en: "**Affinity has two distinct Text Tools built for different purposes:**\n\n🅰️ **Artistic Text Tool:** Used for headlines, titles, and logos. If you click and drag the bounding box, the font physically scales up and gets larger!\n📄 **Frame Text Tool:** Used for long paragraphs and magazines. If you scale the bounding box, the font size stays exactly the same, but the text automatically reflows to fit the new box shape.",
         chips: ["សរសេរអក្សរតាមខ្សែកោង", "អ្វីទៅជា Typography?"],
@@ -232,7 +232,7 @@ export const affinityIpadData = [
     {
         primaryKeys: ['Affinity V3 និងអនាគត (Canva)', 'affinity v3 updates'],
         keys: ['affinity photo v3', 'affinity v3', 'v3 មានអ្វីថ្មី', 'update', 'canva'],
-        regex: ['affinity photo v3', 'affinity v3', 'v3 មានអ្វីថ្មី', 'canva'],
+        regex: ['affinity v3', 'v3 មានអ្វីថ្មី', 'canva'],
         answer: "បាទ សម្រាប់ **Affinity ជំនាន់ថ្មី និងអនាគតជាមួយ Canva** គឺគួរឱ្យរំភើបណាស់! 🚀\n\nបន្ទាប់ពី Canva បានទិញយក Affinity ក្នុងឆ្នាំ ២០២៤ កម្មវិធីនេះនៅតែរក្សាភាពជាកម្មវិធីទិញដាច់ (One-time payment) ដដែល! ប៉ុន្តែអ្វីដែលថ្មីគឺ **ការរួមបញ្ចូលគ្នា (Integration)**។\n\nអ្នករចនាអាចបង្កើត Graphic ធំៗនិងស្មុគស្មាញក្នុង Affinity Designer ហើយអនាគត វានឹងងាយស្រួលបញ្ជូនទៅឱ្យក្រុមការងារយកទៅប្រើប្រាស់បន្តនៅក្នុង Canva បានយ៉ាងរលូន។ វាជាការបូកបញ្ចូលគ្នារវាង 'ថាមពលកម្មវិធីអាជីព' និង 'ភាពងាយស្រួលនៃការចែករំលែក'!",
         answer_en: "**The future of Affinity and V3 updates alongside Canva** is incredibly exciting! 🚀\n\nAfter Canva acquired Affinity in 2024, they pledged to keep the beloved One-Time Payment model! The biggest upcoming updates revolve around **Integration**.\n\nProfessional designers can build incredibly complex vectors and assets in Affinity, and seamlessly push them into Canva for marketing teams to use. It's the perfect marriage of 'Professional Power' and 'Cloud Accessibility'!",
         chips: ["តើ Affinity Photo និង Designer ខុសគ្នាម៉េច?", "របៀបរក្សាទុកក្នុង Assets Panel 📦"],
@@ -241,7 +241,7 @@ export const affinityIpadData = [
     {
         primaryKeys: ['តិចនិក Power Duplicate', 'power duplicate shortcut'],
         keys: ['power duplicate', 'copy rotate', 'duplicate', 'cmd j'],
-        regex: ['power duplicate', 'copy rotate', 'cmd j'],
+        regex: ['power duplicate', 'cmd j', 'ctrl j', 'កូពី.*បង្វិល'],
         answer: "បាទ **Power Duplicate (Cmd/Ctrl + J)** គឺជាវេទមន្តដ៏អស្ចារ្យបំផុតសម្រាប់ការរចនាប្លង់ ឬគូរ Mandala ក្នុងកម្មវិធី Affinity!\n\n💡 **របៀបធ្វើ៖**\n១. គូររាងមួយ រួចចុច `Cmd+J` (ឬ `Ctrl+J`) ដើម្បីកូពីវា។\n២. ទាញវត្ថុថ្មីនោះឱ្យរំកិលទៅមុខ និង បង្វិលវាបន្តិច។\n៣. ចុច `Cmd+J` ទៀត... កម្មវិធីនឹង **កូពីបូកជាមួយការបង្វិលនោះ** ធ្វើឡើងវិញដោយស្វ័យប្រវត្តិ! ចុចផ្ទួនៗ វានឹងបង្កើតជារង្វង់ផ្កា ឬកាំរស្មីព្រះអាទិត្យដ៏ល្អឥតខ្ចោះក្នុងពេល ២ វិនាទី!",
         answer_en: "**Power Duplicate (Cmd/Ctrl + J)** is absolute magic for creating geometric patterns, mandalas, or sunbursts in Affinity!\n\n💡 **How it works:**\n1. Draw a shape, then press `Cmd+J` (or `Ctrl+J`) to duplicate it.\n2. Move the new shape slightly and rotate it a few degrees.\n3. Press `Cmd+J` again... Affinity will automatically **duplicate AND repeat the rotation/movement**! Press it repeatedly to generate a perfect sunburst or spiral in 2 seconds!",
         chips: ["Shortcut ផ្លូវកាត់សំខាន់ៗមានអ្វីខ្លះ?", "Geometry Operations (Add, Subtract, Intersect)"],
@@ -250,7 +250,7 @@ export const affinityIpadData = [
     {
         primaryKeys: ['Shortcut ផ្លូវកាត់សំខាន់ៗមានអ្វីខ្លះ?', 'keyboard shortcuts'],
         keys: ['shortcut', 'ផ្លូវកាត់', 'key', 'keyboard shortcut'],
-        regex: ['shortcut', 'ផ្លូវកាត់', 'key', 'keyboard shortcut'],
+        regex: ['keyboard shortcut', 'ផ្លូវកាត់'],
         answer: "បាទ នេះគឺជា **Shortcut ផ្លូវកាត់** ដែលអ្នករចនាអាជីពតែងតែប្រើប្រាស់ (សម្រាប់កម្មវិធី Affinity)៖\n\n- **V:** Move Tool (រំកិលវត្ថុ)\n- **T:** Text Tool (សរសេរអក្សរ)\n- **Ctrl / Cmd + Z:** Undo (ថយក្រោយ)\n- **Ctrl / Cmd + T:** Free Transform (ពង្រីក/បង្រួមរូប)\n- **Ctrl / Cmd + J:** Duplicate Layer (ចម្លង Layer បន្ថែម)\n\n💡 **សម្រាប់ iPad:** អ្នកអាចប្រើ Command Controller ឬមុខងារ Quick Menu (អូសម្រាម៣ចុះក្រោម) ដើម្បីប្រើផ្លូវកាត់ទាំងនេះបានយ៉ាងងាយ!",
         answer_en: "**Here are the essential Keyboard Shortcuts** every professional Affinity designer uses:\n\n- **V:** Move Tool\n- **T:** Type Tool\n- **Ctrl / Cmd + Z:** Undo\n- **Ctrl / Cmd + T:** Free Transform (Scale/Rotate)\n- **Ctrl / Cmd + J:** Duplicate Layer\n\n💡 **For iPad Users:** Use the Command Controller on-screen joystick or the Quick Menu (3-finger swipe down) to execute these shortcuts seamlessly!",
         chips: ["តិចនិក Power Duplicate 🔄", "មុខងារ Quick Menu លើ iPad"],
@@ -268,7 +268,7 @@ export const affinityIpadData = [
     {
         primaryKeys: ['Global Colors (ប្តូរពណ៌ម្តងទាំងអស់)', 'affinity global colors swatches'],
         keys: ['global color', 'swatches', 'ដូរពណ៌ម្តងទាំងអស់', 'color palette'],
-        regex: ['global color', 'swatches', 'ដូរពណ៌'],
+        regex: ['global color', 'swatches', 'ដូរពណ៌ម្តងទាំងអស់'],
         answer: "បាទ ការប្រើប្រាស់ **Global Colors** គឺជាវិធីសន្សំពេលដ៏ឆ្លាតវៃពេលធ្វើ UI Design ឬ Branding!\n\nជំនួសឱ្យការចាក់ពណ៌ធម្មតា អ្នកត្រូវ Add ពណ៌នោះចូល Swatches Panel រួចចុចគ្រីសយកពាក្យ **'Global'**។\n\n💡 **មន្តអាគម៖** បើអ្នកប្រើពណ៌ Global នោះទៅលើប៊ូតុងចំនួន ៥០ កន្លែង។ ថ្ងៃក្រោយបើភ្ញៀវចង់ប្តូរពីពណ៌ខៀវ ទៅពណ៌បៃតង អ្នកគ្រាន់តែចុចកែពណ៌ Global នោះមួយ នោះប៊ូតុងទាំង ៥០ នឹងដូរពណ៌ទៅជាបៃតងព្រមគ្នាក្នុងពេល ១ វិនាទី!",
         answer_en: "Using **Global Colors** is the smartest workflow secret for UI/UX and Brand Design!\n\nInstead of just picking a color from the wheel, add it to your Swatches panel and check the box for **'Global'**.\n\n💡 **The Magic:** If you apply that Global Color to 50 different buttons across your document... and later the client says, 'Make them green instead of blue,' you simply edit the single Global Swatch. All 50 buttons will instantly change to green simultaneously!",
         chips: ["Affinity Symbols គឺអ្វី?", "Color Theory"],

@@ -2,8 +2,8 @@ export const basicsData = [
     // 1. FUN, EMOTIONAL & CASUAL CHAT
     {
         primaryKeys: ['កំប្លែង', 'joke'],
-        keys: ['funny', 'សើច', 'ធុញ', 'tell me a joke', 'make me laugh'],
-        regex: ['joke', 'funny', 'កំប្លែង', 'សើច', 'ធុញ'],
+        keys: ['funny', 'សើច', 'tell me a joke', 'make me laugh'],
+        regex: ['joke', 'funny', 'កំប្លែង', 'សើច'],
         answer: "បាទ ហាហា! ចង់ស្តាប់រឿងកំប្លែងមែនទេ? \n\nតើអ្នកដឹងទេថាហេតុអ្វីបានជា Graphic Designer មិនសូវចេះលេងលាក់កន្សែង? \nព្រោះពួកគេពូកែលាក់តែ Layer (Hide Layers) តើ! 😆 រួចចុះអ្នកវិញ តើចង់លាក់អីគេក្នុងកម្មវិធីថ្ងៃនេះ?",
         answer_en: "Haha! You want a design joke? \n\nWhy did the graphic designer break up with their partner? Because they had 'no chemistry' and way too much 'contrast'! 😆 Feeling better? What are we designing today?",
         chips: ["ពណ៌ចៃដន្យ 🎨", "អ្វីទៅជា Typography?"],
@@ -30,7 +30,7 @@ export const basicsData = [
     {
         primaryKeys: ['ឆ្លាត', 'smart'],
         keys: ['ពូកែ', 'love you', 'who are you', 'ai', 'robot', 'អ្នកណាគេ', 'awesome', 'great', 'ល្អណាស់'],
-        regex: ['love you', 'smart', 'who are you', 'ai', 'robot', 'ឆ្លាត', 'ពូកែ', 'អ្នកណាគេ', 'awesome', 'great', 'ល្អណាស់'],
+        regex: ['love you', 'who are you', 'ai', 'robot', 'ឆ្លាត', 'ពូកែ', 'អ្នកណាគេ', 'awesome', 'great', 'ល្អណាស់'],
         answer: "បាទ អូហូ! អរគុណច្រើន! 🥰 ខ្ញុំគ្រាន់តែជាជំនួយការ AI ផ្នែក Graphic Design ម្នាក់ដែលចូលចិត្តពណ៌និងសិល្បៈប៉ុណ្ណោះ។ តែអ្នកទើបជាអ្នករចនា (Designer) ដ៏ពិតប្រាកដ! 👩‍🎨👨‍🎨 តោះ ចង់រៀនគន្លឹះអ្វីថ្មីទេថ្ងៃនេះ?",
         answer_en: "Aww, you're making me blush! 🥰 I'm just a friendly Graphic Design AI who loves colors and pixels, but YOU are the real artist here! 👩‍🎨👨‍🎨 Ready to learn a cool new trick today?",
         chips: ["របៀបរចនា Poster ឱ្យទាក់ទាញ? 🖼️", "Color Theory"],
@@ -39,7 +39,7 @@ export const basicsData = [
     {
         primaryKeys: ['របៀបរកគំនិត Design 💡', 'how to find inspiration'],
         keys: ['រកគំនិត', 'គិតអត់ចេញ', 'inspiration', 'idea', 'creative block', 'រក idea'],
-        regex: ['រកគំនិត', 'គិតអត់ចេញ', 'inspiration', 'idea', 'creative block'],
+        regex: ['រកគំនិត', 'គិតអត់ចេញ', 'inspiration', 'creative block'],
         answer: "បាទ អាការៈគិតអត់ចេញ (Creative Block) កើតមានលើ Designer គ្រប់រូប! តោះសាកល្បងវិធីទាំងនេះ៖\n\n១. **មើលស្នាដៃគេ (Moodboard):** ចូលមើល Pinterest, Behance, ឬ Dribbble ដើម្បីប្រមូលគំនិតពណ៌ និងប្លង់។\n២. **ដើរចេញពីអេក្រង់:** បិទ iPad ហើយទៅដើរលេង ឬផឹកកាហ្វេ។ ខួរក្បាលត្រូវការពេលសម្រាកដើម្បីបង្កើតគំនិតថ្មី។\n៣. **ចម្លងដើម្បីរៀន:** យករូប Poster ស្អាតមួយមកគូរតាម ១០០% (គ្រាន់តែសម្រាប់ហាត់ដៃ ហាមផុស) ដើម្បីស្វែងយល់ពីរបៀបដែលគេរៀបប្លង់។\n\n💡 **គន្លឹះអាជីព៖** កុំរង់ចាំទាល់តែមានអារម្មណ៍ទើបធ្វើការ! ចាប់ផ្តើមគូសវាស (Sketch) រាងអាក្រក់ៗសិន នោះគំនិតនឹងហូរមកតាមក្រោយ។",
         answer_en: "Hitting a Creative Block is completely normal for every designer! Try these steps:\n\n1. **Build a Moodboard:** Browse Pinterest, Behance, or Dribbble to collect color palettes and layout ideas.\n2. **Step Away:** Close your iPad and go for a walk. Your brain needs rest to make new creative connections.\n3. **Copy to Learn:** Find a poster you love and recreate it 100% (for practice only, don't publish it!). It helps you understand their thought process.\n\n💡 **Pro Tip:** Don't wait for inspiration to strike! Start sketching ugly wireframes first; the inspiration will follow the action.",
         chips: ["អ្វីទៅជា Typography?", "របៀបរចនា Poster ឱ្យទាក់ទាញ? 🖼️"],
@@ -48,7 +48,7 @@ export const basicsData = [
     {
         primaryKeys: ['ភាសាអង់គ្លេសសម្រាប់ Design', 'english for design'],
         keys: ['រៀនអង់គ្លេស', 'ពាក្យបច្ចេកទេស', 'english terms', 'design terms'],
-        regex: ['អង់គ្លេស', 'ពាក្យបច្ចេកទេស', 'english term'],
+        regex: ['ពាក្យបច្ចេកទេស', 'english term'],
         answer: "បាទ ការចេះពាក្យបច្ចេកទេសភាសាអង់គ្លេស ជួយឱ្យអ្នកប្រើកម្មវិធីនិងរៀនតាម YouTube បានលឿនមែនទែន!\n\nពាក្យសំខាន់ៗដែលត្រូវដឹង៖\n- **Hue / Saturation:** ពណ៌ដើម / កម្រិតឆើតនៃពណ៌។\n- **Opacity:** ភាពថ្លា (មើលធ្លុះ)។\n- **Alignment:** ការតម្រឹមឱ្យស្មើគ្នា។\n- **Resolution:** កម្រិតភាពច្បាស់នៃរូបភាព។\n\n💡 **គន្លឹះអាជីព៖** អ្នកអាចប្តូរភាសា App នេះទៅជាភាសាអង់គ្លេស (ប៊ូតុងខាងលើ) ដើម្បីអនុវត្តការអាន និងបង្កើនជំនាញភាសាអង់គ្លេសរបស់អ្នកបណ្តើរៗ ព្រោះពាក្យ UI/UX ភាគច្រើនប្រើភាសាអង់គ្លេសទូទាំងពិភពលោក!",
         answer_en: "Knowing the English technical terms is crucial for following tutorials and mastering global UI/UX standards!\n\nEssential Terms:\n- **Hue / Saturation:** The core color / The intensity of the color.\n- **Opacity:** How transparent an object is.\n- **Alignment:** Lining up objects perfectly.\n- **Resolution:** The pixel density and crispness of an image.\n\n💡 **Pro Tip:** Try listening to English design tutorials with subtitles. It's one of the best ways to improve both your listening skills and your design knowledge simultaneously!",
         chips: ["តើ HSL គឺជាអ្វី?", "Margin និង Padding ខុសគ្នាម៉េច?"],
@@ -130,9 +130,9 @@ export const basicsData = [
         chips_en: ["Photomanipulation workflows", "Color Theory"]
     },
     {
-        primaryKeys: ['ឧបករណ៍', 'tools'],
+        primaryKeys: ['ឧបករណ៍ជំនួយ UI', 'ui tools'],
         keys: ['layout generator', 'បើកប្លង់', 'បើកឧបករណ៍', 'ឧបករណ៍ជំនួយ', 'open tools'],
-        regex: ['ឧបករណ៍ជំនួយ', 'layout generator', 'open tools'],
+        regex: ['ឧបករណ៍ជំនួយ', 'layout generator', 'open tools'], // STRIOT: Only perfectly matching these exact phrases
         answer: "បាទ ខ្ញុំមានឧបករណ៍ពិសេសសម្រាប់អ្នក! អ្នកអាចបង្កើតពណ៌ ឬមើលគំរូប្លង់ខ្នាតស្តង់ដារបាននៅទីនេះ៖",
         answer_en: "I have some special tools for you! You can generate colors or view standard layout grids here:",
         actionButton: { label: "បើកឧបករណ៍ជំនួយ 🛠️", label_en: "Open Design Tools 🛠️", actionToTrigger: "tools" },
