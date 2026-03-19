@@ -1,42 +1,5 @@
 export const editingData = [
-    // 1. LIGHTROOM & RAW BASICS
-    {
-        primaryKeys: ['RAW vs JPEG', 'raw vs jpeg photography'],
-        keys: ['raw format', 'jpeg', 'ថតរូប raw', 'ប្រភេទរូប'],
-        regex: ['raw format', 'jpeg', 'raw vs jpeg'],
-        answer: "បាទ **ការថតរូបជា File RAW ខុសពី JPEG ដាច់ស្រឡះ៖**\n\n📷 **RAW:** ប្រៀបដូចជាសាច់ស្រស់! វាផ្ទុកទិន្នន័យពន្លឺនិងពណ៌១០០%ពីកាមេរ៉ា។ អ្នកអាចទាញពន្លឺមេឃដែលសក្បុស ឱ្យឃើញពពកវិញបានយ៉ាងងាយក្នុង Lightroom។\n🖼️ **JPEG:** ប្រៀបដូចជាសាច់ចម្អិនរួច! កាមេរ៉ាបានលុបទិន្នន័យចោលខ្លះដើម្បីឱ្យ File តូច។ បើអ្នកទាញពន្លឺខ្លាំងពេក រូបនឹងបែកគ្រាប់។\n\n💡 **គន្លឹះអាជីព៖** តែងតែថតរូបជា RAW បើអ្នកចង់យកមកកែពណ៌ (Color Grading) បែប Cinematic!",
-        answer_en: "**Shooting in RAW vs JPEG is fundamentally different:**\n\n📷 **RAW:** Think of it as raw, uncooked ingredients. It contains 100% of the light and color data captured by the camera sensor. You can easily recover blown-out white skies in Lightroom.\n🖼️ **JPEG:** Think of it as a fully baked cake. The camera permanently compressed and deleted data to make the file small. If you try to heavily color grade it, the pixels will break apart.\n\n💡 **Pro Tip:** Always shoot in RAW if you plan to do professional Color Grading!",
-        chips: ["អ្វីទៅជា Histogram ក្នុង Lightroom?", "ការកែពណ៌ RAW"],
-        chips_en: ["What is a Histogram in Lightroom?", "RAW Color Grading"]
-    },
-    {
-        primaryKeys: ['អ្វីទៅជា Histogram ក្នុង Lightroom?', 'what is a histogram'],
-        keys: ['histogram', 'ក្រាហ្វិកពន្លឺ', 'មើលពន្លឺ'],
-        regex: ['histogram', 'ក្រាហ្វិកពន្លឺ'],
-        answer: "បាទ **Histogram (ក្រាហ្វិកពន្លឺ)** គឺជាឧបករណ៍វាស់ពន្លឺដ៏ជាក់លាក់បំផុត មិនអាចកុហកភ្នែកយើងបានទេ!\n\nវាបង្ហាញពីបរិមាណភីកសែល (Pixels) នៅក្នុងរូបភាពរបស់អ្នក៖\n- **ឆ្វេងបំផុត:** ចំណុចខ្មៅងងឹត (Blacks)\n- **កណ្តាល:** ពន្លឺមធ្យម (Midtones / Exposure)\n- **ស្តាំបំផុត:** ចំណុចភ្លឺខ្លាំង (Whites)\n\n💡 **គន្លឹះអាជីព៖** បើក្រាហ្វិកកកស្ទះនៅខាងឆ្វេងខ្លាំងពេក មានន័យថារូបអ្នកងងឹតមើលលែងឃើញអ្វីហើយ (Underexposed)។ បើវាហៀរទៅខាងស្តាំពេក គឺរូបអ្នកឆេះពន្លឺហើយ (Overexposed)! ព្យាយាមសារ៉េឱ្យក្រាហ្វិកស្ថិតនៅកណ្តាលរាងដូចភ្នំ។",
-        answer_en: "**The Histogram** is the ultimate truth-teller for lighting in photography!\n\nIt visually graphs the amount of pixels in your image based on brightness:\n- **Far Left:** Pure Blacks (Shadows)\n- **Middle:** Midtones (General Exposure)\n- **Far Right:** Pure Whites (Highlights)\n\n💡 **Pro Tip:** If the graph is clustered heavily on the left edge, your image is critically underexposed (crushed blacks). If it touches the far right edge, your highlights are blown out! Aim for a balanced, mountain-like shape in the middle.",
-        chips: ["របៀបកែពន្លឺ ក្នុង Affinity", "តើ Tone Curve ប្រើធ្វើអ្វី?"],
-        chips_en: ["How to edit light in Affinity", "How to use Tone Curve?"]
-    },
-    {
-        primaryKeys: ['តើ Tone Curve ប្រើធ្វើអ្វី?', 'tone curve lightroom'],
-        keys: ['tone curve', 'ខ្សែកោង', 's curve', 'ទាញពន្លឺ'],
-        regex: ['tone curve', 's curve', 'ខ្សែកោង'],
-        answer: "បាទ **Tone Curve (ខ្សែកោងពន្លឺ)** គឺជាអាវុធសម្ងាត់សម្រាប់បង្កើតរូបភាពបែបភាពយន្ត (Cinematic)!\n\n- ចំណុចខាងក្រោមគឺ **ស្រមោល (Shadows)**\n- ចំណុចកណ្តាលគឺ **ពន្លឺមធ្យម (Midtones)**\n- ចំណុចខាងលើគឺ **ពន្លឺភ្លឺ (Highlights)**\n\n💡 **គន្លឹះអាជីព (S-Curve):** ដើម្បីឱ្យរូបមើលទៅថ្លៃថ្នូរ សូមទាញចំណុច Highlights ឡើងលើបន្តិច រួចទាញចំណុច Shadows ចុះក្រោមបន្តិច ដើម្បីបង្កើតជារាង **អក្សរ S**។ វាបង្កើត Contrast ដែលមើលទៅធម្មជាតិ និងទាក់ទាញបំផុត!",
-        answer_en: "**The Tone Curve** is the ultimate secret weapon for achieving cinematic color grading!\n\n- Bottom of the curve = **Shadows**\n- Middle of the curve = **Midtones**\n- Top of the curve = **Highlights**\n\n💡 **Pro Tip (The S-Curve):** To instantly make a photo look professional, plot a point on the Highlights and drag it slightly UP, then plot a point on the Shadows and drag it slightly DOWN. This creates an **'S' shape**, injecting beautiful, organic contrast into your image!",
-        chips: ["អ្វីទៅជា Histogram ក្នុង Lightroom?", "ពណ៌ Cinematic"],
-        chips_en: ["What is a Histogram in Lightroom?", "Cinematic Color"]
-    },
-    {
-        primaryKeys: ['Clarity vs Texture ក្នុង Lightroom', 'clarity vs texture'],
-        keys: ['clarity', 'texture', 'ភាពច្បាស់', 'ធ្វើឱ្យរូបច្បាស់', 'lightroom clarity'],
-        regex: ['clarity', 'texture', 'ភាពច្បាស់'],
-        answer: "បាទ នៅក្នុងមុខងារអូសទាញរបស់ Lightroom ទាំងពីរនេះធ្វើឱ្យរូបភាពច្បាស់ តែវាមានឥទ្ធិពលខុសគ្នា៖\n\n🔍 **Texture:** បង្កើនភាពលម្អិតខ្នាតតូច (ដូចជារន្ធញើស គ្រាប់ខ្សាច់ ឬសរសៃសក់) ដោយមិនប៉ះពាល់ដល់ពន្លឺរួមរបស់រូបភាពទេ។ ល្អបំផុតសម្រាប់បញ្ជាក់ស្បែក ឬអាហារ។\n🥊 **Clarity:** បង្កើន Contrast នៅត្រង់ Midtones ខ្លាំងមែនទែន! ធ្វើឱ្យរូបមើលទៅរឹងមាំ ដិត និងកាច (Grunge look)។ 💡 **បំរាម៖** កុំអូស Clarity ខ្លាំងពេកលើស្បែកមនុស្ស ព្រោះវានឹងធ្វើឱ្យមុខមើលទៅចាស់ និងខ្មៅក្រញុះ!",
-        answer_en: "In Lightroom, both sliders add detail, but they behave very differently:\n\n🔍 **Texture:** Enhances fine, medium-sized details (like skin pores, sand, or hair strands) without affecting the overall contrast of the image. Great for food and portraits.\n🥊 **Clarity:** Aggressively boosts contrast purely in the midtones! It makes images look gritty, hard, and punchy (Grunge look). 💡 **Warning:** Never push Clarity too high on human faces, or it will age the subject by 20 years and make them look dirty!",
-        chips: ["អ្វីទៅជា Vector និង Raster?", "ការធ្វើឱ្យរូបស្លេកៗ (Fading) 🌫️"],
-        chips_en: ["Vector vs Raster?", "How to fade images properly 🌫️"]
-    },
-    // 2. PHOTOMANIPULATION & BLENDING
+    // 1. PHOTOMANIPULATION & BLENDING
     {
         primaryKeys: ['កាត់តរូបភាព', 'photomanipulation'],
         keys: ['កាត់តរូប', 'តរូប', 'blend image', 'match color', 'shadow', 'កាត់ត'],
@@ -82,53 +45,55 @@ export const editingData = [
         chips: ["តើ Dodge និង Burn គឺជាអ្វី?", "រលាយវត្ថុនិង Background បញ្ចូលគ្នា 🌪️"],
         chips_en: ["What is Dodge and Burn?", "How to seamlessly blend subjects 🌪️"]
     },
-    // 3. COLOR GRADING & LIGHTING
+    {
+        primaryKeys: ['របៀបកាត់សក់ឬ Background ឱ្យស្អាត', 'precise background removal'],
+        keys: ['កាត់ background', 'remove bg', 'លុបផ្ទៃខាងក្រោយ', 'refine edge', 'កាត់សក់', 'cut out'],
+        regex: ['កាត់.*background', 'remove bg', 'លុបផ្ទៃខាងក្រោយ', 'refine edge', 'កាត់សក់', 'cut out'],
+        answer: "បាទ **ការកាត់ Background ត្រូវប្រើឧបករណ៍ទៅតាមប្រភេទវត្ថុ៖**\n\n១. **វត្ថុមានគែមរឹង (Hard Edges):** ដូចជា ឡាន ទូរស័ព្ទ កែវ។ អ្នក **ត្រូវតែប្រើ Pen Tool** ដើម្បីគូសតាមគែមវា។ ការប្រើឧបករណ៍ស្វ័យប្រវត្តិនឹងធ្វើឱ្យគែមវាមើលទៅមិនស្មើគ្នា ឬឆែបៗ។\n២. **សក់ មែកឈើ ឬរោមសត្វ (Soft/Complex Edges):** ប្រើ Selection Brush Tool ជ្រើសរើសរូបជាមុន រួចចុចប៊ូតុង **Refine Edge**។ យកជក់ផាត់តាមគែមសក់ កម្មវិធីនឹងគណនាបំបែកសរសៃសក់ចេញពីផ្ទៃខាងក្រោយយ៉ាងឆ្លាតវៃ។\n\n💡 **គន្លឹះអាជីព៖** តែងតែ Output ឯកសារដែលកាត់រួចជា 'Layer Mask' ជានិច្ច ជៀសវាងការលុបសាច់រូបចោល (Destructive) ទើបយើងអាចកែសម្រួលគែមសក់ពេលក្រោយបាន។",
+        answer_en: "**Precise Background Removal depends entirely on what you are cutting out:**\n\n1. **Hard Edges (Cars, Phones, Buildings):** You **must use the Pen Tool** to create a sharp Vector Clipping Path. Magic selection tools will leave jagged, amateur edges on hard products.\n2. **Soft/Complex Edges (Hair, Fur, Trees):** Use the Selection Brush to get the main body, then click **Refine Edge**. Paint over the flyaway hairs, and the software will mathematically separate the tiny hair strands from the background.\n\n💡 **Pro Tip:** Always Output your selection as a 'Layer Mask'. This is non-destructive, meaning if the AI cut off part of an ear, you can easily paint it back later using white on the mask.",
+        chips: ["តើ Pen Tool ប្រើធ្វើអ្វី?", "តើ Masking ជាអ្វី?"],
+        chips_en: ["How to use the Pen Tool?", "What is Masking?"]
+    },
+    {
+        primaryKeys: ['ប្តូរវត្ថុទៅជាមាស', 'turn anything into gold effect'],
+        keys: ['មាស', 'ប្រាក់', 'gold', 'silver', 'metallic', 'មាសប្រាក់', 'ធ្វើឱ្យឡើងមាស'],
+        regex: ['មាស', 'ប្រាក់', 'gold', 'silver', 'metallic'],
+        answer: "បាទ **របៀបប្តូរវត្ថុណាមួយ (រូបចម្លាក់ ឡាន ឬសម្លៀកបំពាក់) ទៅជាមាស (Gold) ឬប្រាក់ (Silver)៖**\n\nលោហៈធាតុមានលក្ខណៈពិសេសគឺវាមានចំណាំងផ្លាតពន្លឺដិតខ្លាំង (High Contrast)។\n១. **Desaturate:** លុបពណ៌ដើមរបស់វត្ថុនោះចោលឱ្យទៅជាសខ្មៅ (Black & White)។\n២. **High Contrast Curves:** ប្រើ Curves ទាញរាងអក្សរ S ឱ្យកោងខ្លាំងមែនទែន ដើម្បីឱ្យចំណុចស កាន់តែសក្បុស និងចំណុចខ្មៅ កាន់តែងងឹត (នេះជាអ្វីដែលបង្កើតភាពរលោងរបស់លោហៈ)។\n៣. **Gradient Map:** \n   - **សម្រាប់ពណ៌មាស (Gold):** ចាក់ Gradient Map ពីឆ្វេងទៅស្តាំ៖ `ពណ៌ត្នោតចាស់ -> ពណ៌ទឹកក្រូច -> ពណ៌លឿង -> ពណ៌ស`។\n   - **សម្រាប់ពណ៌ប្រាក់ (Silver):** ចាក់ Gradient Map ពីឆ្វេងទៅស្តាំ៖ `ពណ៌ប្រផេះចាស់ -> ពណ៌ប្រផេះស្រាល -> ពណ៌ស`។",
+        answer_en: "**The professional workflow to turn any object (statues, cars, clothing) into realistic Gold or Silver:**\n\nMetallic surfaces are defined by their extreme, sharp contrast and reflections.\n1. **Desaturate:** Remove all original color to make the object pure Black & White.\n2. **High Contrast Curves:** Apply a severe 'S-Curve' adjustment. You want the bright highlights to clip to pure white, and the shadows to crush to deep black. This simulates a shiny, highly reflective metallic surface.\n3. **Gradient Map:** Apply a Gradient Map layer.\n   - **For Gold:** Map the gradient colors from `Dark Brown -> Orange -> Yellow -> Pure White`.\n   - **For Silver:** Map the gradient colors from `Dark Slate Grey -> Light Grey -> Pure White`.",
+        chips: ["តើ Blend Modes ដំណើរការយ៉ាងម៉េច?", "របៀបបង្កើត Text Effects ស្អាតៗ ✨"],
+        chips_en: ["How do Blend Modes work?", "How to create premium Text Effects ✨"]
+    },
+
+    // 2. COLOR GRADING (Graphic Design Focus)
     { 
         primaryKeys: ['របៀបកែពន្លឺ ក្នុង Affinity', 'how to edit light in affinity'],
         keys: ['edit light', 'កែពន្លឺ', 'brightness', 'exposure', 'លេងពន្លឺ'],
         regex: ['edit light', 'កែពន្លឺ', 'brightness', 'exposure', 'លេងពន្លឺ'],
         answer: "បាទ **ការកែពន្លឺ (Exposure/Lighting) គឺជាជំហានដំបូងបំផុតមុននឹងលេងពណ៌!**\n\n១. **Curves:** ប្រើខ្សែកោង Curves ដើម្បីទាញ Highlight (ពន្លឺខ្លាំង) ឡើងលើបន្តិច និងទាញ Shadows (ស្រមោល) ចុះក្រោមបន្តិច ដើម្បីបង្កើត S-Curve ដែលផ្តល់នូវ Contrast យ៉ាងស្រស់ស្អាត។\n២. **Shadows & Highlights:** បើរូបថតងងឹតមុខតួអង្គ សូមទាញ Shadows ឡើងបន្តិច។ បើមេឃសក្បុសពេក សូមទាញ Highlights ចុះ។", 
         answer_en: "**Correcting lighting is always the very first step before you touch any colors!**\n\n1. **Curves Tool:** Pull the top of the curve up slightly for brighter highlights, and pull the bottom down slightly for darker shadows. This creates the legendary 'S-Curve' for instant professional contrast.\n2. **Shadows & Highlights:** If your subject's face is dark, boost the 'Shadows' slider. If the sky is blown out, lower the 'Highlights' slider.",
-        chips: ["ពណ៌ Cinematic", "តើ Tone Curve ប្រើធ្វើអ្វី?"],
-        chips_en: ["Cinematic Color", "How to use Tone Curve?"]
+        chips: ["ពណ៌ Cinematic", "កាត់តរូបភាព (Photomanipulation)"],
+        chips_en: ["Cinematic Color", "Photomanipulation techniques"]
     },
     { 
         primaryKeys: ['ពណ៌ Cinematic', 'cinematic color'],
         keys: ['cinematic', 'teal and orange', 'ពណ៌កុន', 'color grading'],
         regex: ['cinematic', 'teal and orange', 'ពណ៌កុន', 'color grading'],
-        answer: "បាទ **ពណ៌បែប Cinematic (ពណ៌រោងកុន) ភាគច្រើនប្រើក្បួន Teal & Orange!**\n\nហេតុអ្វី? ព្រោះស្បែកមនុស្សយើងស្ថិតនៅក្នុងតំបន់ពណ៌ទឹកក្រូច (Orange) ចំណែកឯពណ៌ផ្ទុយរបស់វាគឺពណ៌ខៀវបៃតង (Teal)។ ពេលអ្នកដាក់ពណ៌ Teal ទៅក្នុងផ្ទៃខាងក្រោយ (Background/Shadows) វាធ្វើឱ្យតួអង្គលេចធ្លោខ្លាំង និងផ្តល់អារម្មណ៍ដូចកំពុងមើលកុនហូលីវូដ។\n\n💡 **របៀបធ្វើ៖** ប្រើ Color Grading (ឬ Color Balance) រួចរុញ Shadows ទៅរកពណ៌ខៀវ (Blue/Cyan) និងរុញ Highlights ទៅរកពណ៌លឿងទឹកក្រូច។", 
-        answer_en: "**The classic 'Cinematic Look' relies heavily on the Teal & Orange color harmony!**\n\nWhy? Because human skin tones naturally fall into the Orange spectrum. Its exact opposite on the color wheel is Teal/Cyan. Pushing Teal into the shadows creates massive color contrast that makes the subject pop off the screen like a Hollywood movie.\n\n💡 **How to do it:** Open the Color Grading (or Color Balance) tool. Push your Shadows toward Cyan/Blue, and your Highlights toward Orange/Yellow.",
-        chips: ["របៀបកែពន្លឺ ក្នុង Affinity", "តើ LUTs ជាអ្វី?"],
-        chips_en: ["How to edit light in Affinity", "What are LUTs?"]
+        answer: "បាទ **ពណ៌បែប Cinematic (ពណ៌រោងកុន) ភាគច្រើនប្រើក្បួន Teal & Orange!**\n\nហេតុអ្វី? ព្រោះស្បែកមនុស្សយើងស្ថិតនៅក្នុងតំបន់ពណ៌ទឹកក្រូច (Orange) ចំណែកឯពណ៌ផ្ទុយរបស់វាគឺពណ៌ខៀវបៃតង (Teal)។ ពេលអ្នកដាក់ពណ៌ Teal ទៅក្នុងផ្ទៃខាងក្រោយ (Background/Shadows) វាធ្វើឱ្យតួអង្គលេចធ្លោខ្លាំង និងផ្តល់អារម្មណ៍ដូចកំពុងមើលកុនហូលីវូដ។\n\n💡 **របៀបធ្វើ៖** ប្រើ Color Balance រួចរុញ Shadows ទៅរកពណ៌ខៀវ (Blue/Cyan) និងរុញ Highlights ទៅរកពណ៌លឿងទឹកក្រូច។", 
+        answer_en: "**The classic 'Cinematic Look' relies heavily on the Teal & Orange color harmony!**\n\nWhy? Because human skin tones naturally fall into the Orange spectrum. Its exact opposite on the color wheel is Teal/Cyan. Pushing Teal into the shadows creates massive color contrast that makes the subject pop off the screen like a Hollywood movie.\n\n💡 **How to do it:** Open the Color Balance tool. Push your Shadows toward Cyan/Blue, and your Highlights toward Orange/Yellow.",
+        chips: ["តើ Dodge និង Burn គឺជាអ្វី?", "Color Grading (Split Toning)"],
+        chips_en: ["What is Dodge and Burn?", "Split Toning Color Grading"]
     },
     {
         primaryKeys: ['Color Grading (Split Toning)', 'split toning color grading'],
         keys: ['color grading', 'split toning', 'លាយពណ៌រូប', 'កែពណ៌'],
         regex: ['color grading', 'split toning', 'កែពណ៌'],
-        answer: "បាទ **Color Grading (ឬការដាក់ពណ៌)** គឺជាការបន្ថែមសាច់ពណ៌ (Mood) ទៅឱ្យរូបភាពទាំងមូលបន្ទាប់ពីកែពន្លឺរួច!\n\nនៅក្នុងឧបករណ៍ Color Grading របស់ Lightroom/Affinity មានរង្វង់ពណ៌ ៣៖\n១. **Shadows (ស្រមោល):** ចាក់ពណ៌ចូលទៅក្នុងតំបន់ងងឹត (ឧ. ដាក់ពណ៌ខៀវងងឹត ឱ្យមើលទៅកាច ឬអាថ៌កំបាំង)។\n២. **Midtones (កណ្តាល):** គ្រប់គ្រងពណ៌ស្បែកមនុស្ស។\n៣. **Highlights (ពន្លឺ):** ចាក់ពណ៌ចូលទៅតំបន់ភ្លឺ (ឧ. ដាក់ពណ៌លឿងក្តៅ ដើម្បីឱ្យមើលទៅដូចពេលថ្ងៃរះ)។\n\n💡 **គន្លឹះអាជីព៖** ពណ៌បែបកុនល្បីៗ (Blockbusters) តែងតែរុញ Shadows ទៅពណ៌ Teal (ខៀវបៃតង) និង Highlights ទៅពណ៌ Orange (ទឹកក្រូច)។",
-        answer_en: "**Color Grading (Split Toning)** is injecting a specific color mood into your image after the basic exposure is fixed!\n\nIn the Color Grading panel of Lightroom/Affinity, you have 3 color wheels:\n1. **Shadows:** Injects color into the darkest areas (e.g., adding deep blue for a gritty, mysterious vibe).\n2. **Midtones:** Primarily affects human skin tones.\n3. **Highlights:** Injects color into the brightest areas (e.g., adding warm yellow for a sunrise effect).\n\n💡 **Pro Tip:** The famous Hollywood Blockbuster look is achieved by pushing the Shadows wheel towards Teal (Cyan/Blue) and the Highlights wheel towards Orange.",
-        chips: ["ពណ៌ Cinematic", "RAW vs JPEG"],
-        chips_en: ["Cinematic Color", "RAW vs JPEG photography"]
+        answer: "បាទ **Color Grading (ឬការដាក់ពណ៌)** គឺជាការបន្ថែមសាច់ពណ៌ (Mood) ទៅឱ្យរូបភាពទាំងមូលបន្ទាប់ពីកែពន្លឺរួច!\n\nនៅក្នុងឧបករណ៍ Color Balance / Split Toning របស់ Affinity អ្នកអាចបញ្ជាពណ៌បាន ៣ កម្រិត៖\n១. **Shadows (ស្រមោល):** ចាក់ពណ៌ចូលទៅក្នុងតំបន់ងងឹត (ឧ. ដាក់ពណ៌ខៀវងងឹត ឱ្យមើលទៅកាច ឬអាថ៌កំបាំង)។\n២. **Midtones (កណ្តាល):** គ្រប់គ្រងពណ៌ស្បែកមនុស្សទូទៅ។\n៣. **Highlights (ពន្លឺ):** ចាក់ពណ៌ចូលទៅតំបន់ភ្លឺ (ឧ. ដាក់ពណ៌លឿងក្តៅ ដើម្បីឱ្យមើលទៅដូចពេលថ្ងៃរះ)។",
+        answer_en: "**Color Grading (Split Toning)** is injecting a specific color mood into your image after the basic exposure is fixed!\n\nIn the Color Balance adjustments of Affinity, you can control 3 tonal ranges:\n1. **Shadows:** Injects color into the darkest areas (e.g., adding deep blue for a gritty, mysterious vibe).\n2. **Midtones:** Primarily affects human skin tones.\n3. **Highlights:** Injects color into the brightest areas (e.g., adding warm yellow for a sunrise effect).",
+        chips: ["ពណ៌ Cinematic", "របៀបបង្កើតស្រមោលឱ្យពិតៗ 👥"],
+        chips_en: ["Cinematic Color", "Mastering realistic shadows 👥"]
     },
-    {
-        primaryKeys: ['របៀបធ្វើស្បែករលោង (Frequency Separation)', 'frequency separation skin retouching'],
-        keys: ['frequency separation', 'ស្បែករលោង', 'កែមុខ', 'smooth skin', 'retouch skin', 'ធ្វើឱ្យស្បែករលោង'],
-        regex: ['frequency separation', 'ស្បែករលោង', 'smooth skin', 'retouch skin'],
-        answer: "បាទ **Frequency Separation** គឺជាក្បួនកែស្បែកមុខកម្រិតកំពូល ដែលអ្នកថតរូបទស្សនាវដ្តីប្រើ!\n\nវាបំបែករូបភាពជា ២ ស្រទាប់ (Layers) ផ្សេងគ្នា៖\n១. **ស្រទាប់ពណ៌ (Low Frequency):** មានតែពណ៌និងពន្លឺស្បែក។ អ្នកអាចយកជក់ទៅផាត់បំបាត់ភាពក្រហម ឬស្នាមជាំបាន ដោយមិនធ្វើឱ្យបាត់រន្ធញើស។\n២. **ស្រទាប់ផ្ទៃ (High Frequency):** មានតែរន្ធញើសនិងសាច់ក្រណាត់។ អ្នកអាចលុបមុន ឬស្នាមជ្រួញបានយ៉ាងស្អាត ដោយមិនធ្វើឱ្យខូចពណ៌ស្បែកទាល់តែសោះ។\n\n💡 **នៅក្នុង Affinity Photo:** អ្នកគ្រាន់តែចូលទៅកាន់ `Filters > Frequency Separation` គឺវាធ្វើរឿងនេះដោយស្វ័យប្រវត្តិ!",
-        answer_en: "**Frequency Separation** is the ultimate, high-end skin retouching secret used by magazine retouchers!\n\nIt mathematically splits your image into 2 separate layers:\n1. **Color/Tone Layer (Low Frequency):** Contains only the colors and lighting. You can paint away redness and uneven skin tones without destroying the skin's texture.\n2. **Texture Layer (High Frequency):** Contains only pores, wrinkles, and acne. You can use the healing brush to remove a pimple without ruining the underlying skin color.\n\n💡 **In Affinity Photo:** Simply go to `Filters > Frequency Separation` and it sets up the entire process for you instantly!",
-        chips: ["ឧបករណ៍កាត់តនិងកែសម្ផស្ស (Retouching Tools)", "កាត់តរូបភាព (Photomanipulation)"],
-        chips_en: ["Affinity retouching tools", "Photomanipulation techniques"]
-    },
-    {
-        primaryKeys: ['តើ LUTs ជាអ្វី?', 'what are luts lookup tables'],
-        keys: ['lut', 'luts', 'color lookup', 'ពណ៌កុន', 'filter'],
-        regex: ['lut', 'luts', 'color lookup'],
-        answer: "បាទ **LUTs (Color Look-Up Tables)** គឺជាអាវុធសម្ងាត់ដែលឧស្សាហកម្មភាពយន្តហូលីវូដប្រើដើម្បីកែពណ៌វីដេអូ!\n\nនៅក្នុង Affinity Photo អ្នកអាចអូសយកឯកសារ LUTs (ទម្រង់ .cube ឬ .3dl) មកដាក់លើរូបថតរបស់អ្នក។ វាជាការកែប្រែពណ៌ដ៏ស្មុគស្មាញ (ផ្លាស់ប្តូរទាំងកម្រិតពណ៌ ពន្លឺ និងស្រមោលក្នុងពេលតែមួយ) ត្រឹមតែមួយឃ្លីក (1-Click) ប៉ុណ្ណោះ។\n\n💡 **របៀបប្រើ៖** បង្កើត Adjustment Layer ដែលមានឈ្មោះថា **LUT** រួច Load ឯកសារ LUTs ដែលអ្នកទាញយកពីអ៊ីនធឺណិតចូល។ រូបថតធម្មតារបស់អ្នកនឹងប្រែក្លាយទៅជាមានសាច់ពណ៌បែប Cinematic ភ្លាមៗ។",
-        answer_en: "**LUTs (Color Look-Up Tables)** are the secret color-grading files used by Hollywood colorists to give movies their distinct vibe!\n\nIn Affinity Photo, you can apply LUT files (.cube or .3dl) to your photos. A LUT is essentially a hyper-advanced filter that mathematically remaps the colors, contrast, and shadows of your image in a single click.\n\n💡 **How to use them:** Create a **LUT** Adjustment Layer, then click 'Load' to select a cinematic LUT you downloaded from the internet. Your flat photo will instantly look like a movie still!",
-        chips: ["Color Grading (Split Toning)", "ពណ៌ Cinematic"],
-        chips_en: ["Split Toning Color Grading", "Cinematic Color"]
-    },
-    // 4. TROUBLESHOOTING
+
+    // 3. TROUBLESHOOTING & GENERAL EDITING CONCEPTS
     {
         primaryKeys: ['តើ Dodge និង Burn គឺជាអ្វី?', 'dodge and burn'],
         keys: ['dodge & burn', 'បង្កើតពន្លឺ', 'ធ្វើឱ្យរូបលេច'],
@@ -141,16 +106,16 @@ export const editingData = [
     {
         primaryKeys: ['ព្រិល Background', 'depth of field'],
         keys: ['depth of field', 'blur', 'bokeh', 'រូបព្រិលក្រោយ'],
-        regex: ['depth of field', 'blur', 'bokeh', 'រូបព្រិលក្រោយ', 'ព្រិល background'],
+        regex: ['depth of field', 'blur filter', 'bokeh', 'រូបព្រិលក្រោយ', 'ព្រិល background'],
         answer: "បាទ **Depth of Field (ទំហំច្បាស់)** គឺជាបច្ចេកទេសបំបែកវត្ថុគោលចេញពីផ្ទៃខាងក្រោយរញ៉េរញ៉ៃ។\n\nបើអ្នកចង់ឱ្យវត្ថុគោលលេចធ្លោខ្លាំង អ្នកត្រូវធ្វើឱ្យ Background ព្រិល (ហៅថា Blur ឬ Bokeh)។ នៅក្នុងកម្មវិធីរចនា អ្នកអាចប្រើ **Gaussian Blur** ឬ **Lens Blur** រួចលាយជាមួយ Layer Mask ដើម្បីបង្កើតអារម្មណ៍ដូចថតចេញពីកាមេរ៉ា Lens ធំអាជីពពិតៗ។ វាក៏ជួយបង្កើន Visual Hierarchy ផងដែរ!",
         answer_en: "**Depth of Field (DOF)** is a technique used to isolate your main subject from a distracting background.\n\nBy applying a realistic blur (Bokeh) to the background using **Lens Blur** or **Gaussian Blur** combined with a gradient mask, you instantly create a cinematic, professional-camera look. This forces the viewer's eye exactly onto what matters most!",
-        chips: ["របៀបបែងចែក Foreground និង Background 🏞️", "តើ Hierarchy ជាអ្វី?"],
+        chips: ["របៀបបែងចែក Foreground និង Background 🏞️", "អ្វីទៅជា Hierarchy?"],
         chips_en: ["Foreground vs Background Depth 🏞️", "Visual Hierarchy"]
     },
     {
         primaryKeys: ['រូបភាពខ្ញុំព្រិល', 'my image is blurry'],
-        keys: ['មិនច្បាស់', 'ព្រិល', 'បែកគ្រាប់', 'pixelated', 'blurry'],
-        regex: ['blurry', 'មិនច្បាស់', 'ព្រិល', 'បែកគ្រាប់', 'pixelated'],
+        keys: ['មិនច្បាស់', 'ព្រិល', 'បែកគ្រាប់', 'pixelated', 'blurry', 'រូបព្រិល', 'រូបមិនច្បាស់'],
+        regex: ['blurry', 'មិនច្បាស់', 'បែកគ្រាប់', 'pixelated'],
         answer: "បាទ តោះដោះស្រាយបញ្ហារូបព្រិលនេះ! តើអ្នកកំពុងរៀបចំរូបនេះសម្រាប់ **បោះពុម្ព (Print)** ឬសម្រាប់ផុសលើ **អេក្រង់ (Web/Social)**?",
         answer_en: "Let's fix that blurry image! Are you trying to prepare this image for **Physical Printing** or for a **Digital Screen (Web/Social)**?",
         chips: ["សម្រាប់បោះពុម្ព 🖨️", "សម្រាប់អេក្រង់ 💻"],

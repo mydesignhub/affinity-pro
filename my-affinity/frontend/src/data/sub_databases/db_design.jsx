@@ -64,9 +64,7 @@ export const designData = [
         chips_en: ["Rules of Logo Design", "Color Theory"]
     },
 
-    // ==========================================
-    // 2. COLOR THEORY MASTERCLASS (CANVA STANDARD)
-    // ==========================================
+    // 2. COLOR THEORY (CANVA STANDARD)
     {
         primaryKeys: ['ក្បួនផ្គូផ្គងពណ៌ (Color Harmonies)', 'color harmonies'],
         keys: ['color harmony', 'ក្បួនពណ៌', 'ច្បាប់ពណ៌', 'complementary', 'analogous', 'triadic', 'tetradic', 'monochromatic'],
@@ -196,17 +194,8 @@ export const designData = [
         regex: ['ទំហំ.*poster', 'poster size', 'ខ្នាត.*poster', 'social media size', 'layout'],
         answer: "បាទ **ទំហំ និងប្លង់ (Sizes & Layouts) របស់ Poster ត្រូវបានបែងចែកជា ២ ប្រភេទធំៗ៖**\n\n🖨️ **សម្រាប់បោះពុម្ព (Print):**\n- **A4 (210 x 297mm) / A3 (297 x 420mm):** ប្រើសម្រាប់បិទប្រកាសខ្នាតតូច តាមសាលា ឬហាង។\n- **24 x 36 អាញ់ (Inch):** ខ្នាតស្តង់ដារអន្តរជាតិសម្រាប់ Poster រឿងកុន (Movie Posters) ធំៗ។\n*(កុំភ្លេចប្រើពណ៌ CMYK និង 300 PPI!)*\n\n📱 **សម្រាប់បណ្តាញសង្គម (Digital - 72 PPI, RGB):**\n- **Instagram Portrait (1080 x 1350px):** ជាទំហំល្អបំផុតព្រោះវាពេញអេក្រង់ទូរស័ព្ទ។\n- **Facebook Square (1080 x 1080px):** ស្តង់ដារទូទៅ។\n- **Story/Reels (1080 x 1920px):** សម្រាប់វីដេអូខ្លី។\n\n📐 **ក្បួនរៀបប្លង់ (Layout Structures):**\n- **Z-Pattern:** ល្អសម្រាប់ Poster ដែលមានអក្សរនិងរូបភាពឆ្លាស់គ្នា (ភ្នែកអ្នកមើលរត់ជារាងអក្សរ Z)។\n- **Rule of Thirds:** ចែកប្លង់ជា៩ក្រឡា ដាក់តួអង្គនៅចំណុចប្រសព្វដើម្បីភាពទាក់ទាញ។",
         answer_en: "**Poster Sizes & Layouts are broken down into two main categories:**\n\n🖨️ **Physical Print Sizes:**\n- **A4 (210 x 297mm) / A3 (297 x 420mm):** Standard for local event flyers, shop windows, and schools.\n- **24 x 36 Inches:** The global standard for large, theatrical Movie Posters.\n*(Always use CMYK and 300 PPI for these!)*\n\n📱 **Digital Social Media (72 PPI, RGB):**\n- **Instagram Portrait (1080 x 1350px):** The absolute best size because it takes up the maximum vertical screen space on phones.\n- **Square (1080 x 1080px):** The universal safe standard.\n- **Story (1080 x 1920px):** For full-screen vertical viewing.\n\n📐 **Top Layout Structures:**\n- **Z-Pattern:** Best for posters with balanced text and images (the eye naturally traces a 'Z' from top left to bottom right).\n- **Rule of Thirds:** Placing your main subject off-center on the grid intersections for dynamic energy.",
-        chips: ["តើ Leading Lines ជាអ្វី?", "របៀបបែងចែក Foreground និង Background 🏞️"],
-        chips_en: ["What are Leading Lines?", "Foreground vs Background Depth 🏞️"]
-    },
-    {
-        primaryKeys: ['របៀបបែងចែក Foreground និង Background', 'foreground midground background'],
-        keys: ['foreground', 'ជម្រៅរូប', 'depth', 'ប្លង់មុខក្រោយ', 'midground', 'background'],
-        regex: ['foreground', 'ជម្រៅរូប', 'depth', 'ប្លង់មុខក្រោយ', 'midground', 'background'],
-        answer: "បាទ ដើម្បីធ្វើឱ្យរូបភាពមានជម្រៅ 3D ពិតៗ អ្នកត្រូវចេះបែងចែកប្លង់ជា ៣ កម្រិត (Depth of Field Arrangement)៖\n\n១. **Foreground (ខាងមុខបង្អស់):** ជារបស់ដែលនៅកៀកកាមេរ៉ាបំផុត (ឧ. ស្លឹកឈើ ថ្ម ឬផ្កាភ្លើង)។ ត្រូវដាក់វាឱ្យងងឹតបន្តិច និង **ព្រិលខ្លាំង (Heavy Blur)** ដើម្បីធ្វើជាស៊ុម (Framing)។\n២. **Midground (កណ្តាល):** គឺជាកន្លែងរបស់ **វត្ថុគោល (Main Subject)**។ កន្លែងនេះត្រូវតែ **ច្បាស់បំផុត ភ្លឺបំផុត និងលេចធ្លោជាងគេ**។\n៣. **Background (ផ្ទៃខាងក្រោយ):** ជារបស់នៅឆ្ងាយ (ឧ. ភ្នំ មេឃ)។ ត្រូវដាក់វាឱ្យ **ព្រិលបន្តិច និងស្លេកបន្តិច (Atmospheric Haze)** ព្រោះវត្ថុកាន់តែឆ្ងាយ ពន្លឺកាន់តែស្រអាប់។",
-        answer_en: "To create realistic 3D depth in a flat composition, you must arrange your layout into 3 distinct layers:\n\n1. **Foreground:** Elements extremely close to the camera lens (e.g., leaves, sparks, rocks). These should be slightly darker and have a **Heavy Blur** applied to them to act as a natural frame.\n2. **Midground:** This is where your **Main Subject** lives. This layer must be the **sharpest, brightest, and most highly contrasted** part of the image.\n3. **Background:** Distant elements (mountains, sky). These should be **slightly blurred and washed out (Atmospheric Haze)** because real-world physics dictates that objects further away lose contrast and saturation.",
-        chips: ["តើ Framing ជាអ្វី?", "ព្រិល Background (Depth of Field)"],
-        chips_en: ["What is Framing?", "Depth of Field (Blur)"]
+        chips: ["តើ Leading Lines ជាអ្វី?", "តើ Rule of Thirds គឺជាអ្វី?"],
+        chips_en: ["What are Leading Lines?", "What is the Rule of Thirds?"]
     },
     {
         primaryKeys: ['តើ Leading Lines ជាអ្វី?', 'leading lines'],
@@ -214,8 +203,8 @@ export const designData = [
         regex: ['leading line', 'បន្ទាត់នាំភ្នែក', 'composition line'],
         answer: "បាទ **Leading Lines (បន្ទាត់នាំភ្នែក)** គឺជាក្បួន Composition កម្រិតខ្ពស់មួយ។\n\nវាគឺជាការប្រើប្រាស់បន្ទាត់ដែលមានស្រាប់នៅក្នុងរូបភាព (ដូចជា ផ្លូវថ្នល់ ជួរឈើ ស្ពាន ឬទម្រង់អគារ) ដើម្បីចង្អុលនាំភ្នែករបស់អ្នកមើល ឱ្យរត់ត្រង់ទៅរកវត្ថុគោល (Main Subject) តែម្តង។ វាជួយឱ្យរូបភាពមានជម្រៅ និងកម្លាំងទាក់ទាញយ៉ាងខ្លាំង!",
         answer_en: "**Leading Lines** is a powerful advanced composition technique.\n\nIt involves using natural lines within an image (like roads, fences, tree lines, or architecture) to physically point the viewer's eye directly toward your main subject or focal point. It creates massive depth and visual interest!",
-        chips: ["របៀបបែងចែក Foreground និង Background 🏞️", "តើ Rule of Thirds គឺជាអ្វី?"],
-        chips_en: ["Foreground vs Background Depth 🏞️", "What is the Rule of Thirds?"]
+        chips: ["តើ Rule of Thirds គឺជាអ្វី?", "តើ Framing ជាអ្វី?"],
+        chips_en: ["What is the Rule of Thirds?", "What is Framing?"]
     },
     {
         primaryKeys: ['តើ Framing ជាអ្វី?', 'framing composition'],

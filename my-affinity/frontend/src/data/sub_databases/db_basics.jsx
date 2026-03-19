@@ -13,8 +13,8 @@ export const basicsData = [
         primaryKeys: ['ហត់', 'tired'],
         keys: ['stress', 'ស្ត្រេស', 'ពិបាក', 'ឈឺក្បាល', 'stressed', 'exhausted'],
         regex: ['tired', 'stress', 'ហត់', 'ស្ត្រេស', 'ឈឺក្បាល', 'ពិបាក', 'exhausted'],
-        answer: "បាទ អូ! សម្រាកសិនទៅបង! ☕ ការសម្លឹងអេក្រង់យូរអាចធ្វើឱ្យស្ត្រេសនិងឈឺភ្នែក ថែមទាំងគិតអ្វីលែងចេញទៀត (Creative Block)។ \n\n💡 **គន្លឹះអាជីព (20-20-20 Rule)៖** រៀងរាល់ ២០នាទី មើលទៅកន្លែងឆ្ងាយ២០ហ្វីត រយៈពេល២០វិនាទី។ \n\nទៅផឹកទឹក និងស្តាប់ចម្រៀងបន្តិចទៅ ចាំមក Design បន្ត! ខ្ញុំរង់ចាំនៅទីនេះជានិច្ច! 💙",
-        answer_en: "Oh no, please take a break! ☕ Staring at a canvas for too long causes 'Creative Block' and terrible eye strain. \n\n💡 **Pro Tip (The 20-20-20 Rule):** Every 20 mins, look 20 feet away for 20 seconds. \n\nGo grab some water and listen to your favorite song. Your designs will be waiting for you when you get back! 💙",
+        answer: "បាទ អូ! សម្រាកសិនទៅបង! ☕ ការសម្លឹងអេក្រង់ iPad យូរអាចធ្វើឱ្យស្ត្រេសនិងឈឺភ្នែក ថែមទាំងគិតអ្វីលែងចេញទៀត (Creative Block)។ \n\n💡 **គន្លឹះអាជីព (20-20-20 Rule)៖** រៀងរាល់ ២០នាទី មើលទៅកន្លែងឆ្ងាយ២០ហ្វីត រយៈពេល២០វិនាទី។ \n\nទៅផឹកទឹក និងស្តាប់ចម្រៀងបន្តិចទៅ ចាំមក Design បន្ត! ខ្ញុំរង់ចាំនៅទីនេះជានិច្ច! 💙",
+        answer_en: "Oh no, please take a break! ☕ Staring at your iPad for too long causes 'Creative Block' and terrible eye strain. \n\n💡 **Pro Tip (The 20-20-20 Rule):** Every 20 mins, look 20 feet away for 20 seconds. \n\nGo grab some water and listen to your favorite song. Your designs will be waiting for you when you get back! 💙",
         chips: ["ចង់ស្តាប់រឿងកំប្លែង 😆", "របៀបរកគំនិត Design 💡"],
         chips_en: ["Tell me a joke 😆", "How to find inspiration 💡"]
     },
@@ -40,8 +40,8 @@ export const basicsData = [
         primaryKeys: ['របៀបរកគំនិត Design 💡', 'how to find inspiration'],
         keys: ['រកគំនិត', 'គិតអត់ចេញ', 'inspiration', 'idea', 'creative block', 'រក idea'],
         regex: ['រកគំនិត', 'គិតអត់ចេញ', 'inspiration', 'idea', 'creative block'],
-        answer: "បាទ អាការៈគិតអត់ចេញ (Creative Block) កើតមានលើ Designer គ្រប់រូប! តោះសាកល្បងវិធីទាំងនេះ៖\n\n១. **មើលស្នាដៃគេ (Moodboard):** ចូលមើល Pinterest, Behance, ឬ Dribbble ដើម្បីប្រមូលគំនិតពណ៌ និងប្លង់។\n២. **ដើរចេញពីអេក្រង់:** បិទកុំព្យូទ័រ ហើយទៅដើរលេង ឬផឹកកាហ្វេ។ ខួរក្បាលត្រូវការពេលសម្រាកដើម្បីបង្កើតគំនិតថ្មី។\n៣. **ចម្លងដើម្បីរៀន:** យករូប Poster ស្អាតមួយមកគូរតាម ១០០% (គ្រាន់តែសម្រាប់ហាត់ដៃ ហាមផុស) ដើម្បីស្វែងយល់ពីរបៀបដែលគេរៀបប្លង់។\n\n💡 **គន្លឹះអាជីព៖** កុំរង់ចាំទាល់តែមានអារម្មណ៍ទើបធ្វើការ! ចាប់ផ្តើមគូសវាស (Sketch) រាងអាក្រក់ៗសិន នោះគំនិតនឹងហូរមកតាមក្រោយ។",
-        answer_en: "Hitting a Creative Block is completely normal for every designer! Try these steps:\n\n1. **Build a Moodboard:** Browse Pinterest, Behance, or Dribbble to collect color palettes and layout ideas.\n2. **Step Away:** Close your laptop and go for a walk. Your brain needs rest to make new creative connections.\n3. **Copy to Learn:** Find a poster you love and recreate it 100% (for practice only, don't publish it!). It helps you understand their thought process.\n\n💡 **Pro Tip:** Don't wait for inspiration to strike! Start sketching ugly wireframes first; the inspiration will follow the action.",
+        answer: "បាទ អាការៈគិតអត់ចេញ (Creative Block) កើតមានលើ Designer គ្រប់រូប! តោះសាកល្បងវិធីទាំងនេះ៖\n\n១. **មើលស្នាដៃគេ (Moodboard):** ចូលមើល Pinterest, Behance, ឬ Dribbble ដើម្បីប្រមូលគំនិតពណ៌ និងប្លង់។\n២. **ដើរចេញពីអេក្រង់:** បិទ iPad ហើយទៅដើរលេង ឬផឹកកាហ្វេ។ ខួរក្បាលត្រូវការពេលសម្រាកដើម្បីបង្កើតគំនិតថ្មី។\n៣. **ចម្លងដើម្បីរៀន:** យករូប Poster ស្អាតមួយមកគូរតាម ១០០% (គ្រាន់តែសម្រាប់ហាត់ដៃ ហាមផុស) ដើម្បីស្វែងយល់ពីរបៀបដែលគេរៀបប្លង់។\n\n💡 **គន្លឹះអាជីព៖** កុំរង់ចាំទាល់តែមានអារម្មណ៍ទើបធ្វើការ! ចាប់ផ្តើមគូសវាស (Sketch) រាងអាក្រក់ៗសិន នោះគំនិតនឹងហូរមកតាមក្រោយ។",
+        answer_en: "Hitting a Creative Block is completely normal for every designer! Try these steps:\n\n1. **Build a Moodboard:** Browse Pinterest, Behance, or Dribbble to collect color palettes and layout ideas.\n2. **Step Away:** Close your iPad and go for a walk. Your brain needs rest to make new creative connections.\n3. **Copy to Learn:** Find a poster you love and recreate it 100% (for practice only, don't publish it!). It helps you understand their thought process.\n\n💡 **Pro Tip:** Don't wait for inspiration to strike! Start sketching ugly wireframes first; the inspiration will follow the action.",
         chips: ["អ្វីទៅជា Typography?", "របៀបរចនា Poster ឱ្យទាក់ទាញ? 🖼️"],
         chips_en: ["What is Typography?", "How to design an effective Poster? 🖼️"]
     },
@@ -60,10 +60,10 @@ export const basicsData = [
         primaryKeys: ['សួស្តី', 'hello'],
         keys: ['hi', 'hey', 'សួរស្ដី', 'សុខសប្បាយ', 'how are you', 'yo', 'sup', 'ហេលឡូ', 'អាឡូ', 'alo', 'helo', 'hello'],
         regex: ['^(hi|hello|hey|yo|sup|សួស្តី|សួរស្ដី|ហេលឡូ|អាឡូ|helo|alo)', 'សុខសប្បាយ', 'how are you'],
-        answer: "បាទ សួស្តីបង! 👋 ខ្ញុំគឺជា AI ជំនាញខាង Graphic Design និង Photo Editing។ តើបងមានសំណួរអ្វីទាក់ទងនឹង Design, កម្មវិធីរចនា (Affinity / Lightroom), ឬការរៀបប្លង់ដែរ? 🎨✨",
-        answer_en: "Hello there! 👋 I am your Graphic Design and Photo Editing AI expert. We can chat about Affinity workflows, Lightroom color grading, layout structures, or freelance tips! What's on your mind today? 🎨✨",
-        chips: ["តិចនិកប្រើ Affinity Personas 🚀", "អ្វីទៅជា Histogram ក្នុង Lightroom?"],
-        chips_en: ["Tips for Affinity Personas 🚀", "What is a Histogram in Lightroom?"]
+        answer: "បាទ សួស្តីបង! 👋 ខ្ញុំគឺជា AI ជំនាញខាង Graphic Design។ តើបងមានសំណួរអ្វីទាក់ទងនឹង Design, កម្មវិធីរចនា (ជាពិសេស Affinity លើ iPad), ឬការរៀបប្លង់ដែរ? 🎨✨",
+        answer_en: "Hello there! 👋 I am your Graphic Design AI expert. We can chat about Affinity workflows on iPad, Vector editing, layout structures, or freelance tips! What's on your mind today? 🎨✨",
+        chips: ["របៀបប្រើ Affinity លើ iPad 📱", "តើ គោលការណ៍រចនា មានអ្វីខ្លះ?"],
+        chips_en: ["Affinity iPad Gestures 📱", "Core Design Principles?"]
     },
     {
         primaryKeys: ['យល់ព្រម', 'okay'],
@@ -80,8 +80,8 @@ export const basicsData = [
         regex: ['(sorry|sory|សុំទោស|សូមទោស|សូរី)'],
         answer: "បាទ មិនអីទេបង! ខ្ញុំនៅទីនេះជានិច្ច។ តើមានបញ្ហា Design ណាមួយដែលខ្ញុំអាចជួយដោះស្រាយបានទេ?",
         answer_en: "No worries at all! Is there any design problem I can help you solve right now?",
-        chips: ["របៀបប្រើ Affinity លើ iPad 📱", "ការកែពណ៌ RAW"],
-        chips_en: ["Affinity iPad Gestures 📱", "RAW Color Grading"]
+        chips: ["របៀបប្រើ Affinity លើ iPad 📱", "Affinity Command Controller 🎛️"],
+        chips_en: ["Affinity iPad Gestures 📱", "Affinity Command Controller 🎛️"]
     },
     {
         primaryKeys: ['អរគុណ', 'thanks'],
@@ -104,8 +104,8 @@ export const basicsData = [
         uiElement: 'color_palette',
         colors: [], 
         actionButton: { label: "បើកឧបករណ៍ពណ៌ 🎨", label_en: "Open Color Tools 🎨", actionToTrigger: "tools", subTab: "color" },
-        chips: ["អត្ថន័យនៃពណ៌ (Color Psychology)", "ពណ៌ Cinematic"],
-        chips_en: ["Color Psychology", "Cinematic Color"]
+        chips: ["អត្ថន័យនៃពណ៌ (Color Psychology)", "ក្បួនផ្គូផ្គងពណ៌ (Color Harmonies)"],
+        chips_en: ["Color Psychology", "Color Harmonies"]
     },
     {
         primaryKeys: ['ឧទាហរណ៍ពណ៌ផ្ទុយ', 'complementary example'],
@@ -116,8 +116,8 @@ export const basicsData = [
         uiElement: 'color_palette',
         colors: ['#0055FF', '#FF8800'],
         actionButton: { label: "សាកល្បង HSL Tools 🎨", label_en: "Try the HSL Tools 🎨", actionToTrigger: "tools", subTab: "color" },
-        chips: ["ពណ៌ Cinematic", "ពណ៌ចៃដន្យ 🎨"],
-        chips_en: ["Cinematic Color", "Random Color 🎨"]
+        chips: ["ពណ៌ចៃដន្យ 🎨", "តើ HEX Code គឺជាអ្វី?"],
+        chips_en: ["Random Color 🎨", "What is a HEX Code?"]
     },
     {
         primaryKeys: ['ចង់ធ្វើតេស្ត', 'take a quiz'],
@@ -131,8 +131,8 @@ export const basicsData = [
     },
     {
         primaryKeys: ['ឧបករណ៍', 'tools'],
-        keys: ['layout generator', 'ប្លង់', 'tool', 'ឧបករណ៍ជំនួយ'],
-        regex: ['tool', 'ឧបករណ៍', 'layout generator', 'ប្លង់'],
+        keys: ['layout generator', 'បើកប្លង់', 'បើកឧបករណ៍', 'ឧបករណ៍ជំនួយ', 'open tools'],
+        regex: ['ឧបករណ៍ជំនួយ', 'layout generator', 'open tools'],
         answer: "បាទ ខ្ញុំមានឧបករណ៍ពិសេសសម្រាប់អ្នក! អ្នកអាចបង្កើតពណ៌ ឬមើលគំរូប្លង់ខ្នាតស្តង់ដារបាននៅទីនេះ៖",
         answer_en: "I have some special tools for you! You can generate colors or view standard layout grids here:",
         actionButton: { label: "បើកឧបករណ៍ជំនួយ 🛠️", label_en: "Open Design Tools 🛠️", actionToTrigger: "tools" },

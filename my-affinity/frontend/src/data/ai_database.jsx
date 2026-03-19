@@ -5,7 +5,7 @@
 // 🌟 Import Sub-Databases (FULLY DE-DUPLICATED)
 import { basicsData } from './sub_databases/db_basics.jsx';
 import { designData } from './sub_databases/db_design.jsx';
-import { affinityData } from './sub_databases/db_affinity.jsx';
+import { affinityIpadData } from './sub_databases/db_affinity_ipad.jsx'; // Changed Name
 import { editingData } from './sub_databases/db_editing.jsx';
 
 export const SUGGESTED_QUESTIONS = [
@@ -42,12 +42,12 @@ export const SUGGESTED_QUESTIONS_EN = [
 
 export const GREETINGS = [
     "បាទ សួស្ដី! 👋 ខ្ញុំគឺ **Design Master** ជាជំនួយការផ្ទាល់ខ្លួនដ៏រីករាយរបស់អ្នក។ តើថ្ងៃនេះអ្នកចង់រៀនពីអ្វីដែរ? ខ្ញុំត្រៀមខ្លួនរួចរាល់ហើយ! 🎨✨",
-    "បាទ ស្វាគមន៍មកកាន់ពិភពសិល្បៈ! 🎨 ខ្ញុំនៅទីនេះដើម្បីជួយបង្រៀនអ្នកពីការ Design, ការរៀបចំគំនិត និងការប្រើប្រាស់កម្មវិធី Affinity។ តើមានអ្វីឱ្យខ្ញុំជួយទេថ្ងៃនេះ?"
+    "បាទ ស្វាគមន៍មកកាន់ពិភពសិល្បៈ! 🎨 ខ្ញុំនៅទីនេះដើម្បីជួយបង្រៀនអ្នកពីការ Design, ការរៀបចំគំនិត និងការប្រើប្រាស់កម្មវិធី Affinity លើ iPad។ តើមានអ្វីឱ្យខ្ញុំជួយទេថ្ងៃនេះ?"
 ];
 
 export const GREETINGS_EN = [
     "Hello! 👋 I am **Design Master**, your friendly personal Graphic Design AI assistant. What are we creating today? I'm ready when you are! 🎨✨",
-    "Welcome to the creative zone! 🎨 I am here to help you master design theory, Affinity software, and layouts. How can I brighten your day?"
+    "Welcome to the creative zone! 🎨 I am here to help you master design theory, layout, and Affinity iPad workflows. How can I brighten your day?"
 ];
 
 export const SMART_GREETINGS = ["បាទ សួស្តីម្តងទៀត! 👋 ថ្ងៃមុនយើងបានជជែកគ្នាពី **{topic}**។ តើថ្ងៃនេះចង់រៀនពីវាបន្ត ឬចង់ប្តូរប្រធានបទថ្មី? 😊"];
@@ -94,6 +94,6 @@ export const QUIZ_INVITATIONS_EN = [
 export const KNOWLEDGE_BASE = [
     ...basicsData,
     ...designData,
-    ...affinityData,
+    ...affinityIpadData,
     ...editingData
 ];
