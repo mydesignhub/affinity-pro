@@ -1,0 +1,142 @@
+export const basicsData = [
+    // 1. FUN, EMOTIONAL & CASUAL CHAT
+    {
+        primaryKeys: ['កំប្លែង', 'joke'],
+        keys: ['funny', 'សើច', 'ធុញ', 'tell me a joke', 'make me laugh'],
+        regex: ['joke', 'funny', 'កំប្លែង', 'សើច', 'ធុញ'],
+        answer: "បាទ ហាហា! ចង់ស្តាប់រឿងកំប្លែងមែនទេ? \n\nតើអ្នកដឹងទេថាហេតុអ្វីបានជា Graphic Designer មិនសូវចេះលេងលាក់កន្សែង? \nព្រោះពួកគេពូកែលាក់តែ Layer (Hide Layers) តើ! 😆 រួចចុះអ្នកវិញ តើចង់លាក់អីគេក្នុងកម្មវិធីថ្ងៃនេះ?",
+        answer_en: "Haha! You want a design joke? \n\nWhy did the graphic designer break up with their partner? Because they had 'no chemistry' and way too much 'contrast'! 😆 Feeling better? What are we designing today?",
+        chips: ["ពណ៌ចៃដន្យ 🎨", "អ្វីទៅជា Typography?"],
+        chips_en: ["Random Color 🎨", "What is Typography?"]
+    },
+    {
+        primaryKeys: ['ហត់', 'tired'],
+        keys: ['stress', 'ស្ត្រេស', 'ពិបាក', 'ឈឺក្បាល', 'stressed', 'exhausted'],
+        regex: ['tired', 'stress', 'ហត់', 'ស្ត្រេស', 'ឈឺក្បាល', 'ពិបាក', 'exhausted'],
+        answer: "បាទ អូ! សម្រាកសិនទៅបង! ☕ ការសម្លឹងអេក្រង់យូរអាចធ្វើឱ្យស្ត្រេសនិងឈឺភ្នែក ថែមទាំងគិតអ្វីលែងចេញទៀត (Creative Block)។ \n\n💡 **គន្លឹះអាជីព (20-20-20 Rule)៖** រៀងរាល់ ២០នាទី មើលទៅកន្លែងឆ្ងាយ២០ហ្វីត រយៈពេល២០វិនាទី។ \n\nទៅផឹកទឹក និងស្តាប់ចម្រៀងបន្តិចទៅ ចាំមក Design បន្ត! ខ្ញុំរង់ចាំនៅទីនេះជានិច្ច! 💙",
+        answer_en: "Oh no, please take a break! ☕ Staring at a canvas for too long causes 'Creative Block' and terrible eye strain. \n\n💡 **Pro Tip (The 20-20-20 Rule):** Every 20 mins, look 20 feet away for 20 seconds. \n\nGo grab some water and listen to your favorite song. Your designs will be waiting for you when you get back! 💙",
+        chips: ["ចង់ស្តាប់រឿងកំប្លែង 😆", "របៀបរកគំនិត Design 💡"],
+        chips_en: ["Tell me a joke 😆", "How to find inspiration 💡"]
+    },
+    {
+        primaryKeys: ['អរុណសួស្តី', 'good morning'],
+        keys: ['morning', 'night', 'រាត្រីសួស្តី', 'ទិវាសួស្តី', 'goodnight', 'afternoon'],
+        regex: ['morning', 'night', 'afternoon', 'អរុណសួស្តី', 'រាត្រីសួស្តី', 'ទិវាសួស្តី'],
+        answer: "បាទ សួស្តី! 🌞 រាល់ពេលចាប់ផ្តើមថ្ងៃថ្មី គឺជាផ្ទាំងក្រណាត់ទទេ (Blank Canvas) សម្រាប់អ្នកបង្កើតស្នាដៃថ្មីៗជានិច្ច។ តើថ្ងៃនេះមានគម្រោងចង់រៀន ឬ Design អ្វីខ្លះដែរ? ខ្ញុំត្រៀមខ្លួនរួចហើយ! ✨",
+        answer_en: "Hello! 🌞 Every new day is a blank canvas ready for your creativity. What amazing thing are we going to design today? I'm pumped! ✨",
+        chips: ["តើ គោលការណ៍រចនា មានអ្វីខ្លះ?", "ចង់ធ្វើតេស្ត 🎯"],
+        chips_en: ["Core Design Principles?", "Take a Quiz 🎯"]
+    },
+    {
+        primaryKeys: ['ឆ្លាត', 'smart'],
+        keys: ['ពូកែ', 'love you', 'who are you', 'ai', 'robot', 'អ្នកណាគេ', 'awesome', 'great', 'ល្អណាស់'],
+        regex: ['love you', 'smart', 'who are you', 'ai', 'robot', 'ឆ្លាត', 'ពូកែ', 'អ្នកណាគេ', 'awesome', 'great', 'ល្អណាស់'],
+        answer: "បាទ អូហូ! អរគុណច្រើន! 🥰 ខ្ញុំគ្រាន់តែជាជំនួយការ AI ផ្នែក Graphic Design ម្នាក់ដែលចូលចិត្តពណ៌និងសិល្បៈប៉ុណ្ណោះ។ តែអ្នកទើបជាអ្នករចនា (Designer) ដ៏ពិតប្រាកដ! 👩‍🎨👨‍🎨 តោះ ចង់រៀនគន្លឹះអ្វីថ្មីទេថ្ងៃនេះ?",
+        answer_en: "Aww, you're making me blush! 🥰 I'm just a friendly Graphic Design AI who loves colors and pixels, but YOU are the real artist here! 👩‍🎨👨‍🎨 Ready to learn a cool new trick today?",
+        chips: ["របៀបរចនា Poster ឱ្យទាក់ទាញ? 🖼️", "Color Theory"],
+        chips_en: ["How to design an effective Poster? 🖼️", "Color Theory"]
+    },
+    {
+        primaryKeys: ['របៀបរកគំនិត Design 💡', 'how to find inspiration'],
+        keys: ['រកគំនិត', 'គិតអត់ចេញ', 'inspiration', 'idea', 'creative block', 'រក idea'],
+        regex: ['រកគំនិត', 'គិតអត់ចេញ', 'inspiration', 'idea', 'creative block'],
+        answer: "បាទ អាការៈគិតអត់ចេញ (Creative Block) កើតមានលើ Designer គ្រប់រូប! តោះសាកល្បងវិធីទាំងនេះ៖\n\n១. **មើលស្នាដៃគេ (Moodboard):** ចូលមើល Pinterest, Behance, ឬ Dribbble ដើម្បីប្រមូលគំនិតពណ៌ និងប្លង់។\n២. **ដើរចេញពីអេក្រង់:** បិទកុំព្យូទ័រ ហើយទៅដើរលេង ឬផឹកកាហ្វេ។ ខួរក្បាលត្រូវការពេលសម្រាកដើម្បីបង្កើតគំនិតថ្មី។\n៣. **ចម្លងដើម្បីរៀន:** យករូប Poster ស្អាតមួយមកគូរតាម ១០០% (គ្រាន់តែសម្រាប់ហាត់ដៃ ហាមផុស) ដើម្បីស្វែងយល់ពីរបៀបដែលគេរៀបប្លង់។\n\n💡 **គន្លឹះអាជីព៖** កុំរង់ចាំទាល់តែមានអារម្មណ៍ទើបធ្វើការ! ចាប់ផ្តើមគូសវាស (Sketch) រាងអាក្រក់ៗសិន នោះគំនិតនឹងហូរមកតាមក្រោយ។",
+        answer_en: "Hitting a Creative Block is completely normal for every designer! Try these steps:\n\n1. **Build a Moodboard:** Browse Pinterest, Behance, or Dribbble to collect color palettes and layout ideas.\n2. **Step Away:** Close your laptop and go for a walk. Your brain needs rest to make new creative connections.\n3. **Copy to Learn:** Find a poster you love and recreate it 100% (for practice only, don't publish it!). It helps you understand their thought process.\n\n💡 **Pro Tip:** Don't wait for inspiration to strike! Start sketching ugly wireframes first; the inspiration will follow the action.",
+        chips: ["អ្វីទៅជា Typography?", "របៀបរចនា Poster ឱ្យទាក់ទាញ? 🖼️"],
+        chips_en: ["What is Typography?", "How to design an effective Poster? 🖼️"]
+    },
+    {
+        primaryKeys: ['ភាសាអង់គ្លេសសម្រាប់ Design', 'english for design'],
+        keys: ['រៀនអង់គ្លេស', 'ពាក្យបច្ចេកទេស', 'english terms', 'design terms'],
+        regex: ['អង់គ្លេស', 'ពាក្យបច្ចេកទេស', 'english term'],
+        answer: "បាទ ការចេះពាក្យបច្ចេកទេសភាសាអង់គ្លេស ជួយឱ្យអ្នកប្រើកម្មវិធីនិងរៀនតាម YouTube បានលឿនមែនទែន!\n\nពាក្យសំខាន់ៗដែលត្រូវដឹង៖\n- **Hue / Saturation:** ពណ៌ដើម / កម្រិតឆើតនៃពណ៌។\n- **Opacity:** ភាពថ្លា (មើលធ្លុះ)។\n- **Alignment:** ការតម្រឹមឱ្យស្មើគ្នា។\n- **Resolution:** កម្រិតភាពច្បាស់នៃរូបភាព។\n\n💡 **គន្លឹះអាជីព៖** អ្នកអាចប្តូរភាសា App នេះទៅជាភាសាអង់គ្លេស (ប៊ូតុងខាងលើ) ដើម្បីអនុវត្តការអាន និងបង្កើនជំនាញភាសាអង់គ្លេសរបស់អ្នកបណ្តើរៗ ព្រោះពាក្យ UI/UX ភាគច្រើនប្រើភាសាអង់គ្លេសទូទាំងពិភពលោក!",
+        answer_en: "Knowing the English technical terms is crucial for following tutorials and mastering global UI/UX standards!\n\nEssential Terms:\n- **Hue / Saturation:** The core color / The intensity of the color.\n- **Opacity:** How transparent an object is.\n- **Alignment:** Lining up objects perfectly.\n- **Resolution:** The pixel density and crispness of an image.\n\n💡 **Pro Tip:** Try listening to English design tutorials with subtitles. It's one of the best ways to improve both your listening skills and your design knowledge simultaneously!",
+        chips: ["តើ HSL គឺជាអ្វី?", "Margin និង Padding ខុសគ្នាម៉េច?"],
+        chips_en: ["What is HSL?", "Margin vs Padding?"]
+    },
+    
+    // 2. BASIC CONVERSATION CATCH-ALL
+    {
+        primaryKeys: ['សួស្តី', 'hello'],
+        keys: ['hi', 'hey', 'សួរស្ដី', 'សុខសប្បាយ', 'how are you', 'yo', 'sup', 'ហេលឡូ', 'អាឡូ', 'alo', 'helo', 'hello'],
+        regex: ['^(hi|hello|hey|yo|sup|សួស្តី|សួរស្ដី|ហេលឡូ|អាឡូ|helo|alo)', 'សុខសប្បាយ', 'how are you'],
+        answer: "បាទ សួស្តីបង! 👋 ខ្ញុំគឺជា AI ជំនាញខាង Graphic Design និង Photo Editing។ តើបងមានសំណួរអ្វីទាក់ទងនឹង Design, កម្មវិធីរចនា (Affinity / Lightroom), ឬការរៀបប្លង់ដែរ? 🎨✨",
+        answer_en: "Hello there! 👋 I am your Graphic Design and Photo Editing AI expert. We can chat about Affinity workflows, Lightroom color grading, layout structures, or freelance tips! What's on your mind today? 🎨✨",
+        chips: ["តិចនិកប្រើ Affinity Personas 🚀", "អ្វីទៅជា Histogram ក្នុង Lightroom?"],
+        chips_en: ["Tips for Affinity Personas 🚀", "What is a Histogram in Lightroom?"]
+    },
+    {
+        primaryKeys: ['យល់ព្រម', 'okay'],
+        keys: ['ok', 'okay', 'អូខេ', 'អូខេស', 'បាទ', 'ចាស', 'យល់ហើយ', 'អូខេចា', 'អូខេបាទ'],
+        regex: ['^(ok|okay|អូខេ|អូខេស|បាទ|ចាស|យល់ហើយ)'],
+        answer: "បាទ តើមានអ្វីឱ្យខ្ញុំជួយបន្តទៀតទេ? អ្នកអាចសួរខ្ញុំពីរបៀបកាត់តរូបភាព (Photomanipulation) ឬទ្រឹស្តីរចនាផ្សេងៗបាន។ ✨",
+        answer_en: "Great! Let me know if you want to explore any other design topics like realistic photomanipulation. ✨",
+        chips: ["កាត់តរូបភាព (Photomanipulation)", "តើទំហំ Poster ស្តង់ដារមានអ្វីខ្លះ? 📏"],
+        chips_en: ["Photomanipulation techniques", "Standard Poster Sizes & Layouts? 📏"]
+    },
+    {
+        primaryKeys: ['សុំទោស', 'sorry'],
+        keys: ['សូរី', 'sorry', 'sory', 'សូមទោស'],
+        regex: ['(sorry|sory|សុំទោស|សូមទោស|សូរី)'],
+        answer: "បាទ មិនអីទេបង! ខ្ញុំនៅទីនេះជានិច្ច។ តើមានបញ្ហា Design ណាមួយដែលខ្ញុំអាចជួយដោះស្រាយបានទេ?",
+        answer_en: "No worries at all! Is there any design problem I can help you solve right now?",
+        chips: ["របៀបប្រើ Affinity លើ iPad 📱", "ការកែពណ៌ RAW"],
+        chips_en: ["Affinity iPad Gestures 📱", "RAW Color Grading"]
+    },
+    {
+        primaryKeys: ['អរគុណ', 'thanks'],
+        keys: ['thank you', 'អគុណ', 'អរគុណច្រើន'],
+        regex: ['(thanks|thank you|អរគុណ|អគុណ)'],
+        answer: "បាទ ដោយក្តីរីករាយបំផុតបង! 😊 បើមានចម្ងល់រឿង Design លើកក្រោយ កុំភ្លេចសួរខ្ញុំណា៎ ខ្ញុំនៅទីនេះរង់ចាំជួយជានិច្ច! 🚀",
+        answer_en: "You are very welcome! 😊 Whenever you have another design question or need layout feedback, I'll be right here waiting to help! 🚀",
+        chips: ["របៀបលក់ Digital Assets 💰", "Color Theory"],
+        chips_en: ["How to sell Digital Assets? 💰", "Color Theory"]
+    },
+    
+    // 3. DYNAMIC UI GENERATORS
+    {
+        primaryKeys: ['ពណ៌ចៃដន្យ', 'random color'],
+        keys: ['color generator', 'generate color', 'give me a color'],
+        regex: ['(generate|random|give me a).*color', 'ពណ៌ចៃដន្យ', 'color generator', 'random color'],
+        answer: "បាទ នេះគឺជាពណ៌ចៃដន្យដ៏ស្រស់ស្អាតមួយ (**{hex}**) សម្រាប់គម្រោងបន្ទាប់របស់អ្នក។ 🎨\n\n💡 **អនុសាសន៍:** ខ្ញុំសូមណែនាំឱ្យអ្នកចុចប៊ូតុងខាងក្រោម ដើម្បីប្រើប្រាស់ **ឧបករណ៍ពណ៌ (Color Generator)** របស់យើង។ វានឹងជួយស្វែងរកក្បួនផ្គូផ្គងពណ៌ (Color Harmonies) ដែលស៊ីនឹងពណ៌នេះបានយ៉ាងល្អឥតខ្ចោះ!",
+        answer_en: "Here is a beautiful random color (**{hex}**) for your next project! 🎨\n\n💡 **Recommendation:** I highly recommend clicking the button below to use our built-in **Color Generator Tool**. It will help you instantly find the perfect professional color harmonies to match this exact hex code!",
+        dynamicColor: true, 
+        uiElement: 'color_palette',
+        colors: [], 
+        actionButton: { label: "បើកឧបករណ៍ពណ៌ 🎨", label_en: "Open Color Tools 🎨", actionToTrigger: "tools", subTab: "color" },
+        chips: ["អត្ថន័យនៃពណ៌ (Color Psychology)", "ពណ៌ Cinematic"],
+        chips_en: ["Color Psychology", "Cinematic Color"]
+    },
+    {
+        primaryKeys: ['ឧទាហរណ៍ពណ៌ផ្ទុយ', 'complementary example'],
+        keys: ['ពណ៌ផ្ទុយ', 'complementary color'],
+        regex: ['complementary.*example', 'ឧទាហរណ៍.*ពណ៌ផ្ទុយ'],
+        answer: "បាទ នេះគឺជាឧទាហរណ៍នៃពណ៌ផ្ទុយគ្នា (Complementary) ដែលទាក់ទាញភ្នែកបំផុត (Blue & Orange)៖",
+        answer_en: "Here is a classic example of a highly contrasting Complementary Color palette (Blue & Orange):",
+        uiElement: 'color_palette',
+        colors: ['#0055FF', '#FF8800'],
+        actionButton: { label: "សាកល្បង HSL Tools 🎨", label_en: "Try the HSL Tools 🎨", actionToTrigger: "tools", subTab: "color" },
+        chips: ["ពណ៌ Cinematic", "ពណ៌ចៃដន្យ 🎨"],
+        chips_en: ["Cinematic Color", "Random Color 🎨"]
+    },
+    {
+        primaryKeys: ['ចង់ធ្វើតេស្ត', 'take a quiz'],
+        keys: ['ធ្វើតេស្ត', 'ប្រឡង', 'តេស្តសមត្ថភាព', 'quiz', 'test'],
+        regex: ['(take|do|start).*(quiz|test)', 'ធ្វើតេស្ត', 'ប្រឡង', 'តេស្តសមត្ថភាព', 'take a quiz'],
+        answer: "បាទ តោះ! អ្នកអាចធ្វើតេស្តសមត្ថភាព Graphic Design របស់អ្នកបាន។ ចុចប៊ូតុងខាងក្រោមដើម្បីទៅកាន់ទំព័រតេស្ត៖",
+        answer_en: "Let's go! You can test your Graphic Design knowledge right now. Click the button below to start:",
+        actionButton: { label: "ទៅកាន់ការធ្វើតេស្ត 🎯", label_en: "Go to Quiz 🎯", actionToTrigger: "quiz" },
+        chips: ["កាត់តរូបភាព (Photomanipulation)", "Color Theory"],
+        chips_en: ["Photomanipulation workflows", "Color Theory"]
+    },
+    {
+        primaryKeys: ['ឧបករណ៍', 'tools'],
+        keys: ['layout generator', 'ប្លង់', 'tool', 'ឧបករណ៍ជំនួយ'],
+        regex: ['tool', 'ឧបករណ៍', 'layout generator', 'ប្លង់'],
+        answer: "បាទ ខ្ញុំមានឧបករណ៍ពិសេសសម្រាប់អ្នក! អ្នកអាចបង្កើតពណ៌ ឬមើលគំរូប្លង់ខ្នាតស្តង់ដារបាននៅទីនេះ៖",
+        answer_en: "I have some special tools for you! You can generate colors or view standard layout grids here:",
+        actionButton: { label: "បើកឧបករណ៍ជំនួយ 🛠️", label_en: "Open Design Tools 🛠️", actionToTrigger: "tools" },
+        chips: ["តើទំហំ Poster ស្តង់ដារមានអ្វីខ្លះ? 📏", "តើ Rule of Thirds គឺជាអ្វី?"],
+        chips_en: ["Standard Poster Sizes & Layouts? 📏", "What is the Rule of Thirds?"]
+    }
+];
