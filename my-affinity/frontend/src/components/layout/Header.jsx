@@ -1,5 +1,5 @@
 import React from 'react';
-import { Moon, Sun, BookOpen, Award, Zap, Bot, Trash2 } from 'lucide-react';
+import { Moon, Sun, BookOpen, Award, Zap, Bot } from 'lucide-react';
 // Notice the updated path below!
 import { useLanguage } from '../../contexts/LanguageContext';
 
@@ -14,11 +14,6 @@ export default function Header({ activeTab, setActiveTab, isDarkMode, setIsDarkM
         triggerHaptic();
         setActiveTab(tabId);
         window.dispatchEvent(new CustomEvent('switchTab', { detail: tabId }));
-    };
-
-    const handleClearChat = () => {
-        triggerHaptic();
-        window.dispatchEvent(new CustomEvent('clearAiChat'));
     };
 
     return (
@@ -53,11 +48,6 @@ export default function Header({ activeTab, setActiveTab, isDarkMode, setIsDarkM
                     </nav>
 
                     <div className="flex items-center gap-2 sm:gap-3 shrink-0">
-                        {activeTab === 'ai' && (
-                            <button onClick={handleClearChat} className={`w-10 h-10 sm:w-11 sm:h-11 rounded-full flex items-center justify-center transition-all active:scale-90 border shadow-sm ${isDarkMode ? 'bg-[#1E1E1E]/50 border-[#2C2C2C] text-red-400 hover:text-red-500 hover:bg-red-500/10' : 'bg-[#F8F9FA]/80 border-[#E5E7EB] text-red-500 hover:bg-red-500/10'}`} title={t('clear_tooltip')}>
-                                <Trash2 size={18} />
-                            </button>
-                        )}
                         <button onClick={(e) => { e.preventDefault(); triggerHaptic(); toggleLanguage(); }} className={`w-10 h-10 sm:w-11 sm:h-11 rounded-full flex items-center justify-center font-bold text-xs transition-all active:scale-90 border shadow-sm ${isDarkMode ? 'bg-[#1E1E1E] border-[#2C2C2C] text-[#F1F1F1] hover:bg-[#2C2C2C]' : 'bg-[#FFFFFF] border-[#E5E7EB] text-[#1A1A1A] hover:bg-[#F8F9FA]'}`} title="Switch Language">
                             {lang === 'en' ? 'ខ្មែរ' : 'EN'}
                         </button>
