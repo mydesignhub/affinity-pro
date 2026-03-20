@@ -628,9 +628,6 @@ function AppContent() {
       }
       return [];
   });
-  const [newAiKeywords, setNewAiKeywords] = useState('');
-  const [newAiAnswerKm, setNewAiAnswerKm] = useState('');
-  const [newAiAnswerEn, setNewAiAnswerEn] = useState('');
 
   useEffect(() => {
       if (isAdmin && activeAppTab && showRegistration) {
@@ -684,15 +681,19 @@ function AppContent() {
       document.documentElement.style.backgroundColor = newBgColor;
       document.body.style.backgroundColor = newBgColor;
 
-      if (isDataLoaded) localStorage.setItem('myAffinity_theme', isDarkMode ? 'dark' : 'light');
+      if (isDataLoaded) {
+          localStorage.setItem('myAffinity_theme', isDarkMode ? 'dark' : 'light');
+      }
   }, [isDarkMode, isDataLoaded]);
 
+  // Syncing ALL data to localStorage
   useEffect(() => {
       if (isDataLoaded) {
           localStorage.setItem('myAffinity_completed_steps', JSON.stringify(completedSteps));
           localStorage.setItem('myAffinity_purchases', JSON.stringify(purchasedCourses));
+          localStorage.setItem('myAffinity_live_ai', JSON.stringify(liveAiData));
       }
-  }, [completedSteps, purchasedCourses, isDataLoaded]);
+  }, [completedSteps, purchasedCourses, liveAiData, isDataLoaded]);
 
   useEffect(() => {
     const handlePopState = (event) => {
@@ -1194,56 +1195,13 @@ function AppContent() {
                                                 )}
                                             </div>
                                         ) : (
-                                            /* --- NEW AI TRAINING STUDIO --- */
+                                            /* --- NEW AI MANAGER (Data is added from ChatBot) --- */
                                             <div className="animate-fade-in-up space-y-4">
                                                 <p className={`text-[13px] font-khmer leading-relaxed ${isDarkMode ? 'text-[#9AA0A6]' : 'text-gray-500'}`}>
-                                                    Train new AI answers offline. When ready, copy the final Data Code to update your main <code className="bg-black/20 px-1 rounded">data.js</code> file.
+                                                    Manage the AI training data you added directly from the AI Chat. When ready, copy the final Data Code to update your main <code className="bg-black/20 px-1 rounded">data.js</code> file.
                                                 </p>
                                                 
-                                                <input 
-                                                    type="text" 
-                                                    placeholder="Keywords (comma separated) e.g., print, បោះពុម្ព"
-                                                    value={newAiKeywords}
-                                                    onChange={e => setNewAiKeywords(e.target.value)}
-                                                    className={`w-full p-3.5 rounded-2xl border outline-none font-bold text-[13px] transition-colors shadow-inner ${isDarkMode ? 'bg-[#121212] border-[#2C2C2C] text-white focus:border-[#41B6E6]' : 'bg-gray-50 border-[#E5E7EB] text-black focus:border-[#0277C5]'}`}
-                                                />
-                                                <textarea 
-                                                    placeholder="Khmer Answer..."
-                                                    value={newAiAnswerKm}
-                                                    onChange={e => setNewAiAnswerKm(e.target.value)}
-                                                    rows={3}
-                                                    className={`w-full p-3.5 rounded-2xl border outline-none font-khmer text-[13px] transition-colors shadow-inner resize-none ${isDarkMode ? 'bg-[#121212] border-[#2C2C2C] text-white focus:border-[#41B6E6]' : 'bg-gray-50 border-[#E5E7EB] text-black focus:border-[#0277C5]'}`}
-                                                />
-                                                <textarea 
-                                                    placeholder="English Answer..."
-                                                    value={newAiAnswerEn}
-                                                    onChange={e => setNewAiAnswerEn(e.target.value)}
-                                                    rows={3}
-                                                    className={`w-full p-3.5 rounded-2xl border outline-none font-sans text-[13px] transition-colors shadow-inner resize-none ${isDarkMode ? 'bg-[#121212] border-[#2C2C2C] text-white focus:border-[#41B6E6]' : 'bg-gray-50 border-[#E5E7EB] text-black focus:border-[#0277C5]'}`}
-                                                />
-                                                
                                                 <div className="flex gap-3 pt-2">
-                                                    <button 
-                                                        onClick={() => {
-                                                            if (!newAiKeywords || !newAiAnswerKm) { triggerHaptic('error'); return; }
-                                                            triggerHaptic('success');
-                                                            const keysArray = newAiKeywords.split(',').map(k => k.trim());
-                                                            const newEntry = {
-                                                                primaryKeys: [keysArray[0], keysArray[1] || keysArray[0]],
-                                                                keys: keysArray,
-                                                                regex: keysArray,
-                                                                answer: newAiAnswerKm,
-                                                                answer_en: newAiAnswerEn || newAiAnswerKm
-                                                            };
-                                                            const updatedList = [...liveAiData, newEntry];
-                                                            setLiveAiData(updatedList);
-                                                            localStorage.setItem('myAffinity_live_ai', JSON.stringify(updatedList));
-                                                            setNewAiKeywords(''); setNewAiAnswerKm(''); setNewAiAnswerEn('');
-                                                        }} 
-                                                        className={`flex-1 py-3.5 rounded-2xl font-bold text-[13px] text-white shadow-lg transition-all active:scale-[0.98] ${(!newAiKeywords || !newAiAnswerKm) ? 'opacity-50 cursor-not-allowed bg-gray-500' : 'bg-gradient-to-r from-green-500 to-emerald-500 hover:opacity-90'}`}
-                                                    >
-                                                        Push to Offline DB
-                                                    </button>
                                                     <button 
                                                         onClick={() => {
                                                             if (liveAiData.length === 0) return;
@@ -1255,9 +1213,9 @@ function AppContent() {
                                                             navigator.clipboard.writeText(codeStr);
                                                             alert("AI Data Code Copied! Paste this inside KNOWLEDGE_BASE in your data.js file.");
                                                         }}
-                                                        className={`flex-1 py-3.5 rounded-2xl border font-bold text-[13px] transition-all flex items-center justify-center gap-2 ${liveAiData.length === 0 ? 'opacity-50 cursor-not-allowed' : isDarkMode ? 'bg-[#121212] border-[#2C2C2C] text-white hover:border-[#41B6E6]/50' : 'bg-white border-[#E5E7EB] text-black hover:border-[#0277C5]/50'}`}
+                                                        className={`w-full py-3.5 rounded-2xl font-bold text-[13px] transition-all flex items-center justify-center gap-2 shadow-lg ${liveAiData.length === 0 ? 'opacity-50 cursor-not-allowed bg-gray-500 text-white' : 'bg-gradient-to-r from-green-500 to-emerald-500 text-white hover:opacity-90'}`}
                                                     >
-                                                        <Copy size={16} /> Copy Data Code
+                                                        <Copy size={16} /> Copy All Data Code ({liveAiData.length} Entries)
                                                     </button>
                                                 </div>
 
@@ -1588,11 +1546,14 @@ function AppContent() {
             </div>
             )}
             {activeTab === 'tools' && <div className="pb-24"><ToolsView isDarkMode={isDarkMode} /></div>}
-            {activeTab === 'quiz' && <Test isDarkMode={isDarkMode} />}
+            
+            {/* TEST NOW RECEIVES ISADMIN TO BYPASS LOCK */}
+            {activeTab === 'quiz' && <Test isDarkMode={isDarkMode} isAdmin={isAdmin} />}
         </main>
       ) : (
         <div className={`flex-1 relative w-full h-full md:pb-0 z-0 ${activeAppTab ? 'hidden' : 'block'}`} style={{ paddingTop: 'max(env(safe-area-inset-top), 0px)' }}>
-             <ChatBot messages={chatMessages} setMessages={setChatMessages} isDarkMode={isDarkMode} liveAiData={liveAiData} />
+             {/* CHATBOT NOW RECEIVES ADMIN, LIVEAIDATA, AND SETLIVEAIDATA */}
+             <ChatBot messages={chatMessages} setMessages={setChatMessages} isDarkMode={isDarkMode} liveAiData={liveAiData} setLiveAiData={setLiveAiData} isAdmin={isAdmin} />
         </div>
       )}
 

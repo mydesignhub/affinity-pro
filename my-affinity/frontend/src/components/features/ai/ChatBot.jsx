@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Bot, Send, RefreshCw, Trash2, ThumbsUp, ThumbsDown, ArrowRight } from 'lucide-react';
+import { Bot, Send, RefreshCw, Trash2, ThumbsUp, ThumbsDown, ArrowRight, ShieldCheck, Database } from 'lucide-react';
 
 // 🌟 FIX 1: Point up 3 folders to get to contexts
 import { useLanguage } from '../../../contexts/LanguageContext';
@@ -23,9 +23,11 @@ import {
   KNOWLEDGE_BASE 
 } from '../../../data/ai_database';
 
-const triggerHaptic = () => {
+const triggerHaptic = (type = 'light') => {
     if (typeof navigator !== 'undefined' && navigator.vibrate) {
-        navigator.vibrate(10);
+        if (type === 'error') navigator.vibrate([50, 50, 50]);
+        else if (type === 'success') navigator.vibrate([30, 50, 30]);
+        else navigator.vibrate(10);
     }
 };
 
@@ -96,7 +98,8 @@ const formatMessage = (text) => {
     ));
 };
 
-const ChatBot = ({ messages, setMessages, isDarkMode }) => {
+// 🌟 ADDED PROPS: liveAiData, setLiveAiData, isAdmin
+const ChatBot = ({ messages, setMessages, isDarkMode, liveAiData = [], setLiveAiData, isAdmin }) => {
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
   const [isKeyboardOpen, setIsKeyboardOpen] = useState(false); 
@@ -107,6 +110,12 @@ const ChatBot = ({ messages, setMessages, isDarkMode }) => {
   const [viewportHeight, setViewportHeight] = useState('100%');
   const [keyboardHeight, setKeyboardHeight] = useState(0);
   
+  // 🌟 ADMIN TRAINING STATES
+  const [showAdminTrain, setShowAdminTrain] = useState(false);
+  const [trainKeys, setTrainKeys] = useState('');
+  const [trainKm, setTrainKm] = useState('');
+  const [trainEn, setTrainEn] = useState('');
+
   const messagesEndRef = useRef(null);
   const inputRef = useRef(null);
   const scrollContainerRef = useRef(null);
@@ -123,6 +132,40 @@ const ChatBot = ({ messages, setMessages, isDarkMode }) => {
   });
 
   const { lang, t } = useLanguage();
+
+  // 🌟 DYNAMIC BRAIN: Combines official data with new offline trained data
+  const COMBINED_DB = [...KNOWLEDGE_BASE, ...liveAiData];
+
+  const handleSaveTraining = () => {
+      if (!trainKeys || !trainKm || !trainEn) {
+          triggerHaptic('error');
+          return;
+      }
+      triggerHaptic('success');
+      const keysArray = trainKeys.split(',').map(k => k.trim());
+      const newEntry = {
+          primaryKeys: [keysArray[0], keysArray[1] || keysArray[0]],
+          keys: keysArray,
+          regex: keysArray,
+          answer: trainKm,
+          answer_en: trainEn
+      };
+      
+      if(setLiveAiData) setLiveAiData(prev => [...prev, newEntry]);
+      
+      setTrainKeys(''); setTrainKm(''); setTrainEn('');
+      setShowAdminTrain(false);
+      
+      // Send Fake Bot Confirmation
+      setMessages(prev => [...prev, {
+          role: 'model',
+          text: lang === 'en' ? `✅ **Data Trained Successfully!**\nKeywords: *${keysArray[0]}*` : `✅ **រៀនទិន្នន័យថ្មីបានជោគជ័យ!**\nពាក្យគន្លឹះ៖ *${keysArray[0]}*`,
+          chips: []
+      }]);
+      setTimeout(() => {
+          if (messagesEndRef.current) messagesEndRef.current.scrollIntoView({ behavior: 'smooth', block: 'end' });
+      }, 100);
+  };
 
   // 🌟 UPGRADE 3: SMART CHIP FILTERING (No duplicate questions from history)
   const getSuggestList = () => {
@@ -420,7 +463,8 @@ const ChatBot = ({ messages, setMessages, isDarkMode }) => {
               let bestFollowUp = null;
               let highestFollowUpScore = 0;
 
-              for (const item of KNOWLEDGE_BASE) {
+              // USE COMBINED_DB here
+              for (const item of COMBINED_DB) {
                   const searchKeys = [...(item.primaryKeys || []), ...(item.keys || [])].map(strictClean);
                   for (const key of searchKeys) {
                       if (key.length > 4 && lastTextClean.includes(key)) {
@@ -438,7 +482,8 @@ const ChatBot = ({ messages, setMessages, isDarkMode }) => {
               }
 
               if (currentTopic) {
-                  const topicData = KNOWLEDGE_BASE.find(item => [...(item.primaryKeys || []), ...(item.keys || [])].map(strictClean).includes(strictClean(currentTopic)));
+                  // USE COMBINED_DB here
+                  const topicData = COMBINED_DB.find(item => [...(item.primaryKeys || []), ...(item.keys || [])].map(strictClean).includes(strictClean(currentTopic)));
                   if (topicData && topicData.primaryKeys) {
                       const pk = topicData.primaryKeys[0];
                       const nextTopic = FOLLOW_UP_MAP[pk] || FOLLOW_UP_MAP[strictClean(pk)];
@@ -454,7 +499,8 @@ const ChatBot = ({ messages, setMessages, isDarkMode }) => {
       const isAskingForMore = exactMore.includes(cleanInput) || cleanInput.endsWith('ទៀត');
 
       if (isAskingForMore && currentTopic) {
-          const topicData = KNOWLEDGE_BASE.find(item => [...(item.primaryKeys || []), ...(item.keys || [])].map(strictClean).includes(strictClean(currentTopic)));
+          // USE COMBINED_DB here
+          const topicData = COMBINED_DB.find(item => [...(item.primaryKeys || []), ...(item.keys || [])].map(strictClean).includes(strictClean(currentTopic)));
           
           if (topicData && topicData.primaryKeys) {
               const pk = topicData.primaryKeys[0];
@@ -487,7 +533,8 @@ const ChatBot = ({ messages, setMessages, isDarkMode }) => {
       });
       coreSubject = coreSubject.trim();
 
-      for (const item of KNOWLEDGE_BASE) {
+      // USE COMBINED_DB here
+      for (const item of COMBINED_DB) {
           const exactTriggers = [...(item.primaryKeys || []), ...(item.keys || [])].map(strictClean); 
           if (exactTriggers.includes(cleanInput) || exactTriggers.includes(coreSubject)) {
               setCurrentTopic(item.primaryKeys ? item.primaryKeys[0] : null); 
@@ -515,7 +562,8 @@ const ChatBot = ({ messages, setMessages, isDarkMode }) => {
       let bestMatch = null;
       let highestScore = 0;
 
-      for (const item of KNOWLEDGE_BASE) {
+      // USE COMBINED_DB here
+      for (const item of COMBINED_DB) {
           let score = 0;
           const searchKeys = [...(item.primaryKeys || []), ...(item.keys || [])].map(strictClean);
           
@@ -823,7 +871,7 @@ const ChatBot = ({ messages, setMessages, isDarkMode }) => {
       <div className={`absolute top-0 left-0 w-full z-30 transition-transform duration-300 ease-in-out ${showHeader ? 'translate-y-0' : '-translate-y-full'}`}>
           <div className={`flex items-center justify-between px-4 py-3 backdrop-blur-md border-b shadow-sm ${isDarkMode ? 'bg-[#121212]/80 border-white/5 shadow-black/20' : 'bg-white/80 border-black/5 shadow-[#0277C5]/5'}`}>
               <div className="flex items-center gap-3">
-                  <div className={`w-8 h-8 rounded-xl bg-gradient-to-tr flex items-center justify-center shadow-inner ${isDarkMode ? 'from-[#41B6E6] to-[#0277C5]' : 'from-[#0277C5] to-[#01579B]'}`}>
+                  <div className={`w-8 h-8 rounded-xl bg-gradient-to-tr ${isDarkMode ? 'from-[#41B6E6] to-[#0277C5]' : 'from-[#0277C5] to-[#01579B]'} flex items-center justify-center shadow-inner`}>
                       <Bot size={18} className="text-white drop-shadow-sm" />
                   </div>
                   <div className="flex flex-col">
@@ -951,6 +999,55 @@ const ChatBot = ({ messages, setMessages, isDarkMode }) => {
       
       <div className={`flex-none z-20 w-full flex flex-col px-2 transition-all duration-300 ${theme.bg} ${isKeyboardOpen ? 'pb-3' : 'pb-[85px] sm:pb-[90px]'}`}>
          <div className="max-w-4xl mx-auto w-full">
+
+             {/* 🛡️ ADMIN AI TRAINING UI 🛡️ */}
+             {isAdmin && (
+                <div className="px-3 mb-2 w-full animate-fade-in-up">
+                    <button 
+                        onClick={() => setShowAdminTrain(!showAdminTrain)}
+                        className={`text-[12px] font-bold px-4 py-2 rounded-full border transition-colors flex items-center gap-2 shadow-sm active:scale-95 ${isDarkMode ? 'bg-[#1E1E1E] border-[#2C2C2C] text-[#41B6E6]' : 'bg-[#F8F9FA] border-[#E5E7EB] text-[#0277C5]'}`}
+                    >
+                        <ShieldCheck size={16} /> {showAdminTrain ? 'Close Training UI' : 'Train AI Live'}
+                    </button>
+
+                    {showAdminTrain && (
+                        <div className={`mt-3 p-5 rounded-[24px] border shadow-xl ${isDarkMode ? 'bg-[#121212] border-[#41B6E6]/30' : 'bg-white border-[#0277C5]/30'}`}>
+                            <div className="flex items-center justify-between mb-4">
+                                <span className={`text-[13px] font-black uppercase tracking-widest ${isDarkMode ? 'text-[#41B6E6]' : 'text-[#0277C5]'}`}>AI Data Trainer</span>
+                            </div>
+                            <input 
+                                type="text" 
+                                placeholder="Keywords (comma separated) e.g., print, បោះពុម្ព"
+                                value={trainKeys}
+                                onChange={e => setTrainKeys(e.target.value)}
+                                className={`w-full p-3.5 rounded-xl mb-3 border text-[13px] font-bold outline-none transition-colors ${isDarkMode ? 'bg-[#1E1E1E] border-[#2C2C2C] text-white focus:border-[#41B6E6]' : 'bg-[#F8F9FA] border-[#E5E7EB] text-black focus:border-[#0277C5]'}`}
+                            />
+                            <textarea 
+                                placeholder="Khmer Answer..."
+                                value={trainKm}
+                                onChange={e => setTrainKm(e.target.value)}
+                                rows={3}
+                                className={`w-full p-3.5 rounded-xl mb-3 border text-[13px] font-khmer outline-none resize-none transition-colors ${isDarkMode ? 'bg-[#1E1E1E] border-[#2C2C2C] text-white focus:border-[#41B6E6]' : 'bg-[#F8F9FA] border-[#E5E7EB] text-black focus:border-[#0277C5]'}`}
+                            />
+                            <textarea 
+                                placeholder="English Answer..."
+                                value={trainEn}
+                                onChange={e => setTrainEn(e.target.value)}
+                                rows={3}
+                                className={`w-full p-3.5 rounded-xl mb-4 border text-[13px] font-sans outline-none resize-none transition-colors ${isDarkMode ? 'bg-[#1E1E1E] border-[#2C2C2C] text-white focus:border-[#41B6E6]' : 'bg-[#F8F9FA] border-[#E5E7EB] text-black focus:border-[#0277C5]'}`}
+                            />
+                            <button 
+                                onClick={handleSaveTraining}
+                                disabled={!trainKeys || !trainKm || !trainEn}
+                                className={`w-full py-3.5 rounded-xl font-bold text-[14px] transition-all active:scale-[0.98] flex items-center justify-center gap-2 shadow-md ${(!trainKeys || !trainKm || !trainEn) ? 'opacity-50 cursor-not-allowed bg-gray-500 text-white' : 'bg-gradient-to-r from-green-500 to-emerald-500 text-white hover:opacity-90'}`}
+                            >
+                                <Database size={16} /> Push to Offline DB
+                            </button>
+                        </div>
+                    )}
+                </div>
+            )}
+
              <div className="flex items-center px-2 py-1.5 w-full overflow-hidden">
                  <button 
                      onMouseDown={(e) => e.preventDefault()} 

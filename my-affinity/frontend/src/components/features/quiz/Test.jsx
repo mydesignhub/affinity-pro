@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Trophy, Flame, CheckCircle2, XCircle, Play, Star, Award, Lock, ChevronRight, User, Timer, Camera, PenTool, Book } from 'lucide-react';
+import { Trophy, Flame, CheckCircle2, XCircle, Play, Star, Award, Lock, ChevronRight, User, Timer, Camera, PenTool, Book, ShieldCheck } from 'lucide-react';
 import { useLanguage } from '../../../contexts/LanguageContext';
 import { initialQuestionBank } from '../../../data/data';
 import CertificateForm from './CertificateForm';
@@ -31,7 +31,8 @@ const defaultStars = {
 const defaultScores = { photo: 0, designer: 0, publisher: 0 };
 const defaultCerts = { photo: null, designer: null, publisher: null };
 
-const Test = ({ isDarkMode }) => {
+// 🌟 ADDED isAdmin PROP HERE
+const Test = ({ isDarkMode, isAdmin }) => {
     const { lang } = useLanguage(); 
 
     const [gameState, setGameState] = useState('menu');
@@ -127,7 +128,8 @@ const Test = ({ isDarkMode }) => {
             setTimeLeft(15 * 60);
         } else { setTimeLeft(null); }
 
-        if (!currentUnlocked.includes(level) && level !== 'final') { triggerHaptic('error'); return; }
+        // 🌟 ADMIN BYPASS: Admins ignore level locks
+        if (!isAdmin && !currentUnlocked.includes(level) && level !== 'final') { triggerHaptic('error'); return; }
         triggerHaptic();
         
         let filtered = initialQuestionBank.filter(q => q.app === activeAppTab);
@@ -210,8 +212,10 @@ const Test = ({ isDarkMode }) => {
         const appDisplayName = activeAppTab === 'photo' ? 'Affinity Photo' : activeAppTab === 'designer' ? 'Affinity Designer' : 'Affinity Publisher';
 
         if (quizConfig.level === 'final') {
-            if (percentage >= 90) {
-                const newCert = { name: userName, score: percentage, date: new Date().toISOString(), appCourse: appDisplayName };
+            // 🌟 ADMIN BYPASS: Admin ALWAYS passes the final exam for testing
+            if (percentage >= 90 || isAdmin) {
+                const displayScore = isAdmin && percentage < 90 ? 100 : percentage;
+                const newCert = { name: userName || 'Administrator', score: displayScore, date: new Date().toISOString(), appCourse: appDisplayName };
                 setCertsData(prev => ({ ...prev, [activeAppTab]: newCert }));
                 setGameState('certificate');
             } else {
@@ -256,7 +260,9 @@ const Test = ({ isDarkMode }) => {
     if (gameState === 'certificate') return <CertificateForm certData={currentCert} isDarkMode={isDarkMode} onBack={() => setGameState('menu')} />;
 
     if (gameState === 'menu') {
-        const allUnlocked = currentUnlocked.includes('advanced') && currentStars.advanced >= 2;
+        // 🌟 ADMIN BYPASS: Final exam is always unlocked for admins
+        const allUnlocked = isAdmin || (currentUnlocked.includes('advanced') && currentStars.advanced >= 2);
+        
         return (
             <div className="flex flex-col items-center justify-start min-h-full pt-4 sm:pt-8 px-2 sm:px-6 pb-28 sm:pb-32 w-full">
                 
@@ -333,7 +339,7 @@ const Test = ({ isDarkMode }) => {
 
                     <div className="grid gap-3">
                         {['beginner', 'intermediate', 'advanced'].map(lvl => {
-                            const isLocked = !currentUnlocked.includes(lvl);
+                            const isLocked = !isAdmin && !currentUnlocked.includes(lvl); // Admin ignores locks
                             const stars = currentStars[lvl] || 0;
                             const displayLevel = lang === 'en' ? lvl.charAt(0).toUpperCase() + lvl.slice(1) : (lvl === 'beginner' ? 'កម្រិតដំបូង' : lvl === 'intermediate' ? 'កម្រិតមធ្យម' : 'កម្រិតខ្ពស់');
 
@@ -364,6 +370,24 @@ const Test = ({ isDarkMode }) => {
                                 </div>
                                 {!allUnlocked && <Lock size={16} className="opacity-30"/>}
                             </button>
+
+                            {/* 🌟 ADMIN: ONE-CLICK CERTIFICATE GENERATOR 🌟 */}
+                            {isAdmin && !currentCert && (
+                                <button 
+                                    onClick={() => {
+                                        if (!userName.trim()) { triggerHaptic('error'); alert(lang === 'en' ? "Please enter a name first!" : "សូមបញ្ចូលឈ្មោះរបស់អ្នកជាមុនសិន!"); return; }
+                                        triggerHaptic('success');
+                                        const appDisplayName = activeAppTab === 'photo' ? 'Affinity Photo' : activeAppTab === 'designer' ? 'Affinity Designer' : 'Affinity Publisher';
+                                        const newCert = { name: userName, score: 100, date: new Date().toISOString(), appCourse: appDisplayName };
+                                        setCertsData(prev => ({ ...prev, [activeAppTab]: newCert }));
+                                        setGameState('certificate');
+                                    }}
+                                    className={`p-4 rounded-[24px] border flex items-center justify-center gap-3 transition-all duration-500 ease-out hover:-translate-y-1 active:scale-95 shadow-md ${isDarkMode ? 'border-[#41B6E6]/50 bg-[#41B6E6]/10 text-[#41B6E6] hover:shadow-[0_10px_20px_rgba(65,182,230,0.15)]' : 'border-[#0277C5]/50 bg-[#0277C5]/10 text-[#0277C5] hover:shadow-[0_10px_20px_rgba(2,119,197,0.15)]'}`}
+                                >
+                                    <ShieldCheck size={20} />
+                                    <span className="font-khmer font-black text-[15px] tracking-tight">Admin: Generate Certificate</span>
+                                </button>
+                            )}
 
                             {currentCert && (
                                 <button onClick={() => setGameState('certificate')} className={`p-4 rounded-[24px] border flex items-center justify-center gap-3 transition-all duration-500 ease-out hover:-translate-y-1 active:scale-95 shadow-md ${isDarkMode ? 'border-[#41B6E6]/50 bg-[#41B6E6]/10 text-[#41B6E6] hover:shadow-[0_10px_20px_rgba(65,182,230,0.15)]' : 'border-[#0277C5]/50 bg-[#0277C5]/10 text-[#0277C5] hover:shadow-[0_10px_20px_rgba(2,119,197,0.15)]'}`}>
