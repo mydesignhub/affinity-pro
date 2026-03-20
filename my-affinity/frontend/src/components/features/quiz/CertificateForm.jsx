@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+// Fixed: Added ShieldCheck to the lucide-react imports to fix Vercel crash
 import { Trophy, Flame, CheckCircle2, XCircle, Play, Star, Award, Lock, ChevronRight, User, Timer, Camera, PenTool, Book, ShieldCheck } from 'lucide-react';
 import { useLanguage } from '../../../contexts/LanguageContext';
 import { initialQuestionBank } from '../../../data/data';

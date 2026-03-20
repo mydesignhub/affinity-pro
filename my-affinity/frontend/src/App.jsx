@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { ChevronRight, PlayCircle, Sparkles, Zap, Facebook, Send, Globe, BookOpen, Award, Bot, Camera, PenTool, Book, Lock, KeyRound, AlertCircle, ChevronDown, RotateCcw, Crown, LogOut, Copy, ShieldCheck, CheckCircle, Database, Loader2, Maximize, Minimize, Clock, DownloadCloud, Circle, CheckCircle2, X, Trash2 } from 'lucide-react';
+import { ChevronRight, PlayCircle, Sparkles, Zap, Facebook, Send, Globe, BookOpen, Award, Bot, Camera, PenTool, Book, Lock, KeyRound, AlertCircle, ChevronDown, Crown, LogOut, Copy, ShieldCheck, Database, Loader2, Maximize, Minimize, Clock, DownloadCloud, Circle, CheckCircle2, Trash2 } from 'lucide-react';
 
 // FIREBASE IMPORTS
 import { signInWithPopup, signOut } from 'firebase/auth';
@@ -605,7 +605,18 @@ function AppContent() {
   const [completedSteps, setCompletedSteps] = useState([]);
   
   const [user, setUser] = useState(null);
-  const isAdmin = user?.email === ADMIN_EMAIL;
+
+  // 🌟 TWO-LEVEL ADMIN LOGIC
+  const [isSuperAdmin, setIsSuperAdmin] = useState(false);
+
+  useEffect(() => {
+      const unlockSuperAdmin = () => setIsSuperAdmin(true);
+      window.addEventListener('superAdminUnlocked', unlockSuperAdmin);
+      return () => window.removeEventListener('superAdminUnlocked', unlockSuperAdmin);
+  }, []);
+
+  const isBasicAdmin = user?.email === ADMIN_EMAIL;
+  const showAdminPanel = isBasicAdmin || isSuperAdmin;
 
   const [genAmount, setGenAmount] = useState(5);
   const [generatedKeys, setGeneratedKeys] = useState('');
@@ -620,7 +631,7 @@ function AppContent() {
   const [isDataLoaded, setIsDataLoaded] = useState(false);
 
   // --- NEW AI TRAINING STATES ---
-  const [adminView, setAdminView] = useState('keys'); 
+  const [adminView, setAdminView] = useState('keys'); // 'keys' or 'ai'
   const [liveAiData, setLiveAiData] = useState(() => {
       if (typeof window !== 'undefined') {
           const saved = localStorage.getItem('myAffinity_live_ai');
@@ -629,8 +640,27 @@ function AppContent() {
       return [];
   });
 
+  const fetchCloudAI = async () => {
+      try {
+          const q = query(collection(db, "ai_knowledge"));
+          const snap = await getDocs(q);
+          const cloudData = [];
+          snap.forEach(doc => cloudData.push(doc.data()));
+          if (cloudData.length > 0) {
+              setLiveAiData(cloudData);
+              localStorage.setItem('myAffinity_live_ai', JSON.stringify(cloudData));
+          } else {
+              const saved = localStorage.getItem('myAffinity_live_ai');
+              if (saved) setLiveAiData(JSON.parse(saved));
+          }
+      } catch(e) {
+          const saved = localStorage.getItem('myAffinity_live_ai');
+          if (saved) setLiveAiData(JSON.parse(saved));
+      }
+  };
+
   useEffect(() => {
-      if (isAdmin && activeAppTab && showRegistration) {
+      if (showAdminPanel && activeAppTab && showRegistration) {
           const savedKeys = localStorage.getItem(`myAffinity_last_keys_${activeAppTab}`);
           if (savedKeys) {
               setGeneratedKeys(savedKeys);
@@ -638,7 +668,7 @@ function AppContent() {
               setGeneratedKeys('');
           }
       }
-  }, [activeAppTab, showRegistration, isAdmin]);
+  }, [activeAppTab, showRegistration, showAdminPanel]);
 
   useEffect(() => {
       if (typeof window !== 'undefined') {
@@ -665,6 +695,7 @@ function AppContent() {
               setUser(currentUser);
           });
           
+          fetchCloudAI();
           setIsDataLoaded(true); 
           return () => unsubscribe();
       }
@@ -873,6 +904,7 @@ function AppContent() {
       try {
           await signOut(auth);
           setUser(null);
+          setIsSuperAdmin(false); // Reset Super Admin status
           setPurchasedCourses({ photo: null, designer: null, publisher: null });
           localStorage.removeItem('myAffinity_purchases');
       } catch (error) {
@@ -884,7 +916,7 @@ function AppContent() {
       triggerHaptic();
       
       let message = '';
-      if (!user) {
+      if (!user && !isSuperAdmin) {
           message = lang === 'en' 
               ? '⚠️ WARNING: You have NOT linked a Google account!\n\nIf you sign out now, you will LOSE ACCESS to your premium course permanently. Are you absolutely sure you want to sign out?' 
               : '⚠️ ព្រមាន៖ អ្នកមិនទាន់បានភ្ជាប់គណនី Google ទេ!\n\nប្រសិនបើអ្នកចាកចេញឥឡូវនេះ អ្នកនឹងបាត់បង់សិទ្ធិចូលរៀនវគ្គ Premium នេះជារៀងរហូត។ តើអ្នកពិតជាចង់ចាកចេញមែនទេ?';
@@ -994,7 +1026,7 @@ function AppContent() {
   const completedInThisTab = completedSteps.filter(id => id.startsWith(progressPrefix)).length;
   const progressPercentage = totalSteps === 0 ? 0 : Math.round((completedInThisTab / totalSteps) * 100);
 
-  const isCoursePurchased = isAdmin || (activeAppTab ? purchasedCourses[activeAppTab]?.unlocked === true : false);
+  const isCoursePurchased = showAdminPanel || (activeAppTab ? purchasedCourses[activeAppTab]?.unlocked === true : false);
   const theme = activeAppTab ? APP_THEMES[activeAppTab] : APP_THEMES.photo;
   
   const getAppDisplayName = (id) => id === 'photo' ? 'Affinity Photo 2 iPad' : id === 'designer' ? 'Affinity Designer 2 iPad' : 'Affinity Publisher 2 iPad';
@@ -1090,7 +1122,7 @@ function AppContent() {
                         <div className="flex items-center gap-4 relative z-10 w-full">
                             {isCoursePurchased ? (
                                 <div className={`w-14 h-14 flex items-center justify-center shrink-0 rounded-[18px] shadow-inner ${theme.lightBg}`}>
-                                    {isAdmin ? <ShieldCheck size={28} className={theme.text} /> : <Crown size={28} className={theme.text} />}
+                                    {showAdminPanel ? <ShieldCheck size={28} className={theme.text} /> : <Crown size={28} className={theme.text} />}
                                 </div>
                             ) : (
                                 <div className={`w-14 h-14 flex items-center justify-center shrink-0 rounded-[18px] shadow-inner ${theme.lightBg}`}>
@@ -1101,7 +1133,7 @@ function AppContent() {
                             <div className="text-left flex-1 min-w-0">
                                 <h3 className={`font-black font-khmer text-[17px] md:text-xl truncate ${isCoursePurchased ? theme.text : (isDarkMode ? 'text-white' : 'text-black')}`}>
                                     {isCoursePurchased 
-                                        ? (isAdmin ? 'Admin Control Panel' : 'Premium Member') 
+                                        ? (showAdminPanel ? 'Admin Control Panel' : 'Premium Member') 
                                         : (lang === 'en' ? `Register for ${appDisplayName}` : `ចុះឈ្មោះវគ្គ ${appDisplayName}`)}
                                 </h3>
                                 {isCoursePurchased && (
@@ -1118,21 +1150,22 @@ function AppContent() {
                             
                             <div className="max-w-3xl mx-auto relative z-10">
                                 
-                                {isAdmin ? (
+                                {showAdminPanel ? (
                                     <div className={`p-5 sm:p-8 rounded-3xl border shadow-2xl relative overflow-hidden ${isDarkMode ? 'bg-[#1C1C1E] border-[#2C2C2C]' : 'bg-white border-[#E5E7EB]'}`}>
                                         <div className={`absolute top-0 right-0 w-40 h-40 bg-gradient-to-br ${theme.gradient} rounded-full blur-[60px] opacity-10 pointer-events-none`}></div>
                                         <h4 className={`text-xl font-black font-khmer flex items-center gap-3 mb-6 ${theme.text}`}>
-                                            <ShieldCheck className="w-6 h-6"/> Admin Control Panel
+                                            <ShieldCheck className="w-6 h-6"/> Key Generator {isSuperAdmin && "(Super)"}
                                         </h4>
                                         
-                                        {/* ADMIN TAB NAVIGATION */}
-                                        <div className={`flex p-1.5 rounded-2xl mb-6 shadow-inner border ${isDarkMode ? 'bg-[#121212] border-[#2C2C2C]' : 'bg-[#F4F5F7] border-[#E5E7EB]'}`}>
-                                            <button onClick={() => setAdminView('keys')} className={`flex-1 py-2.5 rounded-xl font-bold text-[13px] uppercase tracking-wider transition-all ${adminView === 'keys' ? (isDarkMode ? 'bg-[#2C2C2C] text-white shadow-sm' : 'bg-white text-black shadow-sm') : 'text-gray-500 hover:text-gray-400'}`}>🔑 Key Manager</button>
-                                            <button onClick={() => setAdminView('ai')} className={`flex-1 py-2.5 rounded-xl font-bold text-[13px] uppercase tracking-wider transition-all ${adminView === 'ai' ? (isDarkMode ? 'bg-[#2C2C2C] text-white shadow-sm' : 'bg-white text-black shadow-sm') : 'text-gray-500 hover:text-gray-400'}`}>🧠 AI Studio</button>
-                                        </div>
+                                        {/* 🌟 UPGRADE: If Super Admin, show AI Manager Tab 🌟 */}
+                                        {isSuperAdmin && (
+                                            <div className={`flex p-1.5 rounded-2xl mb-6 shadow-inner border ${isDarkMode ? 'bg-[#121212] border-[#2C2C2C]' : 'bg-[#F4F5F7] border-[#E5E7EB]'}`}>
+                                                <button onClick={() => setAdminView('keys')} className={`flex-1 py-2.5 rounded-xl font-bold text-[13px] uppercase tracking-wider transition-all ${adminView === 'keys' ? (isDarkMode ? 'bg-[#2C2C2C] text-white shadow-sm' : 'bg-white text-black shadow-sm') : 'text-gray-500 hover:text-gray-400'}`}>🔑 Key Manager</button>
+                                                <button onClick={() => setAdminView('ai')} className={`flex-1 py-2.5 rounded-xl font-bold text-[13px] uppercase tracking-wider transition-all ${adminView === 'ai' ? (isDarkMode ? 'bg-[#2C2C2C] text-white shadow-sm' : 'bg-white text-black shadow-sm') : 'text-gray-500 hover:text-gray-400'}`}>🧠 AI Studio</button>
+                                            </div>
+                                        )}
 
                                         {adminView === 'keys' ? (
-                                            /* --- OLD KEY MANAGER UI --- */
                                             <div className="animate-fade-in-up">
                                                 <p className={`text-[14px] mb-6 font-khmer leading-relaxed ${isDarkMode ? 'text-[#9AA0A6]' : 'text-gray-500'}`}>
                                                     Generate secure, single-use activation keys for <strong>{appDisplayName}</strong>. Keys automatically expire 7 days after generation.
@@ -1195,7 +1228,7 @@ function AppContent() {
                                                 )}
                                             </div>
                                         ) : (
-                                            /* --- NEW AI MANAGER (Data is added from ChatBot) --- */
+                                            /* --- AI MANAGER (Data is added from ChatBot) --- */
                                             <div className="animate-fade-in-up space-y-4">
                                                 <p className={`text-[13px] font-khmer leading-relaxed ${isDarkMode ? 'text-[#9AA0A6]' : 'text-gray-500'}`}>
                                                     Manage the AI training data you added directly from the AI Chat. When ready, copy the final Data Code to update your main <code className="bg-black/20 px-1 rounded">data.js</code> file.
@@ -1507,8 +1540,8 @@ function AppContent() {
                                 <p className={`text-[13px] sm:text-[14px] mt-0.5 sm:mt-1 font-medium truncate ${isDarkMode ? 'text-[#9AA0A6]' : 'text-[#6B7280]'}`}>{lang === 'en' ? 'Professional photo editing & manipulation' : 'ការកែច្នៃរូបភាពបែបអាជីព'}</p>
                             </div>
                             <div className="flex items-center gap-2 sm:gap-3 shrink-0 pl-2">
-                                {!isAdmin && !purchasedCourses['photo']?.unlocked && <Lock size={18} className={`${APP_THEMES.photo.text} opacity-80`} />}
-                                {isAdmin && <ShieldCheck size={18} className="text-[#41B6E6]" />}
+                                {!showAdminPanel && !purchasedCourses['photo']?.unlocked && <Lock size={18} className={`${APP_THEMES.photo.text} opacity-80`} />}
+                                {showAdminPanel && <ShieldCheck size={18} className="text-[#41B6E6]" />}
                                 <div className={`w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center transition-colors ${isDarkMode ? 'bg-white/5 group-hover:bg-white/10' : 'bg-black/5 group-hover:bg-black/10'}`}>
                                     <ChevronRight size={20} className={isDarkMode ? 'text-[#A0A0A0] group-hover:text-white' : 'text-[#6B7280] group-hover:text-black'} />
                                 </div>
@@ -1527,8 +1560,8 @@ function AppContent() {
                                 <p className={`text-[13px] sm:text-[14px] mt-0.5 sm:mt-1 font-medium truncate ${isDarkMode ? 'text-[#9AA0A6]' : 'text-[#6B7280]'}`}>{lang === 'en' ? 'Vector graphics & illustration' : 'ការឌីហ្សាញក្រាហ្វិក និងគំនូរ'}</p>
                             </div>
                             <div className="flex items-center gap-2 sm:gap-3 shrink-0 pl-2">
-                                {!isAdmin && !purchasedCourses['designer']?.unlocked && <Lock size={18} className={`${APP_THEMES.designer.text} opacity-80`} />}
-                                {isAdmin && <ShieldCheck size={18} className="text-[#41B6E6]" />}
+                                {!showAdminPanel && !purchasedCourses['designer']?.unlocked && <Lock size={18} className={`${APP_THEMES.designer.text} opacity-80`} />}
+                                {showAdminPanel && <ShieldCheck size={18} className="text-[#41B6E6]" />}
                                 <div className={`w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center transition-colors ${isDarkMode ? 'bg-white/5 group-hover:bg-white/10' : 'bg-black/5 group-hover:bg-black/10'}`}>
                                     <ChevronRight size={20} className={isDarkMode ? 'text-[#A0A0A0] group-hover:text-white' : 'text-[#6B7280] group-hover:text-black'} />
                                 </div>
@@ -1547,8 +1580,8 @@ function AppContent() {
                                 <p className={`text-[13px] sm:text-[14px] mt-0.5 sm:mt-1 font-medium truncate ${isDarkMode ? 'text-[#9AA0A6]' : 'text-[#6B7280]'}`}>{lang === 'en' ? 'Page layout & typography design' : 'ការរៀបចំទំព័រ និងសៀវភៅ'}</p>
                             </div>
                             <div className="flex items-center gap-2 sm:gap-3 shrink-0 pl-2">
-                                {!isAdmin && !purchasedCourses['publisher']?.unlocked && <Lock size={18} className={`${APP_THEMES.publisher.text} opacity-80`} />}
-                                {isAdmin && <ShieldCheck size={18} className="text-[#41B6E6]" />}
+                                {!showAdminPanel && !purchasedCourses['publisher']?.unlocked && <Lock size={18} className={`${APP_THEMES.publisher.text} opacity-80`} />}
+                                {showAdminPanel && <ShieldCheck size={18} className="text-[#41B6E6]" />}
                                 <div className={`w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center transition-colors ${isDarkMode ? 'bg-white/5 group-hover:bg-white/10' : 'bg-black/5 group-hover:bg-black/10'}`}>
                                     <ChevronRight size={20} className={isDarkMode ? 'text-[#A0A0A0] group-hover:text-white' : 'text-[#6B7280] group-hover:text-black'} />
                                 </div>
@@ -1563,13 +1596,13 @@ function AppContent() {
             )}
             {activeTab === 'tools' && <div className="pb-24"><ToolsView isDarkMode={isDarkMode} /></div>}
             
-            {/* TEST NOW RECEIVES ISADMIN TO BYPASS LOCK */}
-            {activeTab === 'quiz' && <Test isDarkMode={isDarkMode} isAdmin={isAdmin} />}
+            {/* 🌟 TEST RECEIVES SUPER ADMIN BYPASS 🌟 */}
+            {activeTab === 'quiz' && <Test isDarkMode={isDarkMode} isAdmin={isSuperAdmin} />}
         </main>
       ) : (
         <div className={`flex-1 relative w-full h-full md:pb-0 z-0 ${activeAppTab ? 'hidden' : 'block'}`} style={{ paddingTop: 'max(env(safe-area-inset-top), 0px)' }}>
-             {/* CHATBOT NOW RECEIVES ADMIN, LIVEAIDATA, AND SETLIVEAIDATA */}
-             <ChatBot messages={chatMessages} setMessages={setChatMessages} isDarkMode={isDarkMode} liveAiData={liveAiData} setLiveAiData={setLiveAiData} isAdmin={isAdmin} />
+             {/* 🌟 CHATBOT RECEIVES SUPER ADMIN AND LIVE DATA 🌟 */}
+             <ChatBot messages={chatMessages} setMessages={setChatMessages} isDarkMode={isDarkMode} liveAiData={liveAiData} setLiveAiData={setLiveAiData} isAdmin={isSuperAdmin} />
         </div>
       )}
 
