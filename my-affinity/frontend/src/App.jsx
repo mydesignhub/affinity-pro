@@ -3,7 +3,8 @@ import { ChevronRight, PlayCircle, Sparkles, Zap, Facebook, Send, Globe, BookOpe
 
 // FIREBASE IMPORTS
 import { signInWithPopup, signOut } from 'firebase/auth';
-import { doc, setDoc, getDoc, updateDoc, collection, query, where, getDocs } from 'firebase/firestore';
+// 🌟 FIX: Added deleteDoc to the imports
+import { doc, setDoc, getDoc, updateDoc, collection, query, where, getDocs, deleteDoc } from 'firebase/firestore';
 import { auth, googleProvider, db } from './firebase'; 
 
 import Header from './components/layout/Header';
@@ -611,7 +612,7 @@ function AppContent() {
   // 🌟 TWO-LEVEL ADMIN LOGIC
   const [isSuperAdmin, setIsSuperAdmin] = useState(false);
   const [showSuperAdminModal, setShowSuperAdminModal] = useState(false);
-  const [superAdminTab, setSuperAdminTab] = useState('ai'); // 'ai' or 'cert'
+  const [superAdminTab, setSuperAdminTab] = useState('ai'); 
 
   useEffect(() => {
       const unlockSuperAdmin = () => setIsSuperAdmin(true);
@@ -655,7 +656,10 @@ function AppContent() {
           const q = query(collection(db, "ai_knowledge"));
           const snap = await getDocs(q);
           const cloudData = [];
-          snap.forEach(doc => cloudData.push(doc.data()));
+          
+          // 🌟 FIX: We explicitly save doc.id here so we know what to delete later!
+          snap.forEach(doc => cloudData.push({ ...doc.data(), id: doc.id }));
+          
           if (cloudData.length > 0) {
               setLiveAiData(cloudData);
               localStorage.setItem('myAffinity_live_ai', JSON.stringify(cloudData));
@@ -1030,7 +1034,6 @@ function AppContent() {
       setTimeout(() => setCopiedAll(false), 2000);
   };
 
-  // 🌟 TRIGGER CERTIFICATE TEST FROM ADMIN PANEL
   const testCertificate = (appId) => {
       triggerHaptic('success');
       setShowSuperAdminModal(false);
@@ -1087,7 +1090,6 @@ function AppContent() {
         .animate-fade-in-up { animation: fade-in-up 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
       `}</style>
       
-      {/* 🌟 FIXED HEADER VISIBILITY 🌟 */}
       <div 
           style={{ paddingTop: 'max(env(safe-area-inset-top), 0px)' }} 
           className={`w-full shrink-0 ${(activeTab === 'tools' || activeTab === 'ai') ? 'hidden md:block' : 'block'}`}
@@ -1152,14 +1154,31 @@ function AppContent() {
                                   <div className="mt-4 border-t border-dashed border-gray-500/30 pt-4">
                                       <div className="flex justify-between items-center mb-3">
                                           <span className={`text-[10px] font-bold uppercase tracking-widest ${isDarkMode ? 'text-green-400' : 'text-green-600'}`}>{liveAiData.length} Live Offline Entries</span>
-                                          <button onClick={() => { if(window.confirm('Clear all offline training data?')) { setLiveAiData([]); localStorage.removeItem('myAffinity_live_ai'); } }} className="text-red-500 hover:text-red-400"><Trash2 size={16}/></button>
+                                          <button onClick={async () => { 
+                                              if(window.confirm('Clear all offline training data from database?')) { 
+                                                  triggerHaptic();
+                                                  // 🌟 FIX: Permanently delete all entries from Firestore
+                                                  for (const item of liveAiData) {
+                                                      if (item.id) {
+                                                          try { await deleteDoc(doc(db, "ai_knowledge", item.id)); } catch(e) {}
+                                                      }
+                                                  }
+                                                  setLiveAiData([]); 
+                                                  localStorage.removeItem('myAffinity_live_ai'); 
+                                              } 
+                                          }} className="text-red-500 hover:text-red-400"><Trash2 size={16}/></button>
                                       </div>
                                       <div className="space-y-3 max-h-64 overflow-y-auto custom-scrollbar pr-1">
                                           {liveAiData.map((data, i) => (
                                               <div key={i} className={`p-3.5 rounded-xl border text-[11px] font-khmer leading-relaxed relative ${isDarkMode ? 'bg-[#121212] border-[#2C2C2C] text-[#A0A0A0]' : 'bg-[#F8F9FA] border-[#E5E7EB] text-[#6B7280]'}`}>
                                                   <button 
-                                                      onClick={() => {
+                                                      onClick={async () => {
                                                           triggerHaptic();
+                                                          // 🌟 FIX: Permanently delete this single entry from Firestore
+                                                          if (data.id) {
+                                                              try { await deleteDoc(doc(db, "ai_knowledge", data.id)); } 
+                                                              catch(e) { console.error("Failed to delete from DB"); }
+                                                          }
                                                           const updated = liveAiData.filter((_, index) => index !== i);
                                                           setLiveAiData(updated);
                                                           localStorage.setItem('myAffinity_live_ai', JSON.stringify(updated));
@@ -1230,7 +1249,6 @@ function AppContent() {
         />
       )}
 
-      {/* 🌟 FULL SCREEN COURSE PANEL 🌟 */}
       {activeAppTab && !expandedLesson && (
         <div className={`fixed inset-0 z-[60] overflow-y-auto custom-scrollbar flex flex-col ${isDarkMode ? 'bg-[#0A0A0A]' : 'bg-[#F4F5F7]'}`}>
             
@@ -1294,7 +1312,6 @@ function AppContent() {
                                             <ShieldCheck className="w-6 h-6"/> Key Generator
                                         </h4>
 
-                                        {/* --- ONLY KEY MANAGER UI HERE (AI Studio moved to global panel) --- */}
                                         <div className="animate-fade-in-up">
                                             <p className={`text-[14px] mb-6 font-khmer leading-relaxed ${isDarkMode ? 'text-[#9AA0A6]' : 'text-gray-500'}`}>
                                                 Generate secure, single-use activation keys for <strong>{appDisplayName}</strong>. Keys automatically expire 7 days after generation.
@@ -1667,12 +1684,10 @@ function AppContent() {
             )}
             {activeTab === 'tools' && <div className="pb-24"><ToolsView isDarkMode={isDarkMode} /></div>}
             
-            {/* 🌟 TEST RECEIVES SUPER ADMIN BYPASS 🌟 */}
             {activeTab === 'quiz' && <Test isDarkMode={isDarkMode} isAdmin={isSuperAdmin} />}
         </main>
       ) : (
         <div className={`flex-1 relative w-full h-full md:pb-0 z-0 ${activeAppTab ? 'hidden' : 'block'}`} style={{ paddingTop: 'max(env(safe-area-inset-top), 0px)' }}>
-             {/* 🌟 CHATBOT RECEIVES SUPER ADMIN AND LIVE DATA 🌟 */}
              <ChatBot messages={chatMessages} setMessages={setChatMessages} isDarkMode={isDarkMode} liveAiData={liveAiData} setLiveAiData={setLiveAiData} isAdmin={isSuperAdmin} />
         </div>
       )}

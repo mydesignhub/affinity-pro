@@ -65,7 +65,6 @@ const callRealAI = async (userPrompt, language, history = []) => {
     }
 };
 
-// 🌟 FIX: The Ultimate Cleaner! Destroys Emojis, Spaces, and Punctuation 🌟
 const strictClean = (text) => {
     if (!text) return '';
     return text.toLowerCase().replace(/[^\p{L}\p{N}]/gu, '');
@@ -116,7 +115,6 @@ const ChatBot = ({ messages, setMessages, isDarkMode, liveAiData = [], setLiveAi
           const prompt = `Analyze this interaction:\nUser Question: "${userQ}"\nBot Answer: "${botA}"\n\nTask:\n1. Check if this is related to Graphic Design, Affinity software, Photo Editing, Layouts, or Typography. If it is UNRELATED (e.g., cooking, politics, general greetings), reply ONLY with the exact word: REJECT\n2. If it IS related, correct grammar, translate it to provide both English and Khmer answers, and format as JSON:\n{"primaryKeys": ["key1", "key2"], "keys": ["k1", "k2", "k3"], "regex": ["reg1"], "answer": "Corrected Khmer", "answer_en": "English translation"}`;
 
           const res = await callRealAI(prompt, 'en', []);
-          
           if (res.includes('REJECT')) return; 
           
           const match = res.match(/\{[\s\S]*\}/);
@@ -134,8 +132,11 @@ const ChatBot = ({ messages, setMessages, isDarkMode, liveAiData = [], setLiveAi
           newEntry.primaryKeys = uniquePrimaryKeys;
           newEntry.keys = uniqueKeys;
           
+          // 🌟 FIX: Add to Firestore AND grab the unique Document ID
+          const docRef = await addDoc(collection(db, "ai_knowledge"), newEntry);
+          newEntry.id = docRef.id; // Attach ID so we can delete it later!
+
           if(setLiveAiData) setLiveAiData(prev => [...prev, newEntry]);
-          await addDoc(collection(db, "ai_knowledge"), newEntry);
 
       } catch (err) {
           console.log("Secret training skipped:", err.message);
@@ -174,8 +175,11 @@ const ChatBot = ({ messages, setMessages, isDarkMode, liveAiData = [], setLiveAi
           newEntry.primaryKeys = uniquePrimaryKeys;
           newEntry.keys = uniqueKeys;
           
+          // 🌟 FIX: Add to Firestore AND grab the unique Document ID
+          const docRef = await addDoc(collection(db, "ai_knowledge"), newEntry);
+          newEntry.id = docRef.id; // Attach ID so we can delete it later!
+
           if(setLiveAiData) setLiveAiData(prev => [...prev, newEntry]);
-          await addDoc(collection(db, "ai_knowledge"), newEntry);
 
           triggerHaptic('success');
           setMessages(prev => {
@@ -318,12 +322,10 @@ const ChatBot = ({ messages, setMessages, isDarkMode, liveAiData = [], setLiveAi
       return chipsData ? chipsData.slice(0, 3) : getRandomItems(getSuggestList(), 3);
   };
 
-  // 🌟 ZERO-FLAW NLP ROUTER 🌟
   const findAIResponse = (inputTxt, history = []) => {
       const rawInput = inputTxt.trim();
       const cleanInput = strictClean(rawInput); 
 
-      // 🌟 FIX: Remove ALL question words perfectly before checking the core subject
       const questionWords = ['តើ', 'ជាអ្វី', 'អ្វីទៅជា', 'អ្វីទៅ', 'ស្អីគេ', 'ស្អី', 'គឺជាអ្វី', 'របៀប', 'របៀបណា', 'យ៉ាងម៉េច', 'howto', 'whatis', 'explain'];
       let coreSubject = cleanInput;
       let wordStripped = true;
@@ -340,7 +342,6 @@ const ChatBot = ({ messages, setMessages, isDarkMode, liveAiData = [], setLiveAi
       }
       coreSubject = coreSubject.trim();
 
-      // 1. EXACT MATCH GUARANTEE (Including Emoji support)
       for (const item of COMBINED_DB) {
           const exactTriggers = [...(item.primaryKeys || []), ...(item.keys || [])].map(strictClean); 
           if (exactTriggers.includes(cleanInput) || exactTriggers.includes(coreSubject)) {
@@ -361,11 +362,9 @@ const ChatBot = ({ messages, setMessages, isDarkMode, liveAiData = [], setLiveAi
           }
       }
 
-      // 2. LONG SENTENCE FIREWALL
       const wordCount = rawInput.trim().split(/\s+/).length;
       if (wordCount > 4) return { needsBackend: true, query: rawInput };
 
-      // 3. SHORT TYPO & DEEP KEYWORD GUESSING
       let bestMatch = null;
       let highestScore = 0;
       for (const item of COMBINED_DB) {
@@ -390,7 +389,6 @@ const ChatBot = ({ messages, setMessages, isDarkMode, liveAiData = [], setLiveAi
           return { answer: answerText, chips: generateFilteredChips(bestMatch, rawInput), uiElement: bestMatch.uiElement, colors: finalColors, actionButton: bestMatch.actionButton, needsBackend: false };
       }
 
-      // 3. CONVERSATIONAL FALLBACKS
       const FOLLOW_UP_MAP = {
           'តើអ្វីទៅជា Graphic Design?': 'ធាតុផ្សំមូលដ្ឋានទាំង ៦', 'what is graphic design': 'the 6 elements of design',
           'ធាតុផ្សំមូលដ្ឋានទាំង ៦': 'គោលការណ៍រចនា', 'the 6 elements of design': 'design principles',
