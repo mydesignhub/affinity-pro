@@ -21,6 +21,7 @@ const shuffleArray = (array) => {
     return newArr;
 };
 
+// Default empty states
 const defaultLevels = { photo: ['beginner'], designer: ['beginner'], publisher: ['beginner'] };
 const defaultStars = { 
     photo: { beginner: 0, intermediate: 0, advanced: 0 }, 
@@ -41,16 +42,16 @@ const Test = ({ isDarkMode, isAdmin }) => {
     const [isAnswered, setIsAnswered] = useState(false);
     const [quizConfig, setQuizConfig] = useState({ level: 'beginner', amount: 5 });
     
+    // Tracks which Affinity app is active
     const [activeAppTab, setActiveAppTab] = useState('photo');
 
+    // Initialize states safely to prevent Error #418 Hydration Mismatch
     const [userName, setUserName] = useState('');
     const [highScores, setHighScores] = useState(defaultScores);
     const [unlockedLevels, setUnlockedLevels] = useState(defaultLevels);
     const [levelStars, setLevelStars] = useState(defaultStars);
     const [certsData, setCertsData] = useState(defaultCerts);
     const [isDataLoaded, setIsDataLoaded] = useState(false);
-
-    const [activeCertData, setActiveCertData] = useState(null);
 
     const nameInputRef = useRef(null);
 
@@ -59,6 +60,7 @@ const Test = ({ isDarkMode, isAdmin }) => {
     const [streak, setStreak] = useState(0);
     const [isShaking, setIsShaking] = useState(false);
 
+    // Read from localStorage ONLY after the component has mounted
     useEffect(() => {
         if (typeof window !== 'undefined') {
             const savedName = localStorage.getItem('myAffinity_user_name');
@@ -80,6 +82,7 @@ const Test = ({ isDarkMode, isAdmin }) => {
         }
     }, []);
 
+    // Extract current app's specific data
     const currentUnlocked = unlockedLevels[activeAppTab] || ['beginner'];
     const currentStars = levelStars[activeAppTab] || { beginner: 0, intermediate: 0, advanced: 0 };
     const currentHighScore = highScores[activeAppTab] || 0;
@@ -91,6 +94,7 @@ const Test = ({ isDarkMode, isAdmin }) => {
         }
     }, [activeAppTab, userName]); 
 
+    // Save everything to localStorage whenever it changes (ONLY if data is loaded)
     useEffect(() => {
         if (isDataLoaded) {
             localStorage.setItem('myAffinity_quiz_unlocked', JSON.stringify(unlockedLevels));
@@ -203,8 +207,6 @@ const Test = ({ isDarkMode, isAdmin }) => {
                 const displayScore = isAdmin && percentage < 90 ? 100 : percentage;
                 const newCert = { name: userName || 'Administrator', score: displayScore, date: new Date().toISOString(), appCourse: appDisplayName };
                 setCertsData(prev => ({ ...prev, [activeAppTab]: newCert }));
-                
-                setActiveCertData(newCert);
                 setGameState('certificate');
             } else {
                 setCertsData(prev => ({ ...prev, [activeAppTab]: null })); 
@@ -245,24 +247,16 @@ const Test = ({ isDarkMode, isAdmin }) => {
         }
     };
 
-    // 🌟 FIX: Removed the wrapper completely. Renders exactly like the overlay. 🌟
-    if (gameState === 'certificate') {
-        const certToRender = activeCertData || currentCert;
-        
-        if (!certToRender) {
-             setTimeout(() => setGameState('menu'), 0);
-             return null;
-        }
-
+    // 🌟 THE FIX: Simplified exactly like the working model 🌟
+    if (gameState === 'certificate' && currentCert) {
         return (
-            <CertificateForm 
-                certData={certToRender} 
-                isDarkMode={isDarkMode} 
-                onBack={() => {
-                    setActiveCertData(null);
-                    setGameState('menu');
-                }} 
-            />
+            <div className="fixed inset-0 w-full h-full z-[9999] bg-black">
+                <CertificateForm 
+                    certData={currentCert} 
+                    isDarkMode={isDarkMode} 
+                    onBack={() => setGameState('menu')} 
+                />
+            </div>
         );
     }
 
@@ -377,13 +371,30 @@ const Test = ({ isDarkMode, isAdmin }) => {
                                 {!allUnlocked && <Lock size={16} className="opacity-30"/>}
                             </button>
 
-                            {/* Normal Users see their earned certificate here */}
-                            {currentCert && (
+                            {/* 🌟 FIX: The robust internal Admin Button that actually works flawlessly! 🌟 */}
+                            {isAdmin && (
                                 <button 
                                     onClick={() => {
-                                        setActiveCertData(currentCert);
+                                        triggerHaptic('success');
+                                        const finalName = userName.trim() || 'Admin Tester';
+                                        const appDisplayName = activeAppTab === 'photo' ? 'Affinity Photo' : activeAppTab === 'designer' ? 'Affinity Designer' : 'Affinity Publisher';
+                                        const newCert = { name: finalName, score: 100, date: new Date().toISOString(), appCourse: appDisplayName };
+                                        
+                                        // Instantly save and trigger rendering!
+                                        setCertsData(prev => ({ ...prev, [activeAppTab]: newCert }));
                                         setGameState('certificate');
-                                    }} 
+                                    }}
+                                    className={`p-4 rounded-[24px] border flex items-center justify-center gap-3 transition-all duration-500 ease-out hover:-translate-y-1 active:scale-95 shadow-md ${isDarkMode ? 'border-[#41B6E6]/50 bg-[#41B6E6]/10 text-[#41B6E6] hover:shadow-[0_10px_20px_rgba(65,182,230,0.15)]' : 'border-[#0277C5]/50 bg-[#0277C5]/10 text-[#0277C5] hover:shadow-[0_10px_20px_rgba(2,119,197,0.15)]'}`}
+                                >
+                                    <ShieldCheck size={20} />
+                                    <span className="font-khmer font-black text-[15px] tracking-tight">Admin: Generate Certificate</span>
+                                </button>
+                            )}
+
+                            {/* Normal user view certificate button */}
+                            {currentCert && !isAdmin && (
+                                <button 
+                                    onClick={() => setGameState('certificate')} 
                                     className={`p-4 rounded-[24px] border flex items-center justify-center gap-3 transition-all duration-500 ease-out hover:-translate-y-1 active:scale-95 shadow-md ${isDarkMode ? 'border-[#41B6E6]/50 bg-[#41B6E6]/10 text-[#41B6E6] hover:shadow-[0_10px_20px_rgba(65,182,230,0.15)]' : 'border-[#0277C5]/50 bg-[#0277C5]/10 text-[#0277C5] hover:shadow-[0_10px_20px_rgba(2,119,197,0.15)]'}`}
                                 >
                                     <Award size={20} />
