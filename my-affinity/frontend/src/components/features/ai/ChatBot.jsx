@@ -65,7 +65,7 @@ const callRealAI = async (userPrompt, language, history = []) => {
     }
 };
 
-// 🌟 FIX: Bulletproof Regex. Preserves pure text, deletes emojis and punctuation.
+// 🌟 ULTIMATE NORMALIZER: Preserves English, Numbers, and ALL Khmer characters. Destroys Emojis and spaces! 🌟
 const strictClean = (text) => {
     if (!text) return '';
     return text.toLowerCase().replace(/[^a-z0-9\u1780-\u17FF]/g, '');
@@ -322,19 +322,36 @@ const ChatBot = ({ messages, setMessages, isDarkMode, liveAiData = [], setLiveAi
       return chipsData ? chipsData.slice(0, 3) : getRandomItems(getSuggestList(), 3);
   };
 
-  // 🌟 FIX: DEEP SCAN MATCHING ENGINE 🌟
+  // 🌟 ZERO-FLAW NLP ROUTER 🌟
   const findAIResponse = (inputTxt, history = []) => {
       const rawInput = inputTxt.trim();
       const cleanInput = strictClean(rawInput); 
 
-      // 1. DEEP SUBSTRING MATCH (Checks if DB key exists ANYWHERE inside user input)
+      // Remove Question Words
+      const questionWords = ['តើ', 'ជាអ្វី', 'អ្វីទៅជា', 'អ្វីទៅ', 'ស្អីគេ', 'ស្អី', 'គឺជាអ្វី', 'របៀប', 'របៀបណា', 'យ៉ាងម៉េច', 'howto', 'whatis', 'explain'];
+      let coreSubject = cleanInput;
+      let wordStripped = true;
+      while(wordStripped) {
+          wordStripped = false;
+          for(const qw of questionWords) {
+              const cleanQw = strictClean(qw);
+              if (coreSubject.startsWith(cleanQw)) {
+                  coreSubject = coreSubject.substring(cleanQw.length);
+                  wordStripped = true;
+                  break;
+              }
+          }
+      }
+      coreSubject = coreSubject.trim();
+
+      // 1. DEEP INCLUDE GUARANTEE
       for (const item of COMBINED_DB) {
           const exactTriggers = [...(item.primaryKeys || []), ...(item.keys || [])].map(strictClean); 
           
-          // If the user's cleaned prompt contains the cleaned database key perfectly
-          const isMatch = exactTriggers.some(trigger => trigger.length > 3 && cleanInput.includes(trigger));
+          const isExact = exactTriggers.includes(cleanInput) || exactTriggers.includes(coreSubject);
+          const isDeepInclude = exactTriggers.some(trigger => trigger.length > 3 && (cleanInput.includes(trigger) || coreSubject.includes(trigger)));
 
-          if (isMatch) {
+          if (isExact || isDeepInclude) {
               setCurrentTopic(item.primaryKeys ? item.primaryKeys[0] : null); 
               let answerText = lang === 'en' && item.answer_en ? item.answer_en : item.answer;
               let finalColors = item.colors;
@@ -352,7 +369,105 @@ const ChatBot = ({ messages, setMessages, isDarkMode, liveAiData = [], setLiveAi
           }
       }
 
-      // 2. CONVERSATIONAL FALLBACKS
+      // 2. LONG SENTENCE FIREWALL (Only block if > 6 words so specific searches pass)
+      const wordCount = rawInput.trim().split(/\s+/).length;
+      if (wordCount > 6) return { needsBackend: true, query: rawInput };
+
+      // 3. SHORT TYPO & DEEP KEYWORD GUESSING
+      let bestMatch = null;
+      let highestScore = 0;
+      for (const item of COMBINED_DB) {
+          let score = 0;
+          const searchKeys = [...(item.primaryKeys || []), ...(item.keys || [])].map(strictClean);
+          for(const key of searchKeys) {
+              if (key.length >= 4 && cleanInput.includes(key)) score = Math.max(score, key.length * 10); 
+              if (cleanInput.length >= 4 && key.includes(cleanInput)) score = Math.max(score, cleanInput.length * 10);
+          }
+          
+          if (item.primaryKeys?.some(pk => rawInput.includes(pk) || pk.includes(rawInput.trim()))) {
+              score = Math.max(score, 1000); 
+          }
+          
+          if (score > highestScore) { highestScore = score; bestMatch = item; }
+      }
+
+      if (bestMatch && highestScore >= 50) {
+          setCurrentTopic(bestMatch.primaryKeys ? bestMatch.primaryKeys[0] : null); 
+          let answerText = lang === 'en' && bestMatch.answer_en ? bestMatch.answer_en : bestMatch.answer;
+          let finalColors = bestMatch.colors;
+
+          if (bestMatch.dynamicColor) {
+              const hex = '#' + Math.floor(Math.random()*16777215).toString(16).padStart(6, '0').toUpperCase();
+              finalColors = [hex]; answerText = answerText.replace('{hex}', hex);
+          }
+          return { answer: answerText, chips: generateFilteredChips(bestMatch, rawInput), uiElement: bestMatch.uiElement, colors: finalColors, actionButton: bestMatch.actionButton, needsBackend: false };
+      }
+
+      // 4. MASSIVE CONVERSATIONAL RABBIT HOLE (Expanded 50 Questions Map)
+      const FOLLOW_UP_MAP = {
+          // Foundations
+          'តើអ្វីទៅជា Graphic Design?': 'ធាតុផ្សំមូលដ្ឋានទាំង ៦', 'what is graphic design': 'the 6 elements of design',
+          'ធាតុផ្សំមូលដ្ឋានទាំង ៦': 'គោលការណ៍រចនា', 'the 6 elements of design': 'design principles',
+          'គោលការណ៍រចនា': 'ឋានានុក្រមទស្សនីយភាព', 'design principles': 'visual hierarchy',
+          
+          // Layout
+          'ឋានានុក្រមទស្សនីយភាព': 'តើ Contrast ជាអ្វី?', 'visual hierarchy': 'what is contrast',
+          'តើ Contrast ជាអ្វី?': 'តើ Alignment ជាអ្វី?', 'what is contrast': 'what is alignment',
+          'តើ Alignment ជាអ្វី?': 'តើ Proximity ជាអ្វី?', 'what is alignment': 'what is proximity',
+          'តើ Proximity ជាអ្វី?': 'អ្វីទៅជា White Space?', 'what is proximity': 'what is white space',
+          'អ្វីទៅជា White Space?': 'Rule of Thirds ជាអ្វី?', 'what is white space': 'what is the rule of thirds',
+          'Rule of Thirds ជាអ្វី?': 'Grid System ជាអ្វី?', 'what is the rule of thirds': 'what is a grid system',
+          'Grid System ជាអ្វី?': 'Margin និង Padding ខុសគ្នាម៉េច?', 'what is a grid system': 'margin vs padding',
+          
+          // Typography
+          'អ្វីទៅជា Typography?': 'កាយវិភាគវិទ្យាអក្សរ', 'what is typography': 'type anatomy',
+          'កាយវិភាគវិទ្យាអក្សរ': 'របៀបតម្រៀប Font ឱ្យស្អាត?', 'type anatomy': 'how to pair fonts',
+          'របៀបតម្រៀប Font ឱ្យស្អាត?': 'Kerning និង Tracking ខុសគ្នាម៉េច?', 'how to pair fonts': 'kerning vs tracking',
+          'Kerning និង Tracking ខុសគ្នាម៉េច?': 'Variable Fonts', 'kerning vs tracking': 'what are variable fonts',
+          
+          // Color
+          'Color Theory': 'អត្ថន័យនៃពណ៌ (Color Psychology)', 'color theory': 'color psychology',
+          'អត្ថន័យនៃពណ៌ (Color Psychology)': 'ក្បួនពណ៌ UI ៦០-៣០-១០', 'color psychology': 'the 60-30-10 rule',
+          'ក្បួនពណ៌ UI ៦០-៣០-១០': 'តើ HSL គឺជាអ្វី?', 'the 60-30-10 rule': 'what is hsl',
+          'តើ HSL គឺជាអ្វី?': 'RGB និង CMYK ខុសគ្នាម៉េច?', 'what is hsl': 'rgb vs cmyk',
+          
+          // Software Core
+          'អ្វីទៅជា Vector និង Raster?': 'តើ Photoshop និង Illustrator ខុសគ្នាម៉េច?', 'vector vs raster': 'photoshop vs illustrator',
+          'តើ Photoshop និង Illustrator ខុសគ្នាម៉េច?': 'របៀបប្រើ Pen Tool', 'photoshop vs illustrator': 'how to use the pen tool',
+          'របៀបប្រើ Pen Tool': 'បញ្ញាសិប្បនិម្មិត (AI in Design)', 'how to use the pen tool': 'ai in design',
+          
+          // Editing & Manipulation
+          'កាត់តរូបភាព': 'តើ Dodge និង Burn គឺជាអ្វី?', 'photomanipulation': 'dodge and burn',
+          'តើ Dodge និង Burn គឺជាអ្វី?': 'ព្រិល Background', 'dodge and burn': 'depth of field',
+          'ព្រិល Background': 'Smart Object ជាអ្វី?', 'depth of field': 'what is a smart object',
+          'Smart Object ជាអ្វី?': 'តើ Blend Modes ដំណើរការយ៉ាងម៉េច?', 'what is a smart object': 'how do blend modes work',
+          'តើ Blend Modes ដំណើរការយ៉ាងម៉េច?': 'Opacity និង Fill ខុសគ្នាម៉េច?', 'how do blend modes work': 'opacity vs fill',
+
+          // Business & Freelance
+          'របៀបគិតលុយអតិថិជន? 💰': 'Value-Based Pricing', 'how to price my work? 💰': 'value based pricing',
+          'Value-Based Pricing': 'របៀបដោះស្រាយភ្ញៀវរអ៊ូ?', 'value based pricing': 'dealing with difficult clients?',
+          'របៀបដោះស្រាយភ្ញៀវរអ៊ូ?': 'របៀបរៀបចំ Portfolio?', 'dealing with difficult clients?': 'how to build a portfolio',
+          'របៀបរៀបចំ Portfolio?': 'ក្រមសីលធម៌ កម្មសិទ្ធិបញ្ញា', 'how to build a portfolio': 'design copyright and ethics',
+      };
+
+      const exactMore = ['ទៀត', 'more', 'next', 'បន្ត', 'ប្រាប់ទៀត', 'តទៀត', 'continue', 'go on'].map(strictClean);
+      if ((exactMore.includes(cleanInput) || cleanInput.endsWith('ទៀត')) && currentTopic) {
+          const topicData = COMBINED_DB.find(item => [...(item.primaryKeys || []), ...(item.keys || [])].map(strictClean).includes(strictClean(currentTopic)));
+          if (topicData && topicData.primaryKeys) {
+              const nextTopic = FOLLOW_UP_MAP[topicData.primaryKeys[0]] || FOLLOW_UP_MAP[strictClean(topicData.primaryKeys[0])];
+              if (nextTopic) {
+                  const nextData = COMBINED_DB.find(item => [...(item.primaryKeys || []), ...(item.keys || [])].map(strictClean).includes(strictClean(nextTopic)));
+                  if (nextData) {
+                      setCurrentTopic(nextData.primaryKeys[0]);
+                      return { answer: lang === 'en' ? nextData.answer_en || nextData.answer : nextData.answer, chips: generateFilteredChips(nextData, rawInput), needsBackend: false };
+                  }
+              } else {
+                  return { answer: lang === 'en' ? "That covers the basics of this topic! 🎨 What next?" : "បាទ សម្រាប់ប្រធានបទនេះគឺអស់ត្រឹមនេះហើយ! 🎨 តើបងចង់រៀនពីរឿងអ្វីបន្ទាប់?", chips: getRandomItems(getSuggestList(), 3), needsBackend: false };
+              }
+          }
+      }
+
+      // 5. Casual/System Fallbacks
       const boredomWords = ['អផ្សុក', 'មិនដឹងសួរអី', 'សួរអី', 'bored', 'whattoask', 'play', 'លេង', 'សួរអីគេ'].map(strictClean);
       if (boredomWords.some(w => cleanInput.includes(w))) {
           return { answer: getRandomQuizInvitation(lang), chips: getRandomItems(getSuggestList(), 3), needsBackend: false };
@@ -416,7 +531,16 @@ const ChatBot = ({ messages, setMessages, isDarkMode, liveAiData = [], setLiveAi
           }
       }
 
-      // If nothing matches perfectly, route to Backend API
+      if (bestMatch && highestScore >= 30) {
+          const topicName = bestMatch.primaryKeys ? bestMatch.primaryKeys[0] : (bestMatch.keys ? bestMatch.keys[0] : null);
+          setCurrentTopic(topicName); 
+          return { 
+              answer: lang === 'en' ? `I'm not completely sure 🤔. \n\nDid you mean "**${topicName}**"?` : `ខ្ញុំមិនសូវប្រាកដទេ 🤔។ \n\nតើបងចង់សួរពី "**${topicName}**" មែនទេ?`, 
+              chips: [lang === 'en' ? "Yes" : "បាទ", lang === 'en' ? "No thanks" : "ទេ អរគុណ", ...getRandomItems(getSuggestList(), 1)],
+              needsBackend: false
+          };
+      }
+
       return { needsBackend: true, query: rawInput };
   };
 
