@@ -21,7 +21,6 @@ const shuffleArray = (array) => {
     return newArr;
 };
 
-// Default empty states
 const defaultLevels = { photo: ['beginner'], designer: ['beginner'], publisher: ['beginner'] };
 const defaultStars = { 
     photo: { beginner: 0, intermediate: 0, advanced: 0 }, 
@@ -31,7 +30,8 @@ const defaultStars = {
 const defaultScores = { photo: 0, designer: 0, publisher: 0 };
 const defaultCerts = { photo: null, designer: null, publisher: null };
 
-const Test = ({ isDarkMode, isAdmin }) => {
+// 🌟 FIX: Added admin props to receive the command from App.jsx
+const Test = ({ isDarkMode, isAdmin, adminCertRequest, clearAdminCertRequest }) => {
     const { lang } = useLanguage(); 
 
     const [gameState, setGameState] = useState('menu');
@@ -42,10 +42,8 @@ const Test = ({ isDarkMode, isAdmin }) => {
     const [isAnswered, setIsAnswered] = useState(false);
     const [quizConfig, setQuizConfig] = useState({ level: 'beginner', amount: 5 });
     
-    // Tracks which Affinity app is active
     const [activeAppTab, setActiveAppTab] = useState('photo');
 
-    // Initialize states safely to prevent Error #418 Hydration Mismatch
     const [userName, setUserName] = useState('');
     const [highScores, setHighScores] = useState(defaultScores);
     const [unlockedLevels, setUnlockedLevels] = useState(defaultLevels);
@@ -53,6 +51,7 @@ const Test = ({ isDarkMode, isAdmin }) => {
     const [certsData, setCertsData] = useState(defaultCerts);
     const [isDataLoaded, setIsDataLoaded] = useState(false);
 
+    const [activeCertData, setActiveCertData] = useState(null);
     const nameInputRef = useRef(null);
 
     const [timeLeft, setTimeLeft] = useState(null);
@@ -60,7 +59,6 @@ const Test = ({ isDarkMode, isAdmin }) => {
     const [streak, setStreak] = useState(0);
     const [isShaking, setIsShaking] = useState(false);
 
-    // Read from localStorage ONLY after the component has mounted
     useEffect(() => {
         if (typeof window !== 'undefined') {
             const savedName = localStorage.getItem('myAffinity_user_name');
@@ -82,7 +80,31 @@ const Test = ({ isDarkMode, isAdmin }) => {
         }
     }, []);
 
-    // Extract current app's specific data
+    // 🌟 FIX: Listen for the direct prop from App.jsx! 🌟
+    useEffect(() => {
+        if (adminCertRequest) {
+            const appId = adminCertRequest;
+            const appDisplayName = appId === 'photo' ? 'Affinity Photo' : appId === 'designer' ? 'Affinity Designer' : 'Affinity Publisher';
+            
+            const newCert = { 
+                name: userName.trim() || 'Super Admin Tester', 
+                score: 100, 
+                date: new Date().toISOString(), 
+                appCourse: appDisplayName 
+            };
+            
+            setActiveAppTab(appId);
+            setCertsData(prev => ({ ...prev, [appId]: newCert }));
+            setActiveCertData(newCert);
+            setGameState('certificate');
+            
+            if (clearAdminCertRequest) {
+                // Clear the prop so it doesn't loop
+                setTimeout(() => clearAdminCertRequest(), 100);
+            }
+        }
+    }, [adminCertRequest, userName, clearAdminCertRequest]);
+
     const currentUnlocked = unlockedLevels[activeAppTab] || ['beginner'];
     const currentStars = levelStars[activeAppTab] || { beginner: 0, intermediate: 0, advanced: 0 };
     const currentHighScore = highScores[activeAppTab] || 0;
@@ -94,7 +116,6 @@ const Test = ({ isDarkMode, isAdmin }) => {
         }
     }, [activeAppTab, userName]); 
 
-    // Save everything to localStorage whenever it changes (ONLY if data is loaded)
     useEffect(() => {
         if (isDataLoaded) {
             localStorage.setItem('myAffinity_quiz_unlocked', JSON.stringify(unlockedLevels));
@@ -207,6 +228,8 @@ const Test = ({ isDarkMode, isAdmin }) => {
                 const displayScore = isAdmin && percentage < 90 ? 100 : percentage;
                 const newCert = { name: userName || 'Administrator', score: displayScore, date: new Date().toISOString(), appCourse: appDisplayName };
                 setCertsData(prev => ({ ...prev, [activeAppTab]: newCert }));
+                
+                setActiveCertData(newCert);
                 setGameState('certificate');
             } else {
                 setCertsData(prev => ({ ...prev, [activeAppTab]: null })); 
@@ -247,16 +270,17 @@ const Test = ({ isDarkMode, isAdmin }) => {
         }
     };
 
-    // 🌟 THE FIX: Simplified exactly like the working model 🌟
-    if (gameState === 'certificate' && currentCert) {
+    // 🌟 FIX: Render the certificate directly, just like the working app!
+    if (gameState === 'certificate' && activeCertData) {
         return (
-            <div className="fixed inset-0 w-full h-full z-[9999] bg-black">
-                <CertificateForm 
-                    certData={currentCert} 
-                    isDarkMode={isDarkMode} 
-                    onBack={() => setGameState('menu')} 
-                />
-            </div>
+            <CertificateForm 
+                certData={activeCertData} 
+                isDarkMode={isDarkMode} 
+                onBack={() => {
+                    setActiveCertData(null);
+                    setGameState('menu');
+                }} 
+            />
         );
     }
 
@@ -371,8 +395,8 @@ const Test = ({ isDarkMode, isAdmin }) => {
                                 {!allUnlocked && <Lock size={16} className="opacity-30"/>}
                             </button>
 
-                            {/* 🌟 FIX: The robust internal Admin Button that actually works flawlessly! 🌟 */}
-                            {isAdmin && (
+                            {/* Admin Certificate Bypass Button */}
+                            {isAdmin && !currentCert && (
                                 <button 
                                     onClick={() => {
                                         triggerHaptic('success');
@@ -380,8 +404,8 @@ const Test = ({ isDarkMode, isAdmin }) => {
                                         const appDisplayName = activeAppTab === 'photo' ? 'Affinity Photo' : activeAppTab === 'designer' ? 'Affinity Designer' : 'Affinity Publisher';
                                         const newCert = { name: finalName, score: 100, date: new Date().toISOString(), appCourse: appDisplayName };
                                         
-                                        // Instantly save and trigger rendering!
                                         setCertsData(prev => ({ ...prev, [activeAppTab]: newCert }));
+                                        setActiveCertData(newCert); 
                                         setGameState('certificate');
                                     }}
                                     className={`p-4 rounded-[24px] border flex items-center justify-center gap-3 transition-all duration-500 ease-out hover:-translate-y-1 active:scale-95 shadow-md ${isDarkMode ? 'border-[#41B6E6]/50 bg-[#41B6E6]/10 text-[#41B6E6] hover:shadow-[0_10px_20px_rgba(65,182,230,0.15)]' : 'border-[#0277C5]/50 bg-[#0277C5]/10 text-[#0277C5] hover:shadow-[0_10px_20px_rgba(2,119,197,0.15)]'}`}
@@ -391,10 +415,13 @@ const Test = ({ isDarkMode, isAdmin }) => {
                                 </button>
                             )}
 
-                            {/* Normal user view certificate button */}
-                            {currentCert && !isAdmin && (
+                            {/* Earned Certificate Button */}
+                            {currentCert && (
                                 <button 
-                                    onClick={() => setGameState('certificate')} 
+                                    onClick={() => {
+                                        setActiveCertData(currentCert);
+                                        setGameState('certificate');
+                                    }} 
                                     className={`p-4 rounded-[24px] border flex items-center justify-center gap-3 transition-all duration-500 ease-out hover:-translate-y-1 active:scale-95 shadow-md ${isDarkMode ? 'border-[#41B6E6]/50 bg-[#41B6E6]/10 text-[#41B6E6] hover:shadow-[0_10px_20px_rgba(65,182,230,0.15)]' : 'border-[#0277C5]/50 bg-[#0277C5]/10 text-[#0277C5] hover:shadow-[0_10px_20px_rgba(2,119,197,0.15)]'}`}
                                 >
                                     <Award size={20} />
