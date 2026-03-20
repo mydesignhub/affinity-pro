@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Bot, Send, RefreshCw, Trash2, ThumbsUp, ThumbsDown, ArrowRight, Brain, Loader2 } from 'lucide-react';
-
 import { useLanguage } from '../../../contexts/LanguageContext';
 import { collection, addDoc } from 'firebase/firestore';
 import { db } from '../../../firebase'; 
@@ -66,9 +65,11 @@ const callRealAI = async (userPrompt, language, history = []) => {
     }
 };
 
+// 🌟 FIX: ULTIMATE NORMALIZER (STRIPS EMOJIS PERFECTLY) 🌟
 const strictClean = (text) => {
     if (!text) return '';
-    return text.toLowerCase().replace(/[\u200B\s.,!?។៕"“”'*_()\-:;]/g, '');
+    // Keeps ONLY English alphanumeric characters and Khmer characters. Destroys all emojis/punctuation.
+    return text.toLowerCase().replace(/[^\w\u1780-\u17FF0-9]/g, '');
 };
 
 const formatMessage = (text) => {
@@ -316,7 +317,10 @@ const ChatBot = ({ messages, setMessages, isDarkMode, liveAiData = [], setLiveAi
       if (chipsData) {
           const strictQuery = strictClean(rawQuery);
           chipsData = chipsData.filter(c => strictClean(c) !== strictQuery);
-          if (chipsData.length < 2) chipsData = [...new Set([...chipsData, ...getRandomItems(getSuggestList(), 3)])].slice(0, 2);
+          if (chipsData.length < 2) {
+              const moreSuggestions = getRandomItems(getSuggestList(), 3);
+              chipsData = [...new Set([...chipsData, ...moreSuggestions])].slice(0, 2);
+          }
       }
       return chipsData || getRandomItems(getSuggestList(), 2);
   };
@@ -340,6 +344,7 @@ const ChatBot = ({ messages, setMessages, isDarkMode, liveAiData = [], setLiveAi
               }
               return { answer: answerText, chips: generateFilteredChips(item, rawInput), uiElement: item.uiElement, colors: finalColors, actionButton: item.actionButton, needsBackend: false };
           }
+          
           if (item.regex && item.regex.some(r => { try { return new RegExp(`\\b${r}\\b`, 'i').test(rawInput); } catch { return new RegExp(r, 'i').test(rawInput); } })) {
               setCurrentTopic(item.primaryKeys ? item.primaryKeys[0] : null); 
               return { answer: lang === 'en' && item.answer_en ? item.answer_en : item.answer, chips: generateFilteredChips(item, rawInput), uiElement: item.uiElement, actionButton: item.actionButton, needsBackend: false };
@@ -720,6 +725,7 @@ const ChatBot = ({ messages, setMessages, isDarkMode, liveAiData = [], setLiveAi
                                   <button onClick={() => handleFeedback(i, 'up')} className="p-1 hover:text-green-500 rounded-md transition-colors"><ThumbsUp size={14}/></button>
                                   <button onClick={() => handleFeedback(i, 'down')} className="p-1 hover:text-red-500 rounded-md transition-colors"><ThumbsDown size={14}/></button>
                                   
+                                  {/* 🌟 1-CLICK AI AUTO TRAINING (SUPER ADMIN ONLY) 🌟 */}
                                   {isAdmin && m.isTrainable && !m.isTraining && (
                                       <button 
                                           onClick={() => handleAutoTrain(i)} 
