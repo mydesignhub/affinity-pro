@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { ChevronRight, PlayCircle, Sparkles, Zap, Facebook, Send, Globe, BookOpen, Award, Bot, Camera, PenTool, Book, Lock, KeyRound, AlertCircle, ChevronDown, Crown, LogOut, Copy, ShieldCheck, Database, Loader2, Maximize, Minimize, Clock, DownloadCloud, Circle, CheckCircle2 } from 'lucide-react';
+import { ChevronRight, PlayCircle, Sparkles, Zap, Facebook, Send, Globe, BookOpen, Award, Bot, Camera, PenTool, Book, Lock, KeyRound, AlertCircle, ChevronDown, RotateCcw, Crown, LogOut, Copy, ShieldCheck, CheckCircle, Database, Loader2, Maximize, Minimize, Clock, DownloadCloud, Circle, CheckCircle2, X, Trash2 } from 'lucide-react';
 
 // FIREBASE IMPORTS
 import { signInWithPopup, signOut } from 'firebase/auth';
