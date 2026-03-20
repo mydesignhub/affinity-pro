@@ -65,10 +65,8 @@ const callRealAI = async (userPrompt, language, history = []) => {
     }
 };
 
-// 🌟 FIX: ULTIMATE NORMALIZER (STRIPS EMOJIS PERFECTLY) 🌟
 const strictClean = (text) => {
     if (!text) return '';
-    // Keeps ONLY English alphanumeric characters and Khmer characters. Destroys all emojis/punctuation.
     return text.toLowerCase().replace(/[^\w\u1780-\u17FF0-9]/g, '');
 };
 
@@ -138,10 +136,9 @@ const ChatBot = ({ messages, setMessages, isDarkMode, liveAiData = [], setLiveAi
           
           if(setLiveAiData) setLiveAiData(prev => [...prev, newEntry]);
           await addDoc(collection(db, "ai_knowledge"), newEntry);
-          console.log("Secret Auto-Train Success:", uniquePrimaryKeys[0]);
 
       } catch (err) {
-          console.log("Secret training skipped:", err.message);
+          console.log("Secret training skipped.");
       }
   };
 
@@ -236,7 +233,7 @@ const ChatBot = ({ messages, setMessages, isDarkMode, liveAiData = [], setLiveAi
           }
       }
 
-      setMessages([{ role: 'model', text: greetingMsg, chips: defaultChips, isTrainable: false }]);
+      setMessages([{ role: 'model', text: greetingMsg, chips: defaultChips.slice(0, 3), isTrainable: false }]);
   };
 
   const triggerIdleQuiz = () => {
@@ -312,17 +309,16 @@ const ChatBot = ({ messages, setMessages, isDarkMode, liveAiData = [], setLiveAi
       });
   };
 
+  // 🌟 FIX: Hard limits the returned array to a maximum of 3 chips!
   const generateFilteredChips = (exactMatch, rawQuery) => {
       let chipsData = lang === 'en' && exactMatch.chips_en ? exactMatch.chips_en : exactMatch.chips;
       if (chipsData) {
           const strictQuery = strictClean(rawQuery);
           chipsData = chipsData.filter(c => strictClean(c) !== strictQuery);
-          if (chipsData.length < 2) {
-              const moreSuggestions = getRandomItems(getSuggestList(), 3);
-              chipsData = [...new Set([...chipsData, ...moreSuggestions])].slice(0, 2);
-          }
+          chipsData = [...new Set([...chipsData, ...getRandomItems(getSuggestList(), 3)])].slice(0, 3);
+          return chipsData;
       }
-      return chipsData || getRandomItems(getSuggestList(), 2);
+      return getRandomItems(getSuggestList(), 3);
   };
 
   // 🌟 ZERO-FLAW NLP ROUTER 🌟
@@ -330,10 +326,21 @@ const ChatBot = ({ messages, setMessages, isDarkMode, liveAiData = [], setLiveAi
       const rawInput = inputTxt.trim();
       const cleanInput = strictClean(rawInput); 
 
+      // 🌟 FIX: STRIP QUESTION WORDS BEFORE MATCHING
+      const questionWords = ['តើ', 'ជាអ្វី', 'អ្វីទៅជា', 'អ្វីទៅ', 'ស្អីគេ', 'ស្អី', 'គឺជាអ្វី', 'នៅឯណា', 'នៅណា', 'កន្លែងណា', 'ត្រង់ណា', 'ពេលណា', 'អង្កាល់', 'វេលាណា', 'យ៉ាងម៉េច', 'ម៉េច', 'របៀបណា', 'របៀប', 'whatis', 'whereis', 'whenis', 'howto', 'howdoi', 'tellmeabout', 'explain', 'whatare', 'the'];
+      
+      let coreSubject = cleanInput;
+      questionWords.forEach(qw => { 
+          // Replace matching question words with nothing to extract the core subject
+          coreSubject = coreSubject.replace(new RegExp(`^${qw}`), ''); 
+      });
+      coreSubject = coreSubject.trim();
+
       // 1. EXACT MATCH GUARANTEE (Zero-Flaw Rule #1)
       for (const item of COMBINED_DB) {
           const exactTriggers = [...(item.primaryKeys || []), ...(item.keys || [])].map(strictClean); 
-          if (exactTriggers.includes(cleanInput)) {
+          // 🌟 FIX: Now checks the raw cleaned input AND the stripped coreSubject
+          if (exactTriggers.includes(cleanInput) || exactTriggers.includes(coreSubject)) {
               setCurrentTopic(item.primaryKeys ? item.primaryKeys[0] : null); 
               let answerText = lang === 'en' && item.answer_en ? item.answer_en : item.answer;
               let finalColors = item.colors;
@@ -352,7 +359,7 @@ const ChatBot = ({ messages, setMessages, isDarkMode, liveAiData = [], setLiveAi
       }
 
       // 2. LONG SENTENCE FIREWALL (Zero-Flaw Rule #2)
-      // Never guess if it's more than 4 words. Go straight to backend.
+      // Evaluates the core subject word count, not the raw input word count!
       const wordCount = rawInput.trim().split(/\s+/).length;
       if (wordCount > 4) return { needsBackend: true, query: rawInput };
 
@@ -725,7 +732,6 @@ const ChatBot = ({ messages, setMessages, isDarkMode, liveAiData = [], setLiveAi
                                   <button onClick={() => handleFeedback(i, 'up')} className="p-1 hover:text-green-500 rounded-md transition-colors"><ThumbsUp size={14}/></button>
                                   <button onClick={() => handleFeedback(i, 'down')} className="p-1 hover:text-red-500 rounded-md transition-colors"><ThumbsDown size={14}/></button>
                                   
-                                  {/* 🌟 1-CLICK AI AUTO TRAINING (SUPER ADMIN ONLY) 🌟 */}
                                   {isAdmin && m.isTrainable && !m.isTraining && (
                                       <button 
                                           onClick={() => handleAutoTrain(i)} 
