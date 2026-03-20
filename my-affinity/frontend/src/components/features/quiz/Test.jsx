@@ -21,7 +21,6 @@ const shuffleArray = (array) => {
     return newArr;
 };
 
-// Default empty states
 const defaultLevels = { photo: ['beginner'], designer: ['beginner'], publisher: ['beginner'] };
 const defaultStars = { 
     photo: { beginner: 0, intermediate: 0, advanced: 0 }, 
@@ -52,6 +51,7 @@ const Test = ({ isDarkMode, isAdmin }) => {
     const [isDataLoaded, setIsDataLoaded] = useState(false);
 
     const [activeCertData, setActiveCertData] = useState(null);
+
     const nameInputRef = useRef(null);
 
     const [timeLeft, setTimeLeft] = useState(null);
@@ -245,7 +245,7 @@ const Test = ({ isDarkMode, isAdmin }) => {
         }
     };
 
-    // 🌟 FIX: Removed the wrapper div that was breaking the certificate layout!
+    // 🌟 FIX: Removed the wrapper completely. Renders exactly like the overlay. 🌟
     if (gameState === 'certificate') {
         const certToRender = activeCertData || currentCert;
         
