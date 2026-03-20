@@ -11,7 +11,6 @@ import ToolsView from './components/features/tools/ToolsView';
 import Test from './components/features/quiz/Test';
 import ChatBot from './components/features/ai/ChatBot';
 import LessonCard from './components/features/learn/LessonCard';
-import CertificateForm from './components/features/quiz/CertificateForm'; // 🌟 Added for Admin Preview Overlay
 
 import { courseData, TIPS_LIST, TIPS_LIST_EN } from './data/data';
 import { useLanguage, LanguageProvider } from './contexts/LanguageContext';
@@ -323,46 +322,41 @@ const LessonModal = ({ lesson, onClose, isDarkMode, completedSteps, setCompleted
                                                     onLoad={() => setIsVideoLoading(false)}
                                                 />
                                                 
+                                                {/* 🛡️ SMART RESPONSIVE SECURITY SHIELDS 🛡️ */}
+                                                
+                                                {/* 1. Top-Left (All Devices): Blocks Avatar & Title */}
                                                 <div 
-                                                    className={`lg:hidden absolute top-0 left-0 h-[70px] z-30 bg-transparent no-callout cursor-default ${isCssFullscreen ? 'right-[60px]' : 'w-full'}`} 
+                                                    className="absolute top-0 left-0 w-[70%] sm:w-[calc(100%-160px)] h-[70px] z-30 bg-[rgba(255,255,255,0.01)] cursor-default" 
+                                                    style={{ WebkitTouchCallout: 'none' }} 
                                                     onContextMenu={e => e.preventDefault()} 
-                                                    onClick={e => { e.preventDefault(); e.stopPropagation(); }}
-                                                    onDoubleClick={e => { e.preventDefault(); e.stopPropagation(); }}
-                                                    onTouchStart={e => e.stopPropagation()} onTouchEnd={e => e.stopPropagation()} onPointerDown={e => e.stopPropagation()}
                                                 />
 
-                                                {isCssFullscreen && (
-                                                    <div 
-                                                        className="hidden lg:block absolute top-0 left-0 w-full h-[80px] z-30 bg-transparent no-callout cursor-default" 
-                                                        onContextMenu={e => e.preventDefault()} 
-                                                        onClick={e => { e.preventDefault(); e.stopPropagation(); }}
-                                                        onDoubleClick={e => { e.preventDefault(); e.stopPropagation(); }}
-                                                        onTouchStart={e => e.stopPropagation()} onTouchEnd={e => e.stopPropagation()} onPointerDown={e => e.stopPropagation()}
-                                                    />
-                                                )}
-
+                                                {/* 2. Top-Right (Desktop Only): Blocks Watch Later & Share */}
                                                 <div 
-                                                    className="lg:hidden absolute bottom-0 left-0 w-[80px] h-[60px] z-30 bg-transparent no-callout cursor-default" 
+                                                    className="hidden sm:block absolute top-0 right-0 w-[160px] h-[70px] z-30 bg-[rgba(255,255,255,0.01)] cursor-default" 
+                                                    style={{ WebkitTouchCallout: 'none' }} 
                                                     onContextMenu={e => e.preventDefault()} 
-                                                    onClick={e => { e.preventDefault(); e.stopPropagation(); }}
-                                                    onDoubleClick={e => { e.preventDefault(); e.stopPropagation(); }}
-                                                    onTouchStart={e => e.stopPropagation()} onTouchEnd={e => e.stopPropagation()} onPointerDown={e => e.stopPropagation()}
                                                 />
 
+                                                {/* 3. Top-Right Edge (Mobile Only): Blocks 3-dots, allows Gear */}
                                                 <div 
-                                                    className="lg:hidden absolute bottom-0 right-0 w-[120px] h-[55px] z-30 bg-transparent no-callout cursor-default" 
+                                                    className="sm:hidden absolute top-0 right-0 w-[45px] h-[60px] z-30 bg-[rgba(255,255,255,0.01)] cursor-default" 
+                                                    style={{ WebkitTouchCallout: 'none' }} 
                                                     onContextMenu={e => e.preventDefault()} 
-                                                    onClick={e => { e.preventDefault(); e.stopPropagation(); }}
-                                                    onDoubleClick={e => { e.preventDefault(); e.stopPropagation(); }}
-                                                    onTouchStart={e => e.stopPropagation()} onTouchEnd={e => e.stopPropagation()} onPointerDown={e => e.stopPropagation()}
                                                 />
 
+                                                {/* 4. Bottom-Left (Mobile Only): Blocks Share Arrow */}
                                                 <div 
-                                                    className="hidden lg:block absolute bottom-[48px] right-[10px] w-[100px] h-[40px] z-30 bg-transparent no-callout cursor-default" 
+                                                    className="sm:hidden absolute bottom-0 left-0 w-[70px] h-[60px] z-30 bg-[rgba(255,255,255,0.01)] cursor-default" 
+                                                    style={{ WebkitTouchCallout: 'none' }} 
                                                     onContextMenu={e => e.preventDefault()} 
-                                                    onClick={e => { e.preventDefault(); e.stopPropagation(); }}
-                                                    onDoubleClick={e => { e.preventDefault(); e.stopPropagation(); }}
-                                                    onTouchStart={e => e.stopPropagation()} onTouchEnd={e => e.stopPropagation()} onPointerDown={e => e.stopPropagation()}
+                                                />
+
+                                                {/* 5. Bottom-Right (All Devices): Blocks YouTube Logo */}
+                                                <div 
+                                                    className="absolute bottom-0 right-0 w-[80px] h-[60px] z-30 bg-[rgba(255,255,255,0.01)] cursor-default" 
+                                                    style={{ WebkitTouchCallout: 'none' }} 
+                                                    onContextMenu={e => e.preventDefault()} 
                                                 />
                                             </>
                                         )}
@@ -612,9 +606,6 @@ function AppContent() {
   const [isSuperAdmin, setIsSuperAdmin] = useState(false);
   const [showSuperAdminModal, setShowSuperAdminModal] = useState(false);
   const [superAdminTab, setSuperAdminTab] = useState('ai'); 
-
-  // 🌟 FIX: Holds the fully generated Certificate so it can be previewed seamlessly
-  const [adminPreviewCert, setAdminPreviewCert] = useState(null);
 
   useEffect(() => {
       const unlockSuperAdmin = () => setIsSuperAdmin(true);
@@ -1044,20 +1035,6 @@ function AppContent() {
       setTimeout(() => setCopiedAll(false), 2000);
   };
 
-  // 🌟 FIX: Admin Certificate Preview Overlay Engine 🌟
-  const testCertificate = (appId) => {
-      triggerHaptic('success');
-      setShowSuperAdminModal(false);
-      const appDisplayName = appId === 'photo' ? 'Affinity Photo' : appId === 'designer' ? 'Affinity Designer' : 'Affinity Publisher';
-      const newCert = {
-          name: user?.displayName || 'Super Admin Tester',
-          score: 100,
-          date: new Date().toISOString(),
-          appCourse: appDisplayName
-      };
-      setAdminPreviewCert(newCert);
-  };
-
   const currentCourseData = activeAppTab ? (courseData[activeAppTab] || []) : [];
   const totalSteps = currentCourseData.reduce((acc, lesson) => acc + (lesson.steps?.length || 0), 0);
   const progressPrefix = activeAppTab === 'photo' ? 'ph' : activeAppTab === 'designer' ? 'ds' : 'pb';
@@ -1105,13 +1082,6 @@ function AppContent() {
         .animate-fade-in-up { animation: fade-in-up 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
       `}</style>
       
-      {/* 🌟 FIX: Instantly Render the Admin Certificate Preview 🌟 */}
-      {adminPreviewCert && (
-          <div className="fixed inset-0 z-[99999] bg-[#0A0A0A]">
-              <CertificateForm certData={adminPreviewCert} isDarkMode={isDarkMode} onBack={() => setAdminPreviewCert(null)} />
-          </div>
-      )}
-
       <div 
           style={{ paddingTop: 'max(env(safe-area-inset-top), 0px)' }} 
           className={`w-full shrink-0 ${(activeTab === 'tools' || activeTab === 'ai') ? 'hidden md:block' : 'block'}`}
@@ -1259,30 +1229,10 @@ function AppContent() {
                       ) : (
                           <div className="animate-fade-in-up space-y-4">
                               <p className={`text-[13px] font-khmer leading-relaxed ${isDarkMode ? 'text-[#9AA0A6]' : 'text-gray-500'}`}>
-                                  Instantly generate and view passing certificates to verify rendering and UI without taking the 40-question exam.
+                                  To test the certificate renderer, close this panel, navigate to the Quiz tab, and click the new "Admin: Generate Certificate" button at the bottom of the levels list.
                               </p>
-                              <div className="grid gap-3">
-                                  <button onClick={() => testCertificate('photo')} className={`w-full p-4 rounded-2xl font-black font-khmer flex items-center justify-between border transition-all active:scale-[0.98] ${isDarkMode ? 'bg-[#1E1E1E] border-[#2C2C2C] hover:border-[#41B6E6]/50' : 'bg-[#F8F9FA] border-[#E5E7EB] hover:border-[#0277C5]/50'}`}>
-                                      <div className="flex items-center gap-3">
-                                          <div className="w-10 h-10 rounded-xl bg-[#B52885]/10 text-[#B52885] flex items-center justify-center"><Camera size={20}/></div>
-                                          <span className={isDarkMode ? 'text-white' : 'text-black'}>Affinity Photo Certificate</span>
-                                      </div>
-                                      <ChevronRight size={18} className="opacity-50"/>
-                                  </button>
-                                  <button onClick={() => testCertificate('designer')} className={`w-full p-4 rounded-2xl font-black font-khmer flex items-center justify-between border transition-all active:scale-[0.98] ${isDarkMode ? 'bg-[#1E1E1E] border-[#2C2C2C] hover:border-[#41B6E6]/50' : 'bg-[#F8F9FA] border-[#E5E7EB] hover:border-[#0277C5]/50'}`}>
-                                      <div className="flex items-center gap-3">
-                                          <div className="w-10 h-10 rounded-xl bg-[#2862B5]/10 text-[#2862B5] flex items-center justify-center"><PenTool size={20}/></div>
-                                          <span className={isDarkMode ? 'text-white' : 'text-black'}>Affinity Designer Certificate</span>
-                                      </div>
-                                      <ChevronRight size={18} className="opacity-50"/>
-                                  </button>
-                                  <button onClick={() => testCertificate('publisher')} className={`w-full p-4 rounded-2xl font-black font-khmer flex items-center justify-between border transition-all active:scale-[0.98] ${isDarkMode ? 'bg-[#1E1E1E] border-[#2C2C2C] hover:border-[#41B6E6]/50' : 'bg-[#F8F9FA] border-[#E5E7EB] hover:border-[#0277C5]/50'}`}>
-                                      <div className="flex items-center gap-3">
-                                          <div className="w-10 h-10 rounded-xl bg-[#D7383D]/10 text-[#D7383D] flex items-center justify-center"><Book size={20}/></div>
-                                          <span className={isDarkMode ? 'text-white' : 'text-black'}>Affinity Publisher Certificate</span>
-                                      </div>
-                                      <ChevronRight size={18} className="opacity-50"/>
-                                  </button>
+                              <div className="p-4 bg-yellow-500/10 border border-yellow-500/30 rounded-2xl flex items-center justify-center gap-2 text-yellow-600 font-bold">
+                                  <Award size={18} /> Moved to Quiz Tab for stability.
                               </div>
                           </div>
                       )}
