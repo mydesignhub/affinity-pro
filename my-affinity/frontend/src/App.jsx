@@ -3,7 +3,6 @@ import { ChevronRight, PlayCircle, Sparkles, Zap, Facebook, Send, Globe, BookOpe
 
 // FIREBASE IMPORTS
 import { signInWithPopup, signOut } from 'firebase/auth';
-// 🌟 FIX: Added deleteDoc to the imports
 import { doc, setDoc, getDoc, updateDoc, collection, query, where, getDocs, deleteDoc } from 'firebase/firestore';
 import { auth, googleProvider, db } from './firebase'; 
 
@@ -651,13 +650,16 @@ function AppContent() {
       return [];
   });
 
+  // 🌟 NEW STATE: For handling Auto-Cached Memory Data
+  const [aiMemoryCache, setAiMemoryCache] = useState([]);
+
+  // Fetch Firestore Data when component loads
   const fetchCloudAI = async () => {
       try {
           const q = query(collection(db, "ai_knowledge"));
           const snap = await getDocs(q);
           const cloudData = [];
           
-          // 🌟 FIX: We explicitly save doc.id here so we know what to delete later!
           snap.forEach(doc => cloudData.push({ ...doc.data(), id: doc.id }));
           
           if (cloudData.length > 0) {
@@ -672,6 +674,16 @@ function AppContent() {
           if (saved) setLiveAiData(JSON.parse(saved));
       }
   };
+
+  // Automatically load local cache into the admin panel state
+  useEffect(() => {
+      if (showSuperAdminModal && superAdminTab === 'ai') {
+          try {
+              const cache = JSON.parse(localStorage.getItem('myDesign_ai_memory_cache') || '[]');
+              setAiMemoryCache(cache);
+          } catch(e) {}
+      }
+  }, [showSuperAdminModal, superAdminTab]);
 
   useEffect(() => {
       if (showAdminPanel && activeAppTab && showRegistration) {
@@ -1157,7 +1169,6 @@ function AppContent() {
                                           <button onClick={async () => { 
                                               if(window.confirm('Clear all offline training data from database?')) { 
                                                   triggerHaptic();
-                                                  // 🌟 FIX: Permanently delete all entries from Firestore
                                                   for (const item of liveAiData) {
                                                       if (item.id) {
                                                           try { await deleteDoc(doc(db, "ai_knowledge", item.id)); } catch(e) {}
@@ -1174,7 +1185,6 @@ function AppContent() {
                                                   <button 
                                                       onClick={async () => {
                                                           triggerHaptic();
-                                                          // 🌟 FIX: Permanently delete this single entry from Firestore
                                                           if (data.id) {
                                                               try { await deleteDoc(doc(db, "ai_knowledge", data.id)); } 
                                                               catch(e) { console.error("Failed to delete from DB"); }
@@ -1192,6 +1202,44 @@ function AppContent() {
                                                       <div><strong className={isDarkMode ? 'text-white' : 'text-black'}>Keys: </strong> {data.keys.join(', ')}</div>
                                                       <div><strong className={isDarkMode ? 'text-[#41B6E6]' : 'text-[#0277C5]'}>KM: </strong> <span className="line-clamp-2">{data.answer}</span></div>
                                                       <div><strong className={isDarkMode ? 'text-[#41B6E6]' : 'text-[#0277C5]'}>EN: </strong> <span className="line-clamp-2">{data.answer_en}</span></div>
+                                                  </div>
+                                              </div>
+                                          ))}
+                                      </div>
+                                  </div>
+                              )}
+                              
+                              {/* 🌟 NEW: AUTO-CACHED MEMORY MANAGER 🌟 */}
+                              {aiMemoryCache.length > 0 && (
+                                  <div className="mt-6 border-t border-dashed border-gray-500/30 pt-4">
+                                      <div className="flex justify-between items-center mb-3">
+                                          <span className={`text-[10px] font-bold uppercase tracking-widest ${isDarkMode ? 'text-orange-400' : 'text-orange-600'}`}>{aiMemoryCache.length} Auto-Cached API Responses</span>
+                                          <button onClick={() => {
+                                              if(window.confirm('Clear all auto-cached API responses?')) {
+                                                  setAiMemoryCache([]);
+                                                  localStorage.removeItem('myDesign_ai_memory_cache');
+                                                  triggerHaptic();
+                                              }
+                                          }} className="text-red-500 hover:text-red-400"><Trash2 size={16}/></button>
+                                      </div>
+                                      <div className="space-y-3 max-h-64 overflow-y-auto custom-scrollbar pr-1">
+                                          {aiMemoryCache.map((data, i) => (
+                                              <div key={i} className={`p-3.5 rounded-xl border text-[11px] font-khmer leading-relaxed relative ${isDarkMode ? 'bg-[#121212] border-[#2C2C2C] text-[#A0A0A0]' : 'bg-[#F8F9FA] border-[#E5E7EB] text-[#6B7280]'}`}>
+                                                  <button
+                                                      onClick={() => {
+                                                          triggerHaptic();
+                                                          const updated = aiMemoryCache.filter((_, index) => index !== i);
+                                                          setAiMemoryCache(updated);
+                                                          localStorage.setItem('myDesign_ai_memory_cache', JSON.stringify(updated));
+                                                      }}
+                                                      className="absolute top-2 right-2 text-red-500 hover:text-red-400 p-1.5 bg-red-500/10 rounded-md transition-colors"
+                                                      title="Remove this cache"
+                                                  >
+                                                      <Trash2 size={14} />
+                                                  </button>
+                                                  <div className="pr-8 space-y-1.5">
+                                                      <div><strong className={isDarkMode ? 'text-white' : 'text-black'}>Q: </strong> {data.q} <span className="text-[9px] opacity-50">({data.lang})</span></div>
+                                                      <div><strong className={isDarkMode ? 'text-[#41B6E6]' : 'text-[#0277C5]'}>A: </strong> <span className="line-clamp-2">{data.a}</span></div>
                                                   </div>
                                               </div>
                                           ))}
