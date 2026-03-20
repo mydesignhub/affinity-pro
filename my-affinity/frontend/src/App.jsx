@@ -11,6 +11,7 @@ import ToolsView from './components/features/tools/ToolsView';
 import Test from './components/features/quiz/Test';
 import ChatBot from './components/features/ai/ChatBot';
 import LessonCard from './components/features/learn/LessonCard';
+import CertificateForm from './components/features/quiz/CertificateForm'; // 🌟 Added for Admin Preview Overlay
 
 import { courseData, TIPS_LIST, TIPS_LIST_EN } from './data/data';
 import { useLanguage, LanguageProvider } from './contexts/LanguageContext';
@@ -608,13 +609,12 @@ function AppContent() {
   
   const [user, setUser] = useState(null);
 
-  // 🌟 TWO-LEVEL ADMIN LOGIC
   const [isSuperAdmin, setIsSuperAdmin] = useState(false);
   const [showSuperAdminModal, setShowSuperAdminModal] = useState(false);
   const [superAdminTab, setSuperAdminTab] = useState('ai'); 
-  
-  // 🌟 FIX: Handled the prop state correctly!
-  const [adminCertRequest, setAdminCertRequest] = useState(null);
+
+  // 🌟 FIX: Holds the fully generated Certificate so it can be previewed seamlessly
+  const [adminPreviewCert, setAdminPreviewCert] = useState(null);
 
   useEffect(() => {
       const unlockSuperAdmin = () => setIsSuperAdmin(true);
@@ -644,7 +644,6 @@ function AppContent() {
   const [isVerifying, setIsVerifying] = useState(false);
   const [isDataLoaded, setIsDataLoaded] = useState(false);
 
-  // --- NEW AI TRAINING STATES ---
   const [liveAiData, setLiveAiData] = useState(() => {
       if (typeof window !== 'undefined') {
           const saved = localStorage.getItem('myAffinity_live_ai');
@@ -1045,12 +1044,18 @@ function AppContent() {
       setTimeout(() => setCopiedAll(false), 2000);
   };
 
-  // 🌟 FIX: Directly pass the request state down to Test.jsx
+  // 🌟 FIX: Admin Certificate Preview Overlay Engine 🌟
   const testCertificate = (appId) => {
       triggerHaptic('success');
       setShowSuperAdminModal(false);
-      setAdminCertRequest(appId);
-      setActiveTab('quiz'); 
+      const appDisplayName = appId === 'photo' ? 'Affinity Photo' : appId === 'designer' ? 'Affinity Designer' : 'Affinity Publisher';
+      const newCert = {
+          name: user?.displayName || 'Super Admin Tester',
+          score: 100,
+          date: new Date().toISOString(),
+          appCourse: appDisplayName
+      };
+      setAdminPreviewCert(newCert);
   };
 
   const currentCourseData = activeAppTab ? (courseData[activeAppTab] || []) : [];
@@ -1100,6 +1105,13 @@ function AppContent() {
         .animate-fade-in-up { animation: fade-in-up 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
       `}</style>
       
+      {/* 🌟 FIX: Instantly Render the Admin Certificate Preview 🌟 */}
+      {adminPreviewCert && (
+          <div className="fixed inset-0 z-[99999] bg-[#0A0A0A]">
+              <CertificateForm certData={adminPreviewCert} isDarkMode={isDarkMode} onBack={() => setAdminPreviewCert(null)} />
+          </div>
+      )}
+
       <div 
           style={{ paddingTop: 'max(env(safe-area-inset-top), 0px)' }} 
           className={`w-full shrink-0 ${(activeTab === 'tools' || activeTab === 'ai') ? 'hidden md:block' : 'block'}`}
@@ -1729,15 +1741,7 @@ function AppContent() {
             )}
             {activeTab === 'tools' && <div className="pb-24"><ToolsView isDarkMode={isDarkMode} /></div>}
             
-            {/* 🌟 TEST.JSX Prop Handoff 🌟 */}
-            {activeTab === 'quiz' && (
-                <Test 
-                    isDarkMode={isDarkMode} 
-                    isAdmin={isSuperAdmin} 
-                    adminCertRequest={adminCertRequest} 
-                    clearAdminCertRequest={() => setAdminCertRequest(null)} 
-                />
-            )}
+            {activeTab === 'quiz' && <Test isDarkMode={isDarkMode} isAdmin={isSuperAdmin} />}
         </main>
       ) : (
         <div className={`flex-1 relative w-full h-full md:pb-0 z-0 ${activeAppTab ? 'hidden' : 'block'}`} style={{ paddingTop: 'max(env(safe-area-inset-top), 0px)' }}>
