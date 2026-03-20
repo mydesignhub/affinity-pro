@@ -5,8 +5,7 @@
 // 🌟 Import Sub-Databases (FULLY DE-DUPLICATED)
 import { basicsData } from './sub_databases/db_basics.jsx';
 import { designData } from './sub_databases/db_design.jsx';
-import { affinityIpadData } from './sub_databases/db_affinity_ipad.jsx'; // Changed Name
-import { editingData } from './sub_databases/db_editing.jsx';
+import { affinityAndEditingData } from './sub_databases/db_affinity_editing.jsx';
 
 export const SUGGESTED_QUESTIONS = [
     "របៀបរចនា Poster ឱ្យទាក់ទាញ? 🖼️",
@@ -21,7 +20,44 @@ export const SUGGESTED_QUESTIONS = [
     "របៀបលុបមនុស្សចេញពីរូបភាព 🧹", 
     "របៀបលក់ Digital Assets 💰", 
     "តើ Affinity Photo និង Designer ខុសគ្នាម៉េច?", 
-    "ពន្យល់ពី Blend Modes ទាំងអស់ 🌈"
+    "ពន្យល់ពី Blend Modes ទាំងអស់ 🌈",
+    "Affinity Command Controller 🎛️",
+    "មុខងារ Quick Menu លើ iPad",
+    "របៀបរៀបចំ Studio Panels លើ iPad",
+    "ការកាត់រូប Export (Slices) ✂️",
+    "របៀបប្រើប្រាស់ Macros និង Brushes",
+    "របៀបរក្សាទុកក្នុង Assets Panel 📦",
+    "មុខងារ Artboards ក្នុង Affinity",
+    "Snapping ក្នុង Affinity 🧲",
+    "History Panel (Time Travel) ⏱️",
+    "Clipping និង Masking ក្នុង Affinity",
+    "Affinity Symbols គឺអ្វី?",
+    "តើ Shape Builder Tool ប្រើធ្វើអី? 🔲",
+    "Geometry Operations (Add, Subtract, Intersect)",
+    "Image Layer vs Pixel Layer",
+    "Stroke vs Fill",
+    "Designer Persona vs Pixel Persona",
+    "Artistic Text vs Frame Text",
+    "សរសេរអក្សរតាមខ្សែកោង 〰️",
+    "Affinity V3 និងអនាគត (Canva)",
+    "Shortcut ផ្លូវកាត់សំខាន់ៗមានអ្វីខ្លះ? ⌨️",
+    "Blend Ranges (លាក់ពណ៌លឿនបំផុត)",
+    "Global Colors (ប្តូរពណ៌ម្តងទាំងអស់)",
+    "Copy Effect ពី Layer មួយទៅមួយទៀត",
+    "កាត់តរូបភាព (Photomanipulation) 🌌",
+    "រលាយវត្ថុនិង Background បញ្ចូលគ្នា 🌪️",
+    "ការធ្វើឱ្យរូបស្លេកៗ (Fading) 🌫️",
+    "របៀបប្តូរថ្ងៃទៅយប់ (Day to Night) 🌙",
+    "របៀបបង្កើតស្រមោលឱ្យពិតៗ 👥",
+    "របៀបកាត់សក់ឬ Background ឱ្យស្អាត ✂️",
+    "ប្តូរវត្ថុទៅជាមាស 🏆",
+    "របៀបកែពន្លឺ ក្នុង Affinity 💡",
+    "ពណ៌ Cinematic 🎬",
+    "Color Grading (Split Toning) 🎨",
+    "ព្រិល Background (Depth of Field)",
+    "រូបភាពខ្ញុំព្រិល (My image is blurry)",
+    "តើ Typography ជាអ្វី?",
+    "របៀបរៀបចំ Portfolio"
 ];
 
 export const SUGGESTED_QUESTIONS_EN = [
@@ -37,7 +73,44 @@ export const SUGGESTED_QUESTIONS_EN = [
     "How to erase objects (Inpainting)? 🧹", 
     "How to sell Digital Assets? 💰", 
     "Affinity Photo vs Designer?", 
-    "Explain all Blend Modes 🌈"
+    "Explain all Blend Modes 🌈",
+    "Affinity Command Controller 🎛️",
+    "iPad Quick Menu trick",
+    "Managing iPad Studio Panels",
+    "How to use Export Slices ✂️",
+    "How to use Macros and Brushes",
+    "How to use the Assets Panel 📦",
+    "Affinity Artboards",
+    "Snapping Tool Affinity 🧲",
+    "Affinity History Panel Snapshot ⏱️",
+    "Clipping vs Masking affinity",
+    "What are Affinity Symbols?",
+    "What is the Shape Builder Tool? 🔲",
+    "Affinity Boolean Geometry",
+    "Image Layer vs Pixel Layer",
+    "Stroke vs Fill in Affinity",
+    "Designer Persona vs Pixel Persona",
+    "Artistic Text vs Frame Text",
+    "Text on a path Affinity 〰️",
+    "Affinity V3 Updates",
+    "Essential Keyboard Shortcuts ⌨️",
+    "Affinity Blend Ranges",
+    "Affinity Global Colors Swatches",
+    "Paste FX Layer Styles Affinity",
+    "Photomanipulation techniques 🌌",
+    "How to seamlessly blend subjects 🌪️",
+    "How to fade images properly 🌫️",
+    "Day to night editing 🌙",
+    "Mastering realistic shadows 👥",
+    "Precise background removal ✂️",
+    "Turn anything into gold effect 🏆",
+    "How to edit light in affinity 💡",
+    "Cinematic color grading 🎬",
+    "Split Toning Color Grading 🎨",
+    "Depth of Field (Blur)",
+    "My image is blurry",
+    "What is Typography?",
+    "How to build a portfolio"
 ];
 
 export const GREETINGS = [
@@ -94,6 +167,5 @@ export const QUIZ_INVITATIONS_EN = [
 export const KNOWLEDGE_BASE = [
     ...basicsData,
     ...designData,
-    ...affinityIpadData,
-    ...editingData
+    ...affinityAndEditingData
 ];
