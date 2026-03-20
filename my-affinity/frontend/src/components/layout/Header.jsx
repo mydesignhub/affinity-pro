@@ -2,7 +2,7 @@ import React, { useState, useRef } from 'react';
 import { Moon, Sun, BookOpen, Award, Zap, Bot, Trash2, Lock, Mail, KeyRound, X, AlertCircle, CheckCircle2 } from 'lucide-react';
 import { useLanguage } from '../../contexts/LanguageContext';
 
-// FIREBASE IMPORTS (Added createUserWithEmailAndPassword)
+// FIREBASE IMPORTS
 import { signInWithEmailAndPassword, sendPasswordResetEmail, createUserWithEmailAndPassword } from 'firebase/auth';
 import { auth } from '../../firebase';
 
@@ -13,7 +13,7 @@ export default function Header({ activeTab, setActiveTab, isDarkMode, setIsDarkM
     
     // Admin States
     const [showAdminModal, setShowAdminModal] = useState(false);
-    const [isSignUpMode, setIsSignUpMode] = useState(false); // NEW: Toggle for first-time setup
+    const [isSignUpMode, setIsSignUpMode] = useState(false);
     const [password, setPassword] = useState('');
     const [adminError, setAdminError] = useState('');
     const [adminSuccess, setAdminSuccess] = useState('');
@@ -47,9 +47,15 @@ export default function Header({ activeTab, setActiveTab, isDarkMode, setIsDarkM
             }, 1500); 
         }
 
-        // Normal Behavior
-        setActiveTab('learn');
+        // Normal Behavior (Uses event to guarantee App.jsx clears any open overlays)
         window.dispatchEvent(new CustomEvent('switchTab', { detail: 'learn' }));
+    };
+
+    const handleTabClick = (tabId) => {
+        triggerHaptic();
+        // BUG FIX: We only rely on the event dispatcher here instead of calling setActiveTab directly.
+        // This ensures App.jsx triggers `setActiveAppTab(null)` and properly closes the course view.
+        window.dispatchEvent(new CustomEvent('switchTab', { detail: tabId }));
     };
 
     const handleClearChat = () => {
@@ -80,7 +86,7 @@ export default function Header({ activeTab, setActiveTab, isDarkMode, setIsDarkM
                 // NORMAL LOGIN: Authenticate existing admin
                 await signInWithEmailAndPassword(auth, ADMIN_EMAIL, password);
                 triggerHaptic('success');
-                setAdminSuccess("Admin Access Granted.");
+                setAdminSuccess("Granted! Open a Course to view Admin Panel.");
             }
             
             setTimeout(() => {
@@ -90,7 +96,7 @@ export default function Header({ activeTab, setActiveTab, isDarkMode, setIsDarkM
                 setIsSignUpMode(false);
                 // Unlock the rest of the app
                 window.dispatchEvent(new CustomEvent('adminUnlocked'));
-            }, 1200);
+            }, 1800); // Wait slightly longer so you can read the success message
 
         } catch (error) {
             triggerHaptic('error');
