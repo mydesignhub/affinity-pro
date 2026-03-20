@@ -21,6 +21,7 @@ const shuffleArray = (array) => {
     return newArr;
 };
 
+// Default empty states for the 3 apps
 const defaultLevels = { photo: ['beginner'], designer: ['beginner'], publisher: ['beginner'] };
 const defaultStars = { 
     photo: { beginner: 0, intermediate: 0, advanced: 0 }, 
@@ -30,8 +31,7 @@ const defaultStars = {
 const defaultScores = { photo: 0, designer: 0, publisher: 0 };
 const defaultCerts = { photo: null, designer: null, publisher: null };
 
-// 🌟 FIX: Added admin props to receive the command from App.jsx
-const Test = ({ isDarkMode, isAdmin, adminCertRequest, clearAdminCertRequest }) => {
+const Test = ({ isDarkMode, isAdmin }) => {
     const { lang } = useLanguage(); 
 
     const [gameState, setGameState] = useState('menu');
@@ -42,8 +42,10 @@ const Test = ({ isDarkMode, isAdmin, adminCertRequest, clearAdminCertRequest }) 
     const [isAnswered, setIsAnswered] = useState(false);
     const [quizConfig, setQuizConfig] = useState({ level: 'beginner', amount: 5 });
     
+    // Tracks which Affinity app is active
     const [activeAppTab, setActiveAppTab] = useState('photo');
 
+    // Initialize states safely to prevent Error #418 Hydration Mismatch
     const [userName, setUserName] = useState('');
     const [highScores, setHighScores] = useState(defaultScores);
     const [unlockedLevels, setUnlockedLevels] = useState(defaultLevels);
@@ -51,7 +53,9 @@ const Test = ({ isDarkMode, isAdmin, adminCertRequest, clearAdminCertRequest }) 
     const [certsData, setCertsData] = useState(defaultCerts);
     const [isDataLoaded, setIsDataLoaded] = useState(false);
 
+    // 🌟 FIX: We still use this to instantly feed the form upon creation
     const [activeCertData, setActiveCertData] = useState(null);
+
     const nameInputRef = useRef(null);
 
     const [timeLeft, setTimeLeft] = useState(null);
@@ -59,6 +63,7 @@ const Test = ({ isDarkMode, isAdmin, adminCertRequest, clearAdminCertRequest }) 
     const [streak, setStreak] = useState(0);
     const [isShaking, setIsShaking] = useState(false);
 
+    // Read from localStorage ONLY after the component has mounted
     useEffect(() => {
         if (typeof window !== 'undefined') {
             const savedName = localStorage.getItem('myAffinity_user_name');
@@ -80,31 +85,7 @@ const Test = ({ isDarkMode, isAdmin, adminCertRequest, clearAdminCertRequest }) 
         }
     }, []);
 
-    // 🌟 FIX: Listen for the direct prop from App.jsx! 🌟
-    useEffect(() => {
-        if (adminCertRequest) {
-            const appId = adminCertRequest;
-            const appDisplayName = appId === 'photo' ? 'Affinity Photo' : appId === 'designer' ? 'Affinity Designer' : 'Affinity Publisher';
-            
-            const newCert = { 
-                name: userName.trim() || 'Super Admin Tester', 
-                score: 100, 
-                date: new Date().toISOString(), 
-                appCourse: appDisplayName 
-            };
-            
-            setActiveAppTab(appId);
-            setCertsData(prev => ({ ...prev, [appId]: newCert }));
-            setActiveCertData(newCert);
-            setGameState('certificate');
-            
-            if (clearAdminCertRequest) {
-                // Clear the prop so it doesn't loop
-                setTimeout(() => clearAdminCertRequest(), 100);
-            }
-        }
-    }, [adminCertRequest, userName, clearAdminCertRequest]);
-
+    // Extract current app's specific data
     const currentUnlocked = unlockedLevels[activeAppTab] || ['beginner'];
     const currentStars = levelStars[activeAppTab] || { beginner: 0, intermediate: 0, advanced: 0 };
     const currentHighScore = highScores[activeAppTab] || 0;
@@ -116,6 +97,7 @@ const Test = ({ isDarkMode, isAdmin, adminCertRequest, clearAdminCertRequest }) 
         }
     }, [activeAppTab, userName]); 
 
+    // Save everything to localStorage whenever it changes
     useEffect(() => {
         if (isDataLoaded) {
             localStorage.setItem('myAffinity_quiz_unlocked', JSON.stringify(unlockedLevels));
@@ -270,17 +252,26 @@ const Test = ({ isDarkMode, isAdmin, adminCertRequest, clearAdminCertRequest }) 
         }
     };
 
-    // 🌟 FIX: Render the certificate directly, just like the working app!
-    if (gameState === 'certificate' && activeCertData) {
+    // 🌟 FIX: Full screen Certificate Layout overlay. Immune to crashes!
+    if (gameState === 'certificate') {
+        const certToRender = activeCertData || currentCert;
+        
+        if (!certToRender) {
+             setGameState('menu');
+             return null;
+        }
+
         return (
-            <CertificateForm 
-                certData={activeCertData} 
-                isDarkMode={isDarkMode} 
-                onBack={() => {
-                    setActiveCertData(null);
-                    setGameState('menu');
-                }} 
-            />
+            <div className="fixed inset-0 w-full h-full z-[99999] bg-[#0A0A0A] flex flex-col items-center justify-center p-0 sm:p-6 overflow-hidden">
+                <CertificateForm 
+                    certData={certToRender} 
+                    isDarkMode={isDarkMode} 
+                    onBack={() => {
+                        setActiveCertData(null);
+                        setGameState('menu');
+                    }} 
+                />
+            </div>
         );
     }
 
@@ -395,7 +386,7 @@ const Test = ({ isDarkMode, isAdmin, adminCertRequest, clearAdminCertRequest }) 
                                 {!allUnlocked && <Lock size={16} className="opacity-30"/>}
                             </button>
 
-                            {/* Admin Certificate Bypass Button */}
+                            {/* 🌟 FIX: Internal Admin Certificate Button 🌟 */}
                             {isAdmin && !currentCert && (
                                 <button 
                                     onClick={() => {
@@ -415,7 +406,7 @@ const Test = ({ isDarkMode, isAdmin, adminCertRequest, clearAdminCertRequest }) 
                                 </button>
                             )}
 
-                            {/* Earned Certificate Button */}
+                            {/* Normal Users View Certificate Button */}
                             {currentCert && (
                                 <button 
                                     onClick={() => {

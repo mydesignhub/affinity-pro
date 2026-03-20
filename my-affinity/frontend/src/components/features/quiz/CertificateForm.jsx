@@ -1,550 +1,311 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { Trophy, Flame, CheckCircle2, XCircle, Play, Star, Award, Lock, ChevronRight, User, Timer, Camera, PenTool, Book, ShieldCheck } from 'lucide-react';
+import React, { useState, useRef, useEffect } from 'react';
+import { Award, Download, ArrowLeft } from 'lucide-react';
 import { useLanguage } from '../../../contexts/LanguageContext';
-import { initialQuestionBank } from '../../../data/data';
-import CertificateForm from './CertificateForm';
 
-const triggerHaptic = (type = 'light') => {
-    if (typeof navigator !== 'undefined' && navigator.vibrate) {
-        if (type === 'error') navigator.vibrate([50, 50, 50]);
-        else if (type === 'success') navigator.vibrate([30, 50, 30]);
-        else navigator.vibrate(10);
-    }
-};
-
-const shuffleArray = (array) => {
-    const newArr = [...array];
-    for (let i = newArr.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [newArr[i], newArr[j]] = [newArr[j], newArr[i]];
-    }
-    return newArr;
-};
-
-const defaultLevels = { photo: ['beginner'], designer: ['beginner'], publisher: ['beginner'] };
-const defaultStars = { 
-    photo: { beginner: 0, intermediate: 0, advanced: 0 }, 
-    designer: { beginner: 0, intermediate: 0, advanced: 0 }, 
-    publisher: { beginner: 0, intermediate: 0, advanced: 0 } 
-};
-const defaultScores = { photo: 0, designer: 0, publisher: 0 };
-const defaultCerts = { photo: null, designer: null, publisher: null };
-
-const Test = ({ isDarkMode, isAdmin }) => {
+const CertificateForm = ({ certData, isDarkMode = true, onBack }) => {
     const { lang } = useLanguage(); 
+    const [downloadState, setDownloadState] = useState(null);
+    const fontClass = lang === 'en' ? 'font-serif' : 'font-khmer';
+    const dateObj = new Date(certData?.date || Date.now());
+    const today = dateObj.toLocaleDateString(lang === 'en' ? 'en-US' : 'km-KH', { year: 'numeric', month: 'long', day: 'numeric' });
 
-    const [gameState, setGameState] = useState('menu');
-    const [questions, setQuestions] = useState([]);
-    const [currentQuestion, setCurrentQuestion] = useState(0);
-    const [score, setScore] = useState(0);
-    const [selectedOption, setSelectedOption] = useState(null);
-    const [isAnswered, setIsAnswered] = useState(false);
-    const [quizConfig, setQuizConfig] = useState({ level: 'beginner', amount: 5 });
+    const studentName = certData?.name || "Student Name";
+    // Mapped to the Affinity App's data structure
+    const courseName = certData?.appCourse || "Affinity Masterclass"; 
+    const score = certData?.score || 100;
     
-    const [activeAppTab, setActiveAppTab] = useState('photo');
+    const hasKhmerName = /[\u1780-\u17FF]/.test(studentName);
+    const nameFontSize = studentName.length > 20 ? Math.max(28, Math.floor(57 * (20 / studentName.length))) : 57;
 
-    const [userName, setUserName] = useState('');
-    const [highScores, setHighScores] = useState(defaultScores);
-    const [unlockedLevels, setUnlockedLevels] = useState(defaultLevels);
-    const [levelStars, setLevelStars] = useState(defaultStars);
-    const [certsData, setCertsData] = useState(defaultCerts);
-    const [isDataLoaded, setIsDataLoaded] = useState(false);
-
-    const [activeCertData, setActiveCertData] = useState(null);
-
-    const nameInputRef = useRef(null);
-
-    const [timeLeft, setTimeLeft] = useState(null);
-    const [userAnswers, setUserAnswers] = useState([]);
-    const [streak, setStreak] = useState(0);
-    const [isShaking, setIsShaking] = useState(false);
+    const wrapperRef = useRef(null);
+    const [scale, setScale] = useState(1);
+    
+    // State to hold the raw, strictly modified SVG HTML for the logo
+    const [logoHtml, setLogoHtml] = useState(null);
 
     useEffect(() => {
-        if (typeof window !== 'undefined') {
-            const savedName = localStorage.getItem('myAffinity_user_name');
-            if (savedName) setUserName(savedName);
+        const updateScale = () => {
+            if (wrapperRef.current) {
+                const width = wrapperRef.current.offsetWidth;
+                setScale(Math.min(width / 1123, 1));
+            }
+        };
+        window.addEventListener('resize', updateScale);
+        setTimeout(updateScale, 100); 
+        
+        // Fetch and sanitize the logo for PDF compatibility
+        fetch('/certificate_logo.svg')
+            .then(res => res.text())
+            .then(text => {
+                if (text.includes('<svg')) {
+                    let modifiedSvg = text;
+                    
+                    // 1. Strip any existing width/height
+                    modifiedSvg = modifiedSvg.replace(/\s(width|height)="[^"]*"/g, '');
+                    
+                    // 2. Ensure XML namespace exists
+                    if (!modifiedSvg.includes('xmlns=')) {
+                        modifiedSvg = modifiedSvg.replace('<svg', '<svg xmlns="http://www.w3.org/2000/svg"');
+                    }
+                    
+                    // 3. Force exact physical pixel dimensions
+                    modifiedSvg = modifiedSvg.replace('<svg', '<svg width="96" height="96"');
+                    
+                    setLogoHtml(modifiedSvg);
+                }
+            })
+            .catch(e => console.log('Logo fetch error:', e));
 
-            const savedScores = localStorage.getItem('myAffinity_quiz_scores');
-            if (savedScores) setHighScores(JSON.parse(savedScores));
-
-            const savedUnlocked = localStorage.getItem('myAffinity_quiz_unlocked');
-            if (savedUnlocked) setUnlockedLevels(JSON.parse(savedUnlocked));
-
-            const savedStars = localStorage.getItem('myAffinity_quiz_stars');
-            if (savedStars) setLevelStars(JSON.parse(savedStars));
-
-            const savedCerts = localStorage.getItem('myAffinity_quiz_certs');
-            if (savedCerts) setCertsData(JSON.parse(savedCerts));
-
-            setIsDataLoaded(true);
-        }
+        return () => window.removeEventListener('resize', updateScale);
     }, []);
 
-    const currentUnlocked = unlockedLevels[activeAppTab] || ['beginner'];
-    const currentStars = levelStars[activeAppTab] || { beginner: 0, intermediate: 0, advanced: 0 };
-    const currentHighScore = highScores[activeAppTab] || 0;
-    const currentCert = certsData[activeAppTab] || null;
-
-    useEffect(() => {
-        if (nameInputRef.current && userName && !nameInputRef.current.textContent) {
-            nameInputRef.current.textContent = userName;
-        }
-    }, [activeAppTab, userName]); 
-
-    useEffect(() => {
-        if (isDataLoaded) {
-            localStorage.setItem('myAffinity_quiz_unlocked', JSON.stringify(unlockedLevels));
-            localStorage.setItem('myAffinity_quiz_stars', JSON.stringify(levelStars));
-            localStorage.setItem('myAffinity_quiz_scores', JSON.stringify(highScores));
-            localStorage.setItem('myAffinity_quiz_certs', JSON.stringify(certsData));
-            if (userName) localStorage.setItem('myAffinity_user_name', userName);
-        }
-    }, [unlockedLevels, levelStars, highScores, certsData, userName, isDataLoaded]);
-
-    useEffect(() => {
-        if (gameState !== 'playing' || quizConfig.level !== 'final' || timeLeft === null) return;
-        if (timeLeft <= 0) { finishQuiz(score); return; }
-        const timerId = setInterval(() => setTimeLeft(prev => prev - 1), 1000);
-        return () => clearInterval(timerId);
-    }, [gameState, quizConfig.level, timeLeft, score]);
-
-    const formatTime = (seconds) => {
-        const m = Math.floor(seconds / 60); const s = seconds % 60;
-        return `${m}:${s < 10 ? '0' : ''}${s}`;
-    };
-
-    const startQuiz = (level) => { 
-        if (level === 'final') {
-            if (!userName.trim()) { alert(lang === 'en' ? "Please enter your name first!" : "សូមបញ្ចូលឈ្មោះរបស់អ្នកជាមុនសិន!"); return; }
-            if (currentCert) {
-                const confirmRetake = window.confirm(lang === 'en' ? "You already have a certificate. Retake?" : "អ្នកមានវិញ្ញាបនបត្ររួចហើយ។ បន្តឬទេ?");
-                if (!confirmRetake) return;
-            }
-            setTimeLeft(15 * 60);
-        } else { setTimeLeft(null); }
-
-        if (!isAdmin && !currentUnlocked.includes(level) && level !== 'final') { triggerHaptic('error'); return; }
-        triggerHaptic();
+    const handleDownloadPDF = async () => {
+        if (downloadState) return;
+        setDownloadState('pdf');
         
-        let filtered = initialQuestionBank.filter(q => q.app === activeAppTab);
-        if (level !== 'final') {
-             filtered = filtered.filter(q => q.level === level);
-        }
+        try {
+            await document.fonts.ready; 
 
-        if (filtered.length < quizConfig.amount && level !== 'final') {
-            const extra = initialQuestionBank.filter(q => q.app === activeAppTab && q.level !== level);
-            filtered = [...filtered, ...extra];
-        }
-
-        const amount = level === 'final' ? 40 : Math.min(quizConfig.amount, filtered.length);
-        let shuffledQuestions = shuffleArray(filtered).slice(0, amount);
-
-        const finalQuestions = shuffledQuestions.map(q => {
-            const currentOptions = lang === 'en' && q.options_en ? q.options_en : q.options;
-            const currentQuestionText = lang === 'en' && q.question_en ? q.question_en : q.question;
-            const optionsWithOriginalIndex = currentOptions.map((opt, index) => ({ text: opt, isCorrect: index === q.correct }));
-            const shuffledOptions = shuffleArray(optionsWithOriginalIndex);
-            const newCorrectIndex = shuffledOptions.findIndex(opt => opt.isCorrect);
-            return { ...q, question: currentQuestionText, options: shuffledOptions.map(opt => opt.text), correct: newCorrectIndex };
-        });
-
-        setQuestions(finalQuestions); 
-        setQuizConfig(prev => ({...prev, level}));
-        
-        setCurrentQuestion(0); 
-        setScore(0); 
-        setIsAnswered(false); 
-        setSelectedOption(null); 
-        setUserAnswers([]); 
-        setStreak(0);
-        setGameState('playing'); 
-    };
-
-    const handleOptionClick = (selectedIndex) => {
-        if (isAnswered) return;
-        
-        setSelectedOption(selectedIndex);
-        setIsAnswered(true);
-
-        const qInfo = questions[currentQuestion];
-        const isCorrect = selectedIndex === qInfo.correct;
-        const newScore = isCorrect ? score + 1 : score;
-
-        if (isCorrect) {
-            setScore(newScore);
-            setStreak(s => s + 1);
-            triggerHaptic('success');
-        } else {
-            setStreak(0);
-            setIsShaking(true);
-            triggerHaptic('error');
-            setTimeout(() => setIsShaking(false), 500);
-        }
-
-        setUserAnswers(prev => [...prev, { qId: currentQuestion, selected: selectedIndex, isCorrect }]);
-
-        setTimeout(() => {
-            if (currentQuestion + 1 < questions.length) {
-                setSelectedOption(null);
-                setIsAnswered(false);
-                setCurrentQuestion(prev => prev + 1);
-            } else {
-                finishQuiz(newScore);
-            }
-        }, 1200); 
-    };
-
-    const finishQuiz = (finalScore) => {
-        const percentage = Math.round((finalScore / questions.length) * 100);
-        const appDisplayName = activeAppTab === 'photo' ? 'Affinity Photo' : activeAppTab === 'designer' ? 'Affinity Designer' : 'Affinity Publisher';
-
-        if (quizConfig.level === 'final') {
-            if (percentage >= 90 || isAdmin) {
-                const displayScore = isAdmin && percentage < 90 ? 100 : percentage;
-                const newCert = { name: userName || 'Administrator', score: displayScore, date: new Date().toISOString(), appCourse: appDisplayName };
-                setCertsData(prev => ({ ...prev, [activeAppTab]: newCert }));
-                
-                setActiveCertData(newCert);
-                setGameState('certificate');
-            } else {
-                setCertsData(prev => ({ ...prev, [activeAppTab]: null })); 
-                setGameState('result');
-            }
-        } else {
-            let stars = finalScore >= (questions.length * 0.8) ? 3 : finalScore >= (questions.length * 0.5) ? 2 : finalScore >= (questions.length * 0.3) ? 1 : 0;
+            const element = document.getElementById('certificate-node');
+            const scalerParent = document.getElementById('certificate-scaler-parent');
+            const scaler = document.getElementById('certificate-scaler');
             
-            setLevelStars(prev => {
-                const appStars = prev[activeAppTab] || { beginner: 0, intermediate: 0, advanced: 0 };
-                if (stars > (appStars[quizConfig.level] || 0)) {
-                    return { ...prev, [activeAppTab]: { ...appStars, [quizConfig.level]: stars } };
-                }
-                return prev;
-            });
+            const origParentPos = scalerParent ? scalerParent.style.position : '';
+            const origParentLeft = scalerParent ? scalerParent.style.left : '';
+            const origParentTransform = scalerParent ? scalerParent.style.transform : '';
+            const origScalerTransform = scaler ? scaler.style.transform : '';
+            
+            // Temporarily remove CSS transforms so html2canvas captures the full size
+            if (scalerParent) {
+                scalerParent.style.position = 'absolute';
+                scalerParent.style.left = '0px';
+                scalerParent.style.transform = 'none';
+            }
+            if (scaler) {
+                scaler.style.transform = 'none';
+            }
+            
+            window.scrollTo(0, 0); 
+            
+            const opt = {
+                margin: 0,
+                filename: `${studentName.replace(/\s+/g, '_')}_Certificate.pdf`,
+                image: { type: 'jpeg', quality: 1.0 },
+                html2canvas: { 
+                    scale: 3,
+                    useCORS: true, 
+                    logging: false,
+                    x: 0,
+                    y: 0,
+                    scrollX: 0,
+                    scrollY: 0,
+                    backgroundColor: '#0A0F1D', // Forced Dark Mode Background
+                    width: 1123,
+                    height: 794,
+                    windowWidth: 1123
+                },
+                jsPDF: { unit: 'px', format: [1123, 794], orientation: 'landscape', hotfixes: ["px_scaling"] }
+            };
 
-            if (stars >= 1 || percentage >= 80) {
-                setUnlockedLevels(prev => {
-                    const appLevels = prev[activeAppTab] || ['beginner'];
-                    if (quizConfig.level === 'beginner' && !appLevels.includes('intermediate')) {
-                        return { ...prev, [activeAppTab]: [...appLevels, 'intermediate'] };
-                    } else if (quizConfig.level === 'intermediate' && !appLevels.includes('advanced')) {
-                        return { ...prev, [activeAppTab]: [...appLevels, 'advanced'] };
-                    }
-                    return prev;
+            const restoreStyles = () => {
+                if (scalerParent) {
+                    scalerParent.style.position = origParentPos;
+                    scalerParent.style.left = origParentLeft;
+                    scalerParent.style.transform = origParentTransform;
+                }
+                if (scaler) {
+                    scaler.style.transform = origScalerTransform;
+                }
+                setDownloadState(null);
+            };
+
+            const generatePDF = () => {
+                window.html2pdf().set(opt).from(element).save().then(restoreStyles).catch((err) => {
+                    console.error("PDF generation error:", err);
+                    restoreStyles();
                 });
+            };
+
+            // Inject html2pdf script dynamically if not loaded
+            if (window.html2pdf) { 
+                generatePDF(); 
+            } else {
+                const script = document.createElement('script');
+                script.src = "https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js";
+                script.onload = generatePDF;
+                script.onerror = () => {
+                    console.error("Failed to load html2pdf.js script");
+                    restoreStyles();
+                };
+                document.head.appendChild(script);
             }
-
-            setHighScores(prev => {
-                const appScore = prev[activeAppTab] || 0;
-                if (finalScore > appScore) {
-                    return { ...prev, [activeAppTab]: finalScore };
-                }
-                return prev;
-            });
-
-            setGameState('result');
+        } catch (err) {
+            console.error("Download initialization error:", err);
+            setDownloadState(null);
         }
     };
-
-    // 🌟 FIX: Removed the wrapper completely. Renders exactly like the overlay. 🌟
-    if (gameState === 'certificate') {
-        const certToRender = activeCertData || currentCert;
-        
-        if (!certToRender) {
-             setTimeout(() => setGameState('menu'), 0);
-             return null;
-        }
-
-        return (
-            <CertificateForm 
-                certData={certToRender} 
-                isDarkMode={isDarkMode} 
-                onBack={() => {
-                    setActiveCertData(null);
-                    setGameState('menu');
-                }} 
-            />
-        );
-    }
-
-    if (gameState === 'menu') {
-        const allUnlocked = isAdmin || (currentUnlocked.includes('advanced') && currentStars.advanced >= 2);
-        
-        return (
-            <div className="flex flex-col items-center justify-start min-h-full pt-4 sm:pt-8 px-2 sm:px-6 pb-28 sm:pb-32 w-full">
-                
-                <div className={`flex justify-center p-1.5 rounded-2xl mx-auto max-w-md w-full mb-6 border shadow-sm ${isDarkMode ? 'bg-[#1E1E1E] border-[#2C2C2C]' : 'bg-[#FFFFFF] border-[#E5E7EB]'}`}>
-                    <button onClick={() => { setActiveAppTab('photo'); triggerHaptic(); }} className={`flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl font-bold text-sm transition-all ${activeAppTab === 'photo' ? (isDarkMode ? 'bg-[#41B6E6] text-[#0A0A0A]' : 'bg-[#0277C5] text-white') : (isDarkMode ? 'text-[#A0A0A0] hover:text-[#F1F1F1]' : 'text-[#6B7280] hover:text-[#1A1A1A]')}`}>
-                        <Camera size={16} /> Photo
-                    </button>
-                    <button onClick={() => { setActiveAppTab('designer'); triggerHaptic(); }} className={`flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl font-bold text-sm transition-all ${activeAppTab === 'designer' ? (isDarkMode ? 'bg-[#41B6E6] text-[#0A0A0A]' : 'bg-[#0277C5] text-white') : (isDarkMode ? 'text-[#A0A0A0] hover:text-[#F1F1F1]' : 'text-[#6B7280] hover:text-[#1A1A1A]')}`}>
-                        <PenTool size={16} /> Designer
-                    </button>
-                    <button onClick={() => { setActiveAppTab('publisher'); triggerHaptic(); }} className={`flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl font-bold text-sm transition-all ${activeAppTab === 'publisher' ? (isDarkMode ? 'bg-[#41B6E6] text-[#0A0A0A]' : 'bg-[#0277C5] text-white') : (isDarkMode ? 'text-[#A0A0A0] hover:text-[#F1F1F1]' : 'text-[#6B7280] hover:text-[#1A1A1A]')}`}>
-                        <Book size={16} /> Publisher
-                    </button>
-                </div>
-
-                <div className={`p-5 sm:p-8 rounded-[32px] sm:rounded-[40px] border shadow-2xl w-full max-w-[95%] sm:max-w-lg transition-all duration-500 backdrop-blur-2xl animate-fade-in-up ${isDarkMode ? 'bg-[#1A1A1A]/90 border-white/10 shadow-[0_20px_60px_rgba(0,0,0,0.6)]' : 'bg-[#FFFFFF]/95 border-black/5 shadow-[0_20px_60px_rgba(2,119,197,0.1)]'}`}>
+    
+    return (
+        <div className="flex h-full flex-col items-center justify-center p-4 animate-fade-in-up w-full max-w-5xl mx-auto">
+            <style>
+                {`
+                    @import url('https://fonts.googleapis.com/css2?family=Kantumruy+Pro:wght@300;400;500;600;700;900&display=swap');
+                    @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Great+Vibes&display=swap');
+                    .font-kantumruy { font-family: 'Kantumruy Pro', sans-serif; }
+                    .font-serif-luxury { font-family: 'Cinzel', serif; }
+                    .font-signature { font-family: 'Great Vibes', cursive; }
+                `}
+            </style>
+            
+            {/* Certificate Scaler Wrapper */}
+            <div ref={wrapperRef} className="w-full relative overflow-visible mb-6" style={{ height: `${794 * scale}px` }}>
+                <div id="certificate-scaler-parent" className="absolute top-0 left-1/2" style={{ width: `${1123 * scale}px`, height: `${794 * scale}px`, transform: 'translateX(-50%)' }}>
                     
-                    <div className="flex items-center justify-between mb-5 sm:mb-6 px-1">
-                        <div className="flex items-center gap-3">
-                            <div className={`w-12 h-12 rounded-[16px] flex items-center justify-center shadow-inner ${isDarkMode ? 'bg-[#41B6E6]/10' : 'bg-[#0277C5]/10'}`}><Award className={isDarkMode ? 'text-[#41B6E6]' : 'text-[#0277C5]'} size={24} /></div>
-                            <div className="flex flex-col">
-                                <h2 className={`text-[19px] sm:text-[22px] font-black font-khmer leading-none tracking-tight ${isDarkMode ? 'text-[#F1F1F1]' : 'text-[#1A1A1A]'}`}>{lang === 'en' ? 'Skill Test' : 'តេស្តសមត្ថភាព'}</h2>
-                                <p className={`text-[9px] sm:text-[10px] mt-1.5 uppercase font-black tracking-widest ${isDarkMode ? 'text-[#A0A0A0]' : 'text-[#6B7280]'}`}>{lang === 'en' ? 'High Score:' : 'ពិន្ទុខ្ពស់បំផុត:'} {currentHighScore}</p>
-                            </div>
-                        </div>
+                    {/* 🌟 FORCED DARK MODE BACKGROUND: bg-[#0A0F1D] */}
+                    <div id="certificate-scaler" style={{ transform: `scale(${scale})`, transformOrigin: 'top left', width: '1123px', height: '794px' }} className="absolute top-0 left-0 shadow-2xl rounded-sm bg-[#0A0F1D]">
                         
-                        <div className={`flex flex-col items-end px-3 sm:px-4 py-2 rounded-2xl border shadow-sm ${isDarkMode ? 'bg-[#121212] border-white/10' : 'bg-[#F8F9FA] border-[#E5E7EB]'}`}>
-                            <label className={`text-[8px] sm:text-[9px] font-black uppercase mb-1 tracking-widest ${isDarkMode ? 'text-[#A0A0A0]' : 'text-[#6B7280]'}`}>{lang === 'en' ? 'Questions' : 'សំណួរ'}</label>
-                            <div className="flex gap-3">
-                                {[5, 10].map(amt => (
-                                    <button key={amt} onClick={() => { triggerHaptic(); setQuizConfig({...quizConfig, amount: amt}) }} className={`text-[13px] font-black transition-all ${quizConfig.amount === amt ? (isDarkMode ? 'text-[#41B6E6] scale-110 drop-shadow-md' : 'text-[#0277C5] scale-110 drop-shadow-md') : (isDarkMode ? 'text-[#6B7280] hover:text-[#A0A0A0]' : 'text-[#9CA3AF] hover:text-[#6B7280]')}`}>{amt}</button>
-                                ))}
-                            </div>
-                        </div>
-                    </div>
+                        {/* THE CERTIFICATE HTML NODE (Captured for PDF) */}
+                        <div id="certificate-node" className="w-[1123px] h-[794px] relative overflow-hidden text-center bg-[#0A0F1D]">
+                            
+                            <div className="absolute inset-0 w-full h-full z-0 opacity-0 pointer-events-none"></div>
 
-                    <div className={`relative flex items-center gap-3 p-4 mb-6 rounded-2xl border transition-all duration-300 shadow-inner group ${isDarkMode ? 'bg-[#121212] border-[#2C2C2C] focus-within:border-[#41B6E6]/50 focus-within:bg-[#1E1E1E]/50' : 'bg-[#F8F9FA] border-[#E5E7EB] focus-within:border-[#0277C5]/50 focus-within:bg-white'}`}>
-                        <User size={18} className={`opacity-50 transition-colors ${isDarkMode ? 'text-[#41B6E6] group-focus-within:opacity-100' : 'text-[#0277C5] group-focus-within:opacity-100'}`} />
-                        <div className="absolute overflow-hidden w-0 h-0 opacity-0 -z-10">
-                            <input type="text" name="fake_email" tabIndex="-1" />
-                            <input type="password" name="fake_password" tabIndex="-1" />
-                        </div>
-                        <div className="relative flex-1 flex items-center w-full">
-                            {!userName && (
-                                <div className={`absolute left-0 pointer-events-none text-[14px] font-khmer font-bold tracking-wide opacity-40 ${isDarkMode ? 'text-[#A0A0A0]' : 'text-[#6B7280]'}`}>
-                                    {lang === 'en' ? "Enter your full name..." : "រាយឈ្មោះរបស់អ្នក..."}
-                                </div>
-                            )}
-                            <div 
-                                ref={nameInputRef}
-                                contentEditable="true"
-                                onInput={(e) => setUserName(e.currentTarget.textContent)}
-                                onKeyDown={(e) => {
-                                    if (e.key === 'Enter') {
-                                        e.preventDefault(); 
-                                        e.target.blur(); 
-                                    }
-                                }}
-                                onFocus={(e) => {
-                                    setTimeout(() => {
-                                        e.target.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                                    }, 300);
-                                }}
-                                className={`bg-transparent outline-none w-full font-khmer text-[14px] font-bold tracking-wide whitespace-nowrap overflow-x-auto no-scrollbar ${isDarkMode ? 'text-[#F1F1F1]' : 'text-[#1A1A1A]'}`}
-                                spellCheck="false"
-                                role="textbox"
-                                aria-multiline="false"
-                                autoCorrect="off"
-                                autoCapitalize="words"
-                                suppressHydrationWarning
-                            />
-                        </div>
-                    </div>
+                            <div className="absolute inset-0 w-full h-full flex items-center justify-center">
 
-                    <div className="grid gap-3">
-                        {['beginner', 'intermediate', 'advanced'].map(lvl => {
-                            const isLocked = !isAdmin && !currentUnlocked.includes(lvl); 
-                            const stars = currentStars[lvl] || 0;
-                            const displayLevel = lang === 'en' ? lvl.charAt(0).toUpperCase() + lvl.slice(1) : (lvl === 'beginner' ? 'កម្រិតដំបូង' : lvl === 'intermediate' ? 'កម្រិតមធ្យម' : 'កម្រិតខ្ពស់');
+                                {/* 🌟 FORCED DARK MODE BORDERS */}
+                                <div className="absolute top-[35px] bottom-[35px] left-[35px] right-[35px] border-[1px] z-10 pointer-events-none border-[#D4AF37] opacity-40"></div>
+                                
+                                <div className="absolute top-[30px] left-[30px] w-[60px] h-[60px] border-t-[3px] border-l-[3px] z-10 border-[#D4AF37]"></div>
+                                <div className="absolute top-[30px] right-[30px] w-[60px] h-[60px] border-t-[3px] border-r-[3px] z-10 border-[#D4AF37]"></div>
+                                <div className="absolute bottom-[30px] left-[30px] w-[60px] h-[60px] border-b-[3px] border-l-[3px] z-10 border-[#D4AF37]"></div>
+                                <div className="absolute bottom-[30px] right-[30px] w-[60px] h-[60px] border-b-[3px] border-r-[3px] z-10 border-[#D4AF37]"></div>
 
-                            return (
-                                <button key={lvl} onClick={() => startQuiz(lvl)} className={`p-4 rounded-[24px] border flex items-center justify-between transition-all duration-500 ease-out active:scale-[0.98] ${isLocked ? (isDarkMode ? 'opacity-40 grayscale border-[#2C2C2C] cursor-not-allowed bg-[#121212]' : 'opacity-40 grayscale border-[#E5E7EB] cursor-not-allowed bg-[#F8F9FA]') : (isDarkMode ? 'border-[#3A3A3C] bg-[#1E1E1E] hover:-translate-y-1 hover:border-[#41B6E6]/40 shadow-sm hover:shadow-[0_10px_20px_rgba(65,182,230,0.1)]' : 'border-[#E5E7EB] bg-white hover:-translate-y-1 hover:border-[#0277C5]/40 shadow-sm hover:shadow-[0_10px_20px_rgba(2,119,197,0.1)]')}`}>
-                                    <div className="flex items-center gap-4 text-left">
-                                        <div className={`p-3 rounded-2xl shadow-sm ${isLocked ? 'bg-gray-100 text-gray-400 dark:bg-[#2C2C2C] dark:text-[#A0A0A0]' : 'bg-[#0277C5] text-white dark:bg-[#41B6E6] dark:text-[#121212]'}`}>{isLocked ? <Lock size={18}/> : <Play size={18} fill="currentColor"/>}</div>
-                                        <div>
-                                            <span className={`font-khmer font-black text-[15px] block tracking-tight ${isDarkMode && !isLocked ? 'text-[#F1F1F1]' : 'text-[#1A1A1A]'}`}>{displayLevel}</span>
-                                            <div className="flex gap-1 mt-1.5">
-                                                {[1, 2, 3].map(s => <Star key={s} size={11} className={s <= stars ? "fill-[#C5B002] text-[#C5B002]" : (isDarkMode ? "fill-[#2C2C2C] text-[#2C2C2C]" : "fill-[#E5E7EB] text-[#E5E7EB]")} />)}
+                                <div className="relative w-full h-full z-20 flex flex-col items-center justify-center px-[130px]">
+                                    
+                                    <div className="flex justify-center mb-4">
+                                        <Award size={44} strokeWidth={1.5} className="text-[#D4AF37]" />
+                                    </div>
+                                    
+                                    <h1 
+                                        className={`text-[42px] leading-tight ${fontClass} font-bold ${lang === 'en' ? 'tracking-[0.22em] uppercase' : 'tracking-normal'} mb-2 text-[#F1F1F1]`}
+                                        style={lang === 'en' ? { paddingLeft: '0.22em' } : {}}
+                                    >
+                                        {lang === 'en' ? 'Certificate of Completion' : 'វិញ្ញាបនបត្របញ្ជាក់ការសិក្សា'}
+                                    </h1>
+                                    
+                                    <div className="w-[450px] flex items-center justify-center gap-4 mb-10 opacity-80">
+                                        <div className="h-[1px] flex-1 bg-[#D4AF37] opacity-40"></div>
+                                        <div className="w-2.5 h-2.5 shrink-0 rotate-45 bg-[#D4AF37]"></div>
+                                        <div className="h-[1px] flex-1 bg-[#D4AF37] opacity-40"></div>
+                                    </div>
+
+                                    <p className={`text-[18px] mb-6 ${fontClass} italic text-[#A0A0A0]`}>
+                                        {lang === 'en' ? 'This certifies that' : 'ប័ណ្ណនេះបញ្ជាក់ថា'}
+                                    </p>
+                                    
+                                    <div className="w-[650px] border-b-[1px] border-opacity-40 pb-4 mb-10 border-[#D4AF37]">
+                                        <h2 
+                                            className={`leading-none font-khmer font-black italic ${hasKhmerName ? 'tracking-normal' : 'tracking-wide'} whitespace-nowrap text-[#D4AF37]`}
+                                            style={{ fontSize: `${nameFontSize}px`, paddingLeft: hasKhmerName ? '0' : '0.025em' }}
+                                        >
+                                            {studentName}
+                                        </h2>
+                                    </div>
+
+                                    <p 
+                                        className={`text-[14px] ${fontClass} ${lang === 'en' ? 'uppercase tracking-[0.2em]' : 'tracking-normal'} mb-4 text-[#A0A0A0]`}
+                                        style={lang === 'en' ? { paddingLeft: '0.2em' } : {}}
+                                    >
+                                        {lang === 'en' ? 'Has successfully completed the course' : 'បានបញ្ចប់ដោយជោគជ័យនូវវគ្គសិក្សា'}
+                                    </p>
+                                    
+                                    <h3 
+                                        className="text-[36px] font-serif font-bold uppercase tracking-[0.15em] mb-14 text-[#F1F1F1]"
+                                        style={{ paddingLeft: '0.15em' }}
+                                    >
+                                        {courseName}
+                                    </h3>
+
+                                    <div className="w-full flex justify-between items-end">
+                                        
+                                        <div className="w-[240px] text-center">
+                                            <p className="font-serif text-[22px] mb-2 text-[#F1F1F1]">
+                                                {today}
+                                            </p>
+                                            <div className="h-[1px] w-full mb-3 opacity-40 bg-[#D4AF37]"></div>
+                                            <p 
+                                                className={`text-[12px] ${fontClass} ${lang === 'en' ? 'uppercase tracking-[0.2em]' : 'tracking-normal'} text-[#A0A0A0]`}
+                                                style={lang === 'en' ? { paddingLeft: '0.2em' } : {}}
+                                            >
+                                                {lang === 'en' ? 'Date Issued' : 'កាលបរិច្ឆេទ'}
+                                            </p>
+                                        </div>
+                                        
+                                        <div className="flex flex-col items-center justify-end px-4">
+                                            <p 
+                                                className="text-[10px] font-serif uppercase tracking-[0.2em] mb-3 text-[#D4AF37]"
+                                                style={{ paddingLeft: '0.2em' }}
+                                            >
+                                                Verified By
+                                            </p>
+                                            
+                                            <div className="w-[114px] h-[114px] flex items-center justify-center my-1">
+                                                {logoHtml ? (
+                                                    <div 
+                                                        className="flex items-center justify-center text-[#D4AF37]" 
+                                                        dangerouslySetInnerHTML={{ __html: logoHtml }}
+                                                    />
+                                                ) : (
+                                                    <div className="w-[96px] h-[96px] border-2 border-dashed border-[#D4AF37]/30 rounded-lg flex items-center justify-center">
+                                                        <Award className="w-8 h-8 text-[#D4AF37]/50" />
+                                                    </div>
+                                                )}
                                             </div>
                                         </div>
-                                    </div>
-                                    {!isLocked && <ChevronRight size={20} className={`opacity-40 ${isDarkMode ? 'text-[#41B6E6]' : 'text-[#0277C5]'}`}/>}
-                                </button>
-                            );
-                        })}
-                        
-                        <div className={`mt-2 pt-3 border-t flex flex-col gap-3 ${isDarkMode ? 'border-[#2C2C2C]' : 'border-[#E5E7EB]'}`}>
-                            <button onClick={() => startQuiz('final')} disabled={!allUnlocked} className={`p-5 rounded-[24px] border flex items-center justify-between transition-all duration-500 ease-out active:scale-[0.98] ${allUnlocked ? 'border-[#C5B002] bg-[#C5B002]/10 shadow-lg hover:-translate-y-1 hover:shadow-[#C5B002]/20' : 'opacity-40 border-gray-200 dark:border-[#2C2C2C] cursor-not-allowed bg-transparent'}`}>
-                                <div className="flex items-center gap-4">
-                                    <div className={`p-3 rounded-2xl ${allUnlocked ? 'bg-[#C5B002] text-white shadow-inner' : 'bg-gray-100 text-gray-400 dark:bg-[#2C2C2C] dark:text-[#A0A0A0]'}`}><Trophy size={20}/></div>
-                                    <div className="text-left">
-                                        <span className={`font-khmer font-black text-[15px] block tracking-tight ${allUnlocked ? 'text-[#C5B002]' : ''}`}>{currentCert ? (lang === 'en' ? 'Retake Final Exam' : 'ប្រឡងយកវិញ្ញាបនបត្រម្តងទៀត') : (lang === 'en' ? 'Final Certification Exam' : 'តេស្តបញ្ចប់យកវិញ្ញាបនបត្រ')}</span>
-                                        <span className={`text-[10px] font-black uppercase tracking-widest mt-1 block ${allUnlocked ? 'opacity-80 text-[#C5B002]' : 'opacity-50'}`}>{lang === 'en' ? '40 Questions • 15 Mins • 90% to Pass' : '៤០ សំណួរ • ១៥ នាទី • ជាប់ ៩០%'}</span>
+
+                                        <div className="w-[240px] text-center">
+                                            <p className="font-serif font-bold text-[22px] mb-2 text-[#F1F1F1]">
+                                                {score}%
+                                            </p>
+                                            <div className="h-[1px] w-full mb-3 opacity-40 bg-[#D4AF37]"></div>
+                                            <p 
+                                                className={`text-[12px] ${fontClass} ${lang === 'en' ? 'uppercase tracking-[0.2em]' : 'tracking-normal'} text-[#A0A0A0]`}
+                                                style={lang === 'en' ? { paddingLeft: '0.2em' } : {}}
+                                            >
+                                                {lang === 'en' ? 'Final Score' : 'ពិន្ទុសម្រេច'}
+                                            </p>
+                                        </div>
+                                        
                                     </div>
                                 </div>
-                                {!allUnlocked && <Lock size={16} className="opacity-30"/>}
-                            </button>
-
-                            {/* Normal Users see their earned certificate here */}
-                            {currentCert && (
-                                <button 
-                                    onClick={() => {
-                                        setActiveCertData(currentCert);
-                                        setGameState('certificate');
-                                    }} 
-                                    className={`p-4 rounded-[24px] border flex items-center justify-center gap-3 transition-all duration-500 ease-out hover:-translate-y-1 active:scale-95 shadow-md ${isDarkMode ? 'border-[#41B6E6]/50 bg-[#41B6E6]/10 text-[#41B6E6] hover:shadow-[0_10px_20px_rgba(65,182,230,0.15)]' : 'border-[#0277C5]/50 bg-[#0277C5]/10 text-[#0277C5] hover:shadow-[0_10px_20px_rgba(2,119,197,0.15)]'}`}
-                                >
-                                    <Award size={20} />
-                                    <span className="font-khmer font-black text-[15px] tracking-tight">{lang === 'en' ? 'View My Certificate' : 'មើលវិញ្ញាបនបត្ររបស់ខ្ញុំ'}</span>
-                                </button>
-                            )}
-                        </div>
-                    </div>
-                </div>
-            </div>
-        );
-    }
-
-    const q = questions[currentQuestion];
-    if (gameState === 'playing' && q) {
-        return (
-            <div className="flex flex-col items-center justify-start min-h-full pt-4 sm:pt-8 px-2 sm:px-6 pb-28 sm:pb-32 w-full">
-                <style>{`
-                    @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-5px); } 50% { transform: translateX(5px); } 75% { transform: translateX(-5px); } }
-                    .animate-shake { animation: shake 0.4s ease-in-out; }
-                `}</style>
-                <div className={`p-6 sm:p-10 rounded-[32px] sm:rounded-[40px] border shadow-2xl w-full max-w-[95%] sm:max-w-xl transition-all duration-500 relative backdrop-blur-2xl animate-fade-in-up ${isShaking ? 'animate-shake border-red-500' : isDarkMode ? 'bg-[#1A1A1A]/90 border-white/10 shadow-[0_20px_60px_rgba(0,0,0,0.6)]' : 'bg-[#FFFFFF]/95 border-black/5 shadow-[0_20px_60px_rgba(2,119,197,0.1)]'}`}>
-                    
-                    <div className="flex items-center justify-between mb-8">
-                        <div className={`flex items-center gap-2 px-4 py-2 rounded-2xl border shadow-sm ${isDarkMode ? 'bg-[#41B6E6]/10 border-[#41B6E6]/20' : 'bg-[#0277C5]/10 border-[#0277C5]/20'}`}><span className={`text-[11px] font-black font-mono tracking-widest ${isDarkMode ? 'text-[#41B6E6]' : 'text-[#0277C5]'}`}>{currentQuestion + 1} / {questions.length}</span></div>
-                        
-                        {quizConfig.level === 'final' && timeLeft !== null && (
-                            <div className={`flex items-center gap-2 px-4 py-2 rounded-2xl border shadow-sm ${timeLeft < 60 ? 'bg-red-500/10 border-red-500/20 text-red-500 animate-pulse' : (isDarkMode ? 'bg-[#41B6E6]/10 border-[#41B6E6]/20 text-[#41B6E6]' : 'bg-[#0277C5]/10 border-[#0277C5]/20 text-[#0277C5]')}`}>
-                                <Timer size={16} />
-                                <span className="font-black text-[13px] font-mono">{formatTime(timeLeft)}</span>
                             </div>
-                        )}
-
-                        <div className="flex items-center gap-2 px-4 py-2 bg-[#C55002]/10 rounded-2xl border border-[#C55002]/20 shadow-sm"><Flame size={16} className={streak > 0 ? 'text-[#C55002] fill-[#C55002] animate-pulse' : 'text-gray-400 dark:text-gray-600'} /><span className="font-black text-[13px] font-mono text-[#C55002]">{streak}</span></div>
-                    </div>
-                    
-                    <h3 className={`text-[19px] sm:text-2xl font-black mb-8 font-khmer leading-relaxed tracking-tight ${isDarkMode ? 'text-[#F1F1F1]' : 'text-[#1A1A1A]'}`}>{q.question}</h3>
-                    
-                    <div className="grid gap-3.5" key={currentQuestion}>
-                        {q.options.map((opt, i) => {
-                            const isUserChoice = selectedOption === i;
-                            const isCorrectChoice = q.correct === i;
-                            
-                            let btnStyle = isDarkMode ? 'bg-[#121212] border-[#2C2C2C] text-[#E3E3E3]' : 'bg-[#F8F9FA] border-[#E5E7EB] text-[#1A1C1E]';
-                            let iconStyle = isDarkMode ? 'bg-[#1E1E1E] border-[#3A3A3C] text-[#A0A0A0]' : 'bg-[#FFFFFF] border-[#D1D5DB] text-[#6B7280] shadow-sm';
-
-                            if (!isAnswered) {
-                                btnStyle += isDarkMode ? ' md:hover:bg-[#1E1E1E] md:hover:border-[#41B6E6]/50 md:hover:-translate-y-1 shadow-sm active:scale-[0.98]' : ' md:hover:bg-white md:hover:border-[#0277C5]/50 md:hover:-translate-y-1 shadow-sm active:scale-[0.98]';
-                            } else {
-                                if (isCorrectChoice) {
-                                    btnStyle = 'bg-green-500/10 border-green-500/30 text-green-600 font-bold';
-                                    iconStyle = 'bg-green-500 border-green-500 text-white shadow-lg shadow-green-500/20';
-                                } else if (isUserChoice) {
-                                    btnStyle = 'bg-red-500/10 border-red-500/30 text-red-600 font-bold';
-                                    iconStyle = 'bg-red-500 border-red-500 text-white shadow-lg shadow-red-500/20';
-                                } else {
-                                    btnStyle = 'opacity-40 border-transparent grayscale bg-transparent';
-                                    iconStyle = 'opacity-40 bg-transparent border-transparent';
-                                }
-                            }
-
-                            return (
-                                <button key={i} disabled={isAnswered} onClick={() => handleOptionClick(i)} className={`p-4 text-left rounded-[20px] sm:rounded-[24px] border-2 transition-all duration-300 ease-out font-khmer text-[15px] sm:text-[16px] flex items-center group relative overflow-hidden ${btnStyle}`}>
-                                    <span className={`w-10 h-10 min-w-[40px] flex items-center justify-center rounded-[12px] mr-4 text-[12px] font-black border transition-all ${iconStyle}`}>{String.fromCharCode(65 + i)}</span>
-                                    <span className="flex-1 leading-snug py-1 pr-2">{opt}</span>
-                                </button>
-                            );
-                        })}
-                    </div>
-                </div>
-            </div>
-        );
-    }
-
-    if (gameState === 'result') {
-        const percentage = Math.round((score / questions.length) * 100);
-        return (
-            <div className="flex flex-col items-center justify-start min-h-full pt-8 sm:pt-12 px-2 sm:px-6 pb-28 sm:pb-32 w-full">
-                <div className={`p-8 sm:p-10 text-center rounded-[32px] sm:rounded-[40px] border shadow-2xl w-full max-w-[95%] sm:max-w-md backdrop-blur-2xl transition-all duration-500 animate-fade-in-up ${isDarkMode ? 'bg-[#1A1A1A]/90 border-white/10 shadow-[0_20px_60px_rgba(0,0,0,0.6)]' : 'bg-[#FFFFFF]/95 border-black/5 shadow-[0_20px_60px_rgba(2,119,197,0.1)]'}`}>
-                    
-                    <div className="relative w-36 h-36 mx-auto mb-8">
-                        <svg className="w-full h-full transform -rotate-90" viewBox="0 0 144 144">
-                            <circle cx="72" cy="72" r="64" className={isDarkMode ? 'text-[#2C2C2C]' : 'text-[#E5E7EB]'} strokeWidth="16" fill="none" stroke="currentColor" />
-                            <circle cx="72" cy="72" r="64" className={isDarkMode ? 'text-[#41B6E6]' : 'text-[#0277C5]'} strokeWidth="16" fill="none" strokeDasharray="401.9" strokeDashoffset={401.9 - (401.9 * percentage) / 100} strokeLinecap="round" stroke="currentColor" style={{transition: 'stroke-dashoffset 1.5s ease-out'}} />
-                        </svg>
-                        <div className="absolute inset-0 flex flex-col items-center justify-center leading-none">
-                            <span className={`text-[40px] font-black ${isDarkMode ? 'text-[#F1F1F1]' : 'text-[#1A1A1A]'}`}>{percentage}</span>
-                            <span className={`text-[10px] font-black uppercase tracking-widest mt-1.5 ${isDarkMode ? 'text-[#A0A0A0]' : 'text-[#6B7280]'}`}>{lang === 'en' ? '% Score' : '% ពិន្ទុ'}</span>
                         </div>
                     </div>
-                    
-                    <h2 className={`text-[22px] sm:text-2xl font-black font-khmer mb-3 tracking-tight ${isDarkMode ? 'text-[#F1F1F1]' : 'text-[#1A1A1A]'}`}>
-                        {percentage >= 80 ? (lang === 'en' ? "Excellent Work!" : "អស្ចារ្យណាស់បង!") : (lang === 'en' ? "Keep Practicing!" : "ព្យាយាមម្តងទៀត!")}
-                    </h2>
-                    
-                    <p className={`font-khmer font-medium text-[15px] mb-10 ${isDarkMode ? 'text-[#A0A0A0]' : 'text-[#6B7280]'}`}>
-                        {lang === 'en' ? `You answered ${score} out of ${questions.length} questions correctly.` : `អ្នកឆ្លើយត្រូវ ${score} ក្នុងចំណោម ${questions.length} សំណួរ។`}
-                    </p>
-                    
-                    <div className="flex flex-col gap-4">
-                        <button onClick={() => setGameState('review')} className={`w-full py-4 rounded-[24px] font-black font-khmer border-2 transition-all duration-300 ease-out active:scale-95 ${isDarkMode ? 'border-[#41B6E6]/30 text-[#41B6E6] hover:bg-[#41B6E6]/10' : 'border-[#0277C5]/30 text-[#0277C5] hover:bg-[#0277C5]/10'}`}>
-                            {lang === 'en' ? 'Review Answers' : 'មើលចម្លើយឡើងវិញ'}
-                        </button>
-                        <button onClick={() => setGameState('menu')} className="w-full py-4 rounded-[24px] bg-[#C55002] text-white font-black font-khmer transition-all duration-300 ease-out active:scale-95 shadow-xl hover:shadow-[#C55002]/30 hover:-translate-y-1">
-                            {lang === 'en' ? 'Back to Menu' : 'ត្រលប់ទៅកាន់ Menu'}
-                        </button>
-                    </div>
                 </div>
-            </div>
-        );
-    }
-
-    return (
-        <div className="flex flex-col font-khmer animate-fade-in max-w-[95%] sm:max-w-2xl mx-auto w-full pt-4 sm:pt-8 px-2 sm:px-6 pb-28 sm:pb-32 min-h-full">
-            <div className="flex items-center justify-between mb-8 px-2">
-                <div className="flex flex-col">
-                    <h2 className={`text-[22px] font-black leading-none tracking-tight ${isDarkMode ? 'text-[#F1F1F1]' : 'text-[#1A1A1A]'}`}>{lang === 'en' ? 'Review' : 'ការត្រួតពិនិត្យ'}</h2>
-                    <p className={`text-[10px] font-black uppercase mt-2 tracking-widest ${isDarkMode ? 'text-[#A0A0A0]' : 'text-[#6B7280]'}`}>{lang === 'en' ? 'Review your answers' : 'ពិនិត្យមើលចម្លើយរបស់អ្នកឡើងវិញ'}</p>
-                </div>
-                <button onClick={() => setGameState('result')} className={`p-3 rounded-2xl shadow-sm border transition-all active:scale-90 ${isDarkMode ? 'bg-[#1E1E1E] border-[#2C2C2C] hover:bg-[#2C2C2C] text-[#A0A0A0]' : 'bg-[#FFFFFF] border-[#E5E7EB] hover:bg-[#F8F9FA] text-[#6B7280]'}`}><XCircle size={22} /></button>
             </div>
             
-            <div className="flex-1 space-y-4 px-1">
-                {userAnswers.map((ans, idx) => {
-                    const qInfo = questions[ans.qId];
-                    if (!qInfo) return null;
-                    return (
-                        <div key={idx} className={`p-6 sm:p-8 rounded-[28px] border shadow-sm transition-all duration-500 ${isDarkMode ? 'bg-[#1E1E1E] border-[#2C2C2C]' : 'bg-[#FFFFFF] border-[#E5E7EB]'}`}>
-                            <p className={`font-black text-[15px] sm:text-[16px] mb-6 leading-relaxed ${isDarkMode ? 'text-[#F1F1F1]' : 'text-[#1A1A1A]'}`}>{idx + 1}. {qInfo.question}</p>
-                            <div className="grid gap-3">
-                                {qInfo.options.map((opt, i) => {
-                                    const isCorrect = qInfo.correct === i;
-                                    const isSelected = ans.selected === i;
-                                    
-                                    let style = isDarkMode ? 'text-[#A0A0A0] bg-[#121212] border-[#2C2C2C]' : 'text-[#6B7280] bg-[#F8F9FA] border-[#E5E7EB]';
-                                    let iconStyle = 'opacity-30 border-2';
-                                    
-                                    if (isCorrect) {
-                                        style = 'bg-green-500/10 text-green-600 border-green-500/30 font-bold shadow-sm';
-                                        iconStyle = 'text-green-500 border-none';
-                                    } else if (isSelected) {
-                                        style = 'bg-red-500/10 text-red-600 border-red-500/30 font-bold shadow-sm';
-                                        iconStyle = 'text-red-500 border-none';
-                                    }
-                                    
-                                    return (
-                                        <div key={i} className={`p-4 rounded-[20px] border flex items-center gap-4 text-[14px] sm:text-[15px] transition-all ${style}`}>
-                                            <div className="w-5 h-5 flex items-center justify-center shrink-0">
-                                                {isCorrect ? <CheckCircle2 size={20} className={iconStyle} /> : isSelected ? <XCircle size={20} className={iconStyle} /> : <div className={`w-4 h-4 rounded-full ${iconStyle}`}/>}
-                                            </div>
-                                            <span className="flex-1 leading-relaxed">{opt}</span>
-                                        </div>
-                                    );
-                                })}
-                            </div>
-                        </div>
-                    );
-                })}
+            {/* Buttons isolated outside the printable area */}
+            <div className="mt-2 flex flex-row justify-center gap-6 w-full max-w-2xl relative z-10 shrink-0">
+                <button 
+                    onClick={handleDownloadPDF} 
+                    disabled={!!downloadState}
+                    className={`flex-1 max-w-[250px] py-3 sm:py-4 rounded-xl font-bold font-khmer flex items-center justify-center gap-2 shadow-lg transition-all ${downloadState === 'pdf' ? 'opacity-70 cursor-wait' : 'active:scale-95'} ${isDarkMode ? 'bg-[#D4AF37] hover:bg-[#B38728] text-[#0A0F1D]' : 'bg-[#1E3A8A] hover:bg-[#152C6B] text-white'}`}
+                >
+                    <Download size={20} /> 
+                    {downloadState === 'pdf' 
+                        ? (lang === 'en' ? 'Generating PDF...' : 'កំពុងបង្កើត PDF...') 
+                        : (lang === 'en' ? 'Download PDF' : 'ទាញយក PDF')
+                    }
+                </button>
+                <button 
+                    onClick={onBack} 
+                    disabled={!!downloadState} 
+                    className={`flex-1 max-w-[250px] py-3 sm:py-4 border-[1.5px] rounded-xl font-bold font-khmer flex items-center justify-center gap-2 transition-all ${!!downloadState ? 'opacity-50 cursor-not-allowed' : 'active:scale-95'} ${isDarkMode ? 'border-[#D4AF37] text-[#D4AF37] hover:bg-[#D4AF37]/10' : 'border-[#1E3A8A] text-[#1E3A8A] hover:bg-[#1E3A8A]/10'}`}
+                >
+                    <ArrowLeft size={20} /> {lang === 'en' ? 'Go Back' : 'ត្រលប់ក្រោយ'}
+                </button>
             </div>
         </div>
     );
 };
 
-export default Test;
+export default CertificateForm;
