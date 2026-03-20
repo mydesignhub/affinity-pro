@@ -21,7 +21,6 @@ const shuffleArray = (array) => {
     return newArr;
 };
 
-// Default empty states for the 3 apps
 const defaultLevels = { photo: ['beginner'], designer: ['beginner'], publisher: ['beginner'] };
 const defaultStars = { 
     photo: { beginner: 0, intermediate: 0, advanced: 0 }, 
@@ -31,7 +30,7 @@ const defaultStars = {
 const defaultScores = { photo: 0, designer: 0, publisher: 0 };
 const defaultCerts = { photo: null, designer: null, publisher: null };
 
-// 🌟 FIX: Receive the new admin props! 🌟
+// 🌟 FIX: Added adminCertRequest props to receive the certificate from App.jsx!
 const Test = ({ isDarkMode, isAdmin, adminCertRequest, clearAdminCertRequest }) => {
     const { lang } = useLanguage(); 
 
@@ -81,7 +80,7 @@ const Test = ({ isDarkMode, isAdmin, adminCertRequest, clearAdminCertRequest }) 
         }
     }, []);
 
-    // 🌟 FIX: The direct prop listener. It fires instantly when App.jsx passes it the request!
+    // 🌟 FIX: Instantly catch the Certificate Request from App.jsx and render it
     useEffect(() => {
         if (!adminCertRequest) return;
 
@@ -96,16 +95,16 @@ const Test = ({ isDarkMode, isAdmin, adminCertRequest, clearAdminCertRequest }) 
         };
         
         setActiveAppTab(appId);
-        setActiveCertData(newCert); // Force overlay state
+        setCertsData(prev => ({ ...prev, [appId]: newCert }));
+        setActiveCertData(newCert);
         setGameState('certificate');
         
-        // Reset the prop quickly so it doesn't loop
         const timer = setTimeout(() => {
             if (clearAdminCertRequest) clearAdminCertRequest();
-        }, 50);
+        }, 100);
 
         return () => clearTimeout(timer);
-    }, [adminCertRequest]);
+    }, [adminCertRequest, userName, clearAdminCertRequest]);
 
     const currentUnlocked = unlockedLevels[activeAppTab] || ['beginner'];
     const currentStars = levelStars[activeAppTab] || { beginner: 0, intermediate: 0, advanced: 0 };
@@ -405,6 +404,7 @@ const Test = ({ isDarkMode, isAdmin, adminCertRequest, clearAdminCertRequest }) 
                                 {!allUnlocked && <Lock size={16} className="opacity-30"/>}
                             </button>
 
+                            {/* 🌟 ADMIN: Internal One-Click Certificate Generator */}
                             {isAdmin && !currentCert && (
                                 <button 
                                     onClick={() => {

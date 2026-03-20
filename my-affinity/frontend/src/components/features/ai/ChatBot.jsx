@@ -65,7 +65,7 @@ const callRealAI = async (userPrompt, language, history = []) => {
     }
 };
 
-// 🌟 FIX: Bulletproof Regex! Keeps English, Numbers, and ALL Khmer characters (vowels/subscripts). Destroys Emojis and spaces!
+// 🌟 FIX: Preserves English, Numbers, AND Khmer Letters/Vowels. Destroys Emojis.
 const strictClean = (text) => {
     if (!text) return '';
     return text.toLowerCase().replace(/[^a-z0-9\u1780-\u17FF]/g, '');
@@ -365,11 +365,7 @@ const ChatBot = ({ messages, setMessages, isDarkMode, liveAiData = [], setLiveAi
           }
       }
 
-      // 2. LONG SENTENCE FIREWALL (Only block if > 6 words so specific searches pass)
-      const wordCount = rawInput.trim().split(/\s+/).length;
-      if (wordCount > 6) return { needsBackend: true, query: rawInput };
-
-      // 3. SHORT TYPO & DEEP KEYWORD GUESSING
+      // 2. SHORT TYPO & DEEP KEYWORD GUESSING (Moved up BEFORE the firewall)
       let bestMatch = null;
       let highestScore = 0;
       for (const item of COMBINED_DB) {
@@ -379,6 +375,12 @@ const ChatBot = ({ messages, setMessages, isDarkMode, liveAiData = [], setLiveAi
               if (key.length >= 4 && cleanInput.includes(key)) score = Math.max(score, key.length * 10); 
               if (cleanInput.length >= 4 && key.includes(cleanInput)) score = Math.max(score, cleanInput.length * 10);
           }
+          
+          // Fail-safe raw inclusion check
+          if (item.primaryKeys?.some(pk => rawInput.includes(pk) || pk.includes(rawInput.trim()))) {
+              score = Math.max(score, 1000); 
+          }
+          
           if (score > highestScore) { highestScore = score; bestMatch = item; }
       }
 
@@ -394,6 +396,11 @@ const ChatBot = ({ messages, setMessages, isDarkMode, liveAiData = [], setLiveAi
           return { answer: answerText, chips: generateFilteredChips(bestMatch, rawInput), uiElement: bestMatch.uiElement, colors: finalColors, actionButton: bestMatch.actionButton, needsBackend: false };
       }
 
+      // 🌟 FIX: LONG SENTENCE FIREWALL (Moved down so exact matches pass first)
+      const wordCount = rawInput.trim().split(/\s+/).length;
+      if (wordCount > 6) return { needsBackend: true, query: rawInput };
+
+      // 3. CONVERSATIONAL FALLBACKS
       const FOLLOW_UP_MAP = {
           'តើអ្វីទៅជា Graphic Design?': 'ធាតុផ្សំមូលដ្ឋានទាំង ៦', 'what is graphic design': 'the 6 elements of design',
           'ធាតុផ្សំមូលដ្ឋានទាំង ៦': 'គោលការណ៍រចនា', 'the 6 elements of design': 'design principles',
