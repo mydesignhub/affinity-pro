@@ -65,12 +65,10 @@ const callRealAI = async (userPrompt, language, history = []) => {
     }
 };
 
-// 🌟 FIX: Strips Emojis and Punctuation, completely preserving all Khmer scripts! 🌟
+// 🌟 FIX: Bulletproof Regex! Keeps English, Numbers, and ALL Khmer characters (vowels/subscripts). Destroys Emojis and spaces!
 const strictClean = (text) => {
     if (!text) return '';
-    let cleaned = text.replace(/[\u{1F300}-\u{1F9FF}\u{2600}-\u{26FF}\u{2700}-\u{27BF}\u{1F1E0}-\u{1F1FF}]/gu, ''); 
-    cleaned = cleaned.replace(/[\s.,!?។៕"“”'*_()\-:;&]/g, ''); 
-    return cleaned.toLowerCase();
+    return text.toLowerCase().replace(/[^a-z0-9\u1780-\u17FF]/g, '');
 };
 
 const formatMessage = (text) => {
@@ -324,14 +322,32 @@ const ChatBot = ({ messages, setMessages, isDarkMode, liveAiData = [], setLiveAi
       return chipsData ? chipsData.slice(0, 3) : getRandomItems(getSuggestList(), 3);
   };
 
+  // 🌟 ZERO-FLAW NLP ROUTER 🌟
   const findAIResponse = (inputTxt, history = []) => {
       const rawInput = inputTxt.trim();
       const cleanInput = strictClean(rawInput); 
 
-      // 1. EXACT MATCH GUARANTEE (Checks full sentence)
+      // Remove Question Words
+      const questionWords = ['តើ', 'ជាអ្វី', 'អ្វីទៅជា', 'អ្វីទៅ', 'ស្អីគេ', 'ស្អី', 'គឺជាអ្វី', 'របៀប', 'របៀបណា', 'យ៉ាងម៉េច', 'howto', 'whatis', 'explain'];
+      let coreSubject = cleanInput;
+      let wordStripped = true;
+      while(wordStripped) {
+          wordStripped = false;
+          for(const qw of questionWords) {
+              const cleanQw = strictClean(qw);
+              if (coreSubject.startsWith(cleanQw)) {
+                  coreSubject = coreSubject.substring(cleanQw.length);
+                  wordStripped = true;
+                  break;
+              }
+          }
+      }
+      coreSubject = coreSubject.trim();
+
+      // 1. EXACT MATCH GUARANTEE
       for (const item of COMBINED_DB) {
           const exactTriggers = [...(item.primaryKeys || []), ...(item.keys || [])].map(strictClean); 
-          if (exactTriggers.includes(cleanInput)) {
+          if (exactTriggers.includes(cleanInput) || exactTriggers.includes(coreSubject)) {
               setCurrentTopic(item.primaryKeys ? item.primaryKeys[0] : null); 
               let answerText = lang === 'en' && item.answer_en ? item.answer_en : item.answer;
               let finalColors = item.colors;
@@ -349,31 +365,9 @@ const ChatBot = ({ messages, setMessages, isDarkMode, liveAiData = [], setLiveAi
           }
       }
 
-      // 2. CORE SUBJECT MATCHING (Removes question words)
-      const questionWords = ['តើ', 'ជាអ្វី', 'អ្វីទៅជា', 'អ្វីទៅ', 'ស្អីគេ', 'ស្អី', 'គឺជាអ្វី', 'របៀប', 'របៀបណា', 'យ៉ាងម៉េច', 'howto', 'whatis', 'explain'];
-      let coreSubject = cleanInput;
-      let wordStripped = true;
-      while(wordStripped) {
-          wordStripped = false;
-          for(const qw of questionWords) {
-              const cleanQw = strictClean(qw);
-              if (coreSubject.startsWith(cleanQw)) {
-                  coreSubject = coreSubject.substring(cleanQw.length);
-                  wordStripped = true;
-                  break;
-              }
-          }
-      }
-      coreSubject = coreSubject.trim();
-
-      for (const item of COMBINED_DB) {
-          const exactTriggers = [...(item.primaryKeys || []), ...(item.keys || [])].map(strictClean); 
-          if (exactTriggers.includes(coreSubject)) {
-              setCurrentTopic(item.primaryKeys ? item.primaryKeys[0] : null); 
-              let answerText = lang === 'en' && item.answer_en ? item.answer_en : item.answer;
-              return { answer: answerText, chips: generateFilteredChips(item, rawInput), uiElement: item.uiElement, actionButton: item.actionButton, needsBackend: false };
-          }
-      }
+      // 2. LONG SENTENCE FIREWALL (Only block if > 6 words so specific searches pass)
+      const wordCount = rawInput.trim().split(/\s+/).length;
+      if (wordCount > 6) return { needsBackend: true, query: rawInput };
 
       // 3. SHORT TYPO & DEEP KEYWORD GUESSING
       let bestMatch = null;
@@ -385,11 +379,6 @@ const ChatBot = ({ messages, setMessages, isDarkMode, liveAiData = [], setLiveAi
               if (key.length >= 4 && cleanInput.includes(key)) score = Math.max(score, key.length * 10); 
               if (cleanInput.length >= 4 && key.includes(cleanInput)) score = Math.max(score, cleanInput.length * 10);
           }
-          
-          if (item.primaryKeys?.some(pk => rawInput.includes(pk) || pk.includes(rawInput.trim()))) {
-              score = Math.max(score, 1000); 
-          }
-          
           if (score > highestScore) { highestScore = score; bestMatch = item; }
       }
 
@@ -816,4 +805,58 @@ const ChatBot = ({ messages, setMessages, isDarkMode, liveAiData = [], setLiveAi
          <div className="max-w-4xl mx-auto w-full">
              <div className="flex items-center px-2 py-1.5 w-full overflow-hidden">
                  <button onMouseDown={(e) => e.preventDefault()} onTouchStart={(e) => e.preventDefault()} onClick={handleRefresh} className={`p-2 shrink-0 transition-transform duration-300 active:scale-90 ${isDarkMode ? 'text-[#41B6E6]' : 'text-[#0277C5]'} ${isAnimating ? 'rotate-180 opacity-50' : ''}`} aria-label={t('refresh_tooltip')}><RefreshCw size={18} className={isAnimating ? 'animate-spin' : ''} /></button>
-                 <div className="flex-1 overflow-x-
+                 <div className="flex-1 overflow-x-auto no-scrollbar scroll-smooth">
+                     <div className={`flex items-center gap-2 px-1 py-1 transition-opacity duration-300 ${isAnimating ? 'opacity-0' : 'opacity-100'}`}>
+                         {currentSuggestions.map((q, i) => (
+                             <button key={i} onMouseDown={(e) => e.preventDefault()} onTouchStart={(e) => e.preventDefault()} onClick={(e) => { e.preventDefault(); triggerHaptic(); handleSend(q); }} className={`shrink-0 px-3 py-1.5 text-[12px] sm:text-[13px] font-medium font-khmer rounded-full whitespace-nowrap active:scale-95 transition-all shadow-sm border ${isDarkMode ? 'bg-[#1E1E1E] border-[#41B6E6]/30 text-[#41B6E6] hover:bg-[#2C2C2C]' : 'bg-[#FFFFFF] border-[#0277C5]/30 text-[#0277C5] hover:bg-[#F8F9FA]'}`}>{q}</button>
+                         ))}
+                     </div>
+                 </div>
+             </div>
+             
+             <div className="flex items-end px-2 pb-1 w-full relative">
+                <div className={`flex-1 relative flex items-center w-full shadow-sm rounded-[24px] overflow-hidden ${theme.inputBg}`}>
+                    {!input && (
+                        <div className={`absolute left-4 pointer-events-none text-[15px] font-khmer ${isDarkMode ? 'text-[#A0A0A0]' : 'text-[#6B7280]'}`}>
+                            {t('placeholder')}
+                        </div>
+                    )}
+                    <div 
+                        ref={inputRef}
+                        contentEditable={!loading ? "true" : "false"}
+                        onInput={handleInputInput}
+                        onKeyDown={(e) => {
+                            if (e.key === 'Enter' && !loading) {
+                                e.preventDefault();
+                                if (input.trim()) { triggerHaptic(); handleSend(input); }
+                            } else if (e.key === 'Enter') e.preventDefault();
+                        }}
+                        className={`w-full min-h-[44px] max-h-[120px] overflow-y-auto pl-4 pr-12 py-2.5 text-[15px] font-khmer outline-none transition-all whitespace-pre-wrap break-words ${theme.inputColor} ${loading ? 'opacity-50 cursor-not-allowed' : ''}`} 
+                        spellCheck="false" role="textbox" aria-multiline="true" autoCorrect="off" autoCapitalize="off" suppressHydrationWarning
+                    />
+                    <button type="button" disabled={!input.trim() || loading} onMouseDown={(e) => { e.preventDefault(); if (!loading) handleSend(input); }} onTouchStart={(e) => { e.preventDefault(); if (!loading) { triggerHaptic(); handleSend(input); } }} className={`absolute right-1.5 bottom-1 p-1.5 rounded-full hover:bg-black/5 dark:hover:bg-white/5 active:scale-90 transition-transform ${input.trim() && !loading ? theme.iconColor : 'text-[#9AA0A6] dark:text-[#6B7280]'}`} aria-label="Send Message"><Send size={20} className={input.trim() && !loading ? '' : 'opacity-50'} /></button>
+                </div>
+             </div>
+         </div>
+      </div>
+
+      {showConfirmModal && (
+          <div className="fixed inset-0 z-[99999] flex items-center justify-center p-5 backdrop-blur-md bg-black/60 animate-fade-in-up">
+              <div className={`w-full max-w-[320px] p-6 rounded-[32px] shadow-2xl border transition-all ${isDarkMode ? 'bg-[#1A1A1A] border-[#2C2C2C]' : 'bg-[#FFFFFF] border-[#E5E7EB]'}`}>
+                  <div className="text-center">
+                      <div className="w-14 h-14 rounded-full bg-red-500/10 flex items-center justify-center mx-auto mb-5"><Trash2 size={28} className="text-red-500" /></div>
+                      <p className={`text-[16px] font-bold font-khmer mb-8 leading-relaxed ${isDarkMode ? 'text-[#F1F1F1]' : 'text-[#1A1A1A]'}`}>{t('clear_confirm')}</p>
+                  </div>
+                  <div className="flex flex-col gap-3">
+                      <button type="button" onClick={confirmClear} className="w-full py-3.5 rounded-2xl bg-red-500 hover:bg-red-600 text-white font-khmer font-bold text-[15px] active:scale-95 transition-all shadow-lg shadow-red-500/20">{lang === 'en' ? 'Clear Everything' : 'លុបចេញទាំងអស់'}</button>
+                      <button type="button" onClick={() => setShowConfirmModal(false)} className={`w-full py-3.5 rounded-2xl font-khmer font-bold text-[15px] active:scale-95 transition-all border ${isDarkMode ? 'bg-[#2C2C2C] border-[#3A3A3C] text-[#A0A0A0] hover:text-[#F1F1F1]' : 'bg-[#F8F9FA] border-[#E5E7EB] text-[#6B7280] hover:text-[#1A1A1A]'}`}>{lang === 'en' ? 'Cancel' : 'បោះបង់'}</button>
+                  </div>
+              </div>
+          </div>
+      )}
+
+    </div>
+  );
+};
+
+export default ChatBot;
