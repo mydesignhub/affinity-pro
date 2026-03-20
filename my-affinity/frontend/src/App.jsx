@@ -322,7 +322,7 @@ const LessonModal = ({ lesson, onClose, isDarkMode, completedSteps, setCompleted
                                                     onLoad={() => setIsVideoLoading(false)}
                                                 />
                                                 
-                                                {/* 🛡️ SMART RESPONSIVE SECURITY SHIELDS 🛡️ */}
+                                                {/* 🛡️ 6 SMART RESPONSIVE SECURITY SHIELDS 🛡️ */}
                                                 
                                                 {/* 1. Top-Left (All Devices): Blocks Avatar & Title */}
                                                 <div 
@@ -357,6 +357,16 @@ const LessonModal = ({ lesson, onClose, isDarkMode, completedSteps, setCompleted
                                                     className="absolute bottom-0 right-0 w-[80px] h-[60px] z-30 bg-[rgba(255,255,255,0.01)] cursor-default" 
                                                     style={{ WebkitTouchCallout: 'none' }} 
                                                     onContextMenu={e => e.preventDefault()} 
+                                                />
+
+                                                {/* 6. MAIN CENTER SHIELD: Blocks right-clicking the core video area, leaves bottom control bar exposed */}
+                                                <div 
+                                                    className="absolute top-[70px] bottom-[55px] left-0 right-0 z-30 bg-transparent no-callout cursor-default" 
+                                                    onContextMenu={e => e.preventDefault()} 
+                                                    onDoubleClick={e => { e.preventDefault(); e.stopPropagation(); }}
+                                                    onTouchStart={e => e.stopPropagation()} 
+                                                    onTouchEnd={e => e.stopPropagation()} 
+                                                    onPointerDown={e => e.stopPropagation()}
                                                 />
                                             </>
                                         )}
@@ -1082,6 +1092,13 @@ function AppContent() {
         .animate-fade-in-up { animation: fade-in-up 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
       `}</style>
       
+      {/* Admin Certificate Preview Render */}
+      {adminPreviewCert && (
+          <div className="fixed inset-0 z-[99999] bg-[#0A0A0A]">
+              <CertificateForm certData={adminPreviewCert} isDarkMode={isDarkMode} onBack={() => setAdminPreviewCert(null)} />
+          </div>
+      )}
+
       <div 
           style={{ paddingTop: 'max(env(safe-area-inset-top), 0px)' }} 
           className={`w-full shrink-0 ${(activeTab === 'tools' || activeTab === 'ai') ? 'hidden md:block' : 'block'}`}
