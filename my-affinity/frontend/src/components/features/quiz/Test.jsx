@@ -209,10 +209,10 @@ const Test = ({ isDarkMode, isAdmin }) => {
             if (percentage >= 90 || isAdmin) {
                 const displayScore = isAdmin && percentage < 90 ? 100 : percentage;
                 const newCert = { name: userName || 'Administrator', score: displayScore, date: new Date().toISOString(), appCourse: appDisplayName };
-                setCertsData(prev => ({ ...prev, [activeAppTab]: newCert }));
                 
-                // 🌟 FIX: Instantly attach data so it doesn't render null
+                // 🌟 FIX: Force active cert rendering synchronously to avoid the race condition
                 setActiveCertData(newCert);
+                setCertsData(prev => ({ ...prev, [activeAppTab]: newCert }));
                 setGameState('certificate');
             } else {
                 setCertsData(prev => ({ ...prev, [activeAppTab]: null })); 
@@ -253,22 +253,26 @@ const Test = ({ isDarkMode, isAdmin }) => {
         }
     };
 
-    // 🌟 FIX: Safe Fallback for CertificateForm
+    // 🌟 FIX: Guarantee the Certificate Form ALWAYS renders if state is active
     if (gameState === 'certificate') {
         const certToRender = activeCertData || currentCert;
         
-        // If data was somehow lost, immediately bump back to menu
         if (!certToRender) {
+             // Failsafe: if we somehow drop data, quietly go to menu
              setTimeout(() => setGameState('menu'), 0);
              return null;
         }
 
         return (
-            <div className="w-full h-full flex flex-col min-h-screen relative z-50">
-                <CertificateForm certData={certToRender} isDarkMode={isDarkMode} onBack={() => {
-                    setActiveCertData(null);
-                    setGameState('menu');
-                }} />
+            <div className="w-full h-full flex flex-col min-h-[calc(100vh-100px)] relative z-[99]">
+                <CertificateForm 
+                    certData={certToRender} 
+                    isDarkMode={isDarkMode} 
+                    onBack={() => {
+                        setActiveCertData(null);
+                        setGameState('menu');
+                    }} 
+                />
             </div>
         );
     }
@@ -393,8 +397,9 @@ const Test = ({ isDarkMode, isAdmin }) => {
                                         const appDisplayName = activeAppTab === 'photo' ? 'Affinity Photo' : activeAppTab === 'designer' ? 'Affinity Designer' : 'Affinity Publisher';
                                         const newCert = { name: finalName, score: 100, date: new Date().toISOString(), appCourse: appDisplayName };
                                         
+                                        // Update state instantly and securely
+                                        setActiveCertData(newCert);
                                         setCertsData(prev => ({ ...prev, [activeAppTab]: newCert }));
-                                        setActiveCertData(newCert); 
                                         setGameState('certificate');
                                     }}
                                     className={`p-4 rounded-[24px] border flex items-center justify-center gap-3 transition-all duration-500 ease-out hover:-translate-y-1 active:scale-95 shadow-md ${isDarkMode ? 'border-[#41B6E6]/50 bg-[#41B6E6]/10 text-[#41B6E6] hover:shadow-[0_10px_20px_rgba(65,182,230,0.15)]' : 'border-[#0277C5]/50 bg-[#0277C5]/10 text-[#0277C5] hover:shadow-[0_10px_20px_rgba(2,119,197,0.15)]'}`}

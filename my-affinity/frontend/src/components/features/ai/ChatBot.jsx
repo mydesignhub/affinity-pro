@@ -65,7 +65,7 @@ const callRealAI = async (userPrompt, language, history = []) => {
     }
 };
 
-// 🌟 THE ULTIMATE NORMALIZER: Keeps ONLY Letters and Numbers (Any Language). Destroys all spaces, emojis, and punctuation!
+// 🌟 FIX: Bulletproof Regex. Strips out EVERY single emoji, symbol, space, and punctuation.
 const strictClean = (text) => {
     if (!text) return '';
     return text.toLowerCase().replace(/[^\p{L}\p{N}]/gu, '');
@@ -111,7 +111,6 @@ const ChatBot = ({ messages, setMessages, isDarkMode, liveAiData = [], setLiveAi
 
   const COMBINED_DB = [...KNOWLEDGE_BASE, ...liveAiData];
 
-  // 🌟 SECRET BLIND SPOT AUTO-TRAINER 🌟
   const runSecretBackgroundTraining = async (userQ, botA) => {
       try {
           const prompt = `Analyze this interaction:\nUser Question: "${userQ}"\nBot Answer: "${botA}"\n\nTask:\n1. Check if this is related to Graphic Design, Affinity software, Photo Editing, Layouts, or Typography. If it is UNRELATED (e.g., cooking, politics, general greetings), reply ONLY with the exact word: REJECT\n2. If it IS related, correct grammar, translate it to provide both English and Khmer answers, and format as JSON:\n{"primaryKeys": ["key1", "key2"], "keys": ["k1", "k2", "k3"], "regex": ["reg1"], "answer": "Corrected Khmer", "answer_en": "English translation"}`;
@@ -323,15 +322,33 @@ const ChatBot = ({ messages, setMessages, isDarkMode, liveAiData = [], setLiveAi
       return chipsData ? chipsData.slice(0, 3) : getRandomItems(getSuggestList(), 3);
   };
 
-  // 🌟 ZERO-FLAW NLP ROUTER 🌟
   const findAIResponse = (inputTxt, history = []) => {
       const rawInput = inputTxt.trim();
       const cleanInput = strictClean(rawInput); 
 
-      // 1. EXACT MATCH GUARANTEE (Zero-Flaw Rule #1)
+      // 🌟 FIX: STRIP QUESTION WORDS 🌟
+      const questionWords = ['តើ', 'ជាអ្វី', 'អ្វីទៅជា', 'អ្វីទៅ', 'ស្អីគេ', 'ស្អី', 'គឺជាអ្វី', 'របៀប', 'របៀបណា', 'យ៉ាងម៉េច', 'how to', 'what is', 'explain'];
+      let coreSubject = cleanInput;
+      
+      // Keep replacing question words as long as they appear at the start of the sentence
+      let wordStripped = true;
+      while(wordStripped) {
+          wordStripped = false;
+          for(const qw of questionWords) {
+              const cleanQw = strictClean(qw);
+              if (coreSubject.startsWith(cleanQw)) {
+                  coreSubject = coreSubject.substring(cleanQw.length);
+                  wordStripped = true;
+                  break;
+              }
+          }
+      }
+      coreSubject = coreSubject.trim();
+
+      // 1. EXACT MATCH GUARANTEE
       for (const item of COMBINED_DB) {
           const exactTriggers = [...(item.primaryKeys || []), ...(item.keys || [])].map(strictClean); 
-          if (exactTriggers.includes(cleanInput)) {
+          if (exactTriggers.includes(cleanInput) || exactTriggers.includes(coreSubject)) {
               setCurrentTopic(item.primaryKeys ? item.primaryKeys[0] : null); 
               let answerText = lang === 'en' && item.answer_en ? item.answer_en : item.answer;
               let finalColors = item.colors;
@@ -744,7 +761,6 @@ const ChatBot = ({ messages, setMessages, isDarkMode, liveAiData = [], setLiveAi
                                   <button onClick={() => handleFeedback(i, 'up')} className="p-1 hover:text-green-500 rounded-md transition-colors"><ThumbsUp size={14}/></button>
                                   <button onClick={() => handleFeedback(i, 'down')} className="p-1 hover:text-red-500 rounded-md transition-colors"><ThumbsDown size={14}/></button>
                                   
-                                  {/* 🌟 1-CLICK AI AUTO TRAINING (SUPER ADMIN ONLY) 🌟 */}
                                   {isAdmin && m.isTrainable && !m.isTraining && (
                                       <button 
                                           onClick={() => handleAutoTrain(i)} 
