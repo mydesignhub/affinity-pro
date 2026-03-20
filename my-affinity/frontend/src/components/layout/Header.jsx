@@ -33,7 +33,7 @@ export default function Header({ activeTab, setActiveTab, isDarkMode, setIsDarkM
     const handleLogoClick = () => {
         triggerHaptic();
         
-        // 🛡️ 5-CLICK SECRET ADMIN TRIGGER 🛡️
+        // 🛡️ 5-CLICK SECRET SUPER ADMIN TRIGGER 🛡️
         clickCount.current += 1;
         if (clickTimer.current) clearTimeout(clickTimer.current);
         
@@ -47,14 +47,11 @@ export default function Header({ activeTab, setActiveTab, isDarkMode, setIsDarkM
             }, 1500); 
         }
 
-        // Normal Behavior (Uses event to guarantee App.jsx clears any open overlays)
         window.dispatchEvent(new CustomEvent('switchTab', { detail: 'learn' }));
     };
 
     const handleTabClick = (tabId) => {
         triggerHaptic();
-        // BUG FIX: We only rely on the event dispatcher here instead of calling setActiveTab directly.
-        // This ensures App.jsx triggers `setActiveAppTab(null)` and properly closes the course view.
         window.dispatchEvent(new CustomEvent('switchTab', { detail: tabId }));
     };
 
@@ -78,15 +75,13 @@ export default function Header({ activeTab, setActiveTab, isDarkMode, setIsDarkM
 
         try {
             if (isSignUpMode) {
-                // FIRST TIME SETUP: Create the permanent admin account
                 await createUserWithEmailAndPassword(auth, ADMIN_EMAIL, password);
                 triggerHaptic('success');
                 setAdminSuccess("Admin Password Initialized Permanently!");
             } else {
-                // NORMAL LOGIN: Authenticate existing admin
                 await signInWithEmailAndPassword(auth, ADMIN_EMAIL, password);
                 triggerHaptic('success');
-                setAdminSuccess("Granted! Open a Course to view Admin Panel.");
+                setAdminSuccess("Granted! You are now Super Admin.");
             }
             
             setTimeout(() => {
@@ -94,9 +89,9 @@ export default function Header({ activeTab, setActiveTab, isDarkMode, setIsDarkM
                 setPassword('');
                 setAdminSuccess('');
                 setIsSignUpMode(false);
-                // Unlock the rest of the app
-                window.dispatchEvent(new CustomEvent('adminUnlocked'));
-            }, 1800); // Wait slightly longer so you can read the success message
+                // 🌟 UPGRADE: Dispatch Super Admin Event
+                window.dispatchEvent(new CustomEvent('superAdminUnlocked'));
+            }, 1500);
 
         } catch (error) {
             triggerHaptic('error');
@@ -177,7 +172,6 @@ export default function Header({ activeTab, setActiveTab, isDarkMode, setIsDarkM
                 </div>
             </header>
 
-            {/* 🛡️ ADMIN AUTHENTICATION MODAL 🛡️ */}
             {showAdminModal && (
                 <div className="fixed inset-0 z-[999] flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-fade-in">
                     <div className={`w-full max-w-sm rounded-[32px] p-6 sm:p-8 border shadow-2xl relative overflow-hidden ${isDarkMode ? 'bg-[#121212] border-[#3A3A3C]' : 'bg-white border-[#E5E7EB]'}`}>
@@ -193,10 +187,10 @@ export default function Header({ activeTab, setActiveTab, isDarkMode, setIsDarkM
                                 <Lock size={32} />
                             </div>
                             <h2 className={`text-xl font-black font-khmer tracking-tight ${isDarkMode ? 'text-white' : 'text-black'}`}>
-                                {isSignUpMode ? 'Initialize Admin' : 'System Administrator'}
+                                {isSignUpMode ? 'Initialize Admin' : 'Super Administrator'}
                             </h2>
                             <p className={`text-[13px] mt-1 ${isDarkMode ? 'text-[#A0A0A0]' : 'text-[#6B7280]'}`}>
-                                {isSignUpMode ? 'Create your permanent password.' : 'Authorized personnel only.'}
+                                {isSignUpMode ? 'Create your permanent password.' : 'Full system access required.'}
                             </p>
                         </div>
 
