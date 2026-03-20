@@ -1,16 +1,26 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Bot, Send, RefreshCw, Trash2, ThumbsUp, ThumbsDown, ArrowRight, Brain, Loader2 } from 'lucide-react';
+import { Bot, Send, RefreshCw, Trash2, ThumbsUp, ThumbsDown, ArrowRight, ShieldCheck, Database, Brain } from 'lucide-react';
+
+// 🌟 FIX 1: Point up 3 folders to get to contexts
 import { useLanguage } from '../../../contexts/LanguageContext';
-import { collection, addDoc } from 'firebase/firestore';
 
-// 🌟 FIX: Updated path to reach src/firebase.js from src/components/features/ai/ChatBot.jsx
-import { db } from '../../../firebase';
-
+// 🌟 FIX 2: Point up 3 folders to get to data
 import { 
-  SUGGESTED_QUESTIONS, SUGGESTED_QUESTIONS_EN, GREETINGS, GREETINGS_EN,
-  SMART_GREETINGS, SMART_GREETINGS_EN, REJECTION_RESPONSES, REJECTION_RESPONSES_EN,
-  REPEAT_RESPONSES, REPEAT_RESPONSES_EN, API_FALLBACK_RESPONSES, API_FALLBACK_RESPONSES_EN,
-  QUIZ_INVITATIONS, QUIZ_INVITATIONS_EN, KNOWLEDGE_BASE 
+  SUGGESTED_QUESTIONS,
+  SUGGESTED_QUESTIONS_EN,
+  GREETINGS,
+  GREETINGS_EN,
+  SMART_GREETINGS,
+  SMART_GREETINGS_EN,
+  REJECTION_RESPONSES,
+  REJECTION_RESPONSES_EN,
+  REPEAT_RESPONSES,
+  REPEAT_RESPONSES_EN,
+  API_FALLBACK_RESPONSES,
+  API_FALLBACK_RESPONSES_EN,
+  QUIZ_INVITATIONS,
+  QUIZ_INVITATIONS_EN,
+  KNOWLEDGE_BASE 
 } from '../../../data/ai_database';
 
 const triggerHaptic = (type = 'light') => {
@@ -30,9 +40,13 @@ const getRandomItems = (arr, count) => {
 const getRandomQuizInvitation = (language = 'kh') => {
     const invitations = language === 'en' ? QUIZ_INVITATIONS_EN : QUIZ_INVITATIONS;
     if (!invitations || invitations.length === 0) return '';
-    return invitations[Math.floor(Math.random() * invitations.length)];
+    const randomIndex = Math.floor(Math.random() * invitations.length);
+    return invitations[randomIndex];
 };
 
+// ============================================================================
+// 🌟 REAL AI BACKEND INTEGRATION 
+// ============================================================================
 const callRealAI = async (userPrompt, language, history = []) => {
     try {
         const recentHistoryText = history.slice(-6).map(msg => 
@@ -41,20 +55,33 @@ const callRealAI = async (userPrompt, language, history = []) => {
 
         const response = await fetch('https://my-affinity-backend.onrender.com/chat', {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-            body: JSON.stringify({ prompt: userPrompt, history: recentHistoryText, language: language })
+            headers: { 
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            },
+            body: JSON.stringify({
+                prompt: userPrompt,
+                history: recentHistoryText,
+                language: language
+            })
         });
 
-        if (!response.ok) throw new Error("Server error");
+        if (!response.ok) {
+            const errorData = await response.json().catch(() => ({}));
+            throw new Error(`HTTP ${response.status}: ${errorData.details || errorData.error || 'Server crashed'}`);
+        }
+
         const data = await response.json();
-        return data.reply || data.answer || data.text || data.message || "✅ Content generated.";
+        return data.reply || data.answer || data.text || data.message || "✅ Connected, but response was empty.";
             
     } catch (error) {
         console.error("Backend AI Failed:", error);
-        return `*(Debug Error)* ⚠️ Connection Failed.`;
+        return `*(Debug Error)* ⚠️ Connection Failed: ${error.message}\n\n*If this says "Failed to fetch", Render is sleeping (wait 1 minute) or CORS is blocking it.*`;
     }
 };
+// ============================================================================
 
+// 🌟 ULTIMATE NORMALIZER 🌟
 const strictClean = (text) => {
     if (!text) return '';
     return text.toLowerCase().replace(/[\u200B\s.,!?។៕"“”'*_()\-:;]/g, '');
@@ -71,6 +98,7 @@ const formatMessage = (text) => {
     ));
 };
 
+// 🌟 ADDED PROPS: liveAiData, setLiveAiData, isAdmin
 const ChatBot = ({ messages, setMessages, isDarkMode, liveAiData = [], setLiveAiData, isAdmin }) => {
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
@@ -78,9 +106,16 @@ const ChatBot = ({ messages, setMessages, isDarkMode, liveAiData = [], setLiveAi
   const [showHeader, setShowHeader] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
   
+  // 🌟 ANDROID/IOS KEYBOARD FIX
   const [viewportHeight, setViewportHeight] = useState('100%');
   const [keyboardHeight, setKeyboardHeight] = useState(0);
   
+  // 🌟 ADMIN TRAINING STATES
+  const [showAdminTrain, setShowAdminTrain] = useState(false);
+  const [trainKeys, setTrainKeys] = useState('');
+  const [trainKm, setTrainKm] = useState('');
+  const [trainEn, setTrainEn] = useState('');
+
   const messagesEndRef = useRef(null);
   const inputRef = useRef(null);
   const scrollContainerRef = useRef(null);
@@ -98,69 +133,47 @@ const ChatBot = ({ messages, setMessages, isDarkMode, liveAiData = [], setLiveAi
 
   const { lang, t } = useLanguage();
 
+  // 🌟 DYNAMIC BRAIN: Combines official data with new offline trained data
   const COMBINED_DB = [...KNOWLEDGE_BASE, ...liveAiData];
 
-  // 🌟 1-CLICK AUTO TRAINING FUNCTION 🌟
-  const handleAutoTrain = async (index) => {
-      const botMsg = messages[index];
-      const userMsg = messages[index - 1];
-      if (!userMsg || userMsg.role !== 'user') return;
-
-      triggerHaptic();
-      
-      // Set loading state for this specific message
-      setMessages(prev => {
-          const newMsgs = [...prev];
-          newMsgs[index] = { ...newMsgs[index], isTraining: true };
-          return newMsgs;
-      });
-
-      try {
-          const prompt = `Act as an expert data formatter. Analyze this interaction:\nUser Question: "${userMsg.text}"\nBot Answer: "${botMsg.text}"\n\nTask:\n1. Correct any grammar in the answer.\n2. Translate the answer perfectly to English (or Khmer if it is already English).\n3. Generate 2 primary keywords (Khmer), 4 search keys (Khmer/English), and 2 short regex strings (lowercase English).\n\nReturn EXACTLY and ONLY this JSON format (no markdown, no backticks, no extra text):\n{"primaryKeys": ["key1", "key2"], "keys": ["k1", "k2", "k3", "k4"], "regex": ["reg1", "reg2"], "answer": "Corrected Khmer answer", "answer_en": "English translated answer"}`;
-
-          const res = await callRealAI(prompt, 'en', []);
-          
-          const match = res.match(/\{[\s\S]*\}/);
-          if (!match) throw new Error("Invalid JSON format returned from AI.");
-          
-          const newEntry = JSON.parse(match[0]);
-          
-          // Update Local Offline Memory
-          setLiveAiData(prev => [...prev, newEntry]);
-          
-          // Push to Firebase Firestore
-          await addDoc(collection(db, "ai_knowledge"), newEntry);
-
-          triggerHaptic('success');
-          setMessages(prev => {
-              const newMsgs = [...prev];
-              newMsgs[index] = { ...newMsgs[index], isTraining: false, feedback: 'up' };
-              newMsgs.push({
-                  role: 'model',
-                  text: `✅ **Auto-Trained & Synced to Cloud DB!**\nKeywords: *${newEntry.primaryKeys.join(', ')}*`,
-                  chips: []
-              });
-              return newMsgs;
-          });
-          
-          setTimeout(() => {
-              if (messagesEndRef.current) messagesEndRef.current.scrollIntoView({ behavior: 'smooth', block: 'end' });
-          }, 100);
-
-      } catch (err) {
+  const handleSaveTraining = () => {
+      if (!trainKeys || (!trainKm && !trainEn)) {
           triggerHaptic('error');
-          setMessages(prev => {
-              const newMsgs = [...prev];
-              newMsgs[index] = { ...newMsgs[index], isTraining: false };
-              return newMsgs;
-          });
-          alert("Auto-Train Failed: " + err.message);
+          return;
       }
+      triggerHaptic('success');
+      const keysArray = trainKeys.split(',').map(k => k.trim());
+      const newEntry = {
+          primaryKeys: [keysArray[0], keysArray[1] || keysArray[0]],
+          keys: keysArray,
+          regex: keysArray,
+          answer: trainKm || trainEn, // Fallback if one is empty
+          answer_en: trainEn || trainKm
+      };
+      
+      if(setLiveAiData) setLiveAiData(prev => [...prev, newEntry]);
+      
+      setTrainKeys(''); setTrainKm(''); setTrainEn('');
+      setShowAdminTrain(false);
+      
+      // Send Fake Bot Confirmation
+      setMessages(prev => [...prev, {
+          role: 'model',
+          text: lang === 'en' ? `✅ **Data Trained Successfully!**\nKeywords: *${keysArray[0]}*` : `✅ **រៀនទិន្នន័យថ្មីបានជោគជ័យ!**\nពាក្យគន្លឹះ៖ *${keysArray[0]}*`,
+          chips: []
+      }]);
+      setTimeout(() => {
+          if (messagesEndRef.current) messagesEndRef.current.scrollIntoView({ behavior: 'smooth', block: 'end' });
+      }, 100);
   };
 
+  // 🌟 UPGRADE 3: SMART CHIP FILTERING (No duplicate questions from history)
   const getSuggestList = () => {
       const fullList = lang === 'en' ? SUGGESTED_QUESTIONS_EN : SUGGESTED_QUESTIONS;
-      const userAskedQuestions = messages.filter(m => m.role === 'user').map(m => strictClean(m.text));
+      const userAskedQuestions = messages
+          .filter(m => m.role === 'user')
+          .map(m => strictClean(m.text));
+
       const freshQuestions = fullList.filter(q => !userAskedQuestions.includes(strictClean(q)));
       return freshQuestions.length >= 3 ? freshQuestions : fullList;
   };
@@ -168,6 +181,8 @@ const ChatBot = ({ messages, setMessages, isDarkMode, liveAiData = [], setLiveAi
   const generateSmartGreeting = () => {
       const interests = JSON.parse(localStorage.getItem('myDesign_user_interests') || '[]');
       const suggestList = getSuggestList();
+      
+      // 🌟 UPGRADE 2: TIME-AWARE INTELLIGENCE
       const hour = new Date().getHours();
       let timeGreetingKh = "បាទ សួស្ដី! 👋";
       let timeGreetingEn = "Hello! 👋";
@@ -205,10 +220,17 @@ const ChatBot = ({ messages, setMessages, isDarkMode, liveAiData = [], setLiveAi
   const triggerIdleQuiz = () => {
       setMessages(prev => {
           if (prev.length === 0) return prev;
+          
           const lastMsg = prev[prev.length - 1];
           const allInvitations = [...QUIZ_INVITATIONS, ...QUIZ_INVITATIONS_EN];
-          if (lastMsg.role === 'model' && allInvitations.includes(lastMsg.text)) return prev;
-          return [...prev, { role: 'model', text: getRandomQuizInvitation(lang), chips: getRandomItems(getSuggestList(), 3) }];
+          if (lastMsg.role === 'model' && allInvitations.includes(lastMsg.text)) {
+              return prev;
+          }
+
+          const nextChips = getRandomItems(getSuggestList(), 3);
+          const inviteMsg = getRandomQuizInvitation(lang);
+          
+          return [...prev, { role: 'model', text: inviteMsg, chips: nextChips }];
       });
   };
 
@@ -225,13 +247,17 @@ const ChatBot = ({ messages, setMessages, isDarkMode, liveAiData = [], setLiveAi
           generateSmartGreeting();
       }
       setCurrentSuggestions(getRandomItems(getSuggestList(), 3)); 
+      
       const interval = setInterval(() => { handleRefresh(null, true); }, 15000); 
       return () => clearInterval(interval);
+      // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [lang]);
 
   useEffect(() => {
       resetIdleTimer();
-      return () => { if (idleTimerRef.current) clearTimeout(idleTimerRef.current); };
+      return () => {
+          if (idleTimerRef.current) clearTimeout(idleTimerRef.current);
+      };
   }, [messages, input, lang]); 
 
   useEffect(() => {
@@ -245,6 +271,7 @@ const ChatBot = ({ messages, setMessages, isDarkMode, liveAiData = [], setLiveAi
       if (e) { e.preventDefault(); e.stopPropagation(); }
       if (!isAuto) triggerHaptic();
       if (isAnimating) return; 
+      
       setIsAnimating(true);
       setTimeout(() => {
           setCurrentSuggestions(getRandomItems(getSuggestList(), 3));
@@ -288,46 +315,95 @@ const ChatBot = ({ messages, setMessages, isDarkMode, liveAiData = [], setLiveAi
       return chipsData || getRandomItems(getSuggestList(), 2);
   };
 
+  // 🌟 LOCAL NLP ROUTER 🌟
   const findAIResponse = (inputTxt, history = []) => {
       const rawInput = inputTxt.trim();
       const cleanInput = strictClean(rawInput); 
 
+      // 🌟 MOVED UP: MASSIVELY EXPANDED LEARNING RABBIT HOLE (For both Yes & Next triggers)
       const FOLLOW_UP_MAP = {
-          'តើអ្វីទៅជា Graphic Design?': 'ធាតុផ្សំមូលដ្ឋានទាំង ៦', 'what is graphic design': 'the 6 elements of design',
-          'ធាតុផ្សំមូលដ្ឋានទាំង ៦': 'គោលការណ៍រចនា', 'the 6 elements of design': 'design principles',
-          'គោលការណ៍រចនា': 'ឋានានុក្រមទស្សនីយភាព', 'design principles': 'visual hierarchy',
-          'ឋានានុក្រមទស្សនីយភាព': 'តើ Contrast ជាអ្វី?', 'visual hierarchy': 'what is contrast',
-          'តើ Contrast ជាអ្វី?': 'តើ Alignment ជាអ្វី?', 'what is contrast': 'what is alignment',
-          'តើ Alignment ជាអ្វី?': 'តើ Proximity ជាអ្វី?', 'what is alignment': 'what is proximity',
-          'តើ Proximity ជាអ្វី?': 'អ្វីទៅជា White Space?', 'what is proximity': 'what is white space',
-          'អ្វីទៅជា White Space?': 'Rule of Thirds ជាអ្វី?', 'what is white space': 'what is the rule of thirds',
-          'Rule of Thirds ជាអ្វី?': 'Grid System ជាអ្វី?', 'what is the rule of thirds': 'what is a grid system',
-          'Grid System ជាអ្វី?': 'Margin និង Padding ខុសគ្នាម៉េច?', 'what is a grid system': 'margin vs padding',
-          'អ្វីទៅជា Typography?': 'កាយវិភាគវិទ្យាអក្សរ', 'what is typography': 'type anatomy',
-          'កាយវិភាគវិទ្យាអក្សរ': 'របៀបតម្រៀប Font ឱ្យស្អាត?', 'type anatomy': 'how to pair fonts',
-          'របៀបតម្រៀប Font ឱ្យស្អាត?': 'Kerning និង Tracking ខុសគ្នាម៉េច?', 'how to pair fonts': 'kerning vs tracking',
-          'Kerning និង Tracking ខុសគ្នាម៉េច?': 'Variable Fonts', 'kerning vs tracking': 'what are variable fonts',
-          'Color Theory': 'អត្ថន័យនៃពណ៌ (Color Psychology)', 'color theory': 'color psychology',
-          'អត្ថន័យនៃពណ៌ (Color Psychology)': 'ក្បួនពណ៌ UI ៦០-៣០-១០', 'color psychology': 'the 60-30-10 rule',
-          'ក្បួនពណ៌ UI ៦០-៣០-១០': 'តើ HSL គឺជាអ្វី?', 'the 60-30-10 rule': 'what is hsl',
-          'តើ HSL គឺជាអ្វី?': 'RGB និង CMYK ខុសគ្នាម៉េច?', 'what is hsl': 'rgb vs cmyk',
-          'អ្វីទៅជា Vector និង Raster?': 'តើ Photoshop និង Illustrator ខុសគ្នាម៉េច?', 'vector vs raster': 'photoshop vs illustrator',
-          'តើ Photoshop និង Illustrator ខុសគ្នាម៉េច?': 'របៀបប្រើ Pen Tool', 'photoshop vs illustrator': 'how to use the pen tool',
-          'របៀបប្រើ Pen Tool': 'បញ្ញាសិប្បនិម្មិត (AI in Design)', 'how to use the pen tool': 'ai in design',
-          'កាត់តរូបភាព': 'តើ Dodge និង Burn គឺជាអ្វី?', 'photomanipulation': 'dodge and burn',
-          'តើ Dodge និង Burn គឺជាអ្វី?': 'ព្រិល Background', 'dodge and burn': 'depth of field',
-          'ព្រិល Background': 'Smart Object ជាអ្វី?', 'depth of field': 'what is a smart object',
-          'Smart Object ជាអ្វី?': 'តើ Blend Modes ដំណើរការយ៉ាងម៉េច?', 'what is a smart object': 'how do blend modes work',
-          'តើ Blend Modes ដំណើរការយ៉ាងម៉េច?': 'Opacity និង Fill ខុសគ្នាម៉េច?', 'how do blend modes work': 'opacity vs fill',
-          'របៀបគិតលុយអតិថិជន? 💰': 'Value-Based Pricing', 'how to price my work? 💰': 'value based pricing',
-          'Value-Based Pricing': 'របៀបដោះស្រាយភ្ញៀវរអ៊ូ?', 'value based pricing': 'dealing with difficult clients?',
-          'របៀបដោះស្រាយភ្ញៀវរអ៊ូ?': 'របៀបរៀបចំ Portfolio?', 'dealing with difficult clients?': 'how to build a portfolio',
-          'របៀបរៀបចំ Portfolio?': 'ក្រមសីលធម៌ កម្មសិទ្ធិបញ្ញា', 'how to build a portfolio': 'design copyright and ethics',
+          // 1. FOUNDATIONS FLOW
+          'តើអ្វីទៅជា Graphic Design?': 'ធាតុផ្សំមូលដ្ឋានទាំង ៦',
+          'what is graphic design': 'the 6 elements of design',
+          'ធាតុផ្សំមូលដ្ឋានទាំង ៦': 'គោលការណ៍រចនា',
+          'the 6 elements of design': 'design principles',
+          'គោលការណ៍រចនា': 'ឋានានុក្រមទស្សនីយភាព',
+          'design principles': 'visual hierarchy',
+          
+          // 2. LAYOUT & COMPOSITION FLOW
+          'ឋានានុក្រមទស្សនីយភាព': 'តើ Contrast ជាអ្វី?',
+          'visual hierarchy': 'what is contrast',
+          'តើ Contrast ជាអ្វី?': 'តើ Alignment ជាអ្វី?',
+          'what is contrast': 'what is alignment',
+          'តើ Alignment ជាអ្វី?': 'តើ Proximity ជាអ្វី?',
+          'what is alignment': 'what is proximity',
+          'តើ Proximity ជាអ្វី?': 'អ្វីទៅជា White Space?',
+          'what is proximity': 'what is white space',
+          'អ្វីទៅជា White Space?': 'Rule of Thirds ជាអ្វី?',
+          'what is white space': 'what is the rule of thirds',
+          'Rule of Thirds ជាអ្វី?': 'Grid System ជាអ្វី?',
+          'what is the rule of thirds': 'what is a grid system',
+          'Grid System ជាអ្វី?': 'Margin និង Padding ខុសគ្នាម៉េច?',
+          'what is a grid system': 'margin vs padding',
+          
+          // 3. TYPOGRAPHY FLOW
+          'អ្វីទៅជា Typography?': 'កាយវិភាគវិទ្យាអក្សរ',
+          'what is typography': 'type anatomy',
+          'កាយវិភាគវិទ្យាអក្សរ': 'របៀបតម្រៀប Font ឱ្យស្អាត?',
+          'type anatomy': 'how to pair fonts',
+          'របៀបតម្រៀប Font ឱ្យស្អាត?': 'Kerning និង Tracking ខុសគ្នាម៉េច?',
+          'how to pair fonts': 'kerning vs tracking',
+          'Kerning និង Tracking ខុសគ្នាម៉េច?': 'Variable Fonts',
+          'kerning vs tracking': 'what are variable fonts',
+          
+          // 4. COLOR THEORY FLOW
+          'Color Theory': 'អត្ថន័យនៃពណ៌ (Color Psychology)',
+          'color theory': 'color psychology',
+          'អត្ថន័យនៃពណ៌ (Color Psychology)': 'ក្បួនពណ៌ UI ៦០-៣០-១០',
+          'color psychology': 'the 60-30-10 rule',
+          'ក្បួនពណ៌ UI ៦០-៣០-១០': 'តើ HSL គឺជាអ្វី?',
+          'the 60-30-10 rule': 'what is hsl',
+          'តើ HSL គឺជាអ្វី?': 'RGB និង CMYK ខុសគ្នាម៉េច?',
+          'what is hsl': 'rgb vs cmyk',
+          
+          // 5. SOFTWARE & TECHNICAL FLOW
+          'អ្វីទៅជា Vector និង Raster?': 'តើ Photoshop និង Illustrator ខុសគ្នាម៉េច?',
+          'vector vs raster': 'photoshop vs illustrator',
+          'តើ Photoshop និង Illustrator ខុសគ្នាម៉េច?': 'របៀបប្រើ Pen Tool',
+          'photoshop vs illustrator': 'how to use the pen tool',
+          'របៀបប្រើ Pen Tool': 'បញ្ញាសិប្បនិម្មិត (AI in Design)',
+          'how to use the pen tool': 'ai in design',
+          
+          // 6. PHOTO MANIPULATION FLOW
+          'កាត់តរូបភាព': 'តើ Dodge និង Burn គឺជាអ្វី?',
+          'photomanipulation': 'dodge and burn',
+          'តើ Dodge និង Burn គឺជាអ្វី?': 'ព្រិល Background',
+          'dodge and burn': 'depth of field',
+          'ព្រិល Background': 'Smart Object ជាអ្វី?',
+          'depth of field': 'what is a smart object',
+          'Smart Object ជាអ្វី?': 'តើ Blend Modes ដំណើរការយ៉ាងម៉េច?',
+          'what is a smart object': 'how do blend modes work',
+          'តើ Blend Modes ដំណើរការយ៉ាងម៉េច?': 'Opacity និង Fill ខុសគ្នាម៉េច?',
+          'how do blend modes work': 'opacity vs fill',
+
+          // 7. BUSINESS & FREELANCE FLOW
+          'របៀបគិតលុយអតិថិជន? 💰': 'Value-Based Pricing',
+          'how to price my work? 💰': 'value based pricing',
+          'Value-Based Pricing': 'របៀបដោះស្រាយភ្ញៀវរអ៊ូ?',
+          'value based pricing': 'dealing with difficult clients?',
+          'របៀបដោះស្រាយភ្ញៀវរអ៊ូ?': 'របៀបរៀបចំ Portfolio?',
+          'dealing with difficult clients?': 'how to build a portfolio',
+          'របៀបរៀបចំ Portfolio?': 'ក្រមសីលធម៌ កម្មសិទ្ធិបញ្ញា',
+          'how to build a portfolio': 'design copyright and ethics',
       };
 
       const boredomWords = ['អផ្សុក', 'មិនដឹងសួរអី', 'សួរអី', 'bored', 'whattoask', 'play', 'លេង', 'សួរអីគេ'].map(strictClean);
       if (boredomWords.some(w => cleanInput.includes(w))) {
-          return { answer: getRandomQuizInvitation(lang), chips: getRandomItems(getSuggestList(), 3), needsBackend: false };
+          return { 
+              answer: getRandomQuizInvitation(lang), 
+              chips: getRandomItems(getSuggestList(), 3), 
+              needsBackend: false 
+          };
       }
 
       let repeatCount = 0;
@@ -387,6 +463,7 @@ const ChatBot = ({ messages, setMessages, isDarkMode, liveAiData = [], setLiveAi
               let bestFollowUp = null;
               let highestFollowUpScore = 0;
 
+              // USE COMBINED_DB here
               for (const item of COMBINED_DB) {
                   const searchKeys = [...(item.primaryKeys || []), ...(item.keys || [])].map(strictClean);
                   for (const key of searchKeys) {
@@ -400,9 +477,12 @@ const ChatBot = ({ messages, setMessages, isDarkMode, liveAiData = [], setLiveAi
                   }
               }
 
-              if (bestFollowUp && bestFollowUp.primaryKeys) return findAIResponse(bestFollowUp.primaryKeys[0], history);
+              if (bestFollowUp && bestFollowUp.primaryKeys) {
+                  return findAIResponse(bestFollowUp.primaryKeys[0], history);
+              }
 
               if (currentTopic) {
+                  // USE COMBINED_DB here
                   const topicData = COMBINED_DB.find(item => [...(item.primaryKeys || []), ...(item.keys || [])].map(strictClean).includes(strictClean(currentTopic)));
                   if (topicData && topicData.primaryKeys) {
                       const pk = topicData.primaryKeys[0];
@@ -414,32 +494,51 @@ const ChatBot = ({ messages, setMessages, isDarkMode, liveAiData = [], setLiveAi
           return { needsBackend: true, query: rawInput };
       }
 
+      // 🌟 UPGRADE 1: "TELL ME MORE" / AUTO-PROGRESSION
       const exactMore = ['ទៀត', 'more', 'next', 'បន្ត', 'ប្រាប់ទៀត', 'តទៀត', 'continue', 'go on'].map(strictClean);
       const isAskingForMore = exactMore.includes(cleanInput) || cleanInput.endsWith('ទៀត');
 
       if (isAskingForMore && currentTopic) {
+          // USE COMBINED_DB here
           const topicData = COMBINED_DB.find(item => [...(item.primaryKeys || []), ...(item.keys || [])].map(strictClean).includes(strictClean(currentTopic)));
+          
           if (topicData && topicData.primaryKeys) {
               const pk = topicData.primaryKeys[0];
               const nextTopic = FOLLOW_UP_MAP[pk] || FOLLOW_UP_MAP[strictClean(pk)];
+              
               if (nextTopic) {
                   return findAIResponse(nextTopic, history); 
               } else {
-                  return { answer: lang === 'en' ? "That covers the basics of this topic! 🎨 What would you like to explore next?" : "បាទ សម្រាប់ប្រធានបទនេះគឺអស់ត្រឹមនេះហើយ! 🎨 តើបងចង់រៀនពីរឿងអ្វីបន្ទាប់ទៀត?", chips: getRandomItems(getSuggestList(), 3), needsBackend: false };
+                  return { 
+                      answer: lang === 'en' ? "That covers the basics of this topic! 🎨 What would you like to explore next?" : "បាទ សម្រាប់ប្រធានបទនេះគឺអស់ត្រឹមនេះហើយ! 🎨 តើបងចង់រៀនពីរឿងអ្វីបន្ទាប់ទៀត?", 
+                      chips: getRandomItems(getSuggestList(), 3), 
+                      needsBackend: false 
+                  };
               }
           }
       }
 
-      const questionWords = ['តើ', 'ជាអ្វី', 'អ្វីទៅជា', 'អ្វីទៅ', 'ស្អីគេ', 'ស្អី', 'គឺជាអ្វី', 'នៅឯណា', 'នៅណា', 'កន្លែងណា', 'ត្រង់ណា', 'ពេលណា', 'អង្កាល់', 'វេលាណា', 'យ៉ាងម៉េច', 'ម៉េច', 'របៀបណា', 'របៀប', 'what is', 'where is', 'when is', 'how to', 'how do i', 'tell me about', 'explain', 'what are', 'the'].map(strictClean);
+      // 🌟 WH- QUESTION & INTENT CLEANER 🌟
+      const questionWords = [
+          'តើ', 'ជាអ្វី', 'អ្វីទៅជា', 'អ្វីទៅ', 'ស្អីគេ', 'ស្អី', 'គឺជាអ្វី', 
+          'នៅឯណា', 'នៅណា', 'កន្លែងណា', 'ត្រង់ណា', 
+          'ពេលណា', 'អង្កាល់', 'វេលាណា',
+          'យ៉ាងម៉េច', 'ម៉េច', 'របៀបណា', 'របៀប', 
+          'what is', 'where is', 'when is', 'how to', 'how do i', 'tell me about', 'explain', 'what are', 'the'
+      ].map(strictClean);
 
       let coreSubject = cleanInput;
-      questionWords.forEach(qw => { coreSubject = coreSubject.replace(qw, ''); });
+      questionWords.forEach(qw => {
+          coreSubject = coreSubject.replace(qw, '');
+      });
       coreSubject = coreSubject.trim();
 
+      // USE COMBINED_DB here
       for (const item of COMBINED_DB) {
           const exactTriggers = [...(item.primaryKeys || []), ...(item.keys || [])].map(strictClean); 
           if (exactTriggers.includes(cleanInput) || exactTriggers.includes(coreSubject)) {
               setCurrentTopic(item.primaryKeys ? item.primaryKeys[0] : null); 
+              
               let answerText = lang === 'en' && item.answer_en ? item.answer_en : item.answer;
               let finalColors = item.colors;
 
@@ -449,29 +548,53 @@ const ChatBot = ({ messages, setMessages, isDarkMode, liveAiData = [], setLiveAi
                   answerText = answerText.replace('{hex}', hex);
               }
 
-              return { answer: answerText, chips: generateFilteredChips(item, rawInput), uiElement: item.uiElement, colors: finalColors, actionButton: item.actionButton, needsBackend: false };
+              return { 
+                  answer: answerText, 
+                  chips: generateFilteredChips(item, rawInput), 
+                  uiElement: item.uiElement,
+                  colors: finalColors,
+                  actionButton: item.actionButton,
+                  needsBackend: false 
+              };
           }
       }
 
       let bestMatch = null;
       let highestScore = 0;
 
+      // USE COMBINED_DB here
       for (const item of COMBINED_DB) {
           let score = 0;
           const searchKeys = [...(item.primaryKeys || []), ...(item.keys || [])].map(strictClean);
           
           for(const key of searchKeys) {
-              if (key.length >= 4 && cleanInput.includes(key)) score = Math.max(score, key.length * 10); 
-              if (cleanInput.length >= 4 && key.includes(cleanInput)) score = Math.max(score, cleanInput.length * 10);
-              if (coreSubject.length >= 3 && key.includes(coreSubject)) score = Math.max(score, coreSubject.length * 15 + 50); 
-              if (coreSubject.length >= 3 && coreSubject.includes(key)) score = Math.max(score, key.length * 15 + 50);
+              if (key.length >= 4 && cleanInput.includes(key)) {
+                  score = Math.max(score, key.length * 10); 
+              }
+              if (cleanInput.length >= 4 && key.includes(cleanInput)) {
+                  score = Math.max(score, cleanInput.length * 10);
+              }
+              if (coreSubject.length >= 3 && key.includes(coreSubject)) {
+                  score = Math.max(score, coreSubject.length * 15 + 50); 
+              }
+              if (coreSubject.length >= 3 && coreSubject.includes(key)) {
+                  score = Math.max(score, key.length * 15 + 50);
+              }
           }
-          if (item.regex && item.regex.some(r => new RegExp(r, 'i').test(rawInput))) score = Math.max(score, 150); 
-          if (score > highestScore) { highestScore = score; bestMatch = item; }
+
+          if (item.regex && item.regex.some(r => new RegExp(r, 'i').test(rawInput))) {
+              score = Math.max(score, 150); 
+          }
+
+          if (score > highestScore) {
+              highestScore = score;
+              bestMatch = item;
+          }
       }
 
       if (bestMatch && highestScore >= 50) { 
           setCurrentTopic(bestMatch.primaryKeys ? bestMatch.primaryKeys[0] : null); 
+          
           let answerText = lang === 'en' && bestMatch.answer_en ? bestMatch.answer_en : bestMatch.answer;
           let finalColors = bestMatch.colors;
 
@@ -481,7 +604,14 @@ const ChatBot = ({ messages, setMessages, isDarkMode, liveAiData = [], setLiveAi
               answerText = answerText.replace('{hex}', hex);
           }
 
-          return { answer: answerText, chips: generateFilteredChips(bestMatch, rawInput), uiElement: bestMatch.uiElement, colors: finalColors, actionButton: bestMatch.actionButton, needsBackend: false };
+          return { 
+              answer: answerText, 
+              chips: generateFilteredChips(bestMatch, rawInput),
+              uiElement: bestMatch.uiElement,
+              colors: finalColors,
+              actionButton: bestMatch.actionButton, 
+              needsBackend: false 
+          };
       }
 
       const strictRefusePhrases = ['ធ្វើមកពីអ្វី', 'ជាអ្វីខ្លះ', 'រាងកាយ', 'ជីវវិទ្យា', 'អ្នកណាបង្កើត', 'នៅឯណា', 'តម្លៃប៉ុន្មាន', 'ទិញនៅណា', 'ម្ហូប', 'ហូប', 'ញ៉ាំ', 'នយោបាយ', 'ហ្គេម', 'ចម្រៀង', 'វីដេអូ', 'capcut', 'សង្សារ', 'ស្នេហា', 'ប្រវត្តិសាស្ត្រ', 'ប្រទេស', 'អាកាសធាតុ', 'ប៉ុន្មានគីឡូ', 'អាយុប៉ុន្មាន', 'food', 'politics', 'history'].map(strictClean);
@@ -531,12 +661,18 @@ const ChatBot = ({ messages, setMessages, isDarkMode, liveAiData = [], setLiveAi
               let cachedAnswer = null;
               try {
                   const globalMemory = JSON.parse(localStorage.getItem('myDesign_ai_memory_cache') || '[]');
+                  
                   const foundMem = globalMemory.find(mem => 
                       mem.lang === lang && 
                       (mem.q === cleanMsg || (mem.q.length > 5 && cleanMsg.includes(mem.q)) || (cleanMsg.length > 5 && mem.q.includes(cleanMsg)))
                   );
-                  if (foundMem) cachedAnswer = foundMem.a;
-              } catch (e) {}
+                  
+                  if (foundMem) {
+                      cachedAnswer = foundMem.a;
+                  }
+              } catch (e) {
+                  console.error("Cache read error", e);
+              }
 
               if (cachedAnswer) {
                   await new Promise(resolve => setTimeout(resolve, 600));
@@ -552,9 +688,13 @@ const ChatBot = ({ messages, setMessages, isDarkMode, liveAiData = [], setLiveAi
                       try {
                           const globalMemory = JSON.parse(localStorage.getItem('myDesign_ai_memory_cache') || '[]');
                           globalMemory.push({ q: cleanMsg, a: aiBackendAnswer, lang: lang });
+                          
                           if (globalMemory.length > 50) globalMemory.shift();
+                          
                           localStorage.setItem('myDesign_ai_memory_cache', JSON.stringify(globalMemory));
-                      } catch (e) {}
+                      } catch (e) {
+                          console.error("Cache save error", e);
+                      }
                   }
 
                   const nextChips = getRandomItems(getSuggestList(), 3);
@@ -577,7 +717,11 @@ const ChatBot = ({ messages, setMessages, isDarkMode, liveAiData = [], setLiveAi
           const fallbackList = lang === 'en' ? API_FALLBACK_RESPONSES_EN : API_FALLBACK_RESPONSES;
           const randomFallback = getRandomItems(fallbackList, 1)[0] || (lang === 'en' ? "I'm having trouble connecting to the internet. While we wait, try practicing with the Layout Tool!" : "ខ្ញុំកំពុងមានបញ្ហាភ្ជាប់អ៊ីនធឺណិត។ ចន្លោះពេលនេះ សូមសាកល្បងអនុវត្តនៅក្នុង Layout Tool សិនទៅ!");
           
-          setMessages(prev => [...prev, { role: 'model', text: randomFallback, chips: getRandomItems(getSuggestList(), 3) }]);
+          setMessages(prev => [...prev, { 
+              role: 'model', 
+              text: randomFallback, 
+              chips: getRandomItems(getSuggestList(), 3) 
+          }]);
       } finally {
           setLoading(false);
       }
@@ -589,11 +733,15 @@ const ChatBot = ({ messages, setMessages, isDarkMode, liveAiData = [], setLiveAi
 
       const scrollToBottom = (behavior) => {
           isAutoScrolling.current = true; 
+          
           if (behavior === 'auto') {
               container.scrollTop = container.scrollHeight;
           } else {
-              if (messagesEndRef.current) messagesEndRef.current.scrollIntoView({ behavior: 'smooth', block: "end" });
+              if (messagesEndRef.current) {
+                  messagesEndRef.current.scrollIntoView({ behavior: 'smooth', block: "end" });
+              }
           }
+
           setTimeout(() => {
               isAutoScrolling.current = false;
               if (container) setLastScrollY(container.scrollTop);
@@ -603,6 +751,7 @@ const ChatBot = ({ messages, setMessages, isDarkMode, liveAiData = [], setLiveAi
       if (isInitialMount.current) {
           setShowHeader(true); 
           scrollToBottom('auto');
+          
           const timeoutId = setTimeout(() => {
               scrollToBottom('auto');
               isInitialMount.current = false;
@@ -616,28 +765,46 @@ const ChatBot = ({ messages, setMessages, isDarkMode, liveAiData = [], setLiveAi
   useEffect(() => {
       const handleScroll = () => {
           if (isAutoScrolling.current) return; 
+
           if (!scrollContainerRef.current) return;
           const currentScrollY = scrollContainerRef.current.scrollTop;
           
-          if (currentScrollY > lastScrollY && currentScrollY > 50) setShowHeader(false);
-          else if (currentScrollY < lastScrollY) setShowHeader(true);
+          if (currentScrollY > lastScrollY && currentScrollY > 50) {
+              setShowHeader(false);
+          } else if (currentScrollY < lastScrollY) {
+              setShowHeader(true);
+          }
           setLastScrollY(currentScrollY);
       };
 
       const container = scrollContainerRef.current;
-      if (container) container.addEventListener('scroll', handleScroll, { passive: true });
-      return () => { if (container) container.removeEventListener('scroll', handleScroll); };
+      if (container) {
+          container.addEventListener('scroll', handleScroll, { passive: true });
+      }
+
+      return () => {
+          if (container) {
+              container.removeEventListener('scroll', handleScroll);
+          }
+      };
   }, [lastScrollY]);
 
   useEffect(() => {
       const updateViewport = () => {
           if (window.visualViewport) {
               setViewportHeight(`${window.visualViewport.height}px`);
+              
               const keyboardH = window.innerHeight - window.visualViewport.height;
-              setKeyboardHeight(keyboardH > 50 ? keyboardH : 0);
+              if (keyboardH > 50) {
+                  setKeyboardHeight(keyboardH);
+              } else {
+                  setKeyboardHeight(0);
+              }
               
               setTimeout(() => {
-                  if (messagesEndRef.current && !isInitialMount.current) messagesEndRef.current.scrollIntoView({ behavior: 'smooth', block: 'end' });
+                  if (messagesEndRef.current && !isInitialMount.current) {
+                      messagesEndRef.current.scrollIntoView({ behavior: 'smooth', block: 'end' });
+                  }
               }, 50);
           }
       };
@@ -646,13 +813,17 @@ const ChatBot = ({ messages, setMessages, isDarkMode, liveAiData = [], setLiveAi
           window.visualViewport.addEventListener('resize', updateViewport);
           window.visualViewport.addEventListener('scroll', updateViewport);
           updateViewport();
-      } else window.addEventListener('resize', () => setViewportHeight(`${window.innerHeight}px`));
+      } else {
+          window.addEventListener('resize', () => setViewportHeight(`${window.innerHeight}px`));
+      }
 
       return () => {
           if (window.visualViewport) {
               window.visualViewport.removeEventListener('resize', updateViewport);
               window.visualViewport.removeEventListener('scroll', updateViewport);
-          } else window.removeEventListener('resize', () => setViewportHeight(`${window.innerHeight}px`));
+          } else {
+              window.removeEventListener('resize', () => setViewportHeight(`${window.innerHeight}px`));
+          }
       };
   }, []);
 
@@ -667,7 +838,9 @@ const ChatBot = ({ messages, setMessages, isDarkMode, liveAiData = [], setLiveAi
               }, 150);
           }
       };
-      const handleFocusOut = () => setIsKeyboardOpen(false);
+      const handleFocusOut = () => {
+          setIsKeyboardOpen(false);
+      };
 
       document.addEventListener('focusin', handleFocusIn);
       document.addEventListener('focusout', handleFocusOut);
@@ -690,7 +863,10 @@ const ChatBot = ({ messages, setMessages, isDarkMode, liveAiData = [], setLiveAi
   };
 
   return (
-    <div className={`absolute left-0 w-full flex flex-col overflow-hidden font-sans transition-colors ${theme.bg}`} style={{ height: '100%', paddingBottom: `${keyboardHeight}px` }}>
+    <div 
+        className={`absolute left-0 w-full flex flex-col overflow-hidden font-sans transition-colors ${theme.bg}`}
+        style={{ height: '100%', paddingBottom: `${keyboardHeight}px` }}
+    >
       
       <div className={`absolute top-0 left-0 w-full z-30 transition-transform duration-300 ease-in-out ${showHeader ? 'translate-y-0' : '-translate-y-full'}`}>
           <div className={`flex items-center justify-between px-4 py-3 backdrop-blur-md border-b shadow-sm ${isDarkMode ? 'bg-[#121212]/80 border-white/5 shadow-black/20' : 'bg-white/80 border-black/5 shadow-[#0277C5]/5'}`}>
@@ -706,11 +882,22 @@ const ChatBot = ({ messages, setMessages, isDarkMode, liveAiData = [], setLiveAi
                   </div>
               </div>
               
-              <button type="button" onClick={handleClearChat} className={`p-2 rounded-xl transition-all duration-300 ease-out active:scale-90 border ${isDarkMode ? 'bg-[#1E1E1E]/50 border-[#2C2C2C] text-[#A0A0A0] hover:text-[#FF453A] hover:bg-[#FF453A]/10' : 'bg-[#F8F9FA]/80 border-[#E5E7EB] text-[#6B7280] hover:text-[#FF453A] hover:bg-[#FF453A]/10'}`} title={t('clear_tooltip')}><Trash2 size={16} /></button>
+              <button 
+                  type="button" 
+                  onClick={handleClearChat} 
+                  className={`p-2 rounded-xl transition-all duration-300 ease-out active:scale-90 border ${isDarkMode ? 'bg-[#1E1E1E]/50 border-[#2C2C2C] text-[#A0A0A0] hover:text-[#FF453A] hover:bg-[#FF453A]/10' : 'bg-[#F8F9FA]/80 border-[#E5E7EB] text-[#6B7280] hover:text-[#FF453A] hover:bg-[#FF453A]/10'}`}
+                  title={t('clear_tooltip')}
+              >
+                  <Trash2 size={16} />
+              </button>
           </div>
       </div>
       
-      <div ref={scrollContainerRef} className={`flex-1 min-h-0 overflow-y-auto overflow-x-hidden overscroll-none pt-20 no-scrollbar ${theme.bg}`} id="messenger-scroll-container">
+      <div 
+          ref={scrollContainerRef}
+          className={`flex-1 min-h-0 overflow-y-auto overflow-x-hidden overscroll-none pt-20 no-scrollbar ${theme.bg}`} 
+          id="messenger-scroll-container"
+      >
           <div className="max-w-4xl mx-auto w-full p-3 sm:p-4 space-y-4">
               {messages.map((m, i) => {
                   const isUser = m.role === 'user';
@@ -725,7 +912,8 @@ const ChatBot = ({ messages, setMessages, isDarkMode, liveAiData = [], setLiveAi
                               
                               <div className={`max-w-[85%] sm:max-w-[75%] flex flex-col`}>
                                   {m.text && (
-                                      <div className={`px-3.5 py-2.5 sm:px-4 sm:py-3 text-[14.5px] sm:text-[15px] leading-relaxed break-words [word-break:break-word] overflow-hidden shadow-sm font-khmer ${isUser ? `${theme.userBubble} rounded-2xl rounded-br-[4px]` : `${theme.botBubble} rounded-2xl rounded-bl-[4px]`}`}>
+                                      <div className={`px-3.5 py-2.5 sm:px-4 sm:py-3 text-[14.5px] sm:text-[15px] leading-relaxed break-words [word-break:break-word] overflow-hidden shadow-sm font-khmer
+                                          ${isUser ? `${theme.userBubble} rounded-2xl rounded-br-[4px]` : `${theme.botBubble} rounded-2xl rounded-bl-[4px]`}`}>
                                           {typeof m.text === 'object' ? JSON.stringify(m.text) : formatMessage(m.text)}
                                           
                                           {!isUser && m.uiElement === 'color_palette' && m.colors && (
@@ -740,7 +928,22 @@ const ChatBot = ({ messages, setMessages, isDarkMode, liveAiData = [], setLiveAi
                                           )}
 
                                           {!isUser && m.actionButton && (
-                                              <button onClick={() => { triggerHaptic(); if (m.actionButton.subTab) { localStorage.setItem('myDesign_target_subtab', m.actionButton.subTab); } window.dispatchEvent(new CustomEvent('switchTab', { detail: m.actionButton.actionToTrigger })); if (m.actionButton.subTab) { setTimeout(() => { window.dispatchEvent(new CustomEvent('switchToolSubTab', { detail: m.actionButton.subTab })); }, 100); } }} className="mt-4 px-4 py-2.5 bg-[#C55002] text-white font-khmer font-bold text-sm rounded-xl active:scale-95 transition-transform flex items-center gap-2 shadow-lg">
+                                              <button 
+                                                  onClick={() => {
+                                                      triggerHaptic();
+                                                      if (m.actionButton.subTab) {
+                                                          localStorage.setItem('myDesign_target_subtab', m.actionButton.subTab);
+                                                      }
+                                                      window.dispatchEvent(new CustomEvent('switchTab', { detail: m.actionButton.actionToTrigger }));
+                                                      
+                                                      if (m.actionButton.subTab) {
+                                                          setTimeout(() => {
+                                                              window.dispatchEvent(new CustomEvent('switchToolSubTab', { detail: m.actionButton.subTab }));
+                                                          }, 100); 
+                                                      }
+                                                  }}
+                                                  className="mt-4 px-4 py-2.5 bg-[#C55002] text-white font-khmer font-bold text-sm rounded-xl active:scale-95 transition-transform flex items-center gap-2 shadow-lg"
+                                              >
                                                   {lang === 'en' ? m.actionButton.label_en : m.actionButton.label} <ArrowRight size={16} />
                                               </button>
                                           )}
@@ -752,7 +955,11 @@ const ChatBot = ({ messages, setMessages, isDarkMode, liveAiData = [], setLiveAi
                           {!isUser && m.chips && m.chips.length > 0 && (
                               <div className="flex flex-wrap gap-2 mt-2 ml-9">
                                   {m.chips.map((chip, idx) => (
-                                      <button key={idx} onClick={() => { triggerHaptic(); handleSend(chip); }} className={`px-3 py-1.5 text-[12px] font-khmer rounded-full border transition-all active:scale-95 ${isDarkMode ? 'bg-[#1E1E1E] border-[#41B6E6]/30 text-[#41B6E6] hover:bg-[#2C2C2C]' : 'bg-[#FFFFFF] border-[#0277C5]/30 text-[#0277C5] hover:bg-[#F8F9FA]'}`}>
+                                      <button 
+                                          key={idx} 
+                                          onClick={() => { triggerHaptic(); handleSend(chip); }} 
+                                          className={`px-3 py-1.5 text-[12px] font-khmer rounded-full border transition-all active:scale-95 ${isDarkMode ? 'bg-[#1E1E1E] border-[#41B6E6]/30 text-[#41B6E6] hover:bg-[#2C2C2C]' : 'bg-[#FFFFFF] border-[#0277C5]/30 text-[#0277C5] hover:bg-[#F8F9FA]'}`}
+                                      >
                                           {chip}
                                       </button>
                                   ))}
@@ -764,20 +971,28 @@ const ChatBot = ({ messages, setMessages, isDarkMode, liveAiData = [], setLiveAi
                                   <button onClick={() => handleFeedback(i, 'up')} className="p-1 hover:text-green-500 rounded-md transition-colors"><ThumbsUp size={14}/></button>
                                   <button onClick={() => handleFeedback(i, 'down')} className="p-1 hover:text-red-500 rounded-md transition-colors"><ThumbsDown size={14}/></button>
                                   
-                                  {/* 🌟 1-CLICK AI TRAINING (SUPER ADMIN ONLY) 🌟 */}
-                                  {isAdmin && !m.isTraining && (
+                                  {/* 🌟 1-CLICK AI TRAINING (ADMIN ONLY) 🌟 */}
+                                  {isAdmin && (
                                       <button 
-                                          onClick={() => handleAutoTrain(i)} 
+                                          onClick={() => {
+                                              triggerHaptic();
+                                              if (lang === 'en') {
+                                                  setTrainEn(typeof m.text === 'string' ? m.text : '');
+                                                  setTrainKm('');
+                                              } else {
+                                                  setTrainKm(typeof m.text === 'string' ? m.text : '');
+                                                  setTrainEn('');
+                                              }
+                                              setShowAdminTrain(true);
+                                              setTimeout(() => {
+                                                  if (messagesEndRef.current) messagesEndRef.current.scrollIntoView({ behavior: 'smooth', block: 'end' });
+                                              }, 100);
+                                          }} 
                                           className="p-1 hover:text-[#41B6E6] rounded-md transition-colors ml-2 flex items-center gap-1"
-                                          title="Auto-Train AI with this answer"
+                                          title="Train AI with this answer"
                                       >
-                                          <Brain size={14}/> <span className="text-[10px] font-bold">Auto-Train</span>
+                                          <Brain size={14}/> <span className="text-[10px] font-bold">Train</span>
                                       </button>
-                                  )}
-                                  {m.isTraining && (
-                                      <div className="ml-2 flex items-center gap-1 text-[#41B6E6] animate-pulse">
-                                          <Loader2 size={12} className="animate-spin"/> <span className="text-[10px] font-bold">Training...</span>
-                                      </div>
                                   )}
                               </div>
                           )}
@@ -792,7 +1007,9 @@ const ChatBot = ({ messages, setMessages, isDarkMode, liveAiData = [], setLiveAi
               
               {loading && (
                   <div className="flex justify-start items-end animate-fade-in-up">
-                      <div className={`w-7 h-7 rounded-[10px] bg-gradient-to-tr ${isDarkMode ? 'from-[#41B6E6] to-[#0277C5]' : 'from-[#0277C5] to-[#01579B]'} flex items-center justify-center mr-2 shrink-0 mb-1 shadow-sm`}><Bot size={14} className="text-white" /></div>
+                      <div className={`w-7 h-7 rounded-[10px] bg-gradient-to-tr ${isDarkMode ? 'from-[#41B6E6] to-[#0277C5]' : 'from-[#0277C5] to-[#01579B]'} flex items-center justify-center mr-2 shrink-0 mb-1 shadow-sm`}>
+                          <Bot size={14} className="text-white" />
+                      </div>
                       <div className={`px-4 py-3.5 ${theme.botBubble} rounded-2xl rounded-bl-[4px] flex gap-1.5 shadow-sm`}>
                           <div className={`w-1.5 h-1.5 rounded-full animate-bounce ${isDarkMode ? 'bg-[#A0A0A0]' : 'bg-[#6B7280]'}`} style={{animationDelay: '0ms'}}></div>
                           <div className={`w-1.5 h-1.5 rounded-full animate-bounce ${isDarkMode ? 'bg-[#A0A0A0]' : 'bg-[#6B7280]'}`} style={{animationDelay: '150ms'}}></div>
@@ -806,12 +1023,90 @@ const ChatBot = ({ messages, setMessages, isDarkMode, liveAiData = [], setLiveAi
       
       <div className={`flex-none z-20 w-full flex flex-col px-2 transition-all duration-300 ${theme.bg} ${isKeyboardOpen ? 'pb-3' : 'pb-[85px] sm:pb-[90px]'}`}>
          <div className="max-w-4xl mx-auto w-full">
+
+             {/* 🛡️ ADMIN AI TRAINING UI 🛡️ */}
+             {isAdmin && (
+                <div className="px-3 mb-2 w-full animate-fade-in-up">
+                    <button 
+                        onClick={() => {
+                            triggerHaptic();
+                            setShowAdminTrain(!showAdminTrain);
+                            if (!showAdminTrain) {
+                                setTimeout(() => {
+                                    if (messagesEndRef.current) messagesEndRef.current.scrollIntoView({ behavior: 'smooth', block: 'end' });
+                                }, 100);
+                            }
+                        }}
+                        className={`text-[12px] font-bold px-4 py-2 rounded-full border transition-colors flex items-center gap-2 shadow-sm active:scale-95 ${isDarkMode ? 'bg-[#1E1E1E] border-[#2C2C2C] text-[#41B6E6]' : 'bg-[#F8F9FA] border-[#E5E7EB] text-[#0277C5]'}`}
+                    >
+                        <ShieldCheck size={16} /> {showAdminTrain ? 'Close Training UI' : 'Train AI Live'}
+                    </button>
+
+                    {showAdminTrain && (
+                        <div className={`mt-3 p-5 rounded-[24px] border shadow-xl ${isDarkMode ? 'bg-[#121212] border-[#41B6E6]/30' : 'bg-white border-[#0277C5]/30'}`}>
+                            <div className="flex items-center justify-between mb-4">
+                                <span className={`text-[13px] font-black uppercase tracking-widest ${isDarkMode ? 'text-[#41B6E6]' : 'text-[#0277C5]'}`}>AI Data Trainer</span>
+                            </div>
+                            <input 
+                                type="text" 
+                                placeholder="Keywords (comma separated) e.g., print, បោះពុម្ព"
+                                value={trainKeys}
+                                onChange={e => setTrainKeys(e.target.value)}
+                                className={`w-full p-3.5 rounded-xl mb-3 border text-[13px] font-bold outline-none transition-colors ${isDarkMode ? 'bg-[#1E1E1E] border-[#2C2C2C] text-white focus:border-[#41B6E6]' : 'bg-[#F8F9FA] border-[#E5E7EB] text-black focus:border-[#0277C5]'}`}
+                            />
+                            <textarea 
+                                placeholder="Khmer Answer..."
+                                value={trainKm}
+                                onChange={e => setTrainKm(e.target.value)}
+                                rows={3}
+                                className={`w-full p-3.5 rounded-xl mb-3 border text-[13px] font-khmer outline-none resize-none transition-colors ${isDarkMode ? 'bg-[#1E1E1E] border-[#2C2C2C] text-white focus:border-[#41B6E6]' : 'bg-[#F8F9FA] border-[#E5E7EB] text-black focus:border-[#0277C5]'}`}
+                            />
+                            <textarea 
+                                placeholder="English Answer..."
+                                value={trainEn}
+                                onChange={e => setTrainEn(e.target.value)}
+                                rows={3}
+                                className={`w-full p-3.5 rounded-xl mb-4 border text-[13px] font-sans outline-none resize-none transition-colors ${isDarkMode ? 'bg-[#1E1E1E] border-[#2C2C2C] text-white focus:border-[#41B6E6]' : 'bg-[#F8F9FA] border-[#E5E7EB] text-black focus:border-[#0277C5]'}`}
+                            />
+                            <button 
+                                onClick={handleSaveTraining}
+                                disabled={!trainKeys || (!trainKm && !trainEn)}
+                                className={`w-full py-3.5 rounded-xl font-bold text-[14px] transition-all active:scale-[0.98] flex items-center justify-center gap-2 shadow-md ${(!trainKeys || (!trainKm && !trainEn)) ? 'opacity-50 cursor-not-allowed bg-gray-500 text-white' : 'bg-gradient-to-r from-green-500 to-emerald-500 text-white hover:opacity-90'}`}
+                            >
+                                <Database size={16} /> Push to Offline DB
+                            </button>
+                        </div>
+                    )}
+                </div>
+            )}
+
              <div className="flex items-center px-2 py-1.5 w-full overflow-hidden">
-                 <button onMouseDown={(e) => e.preventDefault()} onTouchStart={(e) => e.preventDefault()} onClick={handleRefresh} className={`p-2 shrink-0 transition-transform duration-300 active:scale-90 ${isDarkMode ? 'text-[#41B6E6]' : 'text-[#0277C5]'} ${isAnimating ? 'rotate-180 opacity-50' : ''}`} aria-label={t('refresh_tooltip')}><RefreshCw size={18} className={isAnimating ? 'animate-spin' : ''} /></button>
+                 <button 
+                     onMouseDown={(e) => e.preventDefault()} 
+                     onTouchStart={(e) => e.preventDefault()} 
+                     onClick={handleRefresh}
+                     className={`p-2 shrink-0 transition-transform duration-300 active:scale-90 ${isDarkMode ? 'text-[#41B6E6]' : 'text-[#0277C5]'} ${isAnimating ? 'rotate-180 opacity-50' : ''}`}
+                     aria-label={t('refresh_tooltip')}
+                 >
+                     <RefreshCw size={18} className={isAnimating ? 'animate-spin' : ''} />
+                 </button>
+                 
                  <div className="flex-1 overflow-x-auto no-scrollbar scroll-smooth">
                      <div className={`flex items-center gap-2 px-1 py-1 transition-opacity duration-300 ${isAnimating ? 'opacity-0' : 'opacity-100'}`}>
                          {currentSuggestions.map((q, i) => (
-                             <button key={i} onMouseDown={(e) => e.preventDefault()} onTouchStart={(e) => e.preventDefault()} onClick={(e) => { e.preventDefault(); triggerHaptic(); handleSend(q); }} className={`shrink-0 px-3 py-1.5 text-[12px] sm:text-[13px] font-medium font-khmer rounded-full whitespace-nowrap active:scale-95 transition-all shadow-sm border ${isDarkMode ? 'bg-[#1E1E1E] border-[#41B6E6]/30 text-[#41B6E6] hover:bg-[#2C2C2C]' : 'bg-[#FFFFFF] border-[#0277C5]/30 text-[#0277C5] hover:bg-[#F8F9FA]'}`}>{q}</button>
+                             <button 
+                                 key={i} 
+                                 onMouseDown={(e) => e.preventDefault()}
+                                 onTouchStart={(e) => e.preventDefault()}
+                                 onClick={(e) => { 
+                                     e.preventDefault();
+                                     triggerHaptic(); 
+                                     handleSend(q); 
+                                 }} 
+                                 className={`shrink-0 px-3 py-1.5 text-[12px] sm:text-[13px] font-medium font-khmer rounded-full whitespace-nowrap active:scale-95 transition-all shadow-sm border ${isDarkMode ? 'bg-[#1E1E1E] border-[#41B6E6]/30 text-[#41B6E6] hover:bg-[#2C2C2C]' : 'bg-[#FFFFFF] border-[#0277C5]/30 text-[#0277C5] hover:bg-[#F8F9FA]'}`}
+                             >
+                                 {q}
+                             </button>
                          ))}
                      </div>
                  </div>
@@ -831,13 +1126,42 @@ const ChatBot = ({ messages, setMessages, isDarkMode, liveAiData = [], setLiveAi
                         onKeyDown={(e) => {
                             if (e.key === 'Enter' && !loading) {
                                 e.preventDefault();
-                                if (input.trim()) { triggerHaptic(); handleSend(input); }
-                            } else if (e.key === 'Enter') e.preventDefault();
+                                if (input.trim()) {
+                                    triggerHaptic();
+                                    handleSend(input);
+                                }
+                            } else if (e.key === 'Enter') {
+                                e.preventDefault();
+                            }
                         }}
                         className={`w-full min-h-[44px] max-h-[120px] overflow-y-auto pl-4 pr-12 py-2.5 text-[15px] font-khmer outline-none transition-all whitespace-pre-wrap break-words ${theme.inputColor} ${loading ? 'opacity-50 cursor-not-allowed' : ''}`} 
-                        spellCheck="false" role="textbox" aria-multiline="true" autoCorrect="off" autoCapitalize="off" suppressHydrationWarning
+                        spellCheck="false"
+                        role="textbox"
+                        aria-multiline="true"
+                        autoCorrect="off"
+                        autoCapitalize="off"
+                        suppressHydrationWarning
                     />
-                    <button type="button" disabled={!input.trim() || loading} onMouseDown={(e) => { e.preventDefault(); if (!loading) handleSend(input); }} onTouchStart={(e) => { e.preventDefault(); if (!loading) { triggerHaptic(); handleSend(input); } }} className={`absolute right-1.5 bottom-1 p-1.5 rounded-full hover:bg-black/5 dark:hover:bg-white/5 active:scale-90 transition-transform ${input.trim() && !loading ? theme.iconColor : 'text-[#9AA0A6] dark:text-[#6B7280]'}`} aria-label="Send Message"><Send size={20} className={input.trim() && !loading ? '' : 'opacity-50'} /></button>
+                    
+                    <button 
+                        type="button" 
+                        disabled={!input.trim() || loading}
+                        onMouseDown={(e) => {
+                            e.preventDefault(); 
+                            if (!loading) handleSend(input);
+                        }} 
+                        onTouchStart={(e) => {
+                            e.preventDefault(); 
+                            if (!loading) {
+                                triggerHaptic();
+                                handleSend(input);
+                            }
+                        }} 
+                        className={`absolute right-1.5 bottom-1 p-1.5 rounded-full hover:bg-black/5 dark:hover:bg-white/5 active:scale-90 transition-transform ${input.trim() && !loading ? theme.iconColor : 'text-[#9AA0A6] dark:text-[#6B7280]'}`}
+                        aria-label="Send Message"
+                    >
+                        <Send size={20} className={input.trim() && !loading ? '' : 'opacity-50'} />
+                    </button>
                 </div>
              </div>
          </div>
@@ -847,12 +1171,28 @@ const ChatBot = ({ messages, setMessages, isDarkMode, liveAiData = [], setLiveAi
           <div className="fixed inset-0 z-[99999] flex items-center justify-center p-5 backdrop-blur-md bg-black/60 animate-fade-in-up">
               <div className={`w-full max-w-[320px] p-6 rounded-[32px] shadow-2xl border transition-all ${isDarkMode ? 'bg-[#1A1A1A] border-[#2C2C2C]' : 'bg-[#FFFFFF] border-[#E5E7EB]'}`}>
                   <div className="text-center">
-                      <div className="w-14 h-14 rounded-full bg-red-500/10 flex items-center justify-center mx-auto mb-5"><Trash2 size={28} className="text-red-500" /></div>
-                      <p className={`text-[16px] font-bold font-khmer mb-8 leading-relaxed ${isDarkMode ? 'text-[#F1F1F1]' : 'text-[#1A1A1A]'}`}>{t('clear_confirm')}</p>
+                      <div className="w-14 h-14 rounded-full bg-red-500/10 flex items-center justify-center mx-auto mb-5">
+                          <Trash2 size={28} className="text-red-500" />
+                      </div>
+                      <p className={`text-[16px] font-bold font-khmer mb-8 leading-relaxed ${isDarkMode ? 'text-[#F1F1F1]' : 'text-[#1A1A1A]'}`}>
+                          {t('clear_confirm')}
+                      </p>
                   </div>
                   <div className="flex flex-col gap-3">
-                      <button type="button" onClick={confirmClear} className="w-full py-3.5 rounded-2xl bg-red-500 hover:bg-red-600 text-white font-khmer font-bold text-[15px] active:scale-95 transition-all shadow-lg shadow-red-500/20">{lang === 'en' ? 'Clear Everything' : 'លុបចេញទាំងអស់'}</button>
-                      <button type="button" onClick={() => setShowConfirmModal(false)} className={`w-full py-3.5 rounded-2xl font-khmer font-bold text-[15px] active:scale-95 transition-all border ${isDarkMode ? 'bg-[#2C2C2C] border-[#3A3A3C] text-[#A0A0A0] hover:text-[#F1F1F1]' : 'bg-[#F8F9FA] border-[#E5E7EB] text-[#6B7280] hover:text-[#1A1A1A]'}`}>{lang === 'en' ? 'Cancel' : 'បោះបង់'}</button>
+                      <button 
+                          type="button"
+                          onClick={confirmClear} 
+                          className="w-full py-3.5 rounded-2xl bg-red-500 hover:bg-red-600 text-white font-khmer font-bold text-[15px] active:scale-95 transition-all shadow-lg shadow-red-500/20"
+                      >
+                          {lang === 'en' ? 'Clear Everything' : 'លុបចេញទាំងអស់'}
+                      </button>
+                      <button 
+                          type="button"
+                          onClick={() => setShowConfirmModal(false)} 
+                          className={`w-full py-3.5 rounded-2xl font-khmer font-bold text-[15px] active:scale-95 transition-all border ${isDarkMode ? 'bg-[#2C2C2C] border-[#3A3A3C] text-[#A0A0A0] hover:text-[#F1F1F1]' : 'bg-[#F8F9FA] border-[#E5E7EB] text-[#6B7280] hover:text-[#1A1A1A]'}`}
+                      >
+                          {lang === 'en' ? 'Cancel' : 'បោះបង់'}
+                      </button>
                   </div>
               </div>
           </div>

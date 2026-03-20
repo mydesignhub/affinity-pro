@@ -605,19 +605,7 @@ function AppContent() {
   const [completedSteps, setCompletedSteps] = useState([]);
   
   const [user, setUser] = useState(null);
-
-  // 🌟 NEW TWO-LEVEL ADMIN LOGIC
-  const [isSuperAdmin, setIsSuperAdmin] = useState(false);
-
-  useEffect(() => {
-      const unlockSuperAdmin = () => setIsSuperAdmin(true);
-      window.addEventListener('superAdminUnlocked', unlockSuperAdmin);
-      return () => window.removeEventListener('superAdminUnlocked', unlockSuperAdmin);
-  }, []);
-
-  const isBasicAdmin = user?.email === ADMIN_EMAIL;
-  // If they are Super Admin or Basic Admin, they can see the Admin Panel (Key Generator)
-  const showAdminPanel = isBasicAdmin || isSuperAdmin;
+  const isAdmin = user?.email === ADMIN_EMAIL;
 
   const [genAmount, setGenAmount] = useState(5);
   const [generatedKeys, setGeneratedKeys] = useState('');
@@ -632,30 +620,17 @@ function AppContent() {
   const [isDataLoaded, setIsDataLoaded] = useState(false);
 
   // --- NEW AI TRAINING STATES ---
-  const [liveAiData, setLiveAiData] = useState([]);
-
-  // Fetch Cloud AI Data on load
-  const fetchCloudAI = async () => {
-      try {
-          const q = query(collection(db, "ai_knowledge"));
-          const snap = await getDocs(q);
-          const cloudData = [];
-          snap.forEach(doc => cloudData.push(doc.data()));
-          if (cloudData.length > 0) {
-              setLiveAiData(cloudData);
-              localStorage.setItem('myAffinity_live_ai', JSON.stringify(cloudData));
-          } else {
-              const saved = localStorage.getItem('myAffinity_live_ai');
-              if (saved) setLiveAiData(JSON.parse(saved));
-          }
-      } catch(e) {
+  const [adminView, setAdminView] = useState('keys'); 
+  const [liveAiData, setLiveAiData] = useState(() => {
+      if (typeof window !== 'undefined') {
           const saved = localStorage.getItem('myAffinity_live_ai');
-          if (saved) setLiveAiData(JSON.parse(saved));
+          return saved ? JSON.parse(saved) : [];
       }
-  };
+      return [];
+  });
 
   useEffect(() => {
-      if (showAdminPanel && activeAppTab && showRegistration) {
+      if (isAdmin && activeAppTab && showRegistration) {
           const savedKeys = localStorage.getItem(`myAffinity_last_keys_${activeAppTab}`);
           if (savedKeys) {
               setGeneratedKeys(savedKeys);
@@ -663,7 +638,7 @@ function AppContent() {
               setGeneratedKeys('');
           }
       }
-  }, [activeAppTab, showRegistration, showAdminPanel]);
+  }, [activeAppTab, showRegistration, isAdmin]);
 
   useEffect(() => {
       if (typeof window !== 'undefined') {
@@ -690,7 +665,6 @@ function AppContent() {
               setUser(currentUser);
           });
           
-          fetchCloudAI();
           setIsDataLoaded(true); 
           return () => unsubscribe();
       }
@@ -899,7 +873,6 @@ function AppContent() {
       try {
           await signOut(auth);
           setUser(null);
-          setIsSuperAdmin(false); // Reset Super Admin status
           setPurchasedCourses({ photo: null, designer: null, publisher: null });
           localStorage.removeItem('myAffinity_purchases');
       } catch (error) {
@@ -911,7 +884,7 @@ function AppContent() {
       triggerHaptic();
       
       let message = '';
-      if (!user && !isSuperAdmin) {
+      if (!user) {
           message = lang === 'en' 
               ? '⚠️ WARNING: You have NOT linked a Google account!\n\nIf you sign out now, you will LOSE ACCESS to your premium course permanently. Are you absolutely sure you want to sign out?' 
               : '⚠️ ព្រមាន៖ អ្នកមិនទាន់បានភ្ជាប់គណនី Google ទេ!\n\nប្រសិនបើអ្នកចាកចេញឥឡូវនេះ អ្នកនឹងបាត់បង់សិទ្ធិចូលរៀនវគ្គ Premium នេះជារៀងរហូត។ តើអ្នកពិតជាចង់ចាកចេញមែនទេ?';
@@ -1021,7 +994,7 @@ function AppContent() {
   const completedInThisTab = completedSteps.filter(id => id.startsWith(progressPrefix)).length;
   const progressPercentage = totalSteps === 0 ? 0 : Math.round((completedInThisTab / totalSteps) * 100);
 
-  const isCoursePurchased = showAdminPanel || (activeAppTab ? purchasedCourses[activeAppTab]?.unlocked === true : false);
+  const isCoursePurchased = isAdmin || (activeAppTab ? purchasedCourses[activeAppTab]?.unlocked === true : false);
   const theme = activeAppTab ? APP_THEMES[activeAppTab] : APP_THEMES.photo;
   
   const getAppDisplayName = (id) => id === 'photo' ? 'Affinity Photo 2 iPad' : id === 'designer' ? 'Affinity Designer 2 iPad' : 'Affinity Publisher 2 iPad';
@@ -1117,7 +1090,7 @@ function AppContent() {
                         <div className="flex items-center gap-4 relative z-10 w-full">
                             {isCoursePurchased ? (
                                 <div className={`w-14 h-14 flex items-center justify-center shrink-0 rounded-[18px] shadow-inner ${theme.lightBg}`}>
-                                    {showAdminPanel ? <ShieldCheck size={28} className={theme.text} /> : <Crown size={28} className={theme.text} />}
+                                    {isAdmin ? <ShieldCheck size={28} className={theme.text} /> : <Crown size={28} className={theme.text} />}
                                 </div>
                             ) : (
                                 <div className={`w-14 h-14 flex items-center justify-center shrink-0 rounded-[18px] shadow-inner ${theme.lightBg}`}>
@@ -1128,7 +1101,7 @@ function AppContent() {
                             <div className="text-left flex-1 min-w-0">
                                 <h3 className={`font-black font-khmer text-[17px] md:text-xl truncate ${isCoursePurchased ? theme.text : (isDarkMode ? 'text-white' : 'text-black')}`}>
                                     {isCoursePurchased 
-                                        ? (showAdminPanel ? 'Admin Control Panel' : 'Premium Member') 
+                                        ? (isAdmin ? 'Admin Control Panel' : 'Premium Member') 
                                         : (lang === 'en' ? `Register for ${appDisplayName}` : `ចុះឈ្មោះវគ្គ ${appDisplayName}`)}
                                 </h3>
                                 {isCoursePurchased && (
@@ -1145,74 +1118,140 @@ function AppContent() {
                             
                             <div className="max-w-3xl mx-auto relative z-10">
                                 
-                                {showAdminPanel ? (
+                                {isAdmin ? (
                                     <div className={`p-5 sm:p-8 rounded-3xl border shadow-2xl relative overflow-hidden ${isDarkMode ? 'bg-[#1C1C1E] border-[#2C2C2C]' : 'bg-white border-[#E5E7EB]'}`}>
                                         <div className={`absolute top-0 right-0 w-40 h-40 bg-gradient-to-br ${theme.gradient} rounded-full blur-[60px] opacity-10 pointer-events-none`}></div>
                                         <h4 className={`text-xl font-black font-khmer flex items-center gap-3 mb-6 ${theme.text}`}>
-                                            <ShieldCheck className="w-6 h-6"/> Key Generator {isSuperAdmin && "(Super)"}
+                                            <ShieldCheck className="w-6 h-6"/> Admin Control Panel
                                         </h4>
                                         
-                                        <div className="animate-fade-in-up">
-                                            <p className={`text-[14px] mb-6 font-khmer leading-relaxed ${isDarkMode ? 'text-[#9AA0A6]' : 'text-gray-500'}`}>
-                                                Generate secure, single-use activation keys for <strong>{appDisplayName}</strong>. Keys automatically expire 7 days after generation.
-                                            </p>
-                                            
-                                            <div className="flex gap-3 mb-4">
-                                                <input 
-                                                    type="number" 
-                                                    value={genAmount} 
-                                                    onChange={e => setGenAmount(Number(e.target.value))}
-                                                    className={`w-24 p-3.5 rounded-2xl border text-center outline-none font-bold text-lg transition-colors shadow-inner ${isDarkMode ? 'bg-[#121212] border-[#2C2C2C] text-white focus:border-[#41B6E6]' : 'bg-gray-50 border-[#E5E7EB] text-black focus:border-[#0277C5]'}`}
-                                                    min="1" max="50"
-                                                />
-                                                <button onClick={handleGenerateAdminKeys} className={`flex-1 rounded-2xl font-bold font-khmer text-[15px] text-white transition-all active:scale-[0.98] shadow-lg flex items-center justify-center gap-2 bg-gradient-to-r ${theme.gradient}`}>
-                                                    Generate Keys
-                                                </button>
-                                            </div>
-
-                                            <button 
-                                                onClick={handleFetchUnusedKeys} 
-                                                disabled={isFetchingKeys}
-                                                className={`w-full py-3.5 mb-6 rounded-2xl border font-bold font-khmer text-[14px] transition-all flex items-center justify-center gap-2 shadow-sm ${isDarkMode ? 'bg-[#121212] border-[#2C2C2C] text-[#A0A0A0] hover:text-white hover:border-[#41B6E6]/50' : 'bg-white border-[#E5E7EB] text-gray-600 hover:text-black hover:border-[#0277C5]/50'}`}
-                                            >
-                                                {isFetchingKeys ? <Loader2 size={18} className="animate-spin" /> : <Database size={18} />}
-                                                {lang === 'en' ? 'View Available Unused Keys' : 'មើលលេខកូដដែលនៅទំនេរ'}
-                                            </button>
-
-                                            {generatedKeys && (
-                                                <div className="space-y-3 max-h-64 overflow-y-auto custom-scrollbar animate-fade-in-up pr-2">
-                                                    <div className="flex justify-between items-center mb-3 sticky top-0 bg-inherit py-1 z-10">
-                                                        <span className={`text-xs font-bold uppercase tracking-widest ${theme.text}`}>
-                                                            {generatedKeys.split('\n').length} Codes Ready
-                                                        </span>
-                                                        <button onClick={handleCopyAllCodes} className={`text-xs px-3 py-1.5 rounded-lg flex items-center gap-1.5 font-bold transition-colors ${theme.text} ${theme.lightBg} hover:opacity-80`}>
-                                                            {copiedAll ? <CheckCircle size={14}/> : <Copy size={14}/>} {copiedAll ? 'Copied' : 'Copy All'}
-                                                        </button>
-                                                    </div>
-                                                    {generatedKeys.split('\n').map(c => (
-                                                        <div key={c} className={`p-3.5 rounded-[20px] border flex items-center justify-between shadow-sm transition-colors ${isDarkMode ? 'bg-[#121212] border-[#2C2C2C]' : 'bg-[#F8F9FA] border-[#E5E7EB]'}`}>
-                                                            <span className={`font-mono font-bold tracking-widest text-[15px] ${isDarkMode ? 'text-white' : 'text-black'}`}>{c}</span>
-                                                            <div className="flex gap-2">
-                                                                <button 
-                                                                    onClick={() => { 
-                                                                        navigator.clipboard.writeText(c); 
-                                                                        setCopiedCode(c); 
-                                                                        triggerHaptic();
-                                                                        setTimeout(() => setCopiedCode(null), 2000); 
-                                                                    }} 
-                                                                    className={`p-2.5 rounded-xl transition-colors ${isDarkMode ? 'bg-white/5 hover:bg-white/10' : 'bg-black/5 hover:bg-black/10'}`}
-                                                                >
-                                                                    {copiedCode === c ? <CheckCircle size={18} className="text-green-500"/> : <Copy size={18} className={isDarkMode ? 'text-gray-300' : 'text-gray-700'} />}
-                                                                </button>
-                                                                <button onClick={() => shareSingleKeyTelegram(c)} className={`p-2.5 rounded-xl transition-colors shadow-sm text-white bg-gradient-to-r ${theme.gradient}`}>
-                                                                    <Send size={18} />
-                                                                </button>
-                                                            </div>
-                                                        </div>
-                                                    ))}
-                                                </div>
-                                            )}
+                                        {/* ADMIN TAB NAVIGATION */}
+                                        <div className={`flex p-1.5 rounded-2xl mb-6 shadow-inner border ${isDarkMode ? 'bg-[#121212] border-[#2C2C2C]' : 'bg-[#F4F5F7] border-[#E5E7EB]'}`}>
+                                            <button onClick={() => setAdminView('keys')} className={`flex-1 py-2.5 rounded-xl font-bold text-[13px] uppercase tracking-wider transition-all ${adminView === 'keys' ? (isDarkMode ? 'bg-[#2C2C2C] text-white shadow-sm' : 'bg-white text-black shadow-sm') : 'text-gray-500 hover:text-gray-400'}`}>🔑 Key Manager</button>
+                                            <button onClick={() => setAdminView('ai')} className={`flex-1 py-2.5 rounded-xl font-bold text-[13px] uppercase tracking-wider transition-all ${adminView === 'ai' ? (isDarkMode ? 'bg-[#2C2C2C] text-white shadow-sm' : 'bg-white text-black shadow-sm') : 'text-gray-500 hover:text-gray-400'}`}>🧠 AI Studio</button>
                                         </div>
+
+                                        {adminView === 'keys' ? (
+                                            /* --- OLD KEY MANAGER UI --- */
+                                            <div className="animate-fade-in-up">
+                                                <p className={`text-[14px] mb-6 font-khmer leading-relaxed ${isDarkMode ? 'text-[#9AA0A6]' : 'text-gray-500'}`}>
+                                                    Generate secure, single-use activation keys for <strong>{appDisplayName}</strong>. Keys automatically expire 7 days after generation.
+                                                </p>
+                                                
+                                                <div className="flex gap-3 mb-4">
+                                                    <input 
+                                                        type="number" 
+                                                        value={genAmount} 
+                                                        onChange={e => setGenAmount(Number(e.target.value))}
+                                                        className={`w-24 p-3.5 rounded-2xl border text-center outline-none font-bold text-lg transition-colors shadow-inner ${isDarkMode ? 'bg-[#121212] border-[#2C2C2C] text-white focus:border-[#41B6E6]' : 'bg-gray-50 border-[#E5E7EB] text-black focus:border-[#0277C5]'}`}
+                                                        min="1" max="50"
+                                                    />
+                                                    <button onClick={handleGenerateAdminKeys} className={`flex-1 rounded-2xl font-bold font-khmer text-[15px] text-white transition-all active:scale-[0.98] shadow-lg flex items-center justify-center gap-2 bg-gradient-to-r ${theme.gradient}`}>
+                                                        Generate Keys
+                                                    </button>
+                                                </div>
+
+                                                <button 
+                                                    onClick={handleFetchUnusedKeys} 
+                                                    disabled={isFetchingKeys}
+                                                    className={`w-full py-3.5 mb-6 rounded-2xl border font-bold font-khmer text-[14px] transition-all flex items-center justify-center gap-2 shadow-sm ${isDarkMode ? 'bg-[#121212] border-[#2C2C2C] text-[#A0A0A0] hover:text-white hover:border-[#41B6E6]/50' : 'bg-white border-[#E5E7EB] text-gray-600 hover:text-black hover:border-[#0277C5]/50'}`}
+                                                >
+                                                    {isFetchingKeys ? <Loader2 size={18} className="animate-spin" /> : <Database size={18} />}
+                                                    {lang === 'en' ? 'View Available Unused Keys' : 'មើលលេខកូដដែលនៅទំនេរ'}
+                                                </button>
+
+                                                {generatedKeys && (
+                                                    <div className="space-y-3 max-h-64 overflow-y-auto custom-scrollbar animate-fade-in-up pr-2">
+                                                        <div className="flex justify-between items-center mb-3 sticky top-0 bg-inherit py-1 z-10">
+                                                            <span className={`text-xs font-bold uppercase tracking-widest ${theme.text}`}>
+                                                                {generatedKeys.split('\n').length} Codes Ready
+                                                            </span>
+                                                            <button onClick={handleCopyAllCodes} className={`text-xs px-3 py-1.5 rounded-lg flex items-center gap-1.5 font-bold transition-colors ${theme.text} ${theme.lightBg} hover:opacity-80`}>
+                                                                {copiedAll ? <CheckCircle size={14}/> : <Copy size={14}/>} {copiedAll ? 'Copied' : 'Copy All'}
+                                                            </button>
+                                                        </div>
+                                                        {generatedKeys.split('\n').map(c => (
+                                                            <div key={c} className={`p-3.5 rounded-[20px] border flex items-center justify-between shadow-sm transition-colors ${isDarkMode ? 'bg-[#121212] border-[#2C2C2C]' : 'bg-[#F8F9FA] border-[#E5E7EB]'}`}>
+                                                                <span className={`font-mono font-bold tracking-widest text-[15px] ${isDarkMode ? 'text-white' : 'text-black'}`}>{c}</span>
+                                                                <div className="flex gap-2">
+                                                                    <button 
+                                                                        onClick={() => { 
+                                                                            navigator.clipboard.writeText(c); 
+                                                                            setCopiedCode(c); 
+                                                                            triggerHaptic();
+                                                                            setTimeout(() => setCopiedCode(null), 2000); 
+                                                                        }} 
+                                                                        className={`p-2.5 rounded-xl transition-colors ${isDarkMode ? 'bg-white/5 hover:bg-white/10' : 'bg-black/5 hover:bg-black/10'}`}
+                                                                    >
+                                                                        {copiedCode === c ? <CheckCircle size={18} className="text-green-500"/> : <Copy size={18} className={isDarkMode ? 'text-gray-300' : 'text-gray-700'} />}
+                                                                    </button>
+                                                                    <button onClick={() => shareSingleKeyTelegram(c)} className={`p-2.5 rounded-xl transition-colors shadow-sm text-white bg-gradient-to-r ${theme.gradient}`}>
+                                                                        <Send size={18} />
+                                                                    </button>
+                                                                </div>
+                                                            </div>
+                                                        ))}
+                                                    </div>
+                                                )}
+                                            </div>
+                                        ) : (
+                                            /* --- NEW AI MANAGER (Data is added from ChatBot) --- */
+                                            <div className="animate-fade-in-up space-y-4">
+                                                <p className={`text-[13px] font-khmer leading-relaxed ${isDarkMode ? 'text-[#9AA0A6]' : 'text-gray-500'}`}>
+                                                    Manage the AI training data you added directly from the AI Chat. When ready, copy the final Data Code to update your main <code className="bg-black/20 px-1 rounded">data.js</code> file.
+                                                </p>
+                                                
+                                                <div className="flex gap-3 pt-2 mb-2">
+                                                    <button 
+                                                        onClick={() => {
+                                                            if (liveAiData.length === 0) return;
+                                                            triggerHaptic('success');
+                                                            let codeStr = "";
+                                                            liveAiData.forEach(item => {
+                                                                codeStr += `    {\n        primaryKeys: ${JSON.stringify(item.primaryKeys)},\n        keys: ${JSON.stringify(item.keys)},\n        regex: ${JSON.stringify(item.regex)},\n        answer: ${JSON.stringify(item.answer)},\n        answer_en: ${JSON.stringify(item.answer_en)}\n    },\n`;
+                                                            });
+                                                            navigator.clipboard.writeText(codeStr);
+                                                            alert("AI Data Code Copied! Paste this inside KNOWLEDGE_BASE in your data.js file.");
+                                                        }}
+                                                        className={`w-full py-3.5 rounded-2xl font-bold text-[13px] transition-all flex items-center justify-center gap-2 shadow-lg ${liveAiData.length === 0 ? 'opacity-50 cursor-not-allowed bg-gray-500 text-white' : 'bg-gradient-to-r from-green-500 to-emerald-500 text-white hover:opacity-90'}`}
+                                                    >
+                                                        <Copy size={16} /> Copy All Data Code ({liveAiData.length} Entries)
+                                                    </button>
+                                                </div>
+
+                                                {liveAiData.length > 0 && (
+                                                    <div className="mt-4 border-t border-dashed border-gray-500/30 pt-4">
+                                                        <div className="flex justify-between items-center mb-3">
+                                                            <span className={`text-[10px] font-bold uppercase tracking-widest ${isDarkMode ? 'text-green-400' : 'text-green-600'}`}>{liveAiData.length} Live Offline Entries</span>
+                                                            <button onClick={() => { if(window.confirm('Clear all offline training data?')) { setLiveAiData([]); localStorage.removeItem('myAffinity_live_ai'); } }} className="text-red-500 hover:text-red-400"><Trash2 size={16}/></button>
+                                                        </div>
+                                                        <div className="space-y-3 max-h-64 overflow-y-auto custom-scrollbar pr-1">
+                                                            {liveAiData.map((data, i) => (
+                                                                <div key={i} className={`p-3.5 rounded-xl border text-[11px] font-khmer leading-relaxed relative ${isDarkMode ? 'bg-[#121212] border-[#2C2C2C] text-[#A0A0A0]' : 'bg-[#F8F9FA] border-[#E5E7EB] text-[#6B7280]'}`}>
+                                                                    <button 
+                                                                        onClick={() => {
+                                                                            triggerHaptic();
+                                                                            const updated = liveAiData.filter((_, index) => index !== i);
+                                                                            setLiveAiData(updated);
+                                                                            localStorage.setItem('myAffinity_live_ai', JSON.stringify(updated));
+                                                                        }}
+                                                                        className="absolute top-2 right-2 text-red-500 hover:text-red-400 p-1.5 bg-red-500/10 rounded-md transition-colors"
+                                                                        title="Remove this entry"
+                                                                    >
+                                                                        <Trash2 size={14} />
+                                                                    </button>
+                                                                    <div className="pr-8 space-y-1.5">
+                                                                        <div><strong className={isDarkMode ? 'text-white' : 'text-black'}>Keys: </strong> {data.keys.join(', ')}</div>
+                                                                        <div><strong className={isDarkMode ? 'text-[#41B6E6]' : 'text-[#0277C5]'}>KM: </strong> <span className="line-clamp-2">{data.answer}</span></div>
+                                                                        <div><strong className={isDarkMode ? 'text-[#41B6E6]' : 'text-[#0277C5]'}>EN: </strong> <span className="line-clamp-2">{data.answer_en}</span></div>
+                                                                    </div>
+                                                                </div>
+                                                            ))}
+                                                        </div>
+                                                    </div>
+                                                )}
+                                            </div>
+                                        )}
 
                                         <div className={`w-full h-px my-6 ${isDarkMode ? 'bg-[#2C2C2C]' : 'bg-[#E5E7EB]'}`}></div>
                                         <button onClick={handleSignOutDevice} className="w-full py-3.5 rounded-xl border font-bold font-khmer text-[15px] active:scale-[0.98] transition-colors flex items-center justify-center gap-2 text-red-500 hover:bg-red-500/10 border-red-500/20">
@@ -1468,8 +1507,8 @@ function AppContent() {
                                 <p className={`text-[13px] sm:text-[14px] mt-0.5 sm:mt-1 font-medium truncate ${isDarkMode ? 'text-[#9AA0A6]' : 'text-[#6B7280]'}`}>{lang === 'en' ? 'Professional photo editing & manipulation' : 'ការកែច្នៃរូបភាពបែបអាជីព'}</p>
                             </div>
                             <div className="flex items-center gap-2 sm:gap-3 shrink-0 pl-2">
-                                {!showAdminPanel && !purchasedCourses['photo']?.unlocked && <Lock size={18} className={`${APP_THEMES.photo.text} opacity-80`} />}
-                                {showAdminPanel && <ShieldCheck size={18} className="text-[#41B6E6]" />}
+                                {!isAdmin && !purchasedCourses['photo']?.unlocked && <Lock size={18} className={`${APP_THEMES.photo.text} opacity-80`} />}
+                                {isAdmin && <ShieldCheck size={18} className="text-[#41B6E6]" />}
                                 <div className={`w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center transition-colors ${isDarkMode ? 'bg-white/5 group-hover:bg-white/10' : 'bg-black/5 group-hover:bg-black/10'}`}>
                                     <ChevronRight size={20} className={isDarkMode ? 'text-[#A0A0A0] group-hover:text-white' : 'text-[#6B7280] group-hover:text-black'} />
                                 </div>
@@ -1488,8 +1527,8 @@ function AppContent() {
                                 <p className={`text-[13px] sm:text-[14px] mt-0.5 sm:mt-1 font-medium truncate ${isDarkMode ? 'text-[#9AA0A6]' : 'text-[#6B7280]'}`}>{lang === 'en' ? 'Vector graphics & illustration' : 'ការឌីហ្សាញក្រាហ្វិក និងគំនូរ'}</p>
                             </div>
                             <div className="flex items-center gap-2 sm:gap-3 shrink-0 pl-2">
-                                {!showAdminPanel && !purchasedCourses['designer']?.unlocked && <Lock size={18} className={`${APP_THEMES.designer.text} opacity-80`} />}
-                                {showAdminPanel && <ShieldCheck size={18} className="text-[#41B6E6]" />}
+                                {!isAdmin && !purchasedCourses['designer']?.unlocked && <Lock size={18} className={`${APP_THEMES.designer.text} opacity-80`} />}
+                                {isAdmin && <ShieldCheck size={18} className="text-[#41B6E6]" />}
                                 <div className={`w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center transition-colors ${isDarkMode ? 'bg-white/5 group-hover:bg-white/10' : 'bg-black/5 group-hover:bg-black/10'}`}>
                                     <ChevronRight size={20} className={isDarkMode ? 'text-[#A0A0A0] group-hover:text-white' : 'text-[#6B7280] group-hover:text-black'} />
                                 </div>
@@ -1508,8 +1547,8 @@ function AppContent() {
                                 <p className={`text-[13px] sm:text-[14px] mt-0.5 sm:mt-1 font-medium truncate ${isDarkMode ? 'text-[#9AA0A6]' : 'text-[#6B7280]'}`}>{lang === 'en' ? 'Page layout & typography design' : 'ការរៀបចំទំព័រ និងសៀវភៅ'}</p>
                             </div>
                             <div className="flex items-center gap-2 sm:gap-3 shrink-0 pl-2">
-                                {!showAdminPanel && !purchasedCourses['publisher']?.unlocked && <Lock size={18} className={`${APP_THEMES.publisher.text} opacity-80`} />}
-                                {showAdminPanel && <ShieldCheck size={18} className="text-[#41B6E6]" />}
+                                {!isAdmin && !purchasedCourses['publisher']?.unlocked && <Lock size={18} className={`${APP_THEMES.publisher.text} opacity-80`} />}
+                                {isAdmin && <ShieldCheck size={18} className="text-[#41B6E6]" />}
                                 <div className={`w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center transition-colors ${isDarkMode ? 'bg-white/5 group-hover:bg-white/10' : 'bg-black/5 group-hover:bg-black/10'}`}>
                                     <ChevronRight size={20} className={isDarkMode ? 'text-[#A0A0A0] group-hover:text-white' : 'text-[#6B7280] group-hover:text-black'} />
                                 </div>
@@ -1524,13 +1563,13 @@ function AppContent() {
             )}
             {activeTab === 'tools' && <div className="pb-24"><ToolsView isDarkMode={isDarkMode} /></div>}
             
-            {/* 🌟 TEST RECEIVES SUPER ADMIN BYPASS 🌟 */}
-            {activeTab === 'quiz' && <Test isDarkMode={isDarkMode} isAdmin={isSuperAdmin} />}
+            {/* TEST NOW RECEIVES ISADMIN TO BYPASS LOCK */}
+            {activeTab === 'quiz' && <Test isDarkMode={isDarkMode} isAdmin={isAdmin} />}
         </main>
       ) : (
         <div className={`flex-1 relative w-full h-full md:pb-0 z-0 ${activeAppTab ? 'hidden' : 'block'}`} style={{ paddingTop: 'max(env(safe-area-inset-top), 0px)' }}>
-             {/* 🌟 CHATBOT RECEIVES SUPER ADMIN AND LIVE DATA 🌟 */}
-             <ChatBot messages={chatMessages} setMessages={setChatMessages} isDarkMode={isDarkMode} liveAiData={liveAiData} setLiveAiData={setLiveAiData} isAdmin={isSuperAdmin} />
+             {/* CHATBOT NOW RECEIVES ADMIN, LIVEAIDATA, AND SETLIVEAIDATA */}
+             <ChatBot messages={chatMessages} setMessages={setChatMessages} isDarkMode={isDarkMode} liveAiData={liveAiData} setLiveAiData={setLiveAiData} isAdmin={isAdmin} />
         </div>
       )}
 
