@@ -65,9 +65,10 @@ const callRealAI = async (userPrompt, language, history = []) => {
     }
 };
 
+// 🌟 THE ULTIMATE NORMALIZER: Keeps ONLY Letters and Numbers (Any Language). Destroys all spaces, emojis, and punctuation!
 const strictClean = (text) => {
     if (!text) return '';
-    return text.toLowerCase().replace(/[^\w\u1780-\u17FF0-9]/g, '');
+    return text.toLowerCase().replace(/[^\p{L}\p{N}]/gu, '');
 };
 
 const formatMessage = (text) => {
@@ -110,6 +111,7 @@ const ChatBot = ({ messages, setMessages, isDarkMode, liveAiData = [], setLiveAi
 
   const COMBINED_DB = [...KNOWLEDGE_BASE, ...liveAiData];
 
+  // 🌟 SECRET BLIND SPOT AUTO-TRAINER 🌟
   const runSecretBackgroundTraining = async (userQ, botA) => {
       try {
           const prompt = `Analyze this interaction:\nUser Question: "${userQ}"\nBot Answer: "${botA}"\n\nTask:\n1. Check if this is related to Graphic Design, Affinity software, Photo Editing, Layouts, or Typography. If it is UNRELATED (e.g., cooking, politics, general greetings), reply ONLY with the exact word: REJECT\n2. If it IS related, correct grammar, translate it to provide both English and Khmer answers, and format as JSON:\n{"primaryKeys": ["key1", "key2"], "keys": ["k1", "k2", "k3"], "regex": ["reg1"], "answer": "Corrected Khmer", "answer_en": "English translation"}`;
@@ -326,21 +328,10 @@ const ChatBot = ({ messages, setMessages, isDarkMode, liveAiData = [], setLiveAi
       const rawInput = inputTxt.trim();
       const cleanInput = strictClean(rawInput); 
 
-      // 🌟 INTENT EXTRACTION (Strips 'How to', 'របៀប', etc. so core subject matches instantly)
-      const questionWords = ['តើ', 'ជាអ្វី', 'អ្វីទៅជា', 'អ្វីទៅ', 'ស្អីគេ', 'ស្អី', 'គឺជាអ្វី', 'របៀប', 'របៀបណា', 'យ៉ាងម៉េច', 'how to', 'what is', 'explain'];
-      let coreSubject = cleanInput;
-      questionWords.forEach(qw => {
-          const cleanQw = strictClean(qw);
-          if (coreSubject.startsWith(cleanQw)) {
-              coreSubject = coreSubject.substring(cleanQw.length);
-          }
-      });
-      coreSubject = coreSubject.trim();
-
       // 1. EXACT MATCH GUARANTEE (Zero-Flaw Rule #1)
       for (const item of COMBINED_DB) {
           const exactTriggers = [...(item.primaryKeys || []), ...(item.keys || [])].map(strictClean); 
-          if (exactTriggers.includes(cleanInput) || exactTriggers.includes(coreSubject)) {
+          if (exactTriggers.includes(cleanInput)) {
               setCurrentTopic(item.primaryKeys ? item.primaryKeys[0] : null); 
               let answerText = lang === 'en' && item.answer_en ? item.answer_en : item.answer;
               let finalColors = item.colors;
@@ -358,11 +349,32 @@ const ChatBot = ({ messages, setMessages, isDarkMode, liveAiData = [], setLiveAi
           }
       }
 
-      // 2. LONG SENTENCE FIREWALL (Zero-Flaw Rule #2)
-      const wordCount = rawInput.trim().split(/\s+/).length;
-      if (wordCount > 4) return { needsBackend: true, query: rawInput };
+      // 2. SHORT TYPO & DEEP KEYWORD GUESSING
+      let bestMatch = null;
+      let highestScore = 0;
+      for (const item of COMBINED_DB) {
+          let score = 0;
+          const searchKeys = [...(item.primaryKeys || []), ...(item.keys || [])].map(strictClean);
+          for(const key of searchKeys) {
+              if (key.length >= 4 && cleanInput.includes(key)) score = Math.max(score, key.length * 10); 
+              if (cleanInput.length >= 4 && key.includes(cleanInput)) score = Math.max(score, cleanInput.length * 10);
+          }
+          if (score > highestScore) { highestScore = score; bestMatch = item; }
+      }
 
-      // 3. SHORT TYPO GUESSING
+      if (bestMatch && highestScore >= 50) {
+          setCurrentTopic(bestMatch.primaryKeys ? bestMatch.primaryKeys[0] : null); 
+          let answerText = lang === 'en' && bestMatch.answer_en ? bestMatch.answer_en : bestMatch.answer;
+          let finalColors = bestMatch.colors;
+
+          if (bestMatch.dynamicColor) {
+              const hex = '#' + Math.floor(Math.random()*16777215).toString(16).padStart(6, '0').toUpperCase();
+              finalColors = [hex]; answerText = answerText.replace('{hex}', hex);
+          }
+          return { answer: answerText, chips: generateFilteredChips(bestMatch, rawInput), uiElement: bestMatch.uiElement, colors: finalColors, actionButton: bestMatch.actionButton, needsBackend: false };
+      }
+
+      // 3. CONVERSATIONAL FALLBACKS
       const FOLLOW_UP_MAP = {
           'តើអ្វីទៅជា Graphic Design?': 'ធាតុផ្សំមូលដ្ឋានទាំង ៦', 'what is graphic design': 'the 6 elements of design',
           'ធាតុផ្សំមូលដ្ឋានទាំង ៦': 'គោលការណ៍រចនា', 'the 6 elements of design': 'design principles',
@@ -416,13 +428,11 @@ const ChatBot = ({ messages, setMessages, isDarkMode, liveAiData = [], setLiveAi
           return { needsBackend: true, query: rawInput }; 
       }
 
-      // 🌟 PERFECTED "YES" CONFIRMATION BLOCK 🌟
       const exactYes = ['yes', 'yep', 'ok', 'sure', 'បាទ', 'ចាស', 'ចា', 'យល់ព្រម', 'មែន', 'ចង់', 'អូខេ', 'តោះ', 'បន្ត', 'ដឹង', 'ចង់ដឹង'].map(strictClean);
       if (exactYes.includes(cleanInput) || cleanInput.startsWith('បាទ') || cleanInput.startsWith('ចាស') || cleanInput.startsWith('yes') || cleanInput.startsWith('ok')) {
           if (isBackendActive) return { needsBackend: true, query: rawInput }; 
           
           if (lastBotMsg && (lastBotMsg.text.includes('មែនទេ') || lastBotMsg.text.includes('Did you mean'))) {
-              // Reliably pull the exact topic we guessed out of the bolded text!
               const match = lastBotMsg.text.match(/\*\*(.*?)\*\*/);
               const targetTopic = match ? match[1] : currentTopic;
 
@@ -459,18 +469,7 @@ const ChatBot = ({ messages, setMessages, isDarkMode, liveAiData = [], setLiveAi
           }
       }
 
-      let bestMatch = null;
-      let highestScore = 0;
-      for (const item of COMBINED_DB) {
-          let score = 0;
-          const searchKeys = [...(item.primaryKeys || []), ...(item.keys || [])].map(strictClean);
-          for(const key of searchKeys) {
-              if (key.length >= 4 && cleanInput.includes(key)) score = Math.max(score, key.length * 10); 
-              if (cleanInput.length >= 4 && key.includes(cleanInput)) score = Math.max(score, cleanInput.length * 10);
-          }
-          if (score > highestScore) { highestScore = score; bestMatch = item; }
-      }
-
+      // If it still hasn't matched perfectly, but we had a partial match earlier, confirm it with the user!
       if (bestMatch && highestScore >= 30) {
           const topicName = bestMatch.primaryKeys ? bestMatch.primaryKeys[0] : (bestMatch.keys ? bestMatch.keys[0] : null);
           setCurrentTopic(topicName); 
@@ -745,6 +744,7 @@ const ChatBot = ({ messages, setMessages, isDarkMode, liveAiData = [], setLiveAi
                                   <button onClick={() => handleFeedback(i, 'up')} className="p-1 hover:text-green-500 rounded-md transition-colors"><ThumbsUp size={14}/></button>
                                   <button onClick={() => handleFeedback(i, 'down')} className="p-1 hover:text-red-500 rounded-md transition-colors"><ThumbsDown size={14}/></button>
                                   
+                                  {/* 🌟 1-CLICK AI AUTO TRAINING (SUPER ADMIN ONLY) 🌟 */}
                                   {isAdmin && m.isTrainable && !m.isTraining && (
                                       <button 
                                           onClick={() => handleAutoTrain(i)} 

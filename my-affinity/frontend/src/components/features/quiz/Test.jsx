@@ -53,7 +53,7 @@ const Test = ({ isDarkMode, isAdmin }) => {
     const [certsData, setCertsData] = useState(defaultCerts);
     const [isDataLoaded, setIsDataLoaded] = useState(false);
 
-    // 🌟 FIX: Safe wrapper for Certificate Data
+    // 🌟 FIX: Temp state to force synchronous cert rendering
     const [activeCertData, setActiveCertData] = useState(null);
 
     const nameInputRef = useRef(null);
@@ -211,7 +211,7 @@ const Test = ({ isDarkMode, isAdmin }) => {
                 const newCert = { name: userName || 'Administrator', score: displayScore, date: new Date().toISOString(), appCourse: appDisplayName };
                 setCertsData(prev => ({ ...prev, [activeAppTab]: newCert }));
                 
-                // Set the active cert securely before changing views
+                // 🌟 FIX: Instantly attach data so it doesn't render null
                 setActiveCertData(newCert);
                 setGameState('certificate');
             } else {
@@ -253,7 +253,7 @@ const Test = ({ isDarkMode, isAdmin }) => {
         }
     };
 
-    // 🌟 100% BULLETPROOF CERTIFICATE RENDERER
+    // 🌟 FIX: Safe Fallback for CertificateForm
     if (gameState === 'certificate') {
         const certToRender = activeCertData || currentCert;
         
@@ -384,6 +384,7 @@ const Test = ({ isDarkMode, isAdmin }) => {
                                 {!allUnlocked && <Lock size={16} className="opacity-30"/>}
                             </button>
 
+                            {/* 🌟 ADMIN: ONE-CLICK CERTIFICATE GENERATOR 🌟 */}
                             {isAdmin && !currentCert && (
                                 <button 
                                     onClick={() => {
