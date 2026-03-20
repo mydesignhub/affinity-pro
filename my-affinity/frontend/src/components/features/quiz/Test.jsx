@@ -31,7 +31,8 @@ const defaultStars = {
 const defaultScores = { photo: 0, designer: 0, publisher: 0 };
 const defaultCerts = { photo: null, designer: null, publisher: null };
 
-const Test = ({ isDarkMode, isAdmin }) => {
+// 🌟 FIX: Receive the new admin props! 🌟
+const Test = ({ isDarkMode, isAdmin, adminCertRequest, clearAdminCertRequest }) => {
     const { lang } = useLanguage(); 
 
     const [gameState, setGameState] = useState('menu');
@@ -42,7 +43,6 @@ const Test = ({ isDarkMode, isAdmin }) => {
     const [isAnswered, setIsAnswered] = useState(false);
     const [quizConfig, setQuizConfig] = useState({ level: 'beginner', amount: 5 });
     
-    // Tracks which Affinity app is active
     const [activeAppTab, setActiveAppTab] = useState('photo');
 
     const [userName, setUserName] = useState('');
@@ -52,9 +52,7 @@ const Test = ({ isDarkMode, isAdmin }) => {
     const [certsData, setCertsData] = useState(defaultCerts);
     const [isDataLoaded, setIsDataLoaded] = useState(false);
 
-    // Temp state to force synchronous cert rendering
     const [activeCertData, setActiveCertData] = useState(null);
-
     const nameInputRef = useRef(null);
 
     const [timeLeft, setTimeLeft] = useState(null);
@@ -62,7 +60,6 @@ const Test = ({ isDarkMode, isAdmin }) => {
     const [streak, setStreak] = useState(0);
     const [isShaking, setIsShaking] = useState(false);
 
-    // Read from localStorage ONLY after the component has mounted
     useEffect(() => {
         if (typeof window !== 'undefined') {
             const savedName = localStorage.getItem('myAffinity_user_name');
@@ -84,31 +81,32 @@ const Test = ({ isDarkMode, isAdmin }) => {
         }
     }, []);
 
-    // 🌟 FIX: Listen for the Super Admin Panel signal from App.jsx! 🌟
+    // 🌟 FIX: The direct prop listener. It fires instantly when App.jsx passes it the request!
     useEffect(() => {
-        const handleForceCert = (e) => {
-            const appId = e.detail;
-            const appDisplayName = appId === 'photo' ? 'Affinity Photo' : appId === 'designer' ? 'Affinity Designer' : 'Affinity Publisher';
-            
-            const newCert = { 
-                name: userName.trim() || 'Super Admin Tester', 
-                score: 100, 
-                date: new Date().toISOString(), 
-                appCourse: appDisplayName 
-            };
-            
-            // Force the active tab, generate the certificate, and jump to certificate view
-            setActiveAppTab(appId);
-            setCertsData(prev => ({ ...prev, [appId]: newCert }));
-            setActiveCertData(newCert);
-            setGameState('certificate');
+        if (!adminCertRequest) return;
+
+        const appId = adminCertRequest;
+        const appDisplayName = appId === 'photo' ? 'Affinity Photo' : appId === 'designer' ? 'Affinity Designer' : 'Affinity Publisher';
+        
+        const newCert = { 
+            name: userName.trim() || 'Super Admin Tester', 
+            score: 100, 
+            date: new Date().toISOString(), 
+            appCourse: appDisplayName 
         };
+        
+        setActiveAppTab(appId);
+        setActiveCertData(newCert); // Force overlay state
+        setGameState('certificate');
+        
+        // Reset the prop quickly so it doesn't loop
+        const timer = setTimeout(() => {
+            if (clearAdminCertRequest) clearAdminCertRequest();
+        }, 50);
 
-        window.addEventListener('forceTestCertificate', handleForceCert);
-        return () => window.removeEventListener('forceTestCertificate', handleForceCert);
-    }, [userName]); // Depend on userName so the cert gets the right name
+        return () => clearTimeout(timer);
+    }, [adminCertRequest]);
 
-    // Extract current app's specific data
     const currentUnlocked = unlockedLevels[activeAppTab] || ['beginner'];
     const currentStars = levelStars[activeAppTab] || { beginner: 0, intermediate: 0, advanced: 0 };
     const currentHighScore = highScores[activeAppTab] || 0;
@@ -120,7 +118,6 @@ const Test = ({ isDarkMode, isAdmin }) => {
         }
     }, [activeAppTab, userName]); 
 
-    // Save everything to localStorage whenever it changes
     useEffect(() => {
         if (isDataLoaded) {
             localStorage.setItem('myAffinity_quiz_unlocked', JSON.stringify(unlockedLevels));

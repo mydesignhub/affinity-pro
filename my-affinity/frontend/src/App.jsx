@@ -612,6 +612,9 @@ function AppContent() {
   const [isSuperAdmin, setIsSuperAdmin] = useState(false);
   const [showSuperAdminModal, setShowSuperAdminModal] = useState(false);
   const [superAdminTab, setSuperAdminTab] = useState('ai'); 
+  
+  // 🌟 FIX: Direct Prop Handoff State
+  const [adminCertRequest, setAdminCertRequest] = useState(null);
 
   useEffect(() => {
       const unlockSuperAdmin = () => setIsSuperAdmin(true);
@@ -650,10 +653,8 @@ function AppContent() {
       return [];
   });
 
-  // 🌟 NEW STATE: For handling Auto-Cached Memory Data
   const [aiMemoryCache, setAiMemoryCache] = useState([]);
 
-  // Fetch Firestore Data when component loads
   const fetchCloudAI = async () => {
       try {
           const q = query(collection(db, "ai_knowledge"));
@@ -675,7 +676,6 @@ function AppContent() {
       }
   };
 
-  // Automatically load local cache into the admin panel state
   useEffect(() => {
       if (showSuperAdminModal && superAdminTab === 'ai') {
           try {
@@ -743,7 +743,6 @@ function AppContent() {
       }
   }, [isDarkMode, isDataLoaded]);
 
-  // Syncing ALL data to localStorage
   useEffect(() => {
       if (isDataLoaded) {
           localStorage.setItem('myAffinity_completed_steps', JSON.stringify(completedSteps));
@@ -1046,13 +1045,12 @@ function AppContent() {
       setTimeout(() => setCopiedAll(false), 2000);
   };
 
+  // 🌟 FIX: We now use direct State Prop Handoff instead of buggy Event Listeners
   const testCertificate = (appId) => {
       triggerHaptic('success');
       setShowSuperAdminModal(false);
+      setAdminCertRequest(appId); // Direct prop handoff!
       setActiveTab('quiz'); 
-      setTimeout(() => {
-          window.dispatchEvent(new CustomEvent('forceTestCertificate', { detail: appId }));
-      }, 150); 
   };
 
   const currentCourseData = activeAppTab ? (courseData[activeAppTab] || []) : [];
@@ -1209,7 +1207,6 @@ function AppContent() {
                                   </div>
                               )}
                               
-                              {/* 🌟 NEW: AUTO-CACHED MEMORY MANAGER 🌟 */}
                               {aiMemoryCache.length > 0 && (
                                   <div className="mt-6 border-t border-dashed border-gray-500/30 pt-4">
                                       <div className="flex justify-between items-center mb-3">
@@ -1732,7 +1729,15 @@ function AppContent() {
             )}
             {activeTab === 'tools' && <div className="pb-24"><ToolsView isDarkMode={isDarkMode} /></div>}
             
-            {activeTab === 'quiz' && <Test isDarkMode={isDarkMode} isAdmin={isSuperAdmin} />}
+            {/* 🌟 FIX: PASS THE PROP DOWN TO TEST.JSX 🌟 */}
+            {activeTab === 'quiz' && (
+                <Test 
+                    isDarkMode={isDarkMode} 
+                    isAdmin={isSuperAdmin} 
+                    adminCertRequest={adminCertRequest} 
+                    clearAdminCertRequest={() => setAdminCertRequest(null)} 
+                />
+            )}
         </main>
       ) : (
         <div className={`flex-1 relative w-full h-full md:pb-0 z-0 ${activeAppTab ? 'hidden' : 'block'}`} style={{ paddingTop: 'max(env(safe-area-inset-top), 0px)' }}>
