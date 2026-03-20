@@ -53,7 +53,7 @@ const Test = ({ isDarkMode, isAdmin }) => {
     const [certsData, setCertsData] = useState(defaultCerts);
     const [isDataLoaded, setIsDataLoaded] = useState(false);
 
-    // 🌟 FIX: Temp state to force synchronous cert rendering
+    // 🌟 FIX: Safe wrapper for Certificate Data
     const [activeCertData, setActiveCertData] = useState(null);
 
     const nameInputRef = useRef(null);
@@ -130,7 +130,6 @@ const Test = ({ isDarkMode, isAdmin }) => {
             setTimeLeft(15 * 60);
         } else { setTimeLeft(null); }
 
-        // 🌟 ADMIN BYPASS: Admins ignore level locks
         if (!isAdmin && !currentUnlocked.includes(level) && level !== 'final') { triggerHaptic('error'); return; }
         triggerHaptic();
         
@@ -159,7 +158,6 @@ const Test = ({ isDarkMode, isAdmin }) => {
         setQuestions(finalQuestions); 
         setQuizConfig(prev => ({...prev, level}));
         
-        // 🌟 100% CLEAN STATE RESET ON START 🌟
         setCurrentQuestion(0); 
         setScore(0); 
         setIsAnswered(false); 
@@ -213,7 +211,7 @@ const Test = ({ isDarkMode, isAdmin }) => {
                 const newCert = { name: userName || 'Administrator', score: displayScore, date: new Date().toISOString(), appCourse: appDisplayName };
                 setCertsData(prev => ({ ...prev, [activeAppTab]: newCert }));
                 
-                // 🌟 FIX: Instantly attach data so it doesn't render null
+                // Set the active cert securely before changing views
                 setActiveCertData(newCert);
                 setGameState('certificate');
             } else {
@@ -255,14 +253,24 @@ const Test = ({ isDarkMode, isAdmin }) => {
         }
     };
 
-    // 🌟 FIX: Safe Fallback for CertificateForm
+    // 🌟 100% BULLETPROOF CERTIFICATE RENDERER
     if (gameState === 'certificate') {
         const certToRender = activeCertData || currentCert;
+        
+        // If data was somehow lost, immediately bump back to menu
         if (!certToRender) {
-             setGameState('menu');
+             setTimeout(() => setGameState('menu'), 0);
              return null;
         }
-        return <CertificateForm certData={certToRender} isDarkMode={isDarkMode} onBack={() => setGameState('menu')} />;
+
+        return (
+            <div className="w-full h-full flex flex-col min-h-screen relative z-50">
+                <CertificateForm certData={certToRender} isDarkMode={isDarkMode} onBack={() => {
+                    setActiveCertData(null);
+                    setGameState('menu');
+                }} />
+            </div>
+        );
     }
 
     if (gameState === 'menu') {
@@ -376,7 +384,6 @@ const Test = ({ isDarkMode, isAdmin }) => {
                                 {!allUnlocked && <Lock size={16} className="opacity-30"/>}
                             </button>
 
-                            {/* 🌟 ADMIN: ONE-CLICK CERTIFICATE GENERATOR 🌟 */}
                             {isAdmin && !currentCert && (
                                 <button 
                                     onClick={() => {
@@ -384,8 +391,9 @@ const Test = ({ isDarkMode, isAdmin }) => {
                                         const finalName = userName.trim() || 'Admin Tester';
                                         const appDisplayName = activeAppTab === 'photo' ? 'Affinity Photo' : activeAppTab === 'designer' ? 'Affinity Designer' : 'Affinity Publisher';
                                         const newCert = { name: finalName, score: 100, date: new Date().toISOString(), appCourse: appDisplayName };
+                                        
                                         setCertsData(prev => ({ ...prev, [activeAppTab]: newCert }));
-                                        setActiveCertData(newCert); // 🌟 FIX: Force active cert
+                                        setActiveCertData(newCert); 
                                         setGameState('certificate');
                                     }}
                                     className={`p-4 rounded-[24px] border flex items-center justify-center gap-3 transition-all duration-500 ease-out hover:-translate-y-1 active:scale-95 shadow-md ${isDarkMode ? 'border-[#41B6E6]/50 bg-[#41B6E6]/10 text-[#41B6E6] hover:shadow-[0_10px_20px_rgba(65,182,230,0.15)]' : 'border-[#0277C5]/50 bg-[#0277C5]/10 text-[#0277C5] hover:shadow-[0_10px_20px_rgba(2,119,197,0.15)]'}`}

@@ -110,7 +110,6 @@ const ChatBot = ({ messages, setMessages, isDarkMode, liveAiData = [], setLiveAi
 
   const COMBINED_DB = [...KNOWLEDGE_BASE, ...liveAiData];
 
-  // 🌟 SECRET BLIND SPOT AUTO-TRAINER 🌟
   const runSecretBackgroundTraining = async (userQ, botA) => {
       try {
           const prompt = `Analyze this interaction:\nUser Question: "${userQ}"\nBot Answer: "${botA}"\n\nTask:\n1. Check if this is related to Graphic Design, Affinity software, Photo Editing, Layouts, or Typography. If it is UNRELATED (e.g., cooking, politics, general greetings), reply ONLY with the exact word: REJECT\n2. If it IS related, correct grammar, translate it to provide both English and Khmer answers, and format as JSON:\n{"primaryKeys": ["key1", "key2"], "keys": ["k1", "k2", "k3"], "regex": ["reg1"], "answer": "Corrected Khmer", "answer_en": "English translation"}`;
@@ -136,13 +135,13 @@ const ChatBot = ({ messages, setMessages, isDarkMode, liveAiData = [], setLiveAi
           
           if(setLiveAiData) setLiveAiData(prev => [...prev, newEntry]);
           await addDoc(collection(db, "ai_knowledge"), newEntry);
+          console.log("Secret Auto-Train Success:", uniquePrimaryKeys[0]);
 
       } catch (err) {
-          console.log("Secret training skipped.");
+          console.log("Secret training skipped:", err.message);
       }
   };
 
-  // 🌟 1-CLICK MANUAL TRAINING (For Super Admins) 🌟
   const handleAutoTrain = async (index) => {
       const botMsg = messages[index];
       const userMsg = messages[index - 1];
@@ -309,16 +308,17 @@ const ChatBot = ({ messages, setMessages, isDarkMode, liveAiData = [], setLiveAi
       });
   };
 
-  // 🌟 FIX: Hard limits the returned array to a maximum of 3 chips!
   const generateFilteredChips = (exactMatch, rawQuery) => {
       let chipsData = lang === 'en' && exactMatch.chips_en ? exactMatch.chips_en : exactMatch.chips;
       if (chipsData) {
           const strictQuery = strictClean(rawQuery);
           chipsData = chipsData.filter(c => strictClean(c) !== strictQuery);
-          chipsData = [...new Set([...chipsData, ...getRandomItems(getSuggestList(), 3)])].slice(0, 3);
-          return chipsData;
+          if (chipsData.length < 2) {
+              const moreSuggestions = getRandomItems(getSuggestList(), 3);
+              chipsData = [...new Set([...chipsData, ...moreSuggestions])].slice(0, 2);
+          }
       }
-      return getRandomItems(getSuggestList(), 3);
+      return chipsData ? chipsData.slice(0, 3) : getRandomItems(getSuggestList(), 3);
   };
 
   // 🌟 ZERO-FLAW NLP ROUTER 🌟
@@ -326,20 +326,20 @@ const ChatBot = ({ messages, setMessages, isDarkMode, liveAiData = [], setLiveAi
       const rawInput = inputTxt.trim();
       const cleanInput = strictClean(rawInput); 
 
-      // 🌟 FIX: STRIP QUESTION WORDS BEFORE MATCHING
-      const questionWords = ['តើ', 'ជាអ្វី', 'អ្វីទៅជា', 'អ្វីទៅ', 'ស្អីគេ', 'ស្អី', 'គឺជាអ្វី', 'នៅឯណា', 'នៅណា', 'កន្លែងណា', 'ត្រង់ណា', 'ពេលណា', 'អង្កាល់', 'វេលាណា', 'យ៉ាងម៉េច', 'ម៉េច', 'របៀបណា', 'របៀប', 'whatis', 'whereis', 'whenis', 'howto', 'howdoi', 'tellmeabout', 'explain', 'whatare', 'the'];
-      
+      // 🌟 INTENT EXTRACTION (Strips 'How to', 'របៀប', etc. so core subject matches instantly)
+      const questionWords = ['តើ', 'ជាអ្វី', 'អ្វីទៅជា', 'អ្វីទៅ', 'ស្អីគេ', 'ស្អី', 'គឺជាអ្វី', 'របៀប', 'របៀបណា', 'យ៉ាងម៉េច', 'how to', 'what is', 'explain'];
       let coreSubject = cleanInput;
-      questionWords.forEach(qw => { 
-          // Replace matching question words with nothing to extract the core subject
-          coreSubject = coreSubject.replace(new RegExp(`^${qw}`), ''); 
+      questionWords.forEach(qw => {
+          const cleanQw = strictClean(qw);
+          if (coreSubject.startsWith(cleanQw)) {
+              coreSubject = coreSubject.substring(cleanQw.length);
+          }
       });
       coreSubject = coreSubject.trim();
 
       // 1. EXACT MATCH GUARANTEE (Zero-Flaw Rule #1)
       for (const item of COMBINED_DB) {
           const exactTriggers = [...(item.primaryKeys || []), ...(item.keys || [])].map(strictClean); 
-          // 🌟 FIX: Now checks the raw cleaned input AND the stripped coreSubject
           if (exactTriggers.includes(cleanInput) || exactTriggers.includes(coreSubject)) {
               setCurrentTopic(item.primaryKeys ? item.primaryKeys[0] : null); 
               let answerText = lang === 'en' && item.answer_en ? item.answer_en : item.answer;
@@ -359,7 +359,6 @@ const ChatBot = ({ messages, setMessages, isDarkMode, liveAiData = [], setLiveAi
       }
 
       // 2. LONG SENTENCE FIREWALL (Zero-Flaw Rule #2)
-      // Evaluates the core subject word count, not the raw input word count!
       const wordCount = rawInput.trim().split(/\s+/).length;
       if (wordCount > 4) return { needsBackend: true, query: rawInput };
 
@@ -411,20 +410,34 @@ const ChatBot = ({ messages, setMessages, isDarkMode, liveAiData = [], setLiveAi
       const exactNo = ['nothanks', 'no', 'nope', 'nevermind', 'ទេ', 'អត់ទេ', 'ទេអរគុណ', 'អត់ទេអរគុណ', 'មិនបាច់ទេ', 'អត់ចង់ទេ'].map(strictClean);
       if (exactNo.includes(cleanInput) || cleanInput.startsWith('ទេ') || cleanInput.startsWith('no')) {
           setCurrentTopic(null);
-          if (lastBotMsg && (lastBotMsg.text.includes('មែនទេ') || lastBotMsg.text.includes('Did you want to learn about'))) {
+          if (lastBotMsg && (lastBotMsg.text.includes('មែនទេ') || lastBotMsg.text.includes('Did you mean'))) {
               return { answer: lang === 'en' ? "No problem! What else would you like to learn about? 😊" : "បាទ មិនអីទេ! តើមានអ្វីផ្សេងទៀតដែលបងចង់ស្វែងយល់ទេ? 😊", chips: getRandomItems(getSuggestList(), 3), needsBackend: false };
           }
           return { needsBackend: true, query: rawInput }; 
       }
 
+      // 🌟 PERFECTED "YES" CONFIRMATION BLOCK 🌟
       const exactYes = ['yes', 'yep', 'ok', 'sure', 'បាទ', 'ចាស', 'ចា', 'យល់ព្រម', 'មែន', 'ចង់', 'អូខេ', 'តោះ', 'បន្ត', 'ដឹង', 'ចង់ដឹង'].map(strictClean);
       if (exactYes.includes(cleanInput) || cleanInput.startsWith('បាទ') || cleanInput.startsWith('ចាស') || cleanInput.startsWith('yes') || cleanInput.startsWith('ok')) {
           if (isBackendActive) return { needsBackend: true, query: rawInput }; 
           
-          if (lastBotMsg && (lastBotMsg.text.includes('មែនទេ') || lastBotMsg.text.includes('Did you want to learn about'))) {
-              if (currentTopic) {
-                  const topicData = COMBINED_DB.find(item => [...(item.primaryKeys || []), ...(item.keys || [])].map(strictClean).includes(strictClean(currentTopic)));
-                  if (topicData && topicData.primaryKeys) return { ...topicData, needsBackend: false, chips: generateFilteredChips(topicData, rawInput) };
+          if (lastBotMsg && (lastBotMsg.text.includes('មែនទេ') || lastBotMsg.text.includes('Did you mean'))) {
+              // Reliably pull the exact topic we guessed out of the bolded text!
+              const match = lastBotMsg.text.match(/\*\*(.*?)\*\*/);
+              const targetTopic = match ? match[1] : currentTopic;
+
+              if (targetTopic) {
+                  const topicData = COMBINED_DB.find(item => [...(item.primaryKeys || []), ...(item.keys || [])].map(strictClean).includes(strictClean(targetTopic)));
+                  if (topicData) {
+                      let answerText = lang === 'en' && topicData.answer_en ? topicData.answer_en : topicData.answer;
+                      let finalColors = topicData.colors;
+                      if (topicData.dynamicColor) {
+                          const hex = '#' + Math.floor(Math.random()*16777215).toString(16).padStart(6, '0').toUpperCase();
+                          finalColors = [hex]; answerText = answerText.replace('{hex}', hex);
+                      }
+                      setCurrentTopic(topicData.primaryKeys ? topicData.primaryKeys[0] : null);
+                      return { answer: answerText, chips: generateFilteredChips(topicData, rawInput), uiElement: topicData.uiElement, colors: finalColors, actionButton: topicData.actionButton, needsBackend: false };
+                  }
               }
           }
       }
