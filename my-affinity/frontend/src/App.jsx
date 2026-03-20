@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { ChevronRight, PlayCircle, Sparkles, Zap, Facebook, Send, Globe, BookOpen, Award, Bot, Camera, PenTool, Book, Lock, KeyRound, AlertCircle, ChevronDown, Crown, LogOut, Copy, ShieldCheck, Database, Loader2, Maximize, Minimize, Clock, DownloadCloud, Circle, CheckCircle2, Trash2 } from 'lucide-react';
+// 🌟 FIX: Added the missing 'X' right here! 
+import { ChevronRight, PlayCircle, Sparkles, Zap, Facebook, Send, Globe, BookOpen, Award, Bot, Camera, PenTool, Book, Lock, KeyRound, AlertCircle, ChevronDown, RotateCcw, Crown, LogOut, Copy, ShieldCheck, CheckCircle, Database, Loader2, Maximize, Minimize, Clock, DownloadCloud, Circle, CheckCircle2, Trash2, X } from 'lucide-react';
 
 // FIREBASE IMPORTS
 import { signInWithPopup, signOut } from 'firebase/auth';
@@ -164,10 +165,7 @@ const LessonModal = ({ lesson, onClose, isDarkMode, completedSteps, setCompleted
 
   if (!lesson) return null;
 
-  // 🌟 FIX: Guarantee the video panel exists even if the 'steps' array is missing
-  const currentStepData = lesson.steps && lesson.steps.length > 0 
-      ? lesson.steps[activeStep] 
-      : { id: 1, videoUrl: lesson.videoUrl }; 
+  const currentStepData = lesson.steps && lesson.steps.length > 0 ? lesson.steps[activeStep] : null;
 
   const handlePlayClick = () => {
       setHasStarted(true);
@@ -446,13 +444,13 @@ const LessonModal = ({ lesson, onClose, isDarkMode, completedSteps, setCompleted
                 </div>
             )}
 
-            {!isCssFullscreen && lesson.steps && lesson.steps.length > 0 && (
+            {!isCssFullscreen && (
                 <div className="flex flex-col gap-3 pb-6">
                     <h4 className={`text-sm font-bold uppercase tracking-widest px-2 opacity-50 ${isDarkMode ? 'text-[#A0A0A0]' : 'text-[#6B7280]'}`}>
                         {lang === 'en' ? 'Course Content' : 'មាតិកាមេរៀន'}
                     </h4>
                     
-                    {lesson.steps.map((step, idx) => {
+                    {lesson.steps?.map((step, idx) => {
                         const isActive = activeStep === idx;
                         const stepKey = `${lesson.id}_${step.id}`;
                         const isCompleted = completedSteps.includes(stepKey);
@@ -1097,8 +1095,8 @@ function AppContent() {
       )}
 
       {/* 🌟 FULL SCREEN COURSE PANEL 🌟 */}
-      {activeAppTab && (
-        <div className={`fixed inset-0 z-[60] overflow-y-auto custom-scrollbar flex-col ${isDarkMode ? 'bg-[#0A0A0A]' : 'bg-[#F4F5F7]'} ${expandedLesson ? 'hidden' : 'flex'}`}>
+      {activeAppTab && !expandedLesson && (
+        <div className={`fixed inset-0 z-[60] overflow-y-auto custom-scrollbar flex flex-col ${isDarkMode ? 'bg-[#0A0A0A]' : 'bg-[#F4F5F7]'}`}>
             
             <div 
                 className={`sticky top-0 z-50 px-4 pb-3 border-b flex items-center justify-between backdrop-blur-xl ${isDarkMode ? 'border-[#2C2C2C] bg-[#0A0A0A]/90' : 'border-[#E5E7EB] bg-[#FFFFFF]/90'}`}
@@ -1160,62 +1158,53 @@ function AppContent() {
                                             <ShieldCheck className="w-6 h-6"/> Key Generator {isSuperAdmin && "(Super)"}
                                         </h4>
                                         
-                                        {/* 🌟 UPGRADE: If Super Admin, show AI Manager Tab 🌟 */}
-                                        {isSuperAdmin && (
-                                            <div className={`flex p-1.5 rounded-2xl mb-6 shadow-inner border ${isDarkMode ? 'bg-[#121212] border-[#2C2C2C]' : 'bg-[#F4F5F7] border-[#E5E7EB]'}`}>
-                                                <button onClick={() => setAdminView('keys')} className={`flex-1 py-2.5 rounded-xl font-bold text-[13px] uppercase tracking-wider transition-all ${adminView === 'keys' ? (isDarkMode ? 'bg-[#2C2C2C] text-white shadow-sm' : 'bg-white text-black shadow-sm') : 'text-gray-500 hover:text-gray-400'}`}>🔑 Key Manager</button>
-                                                <button onClick={() => setAdminView('ai')} className={`flex-1 py-2.5 rounded-xl font-bold text-[13px] uppercase tracking-wider transition-all ${adminView === 'ai' ? (isDarkMode ? 'bg-[#2C2C2C] text-white shadow-sm' : 'bg-white text-black shadow-sm') : 'text-gray-500 hover:text-gray-400'}`}>🧠 AI Studio</button>
-                                            </div>
-                                        )}
-
-                                        {adminView === 'keys' ? (
-                                            <div className="animate-fade-in-up">
-                                                <p className={`text-[14px] mb-6 font-khmer leading-relaxed ${isDarkMode ? 'text-[#9AA0A6]' : 'text-gray-500'}`}>
-                                                    Generate secure, single-use activation keys for <strong>{appDisplayName}</strong>. Keys automatically expire 7 days after generation.
-                                                </p>
-                                                
-                                                <div className="flex gap-3 mb-4">
-                                                    <input 
-                                                        type="number" 
-                                                        value={genAmount} 
-                                                        onChange={e => setGenAmount(Number(e.target.value))}
-                                                        className={`w-24 p-3.5 rounded-2xl border text-center outline-none font-bold text-lg transition-colors shadow-inner ${isDarkMode ? 'bg-[#121212] border-[#2C2C2C] text-white focus:border-[#41B6E6]' : 'bg-gray-50 border-[#E5E7EB] text-black focus:border-[#0277C5]'}`}
-                                                        min="1" max="50"
-                                                    />
-                                                    <button onClick={handleGenerateAdminKeys} className={`flex-1 rounded-2xl font-bold font-khmer text-[15px] text-white transition-all active:scale-[0.98] shadow-lg flex items-center justify-center gap-2 bg-gradient-to-r ${theme.gradient}`}>
-                                                        Generate Keys
-                                                    </button>
-                                                </div>
-
-                                                <button 
-                                                    onClick={handleFetchUnusedKeys} 
-                                                    disabled={isFetchingKeys}
-                                                    className={`w-full py-3.5 mb-6 rounded-2xl border font-bold font-khmer text-[14px] transition-all flex items-center justify-center gap-2 shadow-sm ${isDarkMode ? 'bg-[#121212] border-[#2C2C2C] text-[#A0A0A0] hover:text-white hover:border-[#41B6E6]/50' : 'bg-white border-[#E5E7EB] text-gray-600 hover:text-black hover:border-[#0277C5]/50'}`}
-                                                >
-                                                    {isFetchingKeys ? <Loader2 size={18} className="animate-spin" /> : <Database size={18} />}
-                                                    {lang === 'en' ? 'View Available Unused Keys' : 'មើលលេខកូដដែលនៅទំនេរ'}
+                                        <div className="animate-fade-in-up">
+                                            <p className={`text-[14px] mb-6 font-khmer leading-relaxed ${isDarkMode ? 'text-[#9AA0A6]' : 'text-gray-500'}`}>
+                                                Generate secure, single-use activation keys for <strong>{appDisplayName}</strong>. Keys automatically expire 7 days after generation.
+                                            </p>
+                                            
+                                            <div className="flex gap-3 mb-4">
+                                                <input 
+                                                    type="number" 
+                                                    value={genAmount} 
+                                                    onChange={e => setGenAmount(Number(e.target.value))}
+                                                    className={`w-24 p-3.5 rounded-2xl border text-center outline-none font-bold text-lg transition-colors shadow-inner ${isDarkMode ? 'bg-[#121212] border-[#2C2C2C] text-white focus:border-[#41B6E6]' : 'bg-gray-50 border-[#E5E7EB] text-black focus:border-[#0277C5]'}`}
+                                                    min="1" max="50"
+                                                />
+                                                <button onClick={handleGenerateAdminKeys} className={`flex-1 rounded-2xl font-bold font-khmer text-[15px] text-white transition-all active:scale-[0.98] shadow-lg flex items-center justify-center gap-2 bg-gradient-to-r ${theme.gradient}`}>
+                                                    Generate Keys
                                                 </button>
+                                            </div>
 
-                                                {generatedKeys && (
-                                                    <div className="space-y-3 max-h-64 overflow-y-auto custom-scrollbar animate-fade-in-up pr-2">
-                                                        <div className="flex justify-between items-center mb-3 sticky top-0 bg-inherit py-1 z-10">
-                                                            <span className={`text-xs font-bold uppercase tracking-widest ${theme.text}`}>
-                                                                {generatedKeys.split('\n').length} Codes Ready
-                                                            </span>
-                                                            <button onClick={handleCopyAllCodes} className={`text-xs px-3 py-1.5 rounded-lg flex items-center gap-1.5 font-bold transition-colors ${theme.text} ${theme.lightBg} hover:opacity-80`}>
-                                                                {copiedAll ? <CheckCircle size={14}/> : <Copy size={14}/>} {copiedAll ? 'Copied' : 'Copy All'}
-                                                            </button>
-                                                        </div>
-                                                        {generatedKeys.split('\n').map(c => (
-                                                            <div key={c} className={`p-3.5 rounded-[20px] border flex items-center justify-between shadow-sm transition-colors ${isDarkMode ? 'bg-[#121212] border-[#2C2C2C]' : 'bg-[#F8F9FA] border-[#E5E7EB]'}`}>
-                                                                <span className={`font-mono font-bold tracking-widest text-[15px] ${isDarkMode ? 'text-white' : 'text-black'}`}>{c}</span>
-                                                                <div className="flex gap-2">
-                                                                    <button 
-                                                                        onClick={() => { 
-                                                                            navigator.clipboard.writeText(c); 
-                                                                            setCopiedCode(c); 
-                                                                            triggerHaptic();
-                                                                            setTimeout(() => setCopiedCode(null), 2000); 
+                                            <button 
+                                                onClick={handleFetchUnusedKeys} 
+                                                disabled={isFetchingKeys}
+                                                className={`w-full py-3.5 mb-6 rounded-2xl border font-bold font-khmer text-[14px] transition-all flex items-center justify-center gap-2 shadow-sm ${isDarkMode ? 'bg-[#121212] border-[#2C2C2C] text-[#A0A0A0] hover:text-white hover:border-[#41B6E6]/50' : 'bg-white border-[#E5E7EB] text-gray-600 hover:text-black hover:border-[#0277C5]/50'}`}
+                                            >
+                                                {isFetchingKeys ? <Loader2 size={18} className="animate-spin" /> : <Database size={18} />}
+                                                {lang === 'en' ? 'View Available Unused Keys' : 'មើលលេខកូដដែលនៅទំនេរ'}
+                                            </button>
+
+                                            {generatedKeys && (
+                                                <div className="space-y-3 max-h-64 overflow-y-auto custom-scrollbar animate-fade-in-up pr-2">
+                                                    <div className="flex justify-between items-center mb-3 sticky top-0 bg-inherit py-1 z-10">
+                                                        <span className={`text-xs font-bold uppercase tracking-widest ${theme.text}`}>
+                                                            {generatedKeys.split('\n').length} Codes Ready
+                                                        </span>
+                                                        <button onClick={handleCopyAllCodes} className={`text-xs px-3 py-1.5 rounded-lg flex items-center gap-1.5 font-bold transition-colors ${theme.text} ${theme.lightBg} hover:opacity-80`}>
+                                                            {copiedAll ? <CheckCircle size={14}/> : <Copy size={14}/>} {copiedAll ? 'Copied' : 'Copy All'}
+                                                        </button>
+                                                    </div>
+                                                    {generatedKeys.split('\n').map(c => (
+                                                        <div key={c} className={`p-3.5 rounded-[20px] border flex items-center justify-between shadow-sm transition-colors ${isDarkMode ? 'bg-[#121212] border-[#2C2C2C]' : 'bg-[#F8F9FA] border-[#E5E7EB]'}`}>
+                                                            <span className={`font-mono font-bold tracking-widest text-[15px] ${isDarkMode ? 'text-white' : 'text-black'}`}>{c}</span>
+                                                            <div className="flex gap-2">
+                                                                <button 
+                                                                    onClick={() => { 
+                                                                        navigator.clipboard.writeText(c); 
+                                                                        setCopiedCode(c); 
+                                                                        triggerHaptic();
+                                                                        setTimeout(() => setCopiedCode(null), 2000); 
                                                                     }} 
                                                                     className={`p-2.5 rounded-xl transition-colors ${isDarkMode ? 'bg-white/5 hover:bg-white/10' : 'bg-black/5 hover:bg-black/10'}`}
                                                                 >
@@ -1230,64 +1219,6 @@ function AppContent() {
                                                 </div>
                                             )}
                                         </div>
-                                        ) : (
-                                            /* --- AI MANAGER (Data is added from ChatBot) --- */
-                                            <div className="animate-fade-in-up space-y-4">
-                                                <p className={`text-[13px] font-khmer leading-relaxed ${isDarkMode ? 'text-[#9AA0A6]' : 'text-gray-500'}`}>
-                                                    Manage the AI training data you added directly from the AI Chat. When ready, copy the final Data Code to update your main <code className="bg-black/20 px-1 rounded">data.js</code> file.
-                                                </p>
-                                                
-                                                <div className="flex gap-3 pt-2 mb-2">
-                                                    <button 
-                                                        onClick={() => {
-                                                            if (liveAiData.length === 0) return;
-                                                            triggerHaptic('success');
-                                                            let codeStr = "";
-                                                            liveAiData.forEach(item => {
-                                                                codeStr += `    {\n        primaryKeys: ${JSON.stringify(item.primaryKeys)},\n        keys: ${JSON.stringify(item.keys)},\n        regex: ${JSON.stringify(item.regex)},\n        answer: ${JSON.stringify(item.answer)},\n        answer_en: ${JSON.stringify(item.answer_en)}\n    },\n`;
-                                                            });
-                                                            navigator.clipboard.writeText(codeStr);
-                                                            alert("AI Data Code Copied! Paste this inside KNOWLEDGE_BASE in your data.js file.");
-                                                        }}
-                                                        className={`w-full py-3.5 rounded-2xl font-bold text-[13px] transition-all flex items-center justify-center gap-2 shadow-lg ${liveAiData.length === 0 ? 'opacity-50 cursor-not-allowed bg-gray-500 text-white' : 'bg-gradient-to-r from-green-500 to-emerald-500 text-white hover:opacity-90'}`}
-                                                    >
-                                                        <Copy size={16} /> Copy All Data Code ({liveAiData.length} Entries)
-                                                    </button>
-                                                </div>
-
-                                                {liveAiData.length > 0 && (
-                                                    <div className="mt-4 border-t border-dashed border-gray-500/30 pt-4">
-                                                        <div className="flex justify-between items-center mb-3">
-                                                            <span className={`text-[10px] font-bold uppercase tracking-widest ${isDarkMode ? 'text-green-400' : 'text-green-600'}`}>{liveAiData.length} Live Offline Entries</span>
-                                                            <button onClick={() => { if(window.confirm('Clear all offline training data?')) { setLiveAiData([]); localStorage.removeItem('myAffinity_live_ai'); } }} className="text-red-500 hover:text-red-400"><Trash2 size={16}/></button>
-                                                        </div>
-                                                        <div className="space-y-3 max-h-64 overflow-y-auto custom-scrollbar pr-1">
-                                                            {liveAiData.map((data, i) => (
-                                                                <div key={i} className={`p-3.5 rounded-xl border text-[11px] font-khmer leading-relaxed relative ${isDarkMode ? 'bg-[#121212] border-[#2C2C2C] text-[#A0A0A0]' : 'bg-[#F8F9FA] border-[#E5E7EB] text-[#6B7280]'}`}>
-                                                                    <button 
-                                                                        onClick={() => {
-                                                                            triggerHaptic();
-                                                                            const updated = liveAiData.filter((_, index) => index !== i);
-                                                                            setLiveAiData(updated);
-                                                                            localStorage.setItem('myAffinity_live_ai', JSON.stringify(updated));
-                                                                        }}
-                                                                        className="absolute top-2 right-2 text-red-500 hover:text-red-400 p-1.5 bg-red-500/10 rounded-md transition-colors"
-                                                                        title="Remove this entry"
-                                                                    >
-                                                                        <Trash2 size={14} />
-                                                                    </button>
-                                                                    <div className="pr-8 space-y-1.5">
-                                                                        <div><strong className={isDarkMode ? 'text-white' : 'text-black'}>Keys: </strong> {data.keys.join(', ')}</div>
-                                                                        <div><strong className={isDarkMode ? 'text-[#41B6E6]' : 'text-[#0277C5]'}>KM: </strong> <span className="line-clamp-2">{data.answer}</span></div>
-                                                                        <div><strong className={isDarkMode ? 'text-[#41B6E6]' : 'text-[#0277C5]'}>EN: </strong> <span className="line-clamp-2">{data.answer_en}</span></div>
-                                                                    </div>
-                                                                </div>
-                                                            ))}
-                                                        </div>
-                                                    </div>
-                                                )}
-                                            </div>
-                                        )}
 
                                         <div className={`w-full h-px my-6 ${isDarkMode ? 'bg-[#2C2C2C]' : 'bg-[#E5E7EB]'}`}></div>
                                         <button onClick={handleSignOutDevice} className="w-full py-3.5 rounded-xl border font-bold font-khmer text-[15px] active:scale-[0.98] transition-colors flex items-center justify-center gap-2 text-red-500 hover:bg-red-500/10 border-red-500/20">
