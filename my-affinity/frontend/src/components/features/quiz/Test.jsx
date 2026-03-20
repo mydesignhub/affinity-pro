@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Trophy, Flame, CheckCircle2, XCircle, Play, Star, Award, Lock, ChevronRight, User, Timer, Camera, PenTool, Book, ShieldCheck } from 'lucide-react';
+// 🌟 FIX: Added the missing 'X' import right here to stop the crash!
+import { Trophy, Flame, CheckCircle2, XCircle, Play, Star, Award, Lock, ChevronRight, User, Timer, Camera, PenTool, Book, ShieldCheck, X } from 'lucide-react';
 import { useLanguage } from '../../../contexts/LanguageContext';
 import { initialQuestionBank } from '../../../data/data';
 import CertificateForm from './CertificateForm';
@@ -31,7 +32,6 @@ const defaultStars = {
 const defaultScores = { photo: 0, designer: 0, publisher: 0 };
 const defaultCerts = { photo: null, designer: null, publisher: null };
 
-// 🌟 ADDED isAdmin PROP HERE
 const Test = ({ isDarkMode, isAdmin }) => {
     const { lang } = useLanguage(); 
 
@@ -212,10 +212,8 @@ const Test = ({ isDarkMode, isAdmin }) => {
         const appDisplayName = activeAppTab === 'photo' ? 'Affinity Photo' : activeAppTab === 'designer' ? 'Affinity Designer' : 'Affinity Publisher';
 
         if (quizConfig.level === 'final') {
-            // 🌟 ADMIN BYPASS: Admin ALWAYS passes the final exam for testing
-            if (percentage >= 90 || isAdmin) {
-                const displayScore = isAdmin && percentage < 90 ? 100 : percentage;
-                const newCert = { name: userName || 'Administrator', score: displayScore, date: new Date().toISOString(), appCourse: appDisplayName };
+            if (percentage >= 90) {
+                const newCert = { name: userName || 'Administrator', score: percentage, date: new Date().toISOString(), appCourse: appDisplayName };
                 setCertsData(prev => ({ ...prev, [activeAppTab]: newCert }));
                 setGameState('certificate');
             } else {
@@ -375,10 +373,10 @@ const Test = ({ isDarkMode, isAdmin }) => {
                             {isAdmin && !currentCert && (
                                 <button 
                                     onClick={() => {
-                                        if (!userName.trim()) { triggerHaptic('error'); alert(lang === 'en' ? "Please enter a name first!" : "សូមបញ្ចូលឈ្មោះរបស់អ្នកជាមុនសិន!"); return; }
                                         triggerHaptic('success');
+                                        const finalName = userName.trim() || 'Admin Tester';
                                         const appDisplayName = activeAppTab === 'photo' ? 'Affinity Photo' : activeAppTab === 'designer' ? 'Affinity Designer' : 'Affinity Publisher';
-                                        const newCert = { name: userName, score: 100, date: new Date().toISOString(), appCourse: appDisplayName };
+                                        const newCert = { name: finalName, score: 100, date: new Date().toISOString(), appCourse: appDisplayName };
                                         setCertsData(prev => ({ ...prev, [activeAppTab]: newCert }));
                                         setGameState('certificate');
                                     }}
@@ -436,7 +434,6 @@ const Test = ({ isDarkMode, isAdmin }) => {
                             let iconStyle = isDarkMode ? 'bg-[#1E1E1E] border-[#3A3A3C] text-[#A0A0A0]' : 'bg-[#FFFFFF] border-[#D1D5DB] text-[#6B7280] shadow-sm';
 
                             if (!isAnswered) {
-                                // 🌟 MOBILE FIX: Changed hover: to md:hover: to stop stickiness on touch devices
                                 btnStyle += isDarkMode ? ' md:hover:bg-[#1E1E1E] md:hover:border-[#41B6E6]/50 md:hover:-translate-y-1 shadow-sm active:scale-[0.98]' : ' md:hover:bg-white md:hover:border-[#0277C5]/50 md:hover:-translate-y-1 shadow-sm active:scale-[0.98]';
                             } else {
                                 if (isCorrectChoice) {

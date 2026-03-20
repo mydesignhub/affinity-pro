@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Bot, Send, RefreshCw, Trash2, ThumbsUp, ThumbsDown, ArrowRight, Brain, Loader2 } from 'lucide-react';
+
 import { useLanguage } from '../../../contexts/LanguageContext';
 import { collection, addDoc } from 'firebase/firestore';
 import { db } from '../../../firebase'; 
@@ -32,9 +33,6 @@ const getRandomQuizInvitation = (language = 'kh') => {
     return invitations[randomIndex];
 };
 
-// ============================================================================
-// 🌟 REAL AI BACKEND INTEGRATION 
-// ============================================================================
 const callRealAI = async (userPrompt, language, history = []) => {
     try {
         const recentHistoryText = history.slice(-6).map(msg => 
@@ -67,7 +65,6 @@ const callRealAI = async (userPrompt, language, history = []) => {
         return `*(Debug Error)* ⚠️ Connection Failed: ${error.message}\n\n*If this says "Failed to fetch", Render is sleeping (wait 1 minute) or CORS is blocking it.*`;
     }
 };
-// ============================================================================
 
 const strictClean = (text) => {
     if (!text) return '';
@@ -114,16 +111,14 @@ const ChatBot = ({ messages, setMessages, isDarkMode, liveAiData = [], setLiveAi
 
   const COMBINED_DB = [...KNOWLEDGE_BASE, ...liveAiData];
 
-  // ============================================================================
-  // 🌟 SECRET BLIND SPOT AUTO-TRAINER (Runs in background for normal users)
-  // ============================================================================
+  // 🌟 SECRET BLIND SPOT AUTO-TRAINER 🌟
   const runSecretBackgroundTraining = async (userQ, botA) => {
       try {
           const prompt = `Analyze this interaction:\nUser Question: "${userQ}"\nBot Answer: "${botA}"\n\nTask:\n1. Check if this is related to Graphic Design, Affinity software, Photo Editing, Layouts, or Typography. If it is UNRELATED (e.g., cooking, politics, general greetings), reply ONLY with the exact word: REJECT\n2. If it IS related, correct grammar, translate it to provide both English and Khmer answers, and format as JSON:\n{"primaryKeys": ["key1", "key2"], "keys": ["k1", "k2", "k3"], "regex": ["reg1"], "answer": "Corrected Khmer", "answer_en": "English translation"}`;
 
           const res = await callRealAI(prompt, 'en', []);
           
-          if (res.includes('REJECT')) return; // 🛑 FIREWALL: Ignore off-topic data
+          if (res.includes('REJECT')) return; 
           
           const match = res.match(/\{[\s\S]*\}/);
           if (!match) return;
@@ -134,7 +129,7 @@ const ChatBot = ({ messages, setMessages, isDarkMode, liveAiData = [], setLiveAi
           const uniquePrimaryKeys = newEntry.primaryKeys.filter(k => !existingKeys.has(strictClean(k)));
           const uniqueKeys = newEntry.keys.filter(k => !existingKeys.has(strictClean(k)));
 
-          if (uniquePrimaryKeys.length === 0 && uniqueKeys.length === 0) return; // Duplicate blocked
+          if (uniquePrimaryKeys.length === 0 && uniqueKeys.length === 0) return; 
           if (uniquePrimaryKeys.length === 0 && uniqueKeys.length > 0) uniquePrimaryKeys.push(uniqueKeys[0]);
 
           newEntry.primaryKeys = uniquePrimaryKeys;
@@ -149,9 +144,7 @@ const ChatBot = ({ messages, setMessages, isDarkMode, liveAiData = [], setLiveAi
       }
   };
 
-  // ============================================================================
-  // 🌟 1-CLICK MANUAL TRAINING (For Super Admins)
-  // ============================================================================
+  // 🌟 1-CLICK MANUAL TRAINING (For Super Admins) 🌟
   const handleAutoTrain = async (index) => {
       const botMsg = messages[index];
       const userMsg = messages[index - 1];
@@ -328,10 +321,37 @@ const ChatBot = ({ messages, setMessages, isDarkMode, liveAiData = [], setLiveAi
       return chipsData || getRandomItems(getSuggestList(), 2);
   };
 
+  // 🌟 ZERO-FLAW NLP ROUTER 🌟
   const findAIResponse = (inputTxt, history = []) => {
       const rawInput = inputTxt.trim();
       const cleanInput = strictClean(rawInput); 
 
+      // 1. EXACT MATCH GUARANTEE (Zero-Flaw Rule #1)
+      for (const item of COMBINED_DB) {
+          const exactTriggers = [...(item.primaryKeys || []), ...(item.keys || [])].map(strictClean); 
+          if (exactTriggers.includes(cleanInput)) {
+              setCurrentTopic(item.primaryKeys ? item.primaryKeys[0] : null); 
+              let answerText = lang === 'en' && item.answer_en ? item.answer_en : item.answer;
+              let finalColors = item.colors;
+
+              if (item.dynamicColor) {
+                  const hex = '#' + Math.floor(Math.random()*16777215).toString(16).padStart(6, '0').toUpperCase();
+                  finalColors = [hex]; answerText = answerText.replace('{hex}', hex);
+              }
+              return { answer: answerText, chips: generateFilteredChips(item, rawInput), uiElement: item.uiElement, colors: finalColors, actionButton: item.actionButton, needsBackend: false };
+          }
+          if (item.regex && item.regex.some(r => { try { return new RegExp(`\\b${r}\\b`, 'i').test(rawInput); } catch { return new RegExp(r, 'i').test(rawInput); } })) {
+              setCurrentTopic(item.primaryKeys ? item.primaryKeys[0] : null); 
+              return { answer: lang === 'en' && item.answer_en ? item.answer_en : item.answer, chips: generateFilteredChips(item, rawInput), uiElement: item.uiElement, actionButton: item.actionButton, needsBackend: false };
+          }
+      }
+
+      // 2. LONG SENTENCE FIREWALL (Zero-Flaw Rule #2)
+      // Never guess if it's more than 4 words. Go straight to backend.
+      const wordCount = rawInput.trim().split(/\s+/).length;
+      if (wordCount > 4) return { needsBackend: true, query: rawInput };
+
+      // 3. SHORT TYPO GUESSING
       const FOLLOW_UP_MAP = {
           'តើអ្វីទៅជា Graphic Design?': 'ធាតុផ្សំមូលដ្ឋានទាំង ៦', 'what is graphic design': 'the 6 elements of design',
           'ធាតុផ្សំមូលដ្ឋានទាំង ៦': 'គោលការណ៍រចនា', 'the 6 elements of design': 'design principles',
@@ -414,30 +434,6 @@ const ChatBot = ({ messages, setMessages, isDarkMode, liveAiData = [], setLiveAi
           }
       }
 
-      // 🌟 ZERO-FLAW GUARDRAIL 1: EXACT MATCH WINS 🌟
-      for (const item of COMBINED_DB) {
-          const exactTriggers = [...(item.primaryKeys || []), ...(item.keys || [])].map(strictClean); 
-          if (exactTriggers.includes(cleanInput)) {
-              setCurrentTopic(item.primaryKeys ? item.primaryKeys[0] : null); 
-              let answerText = lang === 'en' && item.answer_en ? item.answer_en : item.answer;
-              let finalColors = item.colors;
-              if (item.dynamicColor) {
-                  const hex = '#' + Math.floor(Math.random()*16777215).toString(16).padStart(6, '0').toUpperCase();
-                  finalColors = [hex]; answerText = answerText.replace('{hex}', hex);
-              }
-              return { answer: answerText, chips: generateFilteredChips(item, rawInput), uiElement: item.uiElement, colors: finalColors, actionButton: item.actionButton, needsBackend: false };
-          }
-          if (item.regex && item.regex.some(r => { try { return new RegExp(`\\b${r}\\b`, 'i').test(rawInput); } catch { return new RegExp(r, 'i').test(rawInput); } })) {
-              setCurrentTopic(item.primaryKeys ? item.primaryKeys[0] : null); 
-              return { answer: lang === 'en' && item.answer_en ? item.answer_en : item.answer, chips: generateFilteredChips(item, rawInput), uiElement: item.uiElement, actionButton: item.actionButton, needsBackend: false };
-          }
-      }
-
-      // 🌟 ZERO-FLAW GUARDRAIL 2: SENTENCES GO TO AI 🌟
-      const wordCount = rawInput.trim().split(/\s+/).length;
-      if (wordCount > 4) return { needsBackend: true, query: rawInput };
-
-      // 🌟 ZERO-FLAW GUARDRAIL 3: ONLY GUESS SHORT TYPOS 🌟
       let bestMatch = null;
       let highestScore = 0;
       for (const item of COMBINED_DB) {
@@ -517,7 +513,6 @@ const ChatBot = ({ messages, setMessages, isDarkMode, liveAiData = [], setLiveAi
                       const nextChips = getRandomItems(getSuggestList(), 3);
                       setMessages(prev => [...prev, { role: 'model', text: aiBackendAnswer, chips: nextChips, isTrainable: true }]);
 
-                      // 🌟 TRIGGER BLIND SPOT BACKGROUND TRAINER 🌟
                       runSecretBackgroundTraining(cleanMsg, aiBackendAnswer);
                   }
               }
@@ -725,7 +720,6 @@ const ChatBot = ({ messages, setMessages, isDarkMode, liveAiData = [], setLiveAi
                                   <button onClick={() => handleFeedback(i, 'up')} className="p-1 hover:text-green-500 rounded-md transition-colors"><ThumbsUp size={14}/></button>
                                   <button onClick={() => handleFeedback(i, 'down')} className="p-1 hover:text-red-500 rounded-md transition-colors"><ThumbsDown size={14}/></button>
                                   
-                                  {/* 🌟 1-CLICK AI AUTO TRAINING (SUPER ADMIN ONLY) 🌟 */}
                                   {isAdmin && m.isTrainable && !m.isTraining && (
                                       <button 
                                           onClick={() => handleAutoTrain(i)} 
