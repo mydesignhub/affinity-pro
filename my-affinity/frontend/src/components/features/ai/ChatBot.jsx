@@ -1,31 +1,15 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Bot, Send, RefreshCw, Trash2, ThumbsUp, ThumbsDown, ArrowRight, Brain, Loader2 } from 'lucide-react';
-
-// 🌟 FIX 1: Point up 3 folders to get to contexts
 import { useLanguage } from '../../../contexts/LanguageContext';
-
-// 🌟 FIX 2: Point up 3 folders to get to data
-import { 
-  SUGGESTED_QUESTIONS,
-  SUGGESTED_QUESTIONS_EN,
-  GREETINGS,
-  GREETINGS_EN,
-  SMART_GREETINGS,
-  SMART_GREETINGS_EN,
-  REJECTION_RESPONSES,
-  REJECTION_RESPONSES_EN,
-  REPEAT_RESPONSES,
-  REPEAT_RESPONSES_EN,
-  API_FALLBACK_RESPONSES,
-  API_FALLBACK_RESPONSES_EN,
-  QUIZ_INVITATIONS,
-  QUIZ_INVITATIONS_EN,
-  KNOWLEDGE_BASE 
-} from '../../../data/ai_database';
-
-// 🌟 FIX 3: Firebase imports for Auto-Sync
 import { collection, addDoc } from 'firebase/firestore';
 import { db } from '../../../firebase'; 
+
+import { 
+  SUGGESTED_QUESTIONS, SUGGESTED_QUESTIONS_EN, GREETINGS, GREETINGS_EN,
+  SMART_GREETINGS, SMART_GREETINGS_EN, REJECTION_RESPONSES, REJECTION_RESPONSES_EN,
+  REPEAT_RESPONSES, REPEAT_RESPONSES_EN, API_FALLBACK_RESPONSES, API_FALLBACK_RESPONSES_EN,
+  QUIZ_INVITATIONS, QUIZ_INVITATIONS_EN, KNOWLEDGE_BASE 
+} from '../../../data/ai_database';
 
 const triggerHaptic = (type = 'light') => {
     if (typeof navigator !== 'undefined' && navigator.vibrate) {
@@ -85,7 +69,6 @@ const callRealAI = async (userPrompt, language, history = []) => {
 };
 // ============================================================================
 
-// 🌟 ULTIMATE NORMALIZER 🌟
 const strictClean = (text) => {
     if (!text) return '';
     return text.toLowerCase().replace(/[\u200B\s.,!?។៕"“”'*_()\-:;]/g, '');
@@ -109,7 +92,6 @@ const ChatBot = ({ messages, setMessages, isDarkMode, liveAiData = [], setLiveAi
   const [showHeader, setShowHeader] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
   
-  // 🌟 ANDROID/IOS KEYBOARD FIX
   const [viewportHeight, setViewportHeight] = useState('100%');
   const [keyboardHeight, setKeyboardHeight] = useState(0);
 
@@ -130,18 +112,52 @@ const ChatBot = ({ messages, setMessages, isDarkMode, liveAiData = [], setLiveAi
 
   const { lang, t } = useLanguage();
 
-  // 🌟 DYNAMIC BRAIN: Combines official data with new offline trained data
   const COMBINED_DB = [...KNOWLEDGE_BASE, ...liveAiData];
 
-  // 🌟 1-CLICK AUTO TRAINING FUNCTION 🌟
+  // ============================================================================
+  // 🌟 SECRET BLIND SPOT AUTO-TRAINER (Runs in background for normal users)
+  // ============================================================================
+  const runSecretBackgroundTraining = async (userQ, botA) => {
+      try {
+          const prompt = `Analyze this interaction:\nUser Question: "${userQ}"\nBot Answer: "${botA}"\n\nTask:\n1. Check if this is related to Graphic Design, Affinity software, Photo Editing, Layouts, or Typography. If it is UNRELATED (e.g., cooking, politics, general greetings), reply ONLY with the exact word: REJECT\n2. If it IS related, correct grammar, translate it to provide both English and Khmer answers, and format as JSON:\n{"primaryKeys": ["key1", "key2"], "keys": ["k1", "k2", "k3"], "regex": ["reg1"], "answer": "Corrected Khmer", "answer_en": "English translation"}`;
+
+          const res = await callRealAI(prompt, 'en', []);
+          
+          if (res.includes('REJECT')) return; // 🛑 FIREWALL: Ignore off-topic data
+          
+          const match = res.match(/\{[\s\S]*\}/);
+          if (!match) return;
+          
+          const newEntry = JSON.parse(match[0]);
+          const existingKeys = new Set(COMBINED_DB.flatMap(item => [...(item.primaryKeys || []), ...(item.keys || [])].map(strictClean)));
+          
+          const uniquePrimaryKeys = newEntry.primaryKeys.filter(k => !existingKeys.has(strictClean(k)));
+          const uniqueKeys = newEntry.keys.filter(k => !existingKeys.has(strictClean(k)));
+
+          if (uniquePrimaryKeys.length === 0 && uniqueKeys.length === 0) return; // Duplicate blocked
+          if (uniquePrimaryKeys.length === 0 && uniqueKeys.length > 0) uniquePrimaryKeys.push(uniqueKeys[0]);
+
+          newEntry.primaryKeys = uniquePrimaryKeys;
+          newEntry.keys = uniqueKeys;
+          
+          if(setLiveAiData) setLiveAiData(prev => [...prev, newEntry]);
+          await addDoc(collection(db, "ai_knowledge"), newEntry);
+          console.log("Secret Auto-Train Success:", uniquePrimaryKeys[0]);
+
+      } catch (err) {
+          console.log("Secret training skipped:", err.message);
+      }
+  };
+
+  // ============================================================================
+  // 🌟 1-CLICK MANUAL TRAINING (For Super Admins)
+  // ============================================================================
   const handleAutoTrain = async (index) => {
       const botMsg = messages[index];
       const userMsg = messages[index - 1];
       if (!userMsg || userMsg.role !== 'user') return;
 
       triggerHaptic();
-      
-      // Set loading state for this specific message
       setMessages(prev => {
           const newMsgs = [...prev];
           newMsgs[index] = { ...newMsgs[index], isTraining: true };
@@ -149,49 +165,35 @@ const ChatBot = ({ messages, setMessages, isDarkMode, liveAiData = [], setLiveAi
       });
 
       try {
-          const prompt = `Act as an expert data formatter. Analyze this interaction:\nUser Question: "${userMsg.text}"\nBot Answer: "${botMsg.text}"\n\nTask:\n1. Correct any grammar in the answer.\n2. Translate the answer perfectly to English (or Khmer if it is already English).\n3. Generate 2 primary keywords (Khmer), 4 search keys (Khmer/English), and 2 short regex strings (lowercase English).\n\nReturn EXACTLY and ONLY this JSON format (no markdown, no backticks, no extra text):\n{"primaryKeys": ["key1", "key2"], "keys": ["k1", "k2", "k3", "k4"], "regex": ["reg1", "reg2"], "answer": "Corrected Khmer answer", "answer_en": "English translated answer"}`;
+          const prompt = `Format this interaction:\nUser: "${userMsg.text}"\nBot: "${botMsg.text}"\n\nTask: Correct grammar, translate perfectly to English/Khmer, and generate JSON:\n{"primaryKeys": ["key1"], "keys": ["k1", "k2", "k3"], "regex": ["reg1"], "answer": "Khmer answer", "answer_en": "English translation"}`;
 
           const res = await callRealAI(prompt, 'en', []);
           
           const match = res.match(/\{[\s\S]*\}/);
-          if (!match) throw new Error("Invalid JSON format returned from AI.");
+          if (!match) throw new Error("Invalid JSON format.");
           
           const newEntry = JSON.parse(match[0]);
-          
-          // 🌟 ANTI-DUPLICATE FIREWALL 🌟
-          // Collect all existing keys to ensure we never duplicate
           const existingKeys = new Set(COMBINED_DB.flatMap(item => [...(item.primaryKeys || []), ...(item.keys || [])].map(strictClean)));
           
-          // Filter out any generated keys that already exist in the DB
           const uniquePrimaryKeys = newEntry.primaryKeys.filter(k => !existingKeys.has(strictClean(k)));
           const uniqueKeys = newEntry.keys.filter(k => !existingKeys.has(strictClean(k)));
 
-          // If ALL generated keys already existed, abort the save!
-          if (uniquePrimaryKeys.length === 0 && uniqueKeys.length === 0) {
-              throw new Error("All generated keywords already exist in the database! Duplicate prevented.");
-          }
-
-          // Ensure primaryKeys has at least one item if it was filtered out
-          if (uniquePrimaryKeys.length === 0 && uniqueKeys.length > 0) {
-              uniquePrimaryKeys.push(uniqueKeys[0]);
-          }
+          if (uniquePrimaryKeys.length === 0 && uniqueKeys.length === 0) throw new Error("Duplicate prevented.");
+          if (uniquePrimaryKeys.length === 0 && uniqueKeys.length > 0) uniquePrimaryKeys.push(uniqueKeys[0]);
 
           newEntry.primaryKeys = uniquePrimaryKeys;
           newEntry.keys = uniqueKeys;
           
-          // Update Local Offline Memory (Used immediately by ChatBot and AI Studio Panel)
           if(setLiveAiData) setLiveAiData(prev => [...prev, newEntry]);
-          
-          // Push to Firebase Firestore Automatically
           await addDoc(collection(db, "ai_knowledge"), newEntry);
 
           triggerHaptic('success');
           setMessages(prev => {
               const newMsgs = [...prev];
-              newMsgs[index] = { ...newMsgs[index], isTraining: false, feedback: 'up', isTrainable: false }; // Disable train button
+              newMsgs[index] = { ...newMsgs[index], isTraining: false, feedback: 'up', isTrainable: false };
               newMsgs.push({
                   role: 'model',
-                  text: `✅ **Auto-Trained & Synced to Cloud DB!**\nKeywords: *${newEntry.primaryKeys.join(', ')}*`,
+                  text: `✅ **Trained & Synced to Cloud!**\nKeys: *${newEntry.primaryKeys.join(', ')}*`,
                   chips: [],
                   isTrainable: false
               });
@@ -209,16 +211,13 @@ const ChatBot = ({ messages, setMessages, isDarkMode, liveAiData = [], setLiveAi
               newMsgs[index] = { ...newMsgs[index], isTraining: false };
               return newMsgs;
           });
-          alert("Auto-Train Failed: " + err.message);
+          alert("Admin Train Failed: " + err.message);
       }
   };
 
   const getSuggestList = () => {
       const fullList = lang === 'en' ? SUGGESTED_QUESTIONS_EN : SUGGESTED_QUESTIONS;
-      const userAskedQuestions = messages
-          .filter(m => m.role === 'user')
-          .map(m => strictClean(m.text));
-
+      const userAskedQuestions = messages.filter(m => m.role === 'user').map(m => strictClean(m.text));
       const freshQuestions = fullList.filter(q => !userAskedQuestions.includes(strictClean(q)));
       return freshQuestions.length >= 3 ? freshQuestions : fullList;
   };
@@ -226,35 +225,20 @@ const ChatBot = ({ messages, setMessages, isDarkMode, liveAiData = [], setLiveAi
   const generateSmartGreeting = () => {
       const interests = JSON.parse(localStorage.getItem('myDesign_user_interests') || '[]');
       const suggestList = getSuggestList();
-      
       const hour = new Date().getHours();
-      let timeGreetingKh = "បាទ សួស្ដី! 👋";
-      let timeGreetingEn = "Hello! 👋";
+      
+      let timeGreetingKh = hour >= 5 && hour < 12 ? "បាទ អរុណសួស្តី! 🌅" : hour >= 12 && hour < 17 ? "បាទ ទិវាសួស្តី! ☀️" : hour >= 17 && hour < 22 ? "បាទ សាយន្តសួស្តី! 🌇" : "បាទ រាត្រីសួស្តី! 🌙";
+      let timeGreetingEn = hour >= 5 && hour < 12 ? "Good morning! 🌅" : hour >= 12 && hour < 17 ? "Good afternoon! ☀️" : hour >= 17 && hour < 22 ? "Good evening! 🌇" : "Working late? 🌙";
 
-      if (hour >= 5 && hour < 12) {
-          timeGreetingKh = "បាទ អរុណសួស្តី! 🌅 ចាប់ផ្តើមព្រឹកព្រលឹមជាមួយគំនិតច្នៃប្រឌិតថ្មីៗ!";
-          timeGreetingEn = "Good morning! 🌅 Ready to start the day with some fresh designs?";
-      } else if (hour >= 12 && hour < 17) {
-          timeGreetingKh = "បាទ ទិវាសួស្តី! ☀️ សង្ឃឹមថាការងារថ្ងៃនេះរលូនល្អ។";
-          timeGreetingEn = "Good afternoon! ☀️ Hope your creative workflow is going smoothly.";
-      } else if (hour >= 17 && hour < 22) {
-          timeGreetingKh = "បាទ សាយន្តសួស្តី! 🌇 សម្រាកញ៉ាំទឹកបន្តិចមុននឹងបន្ត Design ទៀតណា៎។";
-          timeGreetingEn = "Good evening! 🌇 Don't forget to rest your eyes while designing.";
-      } else {
-          timeGreetingKh = "បាទ រាត្រីសួស្តី! 🌙 យប់ជ្រៅហើយនៅប្រឹងទៀតកូនជាង! ត្រូវការអោយខ្ញុំជួយអីទេ?";
-          timeGreetingEn = "Working late? 🌙 I'm wide awake and ready to assist you with your night owl designs!";
-      }
-
-      let greetingMsg = `${lang === 'en' ? timeGreetingEn : timeGreetingKh} ${lang === 'en' ? "I am **Design Master**, your AI assistant. What are we creating today? 🎨✨" : "ខ្ញុំគឺ **Design Master**។ តើថ្ងៃនេះចង់ឱ្យខ្ញុំជួយអ្វីខ្លះ? 🎨✨"}`;
+      let greetingMsg = `${lang === 'en' ? timeGreetingEn : timeGreetingKh} ${lang === 'en' ? "I am **Design Master**, your AI assistant. What are we creating today? 🎨" : "ខ្ញុំគឺ **Design Master**។ តើថ្ងៃនេះចង់ឱ្យខ្ញុំជួយអ្វីខ្លះ? 🎨"}`;
       let defaultChips = getRandomItems(suggestList, 3);
 
       if (interests.length > 0) {
-          const lastInterest = interests[interests.length - 1];
           const smartList = lang === 'en' ? SMART_GREETINGS_EN : SMART_GREETINGS;
           const smartMsgTemplate = getRandomItems(smartList, 1)[0];
           if (smartMsgTemplate) {
-              greetingMsg = smartMsgTemplate.replace('{topic}', lastInterest);
-              defaultChips = [lastInterest, ...getRandomItems(suggestList, 2)];
+              greetingMsg = smartMsgTemplate.replace('{topic}', interests[interests.length - 1]);
+              defaultChips = [interests[interests.length - 1], ...getRandomItems(suggestList, 2)];
           }
       }
 
@@ -264,17 +248,10 @@ const ChatBot = ({ messages, setMessages, isDarkMode, liveAiData = [], setLiveAi
   const triggerIdleQuiz = () => {
       setMessages(prev => {
           if (prev.length === 0) return prev;
-          
           const lastMsg = prev[prev.length - 1];
           const allInvitations = [...QUIZ_INVITATIONS, ...QUIZ_INVITATIONS_EN];
-          if (lastMsg.role === 'model' && allInvitations.includes(lastMsg.text)) {
-              return prev;
-          }
-
-          const nextChips = getRandomItems(getSuggestList(), 3);
-          const inviteMsg = getRandomQuizInvitation(lang);
-          
-          return [...prev, { role: 'model', text: inviteMsg, chips: nextChips, isTrainable: false }];
+          if (lastMsg.role === 'model' && allInvitations.includes(lastMsg.text)) return prev;
+          return [...prev, { role: 'model', text: getRandomQuizInvitation(lang), chips: getRandomItems(getSuggestList(), 3), isTrainable: false }];
       });
   };
 
@@ -291,17 +268,13 @@ const ChatBot = ({ messages, setMessages, isDarkMode, liveAiData = [], setLiveAi
           generateSmartGreeting();
       }
       setCurrentSuggestions(getRandomItems(getSuggestList(), 3)); 
-      
       const interval = setInterval(() => { handleRefresh(null, true); }, 15000); 
       return () => clearInterval(interval);
-      // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [lang]);
 
   useEffect(() => {
       resetIdleTimer();
-      return () => {
-          if (idleTimerRef.current) clearTimeout(idleTimerRef.current);
-      };
+      return () => { if (idleTimerRef.current) clearTimeout(idleTimerRef.current); };
   }, [messages, input, lang]); 
 
   useEffect(() => {
@@ -315,7 +288,6 @@ const ChatBot = ({ messages, setMessages, isDarkMode, liveAiData = [], setLiveAi
       if (e) { e.preventDefault(); e.stopPropagation(); }
       if (!isAuto) triggerHaptic();
       if (isAnimating) return; 
-      
       setIsAnimating(true);
       setTimeout(() => {
           setCurrentSuggestions(getRandomItems(getSuggestList(), 3));
@@ -351,15 +323,11 @@ const ChatBot = ({ messages, setMessages, isDarkMode, liveAiData = [], setLiveAi
       if (chipsData) {
           const strictQuery = strictClean(rawQuery);
           chipsData = chipsData.filter(c => strictClean(c) !== strictQuery);
-          if (chipsData.length < 2) {
-              const moreSuggestions = getRandomItems(getSuggestList(), 3);
-              chipsData = [...new Set([...chipsData, ...moreSuggestions])].slice(0, 2);
-          }
+          if (chipsData.length < 2) chipsData = [...new Set([...chipsData, ...getRandomItems(getSuggestList(), 3)])].slice(0, 2);
       }
       return chipsData || getRandomItems(getSuggestList(), 2);
   };
 
-  // 🌟 LOCAL NLP ROUTER 🌟
   const findAIResponse = (inputTxt, history = []) => {
       const rawInput = inputTxt.trim();
       const cleanInput = strictClean(rawInput); 
@@ -373,37 +341,14 @@ const ChatBot = ({ messages, setMessages, isDarkMode, liveAiData = [], setLiveAi
           'តើ Alignment ជាអ្វី?': 'តើ Proximity ជាអ្វី?', 'what is alignment': 'what is proximity',
           'តើ Proximity ជាអ្វី?': 'អ្វីទៅជា White Space?', 'what is proximity': 'what is white space',
           'អ្វីទៅជា White Space?': 'Rule of Thirds ជាអ្វី?', 'what is white space': 'what is the rule of thirds',
-          'Rule of Thirds ជាអ្វី?': 'Grid System ជាអ្វី?', 'what is the rule of thirds': 'what is a grid system',
-          'Grid System ជាអ្វី?': 'Margin និង Padding ខុសគ្នាម៉េច?', 'what is a grid system': 'margin vs padding',
-          'អ្វីទៅជា Typography?': 'កាយវិភាគវិទ្យាអក្សរ', 'what is typography': 'type anatomy',
-          'កាយវិភាគវិទ្យាអក្សរ': 'របៀបតម្រៀប Font ឱ្យស្អាត?', 'type anatomy': 'how to pair fonts',
-          'របៀបតម្រៀប Font ឱ្យស្អាត?': 'Kerning និង Tracking ខុសគ្នាម៉េច?', 'how to pair fonts': 'kerning vs tracking',
-          'Kerning និង Tracking ខុសគ្នាម៉េច?': 'Variable Fonts', 'kerning vs tracking': 'what are variable fonts',
           'Color Theory': 'អត្ថន័យនៃពណ៌ (Color Psychology)', 'color theory': 'color psychology',
-          'អត្ថន័យនៃពណ៌ (Color Psychology)': 'ក្បួនពណ៌ UI ៦០-៣០-១០', 'color psychology': 'the 60-30-10 rule',
-          'ក្បួនពណ៌ UI ៦០-៣០-១០': 'តើ HSL គឺជាអ្វី?', 'the 60-30-10 rule': 'what is hsl',
-          'តើ HSL គឺជាអ្វី?': 'RGB និង CMYK ខុសគ្នាម៉េច?', 'what is hsl': 'rgb vs cmyk',
           'អ្វីទៅជា Vector និង Raster?': 'តើ Photoshop និង Illustrator ខុសគ្នាម៉េច?', 'vector vs raster': 'photoshop vs illustrator',
-          'តើ Photoshop និង Illustrator ខុសគ្នាម៉េច?': 'របៀបប្រើ Pen Tool', 'photoshop vs illustrator': 'how to use the pen tool',
-          'របៀបប្រើ Pen Tool': 'បញ្ញាសិប្បនិម្មិត (AI in Design)', 'how to use the pen tool': 'ai in design',
           'កាត់តរូបភាព': 'តើ Dodge និង Burn គឺជាអ្វី?', 'photomanipulation': 'dodge and burn',
-          'តើ Dodge និង Burn គឺជាអ្វី?': 'ព្រិល Background', 'dodge and burn': 'depth of field',
-          'ព្រិល Background': 'Smart Object ជាអ្វី?', 'depth of field': 'what is a smart object',
-          'Smart Object ជាអ្វី?': 'តើ Blend Modes ដំណើរការយ៉ាងម៉េច?', 'what is a smart object': 'how do blend modes work',
-          'តើ Blend Modes ដំណើរការយ៉ាងម៉េច?': 'Opacity និង Fill ខុសគ្នាម៉េច?', 'how do blend modes work': 'opacity vs fill',
-          'របៀបគិតលុយអតិថិជន? 💰': 'Value-Based Pricing', 'how to price my work? 💰': 'value based pricing',
-          'Value-Based Pricing': 'របៀបដោះស្រាយភ្ញៀវរអ៊ូ?', 'value based pricing': 'dealing with difficult clients?',
-          'របៀបដោះស្រាយភ្ញៀវរអ៊ូ?': 'របៀបរៀបចំ Portfolio?', 'dealing with difficult clients?': 'how to build a portfolio',
-          'របៀបរៀបចំ Portfolio?': 'ក្រមសីលធម៌ កម្មសិទ្ធិបញ្ញា', 'how to build a portfolio': 'design copyright and ethics',
       };
 
       const boredomWords = ['អផ្សុក', 'មិនដឹងសួរអី', 'សួរអី', 'bored', 'whattoask', 'play', 'លេង', 'សួរអីគេ'].map(strictClean);
       if (boredomWords.some(w => cleanInput.includes(w))) {
-          return { 
-              answer: getRandomQuizInvitation(lang), 
-              chips: getRandomItems(getSuggestList(), 3), 
-              needsBackend: false 
-          };
+          return { answer: getRandomQuizInvitation(lang), chips: getRandomItems(getSuggestList(), 3), needsBackend: false };
       }
 
       let repeatCount = 0;
@@ -418,29 +363,21 @@ const ChatBot = ({ messages, setMessages, isDarkMode, liveAiData = [], setLiveAi
           return { answer: getRandomItems(repeatData.level2, 1)[0], chips: getRandomItems(getSuggestList(), 3), needsBackend: false };
       }
 
-      const exactHowAreYou = ['howareyou', 'whatsup', 'howareyoudoing', 'howru', 'sup', 'សុខសប្បាយទេ', 'អ្នកសុខសប្បាយទេ', 'សុខសប្បាយជាទេ', 'សុខទេ', 'ម៉េចហើយ', 'មានរឿងអី'].map(strictClean);
+      const exactHowAreYou = ['howareyou', 'whatsup', 'howareyoudoing', 'howru', 'sup', 'សុខសប្បាយទេ', 'អ្នកសុខសប្បាយទេ', 'សុខទេ', 'ម៉េចហើយ'].map(strictClean);
       if (exactHowAreYou.includes(cleanInput)) {
-          return { 
-              answer: lang === 'en' ? "I'm doing wonderfully, thank you for asking! 😊 I'm ready to help you edit some amazing photos. What are we working on today?" : "បាទ ខ្ញុំសុខសប្បាយធម្មតាទេ អរគុណ! 😊 ខ្ញុំត្រៀមខ្លួនរួចរាល់ជានិច្ច។ តើថ្ងៃនេះចង់អោយខ្ញុំជួយពីបច្ចេកទេសអ្វីដែរ?", 
-              chips: getRandomItems(getSuggestList(), 3), needsBackend: false 
-          };
+          return { answer: lang === 'en' ? "I'm doing wonderfully! Ready to help you design. 🎨" : "បាទ ខ្ញុំសុខសប្បាយទេ អរគុណ! 😊 ត្រៀមខ្លួនជួយបងជានិច្ច។", chips: getRandomItems(getSuggestList(), 3), needsBackend: false };
       }
 
       const exactThanks = ['thanks', 'thankyou', 'អរគុណ', 'អគុណ', 'អរគុណច្រើន', 'អគុណច្រើន', 'អរគុណធំៗ'].map(strictClean);
       if (exactThanks.includes(cleanInput)) {
-          return { 
-              answer: lang === 'en' ? "You're very welcome! Let me know if you need more help. ✨" : "បាទ ដោយក្តីរីករាយបំផុត! 😊 បើមានចម្ងល់អ្វីទាក់ទងនឹងការកែរូបភាព កុំភ្លេចសួរខ្ញុំណា៎!", 
-              chips: getRandomItems(getSuggestList(), 3), needsBackend: false 
-          };
+          return { answer: lang === 'en' ? "You're very welcome! Let me know if you need more help. ✨" : "បាទ ដោយក្តីរីករាយបំផុត! 😊", chips: getRandomItems(getSuggestList(), 3), needsBackend: false };
       }
 
       const lastBotMsg = history.slice().reverse().find(m => m.role === 'model');
-      const isBackendActive = lastBotMsg && (lastBotMsg.text.includes('*(Online AI)*') || lastBotMsg.text.includes('*(Backend AI)*') || lastBotMsg.text.includes('*(Debug Error)*'));
+      const isBackendActive = lastBotMsg && (lastBotMsg.text.includes('*(Online AI)*') || lastBotMsg.text.includes('*(Backend AI)*'));
       
       const exactNo = ['nothanks', 'no', 'nope', 'nevermind', 'ទេ', 'អត់ទេ', 'ទេអរគុណ', 'អត់ទេអរគុណ', 'មិនបាច់ទេ', 'អត់ចង់ទេ'].map(strictClean);
-      const isNegative = exactNo.includes(cleanInput) || cleanInput.startsWith('ទេ') || cleanInput.startsWith('no');
-
-      if (isNegative) {
+      if (exactNo.includes(cleanInput) || cleanInput.startsWith('ទេ') || cleanInput.startsWith('no')) {
           setCurrentTopic(null);
           if (lastBotMsg && (lastBotMsg.text.includes('មែនទេ') || lastBotMsg.text.includes('Did you want to learn about'))) {
               return { answer: lang === 'en' ? "No problem! What else would you like to learn about? 😊" : "បាទ មិនអីទេ! តើមានអ្វីផ្សេងទៀតដែលបងចង់ស្វែងយល់ទេ? 😊", chips: getRandomItems(getSuggestList(), 3), needsBackend: false };
@@ -448,178 +385,76 @@ const ChatBot = ({ messages, setMessages, isDarkMode, liveAiData = [], setLiveAi
           return { needsBackend: true, query: rawInput }; 
       }
 
-      const exactYes = ['yes', 'yep', 'ok', 'sure', 'បាទ', 'ចាស', 'ចា', 'យល់ព្រម', 'មែន', 'ចង់', 'អូខេ', 'ប្រាប់មក', 'តោះ', 'បន្ត', 'ដឹង', 'ចង់ដឹង', 'បាទចង់ដឹង', 'ចាសចង់ដឹង', 'បាទចង់', 'ចាសចង់', 'មាន', 'មានតើ', 'បាទមាន'].map(strictClean);
-      const isPositive = exactYes.includes(cleanInput) || cleanInput.startsWith('បាទ') || cleanInput.startsWith('ចាស') || cleanInput.startsWith('yes') || cleanInput.startsWith('ok') || cleanInput.startsWith('មាន') || cleanInput.startsWith('ចង់');
-      
-      if (isPositive) {
+      const exactYes = ['yes', 'yep', 'ok', 'sure', 'បាទ', 'ចាស', 'ចា', 'យល់ព្រម', 'មែន', 'ចង់', 'អូខេ', 'តោះ', 'បន្ត', 'ដឹង', 'ចង់ដឹង'].map(strictClean);
+      if (exactYes.includes(cleanInput) || cleanInput.startsWith('បាទ') || cleanInput.startsWith('ចាស') || cleanInput.startsWith('yes') || cleanInput.startsWith('ok')) {
           if (isBackendActive) return { needsBackend: true, query: rawInput }; 
           
-          if (lastBotMsg) {
-              if (lastBotMsg.text.includes('មែនទេ') || lastBotMsg.text.includes('Did you want to learn about')) {
-                  if (currentTopic) return findAIResponse(currentTopic, history); 
-              }
-              
-              const lastTextClean = strictClean(lastBotMsg.text);
-              let bestFollowUp = null;
-              let highestFollowUpScore = 0;
-
-              for (const item of COMBINED_DB) {
-                  const searchKeys = [...(item.primaryKeys || []), ...(item.keys || [])].map(strictClean);
-                  for (const key of searchKeys) {
-                      if (key.length > 4 && lastTextClean.includes(key)) {
-                          if (currentTopic && strictClean(currentTopic) === key) continue;
-                          if (key.length > highestFollowUpScore) {
-                              highestFollowUpScore = key.length;
-                              bestFollowUp = item;
-                          }
-                      }
-                  }
-              }
-
-              if (bestFollowUp && bestFollowUp.primaryKeys) {
-                  return findAIResponse(bestFollowUp.primaryKeys[0], history);
-              }
-
+          if (lastBotMsg && (lastBotMsg.text.includes('មែនទេ') || lastBotMsg.text.includes('Did you want to learn about'))) {
               if (currentTopic) {
                   const topicData = COMBINED_DB.find(item => [...(item.primaryKeys || []), ...(item.keys || [])].map(strictClean).includes(strictClean(currentTopic)));
-                  if (topicData && topicData.primaryKeys) {
-                      const pk = topicData.primaryKeys[0];
-                      const nextTopic = FOLLOW_UP_MAP[pk] || FOLLOW_UP_MAP[strictClean(pk)];
-                      if (nextTopic) return findAIResponse(nextTopic, history); 
-                  }
+                  if (topicData && topicData.primaryKeys) return { ...topicData, needsBackend: false, chips: generateFilteredChips(topicData, rawInput) };
               }
           }
-          return { needsBackend: true, query: rawInput };
       }
 
-      // 🌟 UPGRADE 1: "TELL ME MORE" / AUTO-PROGRESSION
       const exactMore = ['ទៀត', 'more', 'next', 'បន្ត', 'ប្រាប់ទៀត', 'តទៀត', 'continue', 'go on'].map(strictClean);
-      const isAskingForMore = exactMore.includes(cleanInput) || cleanInput.endsWith('ទៀត');
-
-      if (isAskingForMore && currentTopic) {
+      if ((exactMore.includes(cleanInput) || cleanInput.endsWith('ទៀត')) && currentTopic) {
           const topicData = COMBINED_DB.find(item => [...(item.primaryKeys || []), ...(item.keys || [])].map(strictClean).includes(strictClean(currentTopic)));
-          
           if (topicData && topicData.primaryKeys) {
-              const pk = topicData.primaryKeys[0];
-              const nextTopic = FOLLOW_UP_MAP[pk] || FOLLOW_UP_MAP[strictClean(pk)];
-              
+              const nextTopic = FOLLOW_UP_MAP[topicData.primaryKeys[0]] || FOLLOW_UP_MAP[strictClean(topicData.primaryKeys[0])];
               if (nextTopic) {
-                  return findAIResponse(nextTopic, history); 
+                  const nextData = COMBINED_DB.find(item => [...(item.primaryKeys || []), ...(item.keys || [])].map(strictClean).includes(strictClean(nextTopic)));
+                  if (nextData) {
+                      setCurrentTopic(nextData.primaryKeys[0]);
+                      return { answer: lang === 'en' ? nextData.answer_en || nextData.answer : nextData.answer, chips: generateFilteredChips(nextData, rawInput), needsBackend: false };
+                  }
               } else {
-                  return { 
-                      answer: lang === 'en' ? "That covers the basics of this topic! 🎨 What would you like to explore next?" : "បាទ សម្រាប់ប្រធានបទនេះគឺអស់ត្រឹមនេះហើយ! 🎨 តើបងចង់រៀនពីរឿងអ្វីបន្ទាប់ទៀត?", 
-                      chips: getRandomItems(getSuggestList(), 3), 
-                      needsBackend: false 
-                  };
+                  return { answer: lang === 'en' ? "That covers the basics of this topic! 🎨 What next?" : "បាទ សម្រាប់ប្រធានបទនេះគឺអស់ត្រឹមនេះហើយ! 🎨 តើបងចង់រៀនពីរឿងអ្វីបន្ទាប់?", chips: getRandomItems(getSuggestList(), 3), needsBackend: false };
               }
           }
       }
 
-      // 🌟 WH- QUESTION & INTENT CLEANER 🌟
-      const questionWords = [
-          'តើ', 'ជាអ្វី', 'អ្វីទៅជា', 'អ្វីទៅ', 'ស្អីគេ', 'ស្អី', 'គឺជាអ្វី', 
-          'នៅឯណា', 'នៅណា', 'កន្លែងណា', 'ត្រង់ណា', 
-          'ពេលណា', 'អង្កាល់', 'វេលាណា',
-          'យ៉ាងម៉េច', 'ម៉េច', 'របៀបណា', 'របៀប', 
-          'what is', 'where is', 'when is', 'how to', 'how do i', 'tell me about', 'explain', 'what are', 'the'
-      ].map(strictClean);
-
-      let coreSubject = cleanInput;
-      questionWords.forEach(qw => {
-          coreSubject = coreSubject.replace(qw, '');
-      });
-      coreSubject = coreSubject.trim();
-
+      // 🌟 ZERO-FLAW GUARDRAIL 1: EXACT MATCH WINS 🌟
       for (const item of COMBINED_DB) {
           const exactTriggers = [...(item.primaryKeys || []), ...(item.keys || [])].map(strictClean); 
-          if (exactTriggers.includes(cleanInput) || exactTriggers.includes(coreSubject)) {
+          if (exactTriggers.includes(cleanInput)) {
               setCurrentTopic(item.primaryKeys ? item.primaryKeys[0] : null); 
-              
               let answerText = lang === 'en' && item.answer_en ? item.answer_en : item.answer;
               let finalColors = item.colors;
-
               if (item.dynamicColor) {
                   const hex = '#' + Math.floor(Math.random()*16777215).toString(16).padStart(6, '0').toUpperCase();
-                  finalColors = [hex];
-                  answerText = answerText.replace('{hex}', hex);
+                  finalColors = [hex]; answerText = answerText.replace('{hex}', hex);
               }
-
-              return { 
-                  answer: answerText, 
-                  chips: generateFilteredChips(item, rawInput), 
-                  uiElement: item.uiElement,
-                  colors: finalColors,
-                  actionButton: item.actionButton,
-                  needsBackend: false 
-              };
+              return { answer: answerText, chips: generateFilteredChips(item, rawInput), uiElement: item.uiElement, colors: finalColors, actionButton: item.actionButton, needsBackend: false };
+          }
+          if (item.regex && item.regex.some(r => { try { return new RegExp(`\\b${r}\\b`, 'i').test(rawInput); } catch { return new RegExp(r, 'i').test(rawInput); } })) {
+              setCurrentTopic(item.primaryKeys ? item.primaryKeys[0] : null); 
+              return { answer: lang === 'en' && item.answer_en ? item.answer_en : item.answer, chips: generateFilteredChips(item, rawInput), uiElement: item.uiElement, actionButton: item.actionButton, needsBackend: false };
           }
       }
 
+      // 🌟 ZERO-FLAW GUARDRAIL 2: SENTENCES GO TO AI 🌟
+      const wordCount = rawInput.trim().split(/\s+/).length;
+      if (wordCount > 4) return { needsBackend: true, query: rawInput };
+
+      // 🌟 ZERO-FLAW GUARDRAIL 3: ONLY GUESS SHORT TYPOS 🌟
       let bestMatch = null;
       let highestScore = 0;
-
       for (const item of COMBINED_DB) {
           let score = 0;
           const searchKeys = [...(item.primaryKeys || []), ...(item.keys || [])].map(strictClean);
-          
           for(const key of searchKeys) {
-              if (key.length >= 4 && cleanInput.includes(key)) {
-                  score = Math.max(score, key.length * 10); 
-              }
-              if (cleanInput.length >= 4 && key.includes(cleanInput)) {
-                  score = Math.max(score, cleanInput.length * 10);
-              }
-              if (coreSubject.length >= 3 && key.includes(coreSubject)) {
-                  score = Math.max(score, coreSubject.length * 15 + 50); 
-              }
-              if (coreSubject.length >= 3 && coreSubject.includes(key)) {
-                  score = Math.max(score, key.length * 15 + 50);
-              }
+              if (key.length >= 4 && cleanInput.includes(key)) score = Math.max(score, key.length * 10); 
+              if (cleanInput.length >= 4 && key.includes(cleanInput)) score = Math.max(score, cleanInput.length * 10);
           }
-
-          if (item.regex && item.regex.some(r => new RegExp(r, 'i').test(rawInput))) {
-              score = Math.max(score, 150); 
-          }
-
-          if (score > highestScore) {
-              highestScore = score;
-              bestMatch = item;
-          }
-      }
-
-      if (bestMatch && highestScore >= 50) { 
-          setCurrentTopic(bestMatch.primaryKeys ? bestMatch.primaryKeys[0] : null); 
-          
-          let answerText = lang === 'en' && bestMatch.answer_en ? bestMatch.answer_en : bestMatch.answer;
-          let finalColors = bestMatch.colors;
-
-          if (bestMatch.dynamicColor) {
-              const hex = '#' + Math.floor(Math.random()*16777215).toString(16).padStart(6, '0').toUpperCase();
-              finalColors = [hex];
-              answerText = answerText.replace('{hex}', hex);
-          }
-
-          return { 
-              answer: answerText, 
-              chips: generateFilteredChips(bestMatch, rawInput),
-              uiElement: bestMatch.uiElement,
-              colors: finalColors,
-              actionButton: bestMatch.actionButton, 
-              needsBackend: false 
-          };
-      }
-
-      const strictRefusePhrases = ['ធ្វើមកពីអ្វី', 'ជាអ្វីខ្លះ', 'រាងកាយ', 'ជីវវិទ្យា', 'អ្នកណាបង្កើត', 'នៅឯណា', 'តម្លៃប៉ុន្មាន', 'ទិញនៅណា', 'ម្ហូប', 'ហូប', 'ញ៉ាំ', 'នយោបាយ', 'ហ្គេម', 'ចម្រៀង', 'វីដេអូ', 'capcut', 'សង្សារ', 'ស្នេហា', 'ប្រវត្តិសាស្ត្រ', 'ប្រទេស', 'អាកាសធាតុ', 'ប៉ុន្មានគីឡូ', 'អាយុប៉ុន្មាន', 'food', 'politics', 'history'].map(strictClean);
-      if (strictRefusePhrases.some(w => cleanInput.includes(w))) {
-           const rejectList = lang === 'en' ? REJECTION_RESPONSES_EN : REJECTION_RESPONSES;
-           return { answer: getRandomItems(rejectList, 1)[0], chips: lang === 'en' ? ["How to edit light", "Cinematic Color"] : ["របៀបកែពន្លឺ", "ពណ៌ Cinematic"], needsBackend: false };
+          if (score > highestScore) { highestScore = score; bestMatch = item; }
       }
 
       if (bestMatch && highestScore >= 30) {
           const topicName = bestMatch.primaryKeys ? bestMatch.primaryKeys[0] : (bestMatch.keys ? bestMatch.keys[0] : null);
           setCurrentTopic(topicName); 
           return { 
-              answer: lang === 'en' ? `I'm not completely sure 🤔. \n\nDid you want to learn about "**${topicName}**"?` : `ខ្ញុំមិនសូវប្រាកដពីសំណួររបស់បងនោះទេ 🤔។ \n\nតើបងកំពុងចង់ស្វែងយល់ពី "**${topicName}**" មែនទេ?`, 
+              answer: lang === 'en' ? `I'm not completely sure 🤔. \n\nDid you mean "**${topicName}**"?` : `ខ្ញុំមិនសូវប្រាកដទេ 🤔។ \n\nតើបងចង់សួរពី "**${topicName}**" មែនទេ?`, 
               chips: [lang === 'en' ? "Yes" : "បាទ", lang === 'en' ? "No thanks" : "ទេ អរគុណ", ...getRandomItems(getSuggestList(), 1)],
               needsBackend: false
           };
@@ -638,7 +473,7 @@ const ChatBot = ({ messages, setMessages, isDarkMode, liveAiData = [], setLiveAi
       const cleanMsg = strictClean(msg);
       if (rudeWords.some(word => cleanMsg.includes(word))) {
           setInput(''); if (inputRef.current) inputRef.current.textContent = '';
-          setMessages(prev => [...prev, { role: 'model', text: lang === 'en' ? "Please use appropriate language! 🚫🙏 I am here to help you learn design." : "សូមមេត្តាប្រើប្រាស់ពាក្យសម្ដីសមរម្យ! 🚫🙏 ខ្ញុំនៅទីនេះដើម្បីជួយបង្រៀននិងពន្យល់ពីបច្ចេកទេសតែប៉ុណ្ណោះ។", chips: [], isTrainable: false }]);
+          setMessages(prev => [...prev, { role: 'model', text: lang === 'en' ? "Please use appropriate language! 🚫🙏" : "សូមមេត្តាប្រើប្រាស់ពាក្យសម្ដីសមរម្យ! 🚫🙏", chips: [], isTrainable: false }]);
           return; 
       }
       
@@ -656,22 +491,12 @@ const ChatBot = ({ messages, setMessages, isDarkMode, liveAiData = [], setLiveAi
               let cachedAnswer = null;
               try {
                   const globalMemory = JSON.parse(localStorage.getItem('myDesign_ai_memory_cache') || '[]');
-                  
-                  const foundMem = globalMemory.find(mem => 
-                      mem.lang === lang && 
-                      (mem.q === cleanMsg || (mem.q.length > 5 && cleanMsg.includes(mem.q)) || (cleanMsg.length > 5 && mem.q.includes(cleanMsg)))
-                  );
-                  
-                  if (foundMem) {
-                      cachedAnswer = foundMem.a;
-                  }
-              } catch (e) {
-                  console.error("Cache read error", e);
-              }
+                  const foundMem = globalMemory.find(mem => mem.lang === lang && (mem.q === cleanMsg || (mem.q.length > 5 && cleanMsg.includes(mem.q)) || (cleanMsg.length > 5 && mem.q.includes(cleanMsg))));
+                  if (foundMem) cachedAnswer = foundMem.a;
+              } catch (e) {}
 
               if (cachedAnswer) {
                   await new Promise(resolve => setTimeout(resolve, 600));
-                  // 🌟 Cache hits are trainable!
                   setMessages(prev => [...prev, { role: 'model', text: cachedAnswer, isTrainable: true }]);
               } else {
                   const historyDiet = messages.slice(-4); 
@@ -679,22 +504,21 @@ const ChatBot = ({ messages, setMessages, isDarkMode, liveAiData = [], setLiveAi
                   
                   if (aiBackendAnswer.includes('*(Debug Error)*')) {
                       const fallbackList = lang === 'en' ? API_FALLBACK_RESPONSES_EN : API_FALLBACK_RESPONSES;
-                      aiBackendAnswer = getRandomItems(fallbackList, 1)[0] || (lang === 'en' ? "I am currently offline, but here is a quick tip: Use high contrast!" : "សុំទោស ខ្ញុំកំពុងគ្មានអ៊ីនធឺណិត។ ប៉ុន្តែនេះជាគន្លឹះ៖ ត្រូវប្រើពណ៌ដែលផ្ទុយគ្នាជានិច្ច!");
+                      aiBackendAnswer = getRandomItems(fallbackList, 1)[0] || "Internet Error.";
                       setMessages(prev => [...prev, { role: 'model', text: aiBackendAnswer, chips: getRandomItems(getSuggestList(), 3), isTrainable: false }]);
                   } else {
                       try {
                           const globalMemory = JSON.parse(localStorage.getItem('myDesign_ai_memory_cache') || '[]');
                           globalMemory.push({ q: cleanMsg, a: aiBackendAnswer, lang: lang });
-                          
                           if (globalMemory.length > 50) globalMemory.shift();
-                          
                           localStorage.setItem('myDesign_ai_memory_cache', JSON.stringify(globalMemory));
-                      } catch (e) {
-                          console.error("Cache save error", e);
-                      }
+                      } catch (e) {}
+                      
                       const nextChips = getRandomItems(getSuggestList(), 3);
-                      // 🌟 Backend hits are trainable!
                       setMessages(prev => [...prev, { role: 'model', text: aiBackendAnswer, chips: nextChips, isTrainable: true }]);
+
+                      // 🌟 TRIGGER BLIND SPOT BACKGROUND TRAINER 🌟
+                      runSecretBackgroundTraining(cleanMsg, aiBackendAnswer);
                   }
               }
               
@@ -707,20 +531,14 @@ const ChatBot = ({ messages, setMessages, isDarkMode, liveAiData = [], setLiveAi
                   uiElement: responseData.uiElement,
                   colors: responseData.colors,
                   actionButton: responseData.actionButton,
-                  isTrainable: false // 🌟 Local Database matches are NOT trainable!
+                  isTrainable: false 
               }]);
           }
 
       } catch (error) {
           const fallbackList = lang === 'en' ? API_FALLBACK_RESPONSES_EN : API_FALLBACK_RESPONSES;
-          const randomFallback = getRandomItems(fallbackList, 1)[0] || (lang === 'en' ? "I'm having trouble connecting to the internet. While we wait, try practicing with the Layout Tool!" : "ខ្ញុំកំពុងមានបញ្ហាភ្ជាប់អ៊ីនធឺណិត។ ចន្លោះពេលនេះ សូមសាកល្បងអនុវត្តនៅក្នុង Layout Tool សិនទៅ!");
-          
-          setMessages(prev => [...prev, { 
-              role: 'model', 
-              text: randomFallback, 
-              chips: getRandomItems(getSuggestList(), 3),
-              isTrainable: false 
-          }]);
+          const randomFallback = getRandomItems(fallbackList, 1)[0] || "Connection issue.";
+          setMessages(prev => [...prev, { role: 'model', text: randomFallback, chips: getRandomItems(getSuggestList(), 3), isTrainable: false }]);
       } finally {
           setLoading(false);
       }
@@ -732,15 +550,11 @@ const ChatBot = ({ messages, setMessages, isDarkMode, liveAiData = [], setLiveAi
 
       const scrollToBottom = (behavior) => {
           isAutoScrolling.current = true; 
-          
           if (behavior === 'auto') {
               container.scrollTop = container.scrollHeight;
           } else {
-              if (messagesEndRef.current) {
-                  messagesEndRef.current.scrollIntoView({ behavior: 'smooth', block: "end" });
-              }
+              if (messagesEndRef.current) messagesEndRef.current.scrollIntoView({ behavior: 'smooth', block: "end" });
           }
-
           setTimeout(() => {
               isAutoScrolling.current = false;
               if (container) setLastScrollY(container.scrollTop);
@@ -750,7 +564,6 @@ const ChatBot = ({ messages, setMessages, isDarkMode, liveAiData = [], setLiveAi
       if (isInitialMount.current) {
           setShowHeader(true); 
           scrollToBottom('auto');
-          
           const timeoutId = setTimeout(() => {
               scrollToBottom('auto');
               isInitialMount.current = false;
@@ -764,46 +577,28 @@ const ChatBot = ({ messages, setMessages, isDarkMode, liveAiData = [], setLiveAi
   useEffect(() => {
       const handleScroll = () => {
           if (isAutoScrolling.current) return; 
-
           if (!scrollContainerRef.current) return;
           const currentScrollY = scrollContainerRef.current.scrollTop;
           
-          if (currentScrollY > lastScrollY && currentScrollY > 50) {
-              setShowHeader(false);
-          } else if (currentScrollY < lastScrollY) {
-              setShowHeader(true);
-          }
+          if (currentScrollY > lastScrollY && currentScrollY > 50) setShowHeader(false);
+          else if (currentScrollY < lastScrollY) setShowHeader(true);
           setLastScrollY(currentScrollY);
       };
 
       const container = scrollContainerRef.current;
-      if (container) {
-          container.addEventListener('scroll', handleScroll, { passive: true });
-      }
-
-      return () => {
-          if (container) {
-              container.removeEventListener('scroll', handleScroll);
-          }
-      };
+      if (container) container.addEventListener('scroll', handleScroll, { passive: true });
+      return () => { if (container) container.removeEventListener('scroll', handleScroll); };
   }, [lastScrollY]);
 
   useEffect(() => {
       const updateViewport = () => {
           if (window.visualViewport) {
               setViewportHeight(`${window.visualViewport.height}px`);
-              
               const keyboardH = window.innerHeight - window.visualViewport.height;
-              if (keyboardH > 50) {
-                  setKeyboardHeight(keyboardH);
-              } else {
-                  setKeyboardHeight(0);
-              }
+              setKeyboardHeight(keyboardH > 50 ? keyboardH : 0);
               
               setTimeout(() => {
-                  if (messagesEndRef.current && !isInitialMount.current) {
-                      messagesEndRef.current.scrollIntoView({ behavior: 'smooth', block: 'end' });
-                  }
+                  if (messagesEndRef.current && !isInitialMount.current) messagesEndRef.current.scrollIntoView({ behavior: 'smooth', block: 'end' });
               }, 50);
           }
       };
@@ -812,17 +607,13 @@ const ChatBot = ({ messages, setMessages, isDarkMode, liveAiData = [], setLiveAi
           window.visualViewport.addEventListener('resize', updateViewport);
           window.visualViewport.addEventListener('scroll', updateViewport);
           updateViewport();
-      } else {
-          window.addEventListener('resize', () => setViewportHeight(`${window.innerHeight}px`));
-      }
+      } else window.addEventListener('resize', () => setViewportHeight(`${window.innerHeight}px`));
 
       return () => {
           if (window.visualViewport) {
               window.visualViewport.removeEventListener('resize', updateViewport);
               window.visualViewport.removeEventListener('scroll', updateViewport);
-          } else {
-              window.removeEventListener('resize', () => setViewportHeight(`${window.innerHeight}px`));
-          }
+          } else window.removeEventListener('resize', () => setViewportHeight(`${window.innerHeight}px`));
       };
   }, []);
 
@@ -837,9 +628,7 @@ const ChatBot = ({ messages, setMessages, isDarkMode, liveAiData = [], setLiveAi
               }, 150);
           }
       };
-      const handleFocusOut = () => {
-          setIsKeyboardOpen(false);
-      };
+      const handleFocusOut = () => setIsKeyboardOpen(false);
 
       document.addEventListener('focusin', handleFocusIn);
       document.addEventListener('focusout', handleFocusOut);
@@ -862,10 +651,7 @@ const ChatBot = ({ messages, setMessages, isDarkMode, liveAiData = [], setLiveAi
   };
 
   return (
-    <div 
-        className={`absolute left-0 w-full flex flex-col overflow-hidden font-sans transition-colors ${theme.bg}`}
-        style={{ height: '100%', paddingBottom: `${keyboardHeight}px` }}
-    >
+    <div className={`absolute left-0 w-full flex flex-col overflow-hidden font-sans transition-colors ${theme.bg}`} style={{ height: '100%', paddingBottom: `${keyboardHeight}px` }}>
       
       <div className={`absolute top-0 left-0 w-full z-30 transition-transform duration-300 ease-in-out ${showHeader ? 'translate-y-0' : '-translate-y-full'}`}>
           <div className={`flex items-center justify-between px-4 py-3 backdrop-blur-md border-b shadow-sm ${isDarkMode ? 'bg-[#121212]/80 border-white/5 shadow-black/20' : 'bg-white/80 border-black/5 shadow-[#0277C5]/5'}`}>
@@ -881,22 +667,11 @@ const ChatBot = ({ messages, setMessages, isDarkMode, liveAiData = [], setLiveAi
                   </div>
               </div>
               
-              <button 
-                  type="button" 
-                  onClick={handleClearChat} 
-                  className={`p-2 rounded-xl transition-all duration-300 ease-out active:scale-90 border ${isDarkMode ? 'bg-[#1E1E1E]/50 border-[#2C2C2C] text-[#A0A0A0] hover:text-[#FF453A] hover:bg-[#FF453A]/10' : 'bg-[#F8F9FA]/80 border-[#E5E7EB] text-[#6B7280] hover:text-[#FF453A] hover:bg-[#FF453A]/10'}`}
-                  title={t('clear_tooltip')}
-              >
-                  <Trash2 size={16} />
-              </button>
+              <button type="button" onClick={handleClearChat} className={`p-2 rounded-xl transition-all duration-300 ease-out active:scale-90 border ${isDarkMode ? 'bg-[#1E1E1E]/50 border-[#2C2C2C] text-[#A0A0A0] hover:text-[#FF453A] hover:bg-[#FF453A]/10' : 'bg-[#F8F9FA]/80 border-[#E5E7EB] text-[#6B7280] hover:text-[#FF453A] hover:bg-[#FF453A]/10'}`} title={t('clear_tooltip')}><Trash2 size={16} /></button>
           </div>
       </div>
       
-      <div 
-          ref={scrollContainerRef}
-          className={`flex-1 min-h-0 overflow-y-auto overflow-x-hidden overscroll-none pt-20 no-scrollbar ${theme.bg}`} 
-          id="messenger-scroll-container"
-      >
+      <div ref={scrollContainerRef} className={`flex-1 min-h-0 overflow-y-auto overflow-x-hidden overscroll-none pt-20 no-scrollbar ${theme.bg}`} id="messenger-scroll-container">
           <div className="max-w-4xl mx-auto w-full p-3 sm:p-4 space-y-4">
               {messages.map((m, i) => {
                   const isUser = m.role === 'user';
@@ -911,8 +686,7 @@ const ChatBot = ({ messages, setMessages, isDarkMode, liveAiData = [], setLiveAi
                               
                               <div className={`max-w-[85%] sm:max-w-[75%] flex flex-col`}>
                                   {m.text && (
-                                      <div className={`px-3.5 py-2.5 sm:px-4 sm:py-3 text-[14.5px] sm:text-[15px] leading-relaxed break-words [word-break:break-word] overflow-hidden shadow-sm font-khmer
-                                          ${isUser ? `${theme.userBubble} rounded-2xl rounded-br-[4px]` : `${theme.botBubble} rounded-2xl rounded-bl-[4px]`}`}>
+                                      <div className={`px-3.5 py-2.5 sm:px-4 sm:py-3 text-[14.5px] sm:text-[15px] leading-relaxed break-words [word-break:break-word] overflow-hidden shadow-sm font-khmer ${isUser ? `${theme.userBubble} rounded-2xl rounded-br-[4px]` : `${theme.botBubble} rounded-2xl rounded-bl-[4px]`}`}>
                                           {typeof m.text === 'object' ? JSON.stringify(m.text) : formatMessage(m.text)}
                                           
                                           {!isUser && m.uiElement === 'color_palette' && m.colors && (
@@ -927,22 +701,7 @@ const ChatBot = ({ messages, setMessages, isDarkMode, liveAiData = [], setLiveAi
                                           )}
 
                                           {!isUser && m.actionButton && (
-                                              <button 
-                                                  onClick={() => {
-                                                      triggerHaptic();
-                                                      if (m.actionButton.subTab) {
-                                                          localStorage.setItem('myDesign_target_subtab', m.actionButton.subTab);
-                                                      }
-                                                      window.dispatchEvent(new CustomEvent('switchTab', { detail: m.actionButton.actionToTrigger }));
-                                                      
-                                                      if (m.actionButton.subTab) {
-                                                          setTimeout(() => {
-                                                              window.dispatchEvent(new CustomEvent('switchToolSubTab', { detail: m.actionButton.subTab }));
-                                                          }, 100); 
-                                                      }
-                                                  }}
-                                                  className="mt-4 px-4 py-2.5 bg-[#C55002] text-white font-khmer font-bold text-sm rounded-xl active:scale-95 transition-transform flex items-center gap-2 shadow-lg"
-                                              >
+                                              <button onClick={() => { triggerHaptic(); if (m.actionButton.subTab) { localStorage.setItem('myDesign_target_subtab', m.actionButton.subTab); } window.dispatchEvent(new CustomEvent('switchTab', { detail: m.actionButton.actionToTrigger })); if (m.actionButton.subTab) { setTimeout(() => { window.dispatchEvent(new CustomEvent('switchToolSubTab', { detail: m.actionButton.subTab })); }, 100); } }} className="mt-4 px-4 py-2.5 bg-[#C55002] text-white font-khmer font-bold text-sm rounded-xl active:scale-95 transition-transform flex items-center gap-2 shadow-lg">
                                                   {lang === 'en' ? m.actionButton.label_en : m.actionButton.label} <ArrowRight size={16} />
                                               </button>
                                           )}
@@ -954,11 +713,7 @@ const ChatBot = ({ messages, setMessages, isDarkMode, liveAiData = [], setLiveAi
                           {!isUser && m.chips && m.chips.length > 0 && (
                               <div className="flex flex-wrap gap-2 mt-2 ml-9">
                                   {m.chips.map((chip, idx) => (
-                                      <button 
-                                          key={idx} 
-                                          onClick={() => { triggerHaptic(); handleSend(chip); }} 
-                                          className={`px-3 py-1.5 text-[12px] font-khmer rounded-full border transition-all active:scale-95 ${isDarkMode ? 'bg-[#1E1E1E] border-[#41B6E6]/30 text-[#41B6E6] hover:bg-[#2C2C2C]' : 'bg-[#FFFFFF] border-[#0277C5]/30 text-[#0277C5] hover:bg-[#F8F9FA]'}`}
-                                      >
+                                      <button key={idx} onClick={() => { triggerHaptic(); handleSend(chip); }} className={`px-3 py-1.5 text-[12px] font-khmer rounded-full border transition-all active:scale-95 ${isDarkMode ? 'bg-[#1E1E1E] border-[#41B6E6]/30 text-[#41B6E6] hover:bg-[#2C2C2C]' : 'bg-[#FFFFFF] border-[#0277C5]/30 text-[#0277C5] hover:bg-[#F8F9FA]'}`}>
                                           {chip}
                                       </button>
                                   ))}
@@ -971,7 +726,6 @@ const ChatBot = ({ messages, setMessages, isDarkMode, liveAiData = [], setLiveAi
                                   <button onClick={() => handleFeedback(i, 'down')} className="p-1 hover:text-red-500 rounded-md transition-colors"><ThumbsDown size={14}/></button>
                                   
                                   {/* 🌟 1-CLICK AI AUTO TRAINING (SUPER ADMIN ONLY) 🌟 */}
-                                  {/* Only renders if user is Admin AND the message is Trainable (Not from Local DB) */}
                                   {isAdmin && m.isTrainable && !m.isTraining && (
                                       <button 
                                           onClick={() => handleAutoTrain(i)} 
@@ -999,9 +753,7 @@ const ChatBot = ({ messages, setMessages, isDarkMode, liveAiData = [], setLiveAi
               
               {loading && (
                   <div className="flex justify-start items-end animate-fade-in-up">
-                      <div className={`w-7 h-7 rounded-[10px] bg-gradient-to-tr ${isDarkMode ? 'from-[#41B6E6] to-[#0277C5]' : 'from-[#0277C5] to-[#01579B]'} flex items-center justify-center mr-2 shrink-0 mb-1 shadow-sm`}>
-                          <Bot size={14} className="text-white" />
-                      </div>
+                      <div className={`w-7 h-7 rounded-[10px] bg-gradient-to-tr ${isDarkMode ? 'from-[#41B6E6] to-[#0277C5]' : 'from-[#0277C5] to-[#01579B]'} flex items-center justify-center mr-2 shrink-0 mb-1 shadow-sm`}><Bot size={14} className="text-white" /></div>
                       <div className={`px-4 py-3.5 ${theme.botBubble} rounded-2xl rounded-bl-[4px] flex gap-1.5 shadow-sm`}>
                           <div className={`w-1.5 h-1.5 rounded-full animate-bounce ${isDarkMode ? 'bg-[#A0A0A0]' : 'bg-[#6B7280]'}`} style={{animationDelay: '0ms'}}></div>
                           <div className={`w-1.5 h-1.5 rounded-full animate-bounce ${isDarkMode ? 'bg-[#A0A0A0]' : 'bg-[#6B7280]'}`} style={{animationDelay: '150ms'}}></div>
@@ -1016,32 +768,11 @@ const ChatBot = ({ messages, setMessages, isDarkMode, liveAiData = [], setLiveAi
       <div className={`flex-none z-20 w-full flex flex-col px-2 transition-all duration-300 ${theme.bg} ${isKeyboardOpen ? 'pb-3' : 'pb-[85px] sm:pb-[90px]'}`}>
          <div className="max-w-4xl mx-auto w-full">
              <div className="flex items-center px-2 py-1.5 w-full overflow-hidden">
-                 <button 
-                     onMouseDown={(e) => e.preventDefault()} 
-                     onTouchStart={(e) => e.preventDefault()} 
-                     onClick={handleRefresh}
-                     className={`p-2 shrink-0 transition-transform duration-300 active:scale-90 ${isDarkMode ? 'text-[#41B6E6]' : 'text-[#0277C5]'} ${isAnimating ? 'rotate-180 opacity-50' : ''}`}
-                     aria-label={t('refresh_tooltip')}
-                 >
-                     <RefreshCw size={18} className={isAnimating ? 'animate-spin' : ''} />
-                 </button>
-                 
+                 <button onMouseDown={(e) => e.preventDefault()} onTouchStart={(e) => e.preventDefault()} onClick={handleRefresh} className={`p-2 shrink-0 transition-transform duration-300 active:scale-90 ${isDarkMode ? 'text-[#41B6E6]' : 'text-[#0277C5]'} ${isAnimating ? 'rotate-180 opacity-50' : ''}`} aria-label={t('refresh_tooltip')}><RefreshCw size={18} className={isAnimating ? 'animate-spin' : ''} /></button>
                  <div className="flex-1 overflow-x-auto no-scrollbar scroll-smooth">
                      <div className={`flex items-center gap-2 px-1 py-1 transition-opacity duration-300 ${isAnimating ? 'opacity-0' : 'opacity-100'}`}>
                          {currentSuggestions.map((q, i) => (
-                             <button 
-                                 key={i} 
-                                 onMouseDown={(e) => e.preventDefault()}
-                                 onTouchStart={(e) => e.preventDefault()}
-                                 onClick={(e) => { 
-                                     e.preventDefault();
-                                     triggerHaptic(); 
-                                     handleSend(q); 
-                                 }} 
-                                 className={`shrink-0 px-3 py-1.5 text-[12px] sm:text-[13px] font-medium font-khmer rounded-full whitespace-nowrap active:scale-95 transition-all shadow-sm border ${isDarkMode ? 'bg-[#1E1E1E] border-[#41B6E6]/30 text-[#41B6E6] hover:bg-[#2C2C2C]' : 'bg-[#FFFFFF] border-[#0277C5]/30 text-[#0277C5] hover:bg-[#F8F9FA]'}`}
-                             >
-                                 {q}
-                             </button>
+                             <button key={i} onMouseDown={(e) => e.preventDefault()} onTouchStart={(e) => e.preventDefault()} onClick={(e) => { e.preventDefault(); triggerHaptic(); handleSend(q); }} className={`shrink-0 px-3 py-1.5 text-[12px] sm:text-[13px] font-medium font-khmer rounded-full whitespace-nowrap active:scale-95 transition-all shadow-sm border ${isDarkMode ? 'bg-[#1E1E1E] border-[#41B6E6]/30 text-[#41B6E6] hover:bg-[#2C2C2C]' : 'bg-[#FFFFFF] border-[#0277C5]/30 text-[#0277C5] hover:bg-[#F8F9FA]'}`}>{q}</button>
                          ))}
                      </div>
                  </div>
@@ -1061,42 +792,13 @@ const ChatBot = ({ messages, setMessages, isDarkMode, liveAiData = [], setLiveAi
                         onKeyDown={(e) => {
                             if (e.key === 'Enter' && !loading) {
                                 e.preventDefault();
-                                if (input.trim()) {
-                                    triggerHaptic();
-                                    handleSend(input);
-                                }
-                            } else if (e.key === 'Enter') {
-                                e.preventDefault();
-                            }
+                                if (input.trim()) { triggerHaptic(); handleSend(input); }
+                            } else if (e.key === 'Enter') e.preventDefault();
                         }}
                         className={`w-full min-h-[44px] max-h-[120px] overflow-y-auto pl-4 pr-12 py-2.5 text-[15px] font-khmer outline-none transition-all whitespace-pre-wrap break-words ${theme.inputColor} ${loading ? 'opacity-50 cursor-not-allowed' : ''}`} 
-                        spellCheck="false"
-                        role="textbox"
-                        aria-multiline="true"
-                        autoCorrect="off"
-                        autoCapitalize="off"
-                        suppressHydrationWarning
+                        spellCheck="false" role="textbox" aria-multiline="true" autoCorrect="off" autoCapitalize="off" suppressHydrationWarning
                     />
-                    
-                    <button 
-                        type="button" 
-                        disabled={!input.trim() || loading}
-                        onMouseDown={(e) => {
-                            e.preventDefault(); 
-                            if (!loading) handleSend(input);
-                        }} 
-                        onTouchStart={(e) => {
-                            e.preventDefault(); 
-                            if (!loading) {
-                                triggerHaptic();
-                                handleSend(input);
-                            }
-                        }} 
-                        className={`absolute right-1.5 bottom-1 p-1.5 rounded-full hover:bg-black/5 dark:hover:bg-white/5 active:scale-90 transition-transform ${input.trim() && !loading ? theme.iconColor : 'text-[#9AA0A6] dark:text-[#6B7280]'}`}
-                        aria-label="Send Message"
-                    >
-                        <Send size={20} className={input.trim() && !loading ? '' : 'opacity-50'} />
-                    </button>
+                    <button type="button" disabled={!input.trim() || loading} onMouseDown={(e) => { e.preventDefault(); if (!loading) handleSend(input); }} onTouchStart={(e) => { e.preventDefault(); if (!loading) { triggerHaptic(); handleSend(input); } }} className={`absolute right-1.5 bottom-1 p-1.5 rounded-full hover:bg-black/5 dark:hover:bg-white/5 active:scale-90 transition-transform ${input.trim() && !loading ? theme.iconColor : 'text-[#9AA0A6] dark:text-[#6B7280]'}`} aria-label="Send Message"><Send size={20} className={input.trim() && !loading ? '' : 'opacity-50'} /></button>
                 </div>
              </div>
          </div>
@@ -1106,28 +808,12 @@ const ChatBot = ({ messages, setMessages, isDarkMode, liveAiData = [], setLiveAi
           <div className="fixed inset-0 z-[99999] flex items-center justify-center p-5 backdrop-blur-md bg-black/60 animate-fade-in-up">
               <div className={`w-full max-w-[320px] p-6 rounded-[32px] shadow-2xl border transition-all ${isDarkMode ? 'bg-[#1A1A1A] border-[#2C2C2C]' : 'bg-[#FFFFFF] border-[#E5E7EB]'}`}>
                   <div className="text-center">
-                      <div className="w-14 h-14 rounded-full bg-red-500/10 flex items-center justify-center mx-auto mb-5">
-                          <Trash2 size={28} className="text-red-500" />
-                      </div>
-                      <p className={`text-[16px] font-bold font-khmer mb-8 leading-relaxed ${isDarkMode ? 'text-[#F1F1F1]' : 'text-[#1A1A1A]'}`}>
-                          {t('clear_confirm')}
-                      </p>
+                      <div className="w-14 h-14 rounded-full bg-red-500/10 flex items-center justify-center mx-auto mb-5"><Trash2 size={28} className="text-red-500" /></div>
+                      <p className={`text-[16px] font-bold font-khmer mb-8 leading-relaxed ${isDarkMode ? 'text-[#F1F1F1]' : 'text-[#1A1A1A]'}`}>{t('clear_confirm')}</p>
                   </div>
                   <div className="flex flex-col gap-3">
-                      <button 
-                          type="button"
-                          onClick={confirmClear} 
-                          className="w-full py-3.5 rounded-2xl bg-red-500 hover:bg-red-600 text-white font-khmer font-bold text-[15px] active:scale-95 transition-all shadow-lg shadow-red-500/20"
-                      >
-                          {lang === 'en' ? 'Clear Everything' : 'លុបចេញទាំងអស់'}
-                      </button>
-                      <button 
-                          type="button"
-                          onClick={() => setShowConfirmModal(false)} 
-                          className={`w-full py-3.5 rounded-2xl font-khmer font-bold text-[15px] active:scale-95 transition-all border ${isDarkMode ? 'bg-[#2C2C2C] border-[#3A3A3C] text-[#A0A0A0] hover:text-[#F1F1F1]' : 'bg-[#F8F9FA] border-[#E5E7EB] text-[#6B7280] hover:text-[#1A1A1A]'}`}
-                      >
-                          {lang === 'en' ? 'Cancel' : 'បោះបង់'}
-                      </button>
+                      <button type="button" onClick={confirmClear} className="w-full py-3.5 rounded-2xl bg-red-500 hover:bg-red-600 text-white font-khmer font-bold text-[15px] active:scale-95 transition-all shadow-lg shadow-red-500/20">{lang === 'en' ? 'Clear Everything' : 'លុបចេញទាំងអស់'}</button>
+                      <button type="button" onClick={() => setShowConfirmModal(false)} className={`w-full py-3.5 rounded-2xl font-khmer font-bold text-[15px] active:scale-95 transition-all border ${isDarkMode ? 'bg-[#2C2C2C] border-[#3A3A3C] text-[#A0A0A0] hover:text-[#F1F1F1]' : 'bg-[#F8F9FA] border-[#E5E7EB] text-[#6B7280] hover:text-[#1A1A1A]'}`}>{lang === 'en' ? 'Cancel' : 'បោះបង់'}</button>
                   </div>
               </div>
           </div>
