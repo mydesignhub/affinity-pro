@@ -1201,7 +1201,7 @@ function AppContent() {
                                                     Manage the AI training data you added directly from the AI Chat. When ready, copy the final Data Code to update your main <code className="bg-black/20 px-1 rounded">data.js</code> file.
                                                 </p>
                                                 
-                                                <div className="flex gap-3 pt-2">
+                                                <div className="flex gap-3 pt-2 mb-2">
                                                     <button 
                                                         onClick={() => {
                                                             if (liveAiData.length === 0) return;
@@ -1220,15 +1220,31 @@ function AppContent() {
                                                 </div>
 
                                                 {liveAiData.length > 0 && (
-                                                    <div className="mt-6 pt-4 border-t border-dashed border-gray-500/30">
+                                                    <div className="mt-4 border-t border-dashed border-gray-500/30 pt-4">
                                                         <div className="flex justify-between items-center mb-3">
                                                             <span className={`text-[10px] font-bold uppercase tracking-widest ${isDarkMode ? 'text-green-400' : 'text-green-600'}`}>{liveAiData.length} Live Offline Entries</span>
                                                             <button onClick={() => { if(window.confirm('Clear all offline training data?')) { setLiveAiData([]); localStorage.removeItem('myAffinity_live_ai'); } }} className="text-red-500 hover:text-red-400"><Trash2 size={16}/></button>
                                                         </div>
-                                                        <div className="space-y-2 max-h-40 overflow-y-auto custom-scrollbar">
+                                                        <div className="space-y-3 max-h-64 overflow-y-auto custom-scrollbar pr-1">
                                                             {liveAiData.map((data, i) => (
-                                                                <div key={i} className={`p-3 rounded-xl border text-[11px] font-khmer line-clamp-2 leading-relaxed ${isDarkMode ? 'bg-[#121212] border-[#2C2C2C] text-[#A0A0A0]' : 'bg-[#F8F9FA] border-[#E5E7EB] text-[#6B7280]'}`}>
-                                                                    <strong className={isDarkMode ? 'text-white' : 'text-black'}>{data.primaryKeys[0]}</strong>: {data.answer}
+                                                                <div key={i} className={`p-3.5 rounded-xl border text-[11px] font-khmer leading-relaxed relative ${isDarkMode ? 'bg-[#121212] border-[#2C2C2C] text-[#A0A0A0]' : 'bg-[#F8F9FA] border-[#E5E7EB] text-[#6B7280]'}`}>
+                                                                    <button 
+                                                                        onClick={() => {
+                                                                            triggerHaptic();
+                                                                            const updated = liveAiData.filter((_, index) => index !== i);
+                                                                            setLiveAiData(updated);
+                                                                            localStorage.setItem('myAffinity_live_ai', JSON.stringify(updated));
+                                                                        }}
+                                                                        className="absolute top-2 right-2 text-red-500 hover:text-red-400 p-1.5 bg-red-500/10 rounded-md transition-colors"
+                                                                        title="Remove this entry"
+                                                                    >
+                                                                        <Trash2 size={14} />
+                                                                    </button>
+                                                                    <div className="pr-8 space-y-1.5">
+                                                                        <div><strong className={isDarkMode ? 'text-white' : 'text-black'}>Keys: </strong> {data.keys.join(', ')}</div>
+                                                                        <div><strong className={isDarkMode ? 'text-[#41B6E6]' : 'text-[#0277C5]'}>KM: </strong> <span className="line-clamp-2">{data.answer}</span></div>
+                                                                        <div><strong className={isDarkMode ? 'text-[#41B6E6]' : 'text-[#0277C5]'}>EN: </strong> <span className="line-clamp-2">{data.answer_en}</span></div>
+                                                                    </div>
                                                                 </div>
                                                             ))}
                                                         </div>

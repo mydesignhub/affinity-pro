@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Bot, Send, RefreshCw, Trash2, ThumbsUp, ThumbsDown, ArrowRight, ShieldCheck, Database } from 'lucide-react';
+import { Bot, Send, RefreshCw, Trash2, ThumbsUp, ThumbsDown, ArrowRight, ShieldCheck, Database, Brain } from 'lucide-react';
 
 // 🌟 FIX 1: Point up 3 folders to get to contexts
 import { useLanguage } from '../../../contexts/LanguageContext';
@@ -137,7 +137,7 @@ const ChatBot = ({ messages, setMessages, isDarkMode, liveAiData = [], setLiveAi
   const COMBINED_DB = [...KNOWLEDGE_BASE, ...liveAiData];
 
   const handleSaveTraining = () => {
-      if (!trainKeys || !trainKm || !trainEn) {
+      if (!trainKeys || (!trainKm && !trainEn)) {
           triggerHaptic('error');
           return;
       }
@@ -147,8 +147,8 @@ const ChatBot = ({ messages, setMessages, isDarkMode, liveAiData = [], setLiveAi
           primaryKeys: [keysArray[0], keysArray[1] || keysArray[0]],
           keys: keysArray,
           regex: keysArray,
-          answer: trainKm,
-          answer_en: trainEn
+          answer: trainKm || trainEn, // Fallback if one is empty
+          answer_en: trainEn || trainKm
       };
       
       if(setLiveAiData) setLiveAiData(prev => [...prev, newEntry]);
@@ -967,9 +967,33 @@ const ChatBot = ({ messages, setMessages, isDarkMode, liveAiData = [], setLiveAi
                           )}
 
                           {!isUser && i > 0 && !m.feedback && (
-                              <div className="flex gap-2 mt-1.5 ml-9 opacity-40 hover:opacity-100 transition-opacity">
+                              <div className="flex gap-2 mt-1.5 ml-9 opacity-40 hover:opacity-100 transition-opacity items-center">
                                   <button onClick={() => handleFeedback(i, 'up')} className="p-1 hover:text-green-500 rounded-md transition-colors"><ThumbsUp size={14}/></button>
                                   <button onClick={() => handleFeedback(i, 'down')} className="p-1 hover:text-red-500 rounded-md transition-colors"><ThumbsDown size={14}/></button>
+                                  
+                                  {/* 🌟 1-CLICK AI TRAINING (ADMIN ONLY) 🌟 */}
+                                  {isAdmin && (
+                                      <button 
+                                          onClick={() => {
+                                              triggerHaptic();
+                                              if (lang === 'en') {
+                                                  setTrainEn(typeof m.text === 'string' ? m.text : '');
+                                                  setTrainKm('');
+                                              } else {
+                                                  setTrainKm(typeof m.text === 'string' ? m.text : '');
+                                                  setTrainEn('');
+                                              }
+                                              setShowAdminTrain(true);
+                                              setTimeout(() => {
+                                                  if (messagesEndRef.current) messagesEndRef.current.scrollIntoView({ behavior: 'smooth', block: 'end' });
+                                              }, 100);
+                                          }} 
+                                          className="p-1 hover:text-[#41B6E6] rounded-md transition-colors ml-2 flex items-center gap-1"
+                                          title="Train AI with this answer"
+                                      >
+                                          <Brain size={14}/> <span className="text-[10px] font-bold">Train</span>
+                                      </button>
+                                  )}
                               </div>
                           )}
                           {!isUser && m.feedback && (
@@ -1004,7 +1028,15 @@ const ChatBot = ({ messages, setMessages, isDarkMode, liveAiData = [], setLiveAi
              {isAdmin && (
                 <div className="px-3 mb-2 w-full animate-fade-in-up">
                     <button 
-                        onClick={() => setShowAdminTrain(!showAdminTrain)}
+                        onClick={() => {
+                            triggerHaptic();
+                            setShowAdminTrain(!showAdminTrain);
+                            if (!showAdminTrain) {
+                                setTimeout(() => {
+                                    if (messagesEndRef.current) messagesEndRef.current.scrollIntoView({ behavior: 'smooth', block: 'end' });
+                                }, 100);
+                            }
+                        }}
                         className={`text-[12px] font-bold px-4 py-2 rounded-full border transition-colors flex items-center gap-2 shadow-sm active:scale-95 ${isDarkMode ? 'bg-[#1E1E1E] border-[#2C2C2C] text-[#41B6E6]' : 'bg-[#F8F9FA] border-[#E5E7EB] text-[#0277C5]'}`}
                     >
                         <ShieldCheck size={16} /> {showAdminTrain ? 'Close Training UI' : 'Train AI Live'}
@@ -1038,8 +1070,8 @@ const ChatBot = ({ messages, setMessages, isDarkMode, liveAiData = [], setLiveAi
                             />
                             <button 
                                 onClick={handleSaveTraining}
-                                disabled={!trainKeys || !trainKm || !trainEn}
-                                className={`w-full py-3.5 rounded-xl font-bold text-[14px] transition-all active:scale-[0.98] flex items-center justify-center gap-2 shadow-md ${(!trainKeys || !trainKm || !trainEn) ? 'opacity-50 cursor-not-allowed bg-gray-500 text-white' : 'bg-gradient-to-r from-green-500 to-emerald-500 text-white hover:opacity-90'}`}
+                                disabled={!trainKeys || (!trainKm && !trainEn)}
+                                className={`w-full py-3.5 rounded-xl font-bold text-[14px] transition-all active:scale-[0.98] flex items-center justify-center gap-2 shadow-md ${(!trainKeys || (!trainKm && !trainEn)) ? 'opacity-50 cursor-not-allowed bg-gray-500 text-white' : 'bg-gradient-to-r from-green-500 to-emerald-500 text-white hover:opacity-90'}`}
                             >
                                 <Database size={16} /> Push to Offline DB
                             </button>

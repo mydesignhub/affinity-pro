@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Trophy, Flame, CheckCircle2, XCircle, Play, Star, Award, Lock, ChevronRight, User, Timer, Camera, PenTool, Book } from 'lucide-react';
+import { Trophy, Flame, CheckCircle2, XCircle, Play, Star, Award, Lock, ChevronRight, User, Timer, Camera, PenTool, Book, ShieldCheck } from 'lucide-react';
 import { useLanguage } from '../../../contexts/LanguageContext';
 import { initialQuestionBank } from '../../../data/data';
 import CertificateForm from './CertificateForm';
@@ -31,7 +31,8 @@ const defaultStars = {
 const defaultScores = { photo: 0, designer: 0, publisher: 0 };
 const defaultCerts = { photo: null, designer: null, publisher: null };
 
-const Test = ({ isDarkMode }) => {
+// 🌟 ADDED isAdmin PROP HERE
+const Test = ({ isDarkMode, isAdmin }) => {
     const { lang } = useLanguage(); 
 
     const [gameState, setGameState] = useState('menu');
@@ -45,7 +46,7 @@ const Test = ({ isDarkMode }) => {
     // Tracks which Affinity app is active
     const [activeAppTab, setActiveAppTab] = useState('photo');
 
-    // 🌟 VERCEL FIX: Initialize states safely to prevent Error #418 Hydration Mismatch
+    // Initialize states safely to prevent Error #418 Hydration Mismatch
     const [userName, setUserName] = useState('');
     const [highScores, setHighScores] = useState(defaultScores);
     const [unlockedLevels, setUnlockedLevels] = useState(defaultLevels);
@@ -60,7 +61,7 @@ const Test = ({ isDarkMode }) => {
     const [streak, setStreak] = useState(0);
     const [isShaking, setIsShaking] = useState(false);
 
-    // 🌟 VERCEL FIX: Read from localStorage ONLY after the component has mounted
+    // Read from localStorage ONLY after the component has mounted
     useEffect(() => {
         if (typeof window !== 'undefined') {
             const savedName = localStorage.getItem('myAffinity_user_name');
@@ -127,22 +128,21 @@ const Test = ({ isDarkMode }) => {
             setTimeLeft(15 * 60);
         } else { setTimeLeft(null); }
 
-        if (!currentUnlocked.includes(level) && level !== 'final') { triggerHaptic('error'); return; }
+        // 🌟 ADMIN BYPASS: Admins ignore level locks
+        if (!isAdmin && !currentUnlocked.includes(level) && level !== 'final') { triggerHaptic('error'); return; }
         triggerHaptic();
         
-        // Filter ONLY questions for the active app
         let filtered = initialQuestionBank.filter(q => q.app === activeAppTab);
         if (level !== 'final') {
              filtered = filtered.filter(q => q.level === level);
         }
 
-        // Pad with other levels if not enough questions exist
         if (filtered.length < quizConfig.amount && level !== 'final') {
             const extra = initialQuestionBank.filter(q => q.app === activeAppTab && q.level !== level);
             filtered = [...filtered, ...extra];
         }
 
-        const amount = level === 'final' ? 15 : Math.min(quizConfig.amount, filtered.length);
+        const amount = level === 'final' ? 40 : Math.min(quizConfig.amount, filtered.length);
         let shuffledQuestions = shuffleArray(filtered).slice(0, amount);
 
         const finalQuestions = shuffledQuestions.map(q => {
@@ -156,20 +156,64 @@ const Test = ({ isDarkMode }) => {
 
         setQuestions(finalQuestions); 
         setQuizConfig(prev => ({...prev, level}));
-        setCurrentQuestion(0); setScore(0); setIsAnswered(false); setSelectedOption(null); setUserAnswers([]); setStreak(0);
+        
+        // 🌟 100% CLEAN STATE RESET ON START 🌟
+        setCurrentQuestion(0); 
+        setScore(0); 
+        setIsAnswered(false); 
+        setSelectedOption(null); 
+        setUserAnswers([]); 
+        setStreak(0);
         setGameState('playing'); 
+    };
+
+    // 🌟 BULLETPROOF CLICK HANDLER 🌟
+    const handleOptionClick = (selectedIndex) => {
+        if (isAnswered) return;
+        
+        // 1. Lock the answers immediately
+        setSelectedOption(selectedIndex);
+        setIsAnswered(true);
+
+        const qInfo = questions[currentQuestion];
+        const isCorrect = selectedIndex === qInfo.correct;
+        const newScore = isCorrect ? score + 1 : score;
+
+        // 2. Handle feedback and scoring
+        if (isCorrect) {
+            setScore(newScore);
+            setStreak(s => s + 1);
+            triggerHaptic('success');
+        } else {
+            setStreak(0);
+            setIsShaking(true);
+            triggerHaptic('error');
+            setTimeout(() => setIsShaking(false), 500);
+        }
+
+        // 3. Save the answer history
+        setUserAnswers(prev => [...prev, { qId: currentQuestion, selected: selectedIndex, isCorrect }]);
+
+        // 4. Safely transition to the next question
+        setTimeout(() => {
+            if (currentQuestion + 1 < questions.length) {
+                // Clear the selection completely BEFORE moving forward
+                setSelectedOption(null);
+                setIsAnswered(false);
+                setCurrentQuestion(prev => prev + 1);
+            } else {
+                finishQuiz(newScore);
+            }
+        }, 1200); // Slightly longer delay allows the user to see the correct answer clearly
     };
 
     const finishQuiz = (finalScore) => {
         const percentage = Math.round((finalScore / questions.length) * 100);
-        
-        // Get formatted app name for the Certificate
         const appDisplayName = activeAppTab === 'photo' ? 'Affinity Photo' : activeAppTab === 'designer' ? 'Affinity Designer' : 'Affinity Publisher';
 
         if (quizConfig.level === 'final') {
             if (percentage >= 90) {
-                // Save the cert exactly to this active App!
-                const newCert = { name: userName, score: percentage, date: new Date().toISOString(), appCourse: appDisplayName };
+                const newCert = { name: userName || 'Administrator', score: percentage, date: new Date().toISOString(), appCourse: appDisplayName };
                 setCertsData(prev => ({ ...prev, [activeAppTab]: newCert }));
                 setGameState('certificate');
             } else {
@@ -179,7 +223,6 @@ const Test = ({ isDarkMode }) => {
         } else {
             let stars = finalScore >= (questions.length * 0.8) ? 3 : finalScore >= (questions.length * 0.5) ? 2 : finalScore >= (questions.length * 0.3) ? 1 : 0;
             
-            // Save Stars
             setLevelStars(prev => {
                 const appStars = prev[activeAppTab] || { beginner: 0, intermediate: 0, advanced: 0 };
                 if (stars > (appStars[quizConfig.level] || 0)) {
@@ -188,7 +231,6 @@ const Test = ({ isDarkMode }) => {
                 return prev;
             });
 
-            // Unlock next levels
             if (stars >= 1 || percentage >= 80) {
                 setUnlockedLevels(prev => {
                     const appLevels = prev[activeAppTab] || ['beginner'];
@@ -201,7 +243,6 @@ const Test = ({ isDarkMode }) => {
                 });
             }
 
-            // Save High Score
             setHighScores(prev => {
                 const appScore = prev[activeAppTab] || 0;
                 if (finalScore > appScore) {
@@ -217,11 +258,12 @@ const Test = ({ isDarkMode }) => {
     if (gameState === 'certificate') return <CertificateForm certData={currentCert} isDarkMode={isDarkMode} onBack={() => setGameState('menu')} />;
 
     if (gameState === 'menu') {
-        const allUnlocked = currentUnlocked.includes('advanced') && currentStars.advanced >= 2;
+        // 🌟 ADMIN BYPASS: Final exam is always unlocked for admins
+        const allUnlocked = isAdmin || (currentUnlocked.includes('advanced') && currentStars.advanced >= 2);
+        
         return (
             <div className="flex flex-col items-center justify-start min-h-full pt-4 sm:pt-8 px-2 sm:px-6 pb-28 sm:pb-32 w-full">
                 
-                {/* 🌟 3-WAY TOGGLE ABOVE THE QUIZ MENU 🌟 */}
                 <div className={`flex justify-center p-1.5 rounded-2xl mx-auto max-w-md w-full mb-6 border shadow-sm ${isDarkMode ? 'bg-[#1E1E1E] border-[#2C2C2C]' : 'bg-[#FFFFFF] border-[#E5E7EB]'}`}>
                     <button onClick={() => { setActiveAppTab('photo'); triggerHaptic(); }} className={`flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl font-bold text-sm transition-all ${activeAppTab === 'photo' ? (isDarkMode ? 'bg-[#41B6E6] text-[#0A0A0A]' : 'bg-[#0277C5] text-white') : (isDarkMode ? 'text-[#A0A0A0] hover:text-[#F1F1F1]' : 'text-[#6B7280] hover:text-[#1A1A1A]')}`}>
                         <Camera size={16} /> Photo
@@ -295,7 +337,7 @@ const Test = ({ isDarkMode }) => {
 
                     <div className="grid gap-3">
                         {['beginner', 'intermediate', 'advanced'].map(lvl => {
-                            const isLocked = !currentUnlocked.includes(lvl);
+                            const isLocked = !isAdmin && !currentUnlocked.includes(lvl); // Admin ignores locks
                             const stars = currentStars[lvl] || 0;
                             const displayLevel = lang === 'en' ? lvl.charAt(0).toUpperCase() + lvl.slice(1) : (lvl === 'beginner' ? 'កម្រិតដំបូង' : lvl === 'intermediate' ? 'កម្រិតមធ្យម' : 'កម្រិតខ្ពស់');
 
@@ -321,11 +363,29 @@ const Test = ({ isDarkMode }) => {
                                     <div className={`p-3 rounded-2xl ${allUnlocked ? 'bg-[#C5B002] text-white shadow-inner' : 'bg-gray-100 text-gray-400 dark:bg-[#2C2C2C] dark:text-[#A0A0A0]'}`}><Trophy size={20}/></div>
                                     <div className="text-left">
                                         <span className={`font-khmer font-black text-[15px] block tracking-tight ${allUnlocked ? 'text-[#C5B002]' : ''}`}>{currentCert ? (lang === 'en' ? 'Retake Final Exam' : 'ប្រឡងយកវិញ្ញាបនបត្រម្តងទៀត') : (lang === 'en' ? 'Final Certification Exam' : 'តេស្តបញ្ចប់យកវិញ្ញាបនបត្រ')}</span>
-                                        <span className={`text-[10px] font-black uppercase tracking-widest mt-1 block ${allUnlocked ? 'opacity-80 text-[#C5B002]' : 'opacity-50'}`}>{lang === 'en' ? '15 Questions • 15 Mins • 90% to Pass' : '១៥ សំណួរ • ១៥ នាទី • ជាប់ ៩០%'}</span>
+                                        <span className={`text-[10px] font-black uppercase tracking-widest mt-1 block ${allUnlocked ? 'opacity-80 text-[#C5B002]' : 'opacity-50'}`}>{lang === 'en' ? '40 Questions • 15 Mins • 90% to Pass' : '៤០ សំណួរ • ១៥ នាទី • ជាប់ ៩០%'}</span>
                                     </div>
                                 </div>
                                 {!allUnlocked && <Lock size={16} className="opacity-30"/>}
                             </button>
+
+                            {/* 🌟 ADMIN: ONE-CLICK CERTIFICATE GENERATOR 🌟 */}
+                            {isAdmin && !currentCert && (
+                                <button 
+                                    onClick={() => {
+                                        triggerHaptic('success');
+                                        const finalName = userName.trim() || 'Admin Tester';
+                                        const appDisplayName = activeAppTab === 'photo' ? 'Affinity Photo' : activeAppTab === 'designer' ? 'Affinity Designer' : 'Affinity Publisher';
+                                        const newCert = { name: finalName, score: 100, date: new Date().toISOString(), appCourse: appDisplayName };
+                                        setCertsData(prev => ({ ...prev, [activeAppTab]: newCert }));
+                                        setGameState('certificate');
+                                    }}
+                                    className={`p-4 rounded-[24px] border flex items-center justify-center gap-3 transition-all duration-500 ease-out hover:-translate-y-1 active:scale-95 shadow-md ${isDarkMode ? 'border-[#41B6E6]/50 bg-[#41B6E6]/10 text-[#41B6E6] hover:shadow-[0_10px_20px_rgba(65,182,230,0.15)]' : 'border-[#0277C5]/50 bg-[#0277C5]/10 text-[#0277C5] hover:shadow-[0_10px_20px_rgba(2,119,197,0.15)]'}`}
+                                >
+                                    <ShieldCheck size={20} />
+                                    <span className="font-khmer font-black text-[15px] tracking-tight">Admin: Generate Certificate</span>
+                                </button>
+                            )}
 
                             {currentCert && (
                                 <button onClick={() => setGameState('certificate')} className={`p-4 rounded-[24px] border flex items-center justify-center gap-3 transition-all duration-500 ease-out hover:-translate-y-1 active:scale-95 shadow-md ${isDarkMode ? 'border-[#41B6E6]/50 bg-[#41B6E6]/10 text-[#41B6E6] hover:shadow-[0_10px_20px_rgba(65,182,230,0.15)]' : 'border-[#0277C5]/50 bg-[#0277C5]/10 text-[#0277C5] hover:shadow-[0_10px_20px_rgba(2,119,197,0.15)]'}`}>
@@ -374,7 +434,7 @@ const Test = ({ isDarkMode }) => {
                             let iconStyle = isDarkMode ? 'bg-[#1E1E1E] border-[#3A3A3C] text-[#A0A0A0]' : 'bg-[#FFFFFF] border-[#D1D5DB] text-[#6B7280] shadow-sm';
 
                             if (!isAnswered) {
-                                btnStyle += isDarkMode ? ' hover:bg-[#1E1E1E] hover:border-[#41B6E6]/50 hover:-translate-y-1 shadow-sm' : ' hover:bg-white hover:border-[#0277C5]/50 hover:-translate-y-1 shadow-sm';
+                                btnStyle += isDarkMode ? ' md:hover:bg-[#1E1E1E] md:hover:border-[#41B6E6]/50 md:hover:-translate-y-1 shadow-sm active:scale-[0.98]' : ' md:hover:bg-white md:hover:border-[#0277C5]/50 md:hover:-translate-y-1 shadow-sm active:scale-[0.98]';
                             } else {
                                 if (isCorrectChoice) {
                                     btnStyle = 'bg-green-500/10 border-green-500/30 text-green-600 font-bold';
@@ -389,23 +449,7 @@ const Test = ({ isDarkMode }) => {
                             }
 
                             return (
-                                <button key={i} disabled={isAnswered} onClick={() => {
-                                    setSelectedOption(i); setIsAnswered(true);
-                                    const isCorrect = i === q.correct;
-                                    if (isCorrect) { setScore(score + 1); setStreak(streak + 1); triggerHaptic('success'); }
-                                    else { setStreak(0); setIsShaking(true); triggerHaptic('error'); setTimeout(() => setIsShaking(false), 500); }
-                                    setUserAnswers(prev => [...prev, { qId: currentQuestion, selected: i, isCorrect }]);
-                                    setTimeout(() => {
-                                        if (currentQuestion + 1 < questions.length) { 
-                                            setCurrentQuestion(currentQuestion + 1); 
-                                            
-                                            // 🌟 FIX: Reset the selection and answer status for the NEXT question!
-                                            setIsAnswered(false); 
-                                            setSelectedOption(null); 
-                                        }
-                                        else finishQuiz(score + (isCorrect ? 1 : 0));
-                                    }, 1000);
-                                }} className={`p-4 text-left rounded-[20px] sm:rounded-[24px] border-2 transition-all duration-300 ease-out font-khmer text-[15px] sm:text-[16px] flex items-center group relative overflow-hidden ${btnStyle}`}>
+                                <button key={i} disabled={isAnswered} onClick={() => handleOptionClick(i)} className={`p-4 text-left rounded-[20px] sm:rounded-[24px] border-2 transition-all duration-300 ease-out font-khmer text-[15px] sm:text-[16px] flex items-center group relative overflow-hidden ${btnStyle}`}>
                                     <span className={`w-10 h-10 min-w-[40px] flex items-center justify-center rounded-[12px] mr-4 text-[12px] font-black border transition-all ${iconStyle}`}>{String.fromCharCode(65 + i)}</span>
                                     <span className="flex-1 leading-snug py-1 pr-2">{opt}</span>
                                 </button>
