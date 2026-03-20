@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-// 🌟 FIX: Added the missing 'X' right here! 
-import { ChevronRight, PlayCircle, Sparkles, Zap, Facebook, Send, Globe, BookOpen, Award, Bot, Camera, PenTool, Book, Lock, KeyRound, AlertCircle, ChevronDown, RotateCcw, Crown, LogOut, Copy, ShieldCheck, CheckCircle, Database, Loader2, Maximize, Minimize, Clock, DownloadCloud, Circle, CheckCircle2, Trash2, X } from 'lucide-react';
+import { ChevronRight, PlayCircle, Sparkles, Zap, Facebook, Send, Globe, BookOpen, Award, Bot, Camera, PenTool, Book, Lock, KeyRound, AlertCircle, ChevronDown, Crown, LogOut, Copy, ShieldCheck, Database, Loader2, Maximize, Minimize, Clock, DownloadCloud, Circle, CheckCircle2, Trash2, X } from 'lucide-react';
 
 // FIREBASE IMPORTS
 import { signInWithPopup, signOut } from 'firebase/auth';
@@ -165,7 +164,9 @@ const LessonModal = ({ lesson, onClose, isDarkMode, completedSteps, setCompleted
 
   if (!lesson) return null;
 
-  const currentStepData = lesson.steps && lesson.steps.length > 0 ? lesson.steps[activeStep] : null;
+  const currentStepData = lesson.steps && lesson.steps.length > 0 
+      ? lesson.steps[activeStep] 
+      : { id: 1, videoUrl: lesson.videoUrl }; 
 
   const handlePlayClick = () => {
       setHasStarted(true);
@@ -444,13 +445,13 @@ const LessonModal = ({ lesson, onClose, isDarkMode, completedSteps, setCompleted
                 </div>
             )}
 
-            {!isCssFullscreen && (
+            {!isCssFullscreen && lesson.steps && lesson.steps.length > 0 && (
                 <div className="flex flex-col gap-3 pb-6">
                     <h4 className={`text-sm font-bold uppercase tracking-widest px-2 opacity-50 ${isDarkMode ? 'text-[#A0A0A0]' : 'text-[#6B7280]'}`}>
                         {lang === 'en' ? 'Course Content' : 'មាតិកាមេរៀន'}
                     </h4>
                     
-                    {lesson.steps?.map((step, idx) => {
+                    {lesson.steps.map((step, idx) => {
                         const isActive = activeStep === idx;
                         const stepKey = `${lesson.id}_${step.id}`;
                         const isCompleted = completedSteps.includes(stepKey);
@@ -609,11 +610,20 @@ function AppContent() {
 
   // 🌟 TWO-LEVEL ADMIN LOGIC
   const [isSuperAdmin, setIsSuperAdmin] = useState(false);
+  const [showSuperAdminModal, setShowSuperAdminModal] = useState(false);
+  const [superAdminTab, setSuperAdminTab] = useState('ai'); // 'ai' or 'cert'
 
   useEffect(() => {
       const unlockSuperAdmin = () => setIsSuperAdmin(true);
+      const toggleSuperAdminPanel = () => setShowSuperAdminModal(prev => !prev);
+      
       window.addEventListener('superAdminUnlocked', unlockSuperAdmin);
-      return () => window.removeEventListener('superAdminUnlocked', unlockSuperAdmin);
+      window.addEventListener('toggleSuperAdminPanel', toggleSuperAdminPanel);
+      
+      return () => {
+          window.removeEventListener('superAdminUnlocked', unlockSuperAdmin);
+          window.removeEventListener('toggleSuperAdminPanel', toggleSuperAdminPanel);
+      };
   }, []);
 
   const isBasicAdmin = user?.email === ADMIN_EMAIL;
@@ -632,7 +642,6 @@ function AppContent() {
   const [isDataLoaded, setIsDataLoaded] = useState(false);
 
   // --- NEW AI TRAINING STATES ---
-  const [adminView, setAdminView] = useState('keys'); // 'keys' or 'ai'
   const [liveAiData, setLiveAiData] = useState(() => {
       if (typeof window !== 'undefined') {
           const saved = localStorage.getItem('myAffinity_live_ai');
@@ -905,7 +914,7 @@ function AppContent() {
       try {
           await signOut(auth);
           setUser(null);
-          setIsSuperAdmin(false); // Reset Super Admin status
+          setIsSuperAdmin(false); 
           setPurchasedCourses({ photo: null, designer: null, publisher: null });
           localStorage.removeItem('myAffinity_purchases');
       } catch (error) {
@@ -1021,6 +1030,16 @@ function AppContent() {
       setTimeout(() => setCopiedAll(false), 2000);
   };
 
+  // 🌟 TRIGGER CERTIFICATE TEST FROM ADMIN PANEL
+  const testCertificate = (appId) => {
+      triggerHaptic('success');
+      setShowSuperAdminModal(false);
+      setActiveTab('quiz'); 
+      setTimeout(() => {
+          window.dispatchEvent(new CustomEvent('forceTestCertificate', { detail: appId }));
+      }, 150); 
+  };
+
   const currentCourseData = activeAppTab ? (courseData[activeAppTab] || []) : [];
   const totalSteps = currentCourseData.reduce((acc, lesson) => acc + (lesson.steps?.length || 0), 0);
   const progressPrefix = activeAppTab === 'photo' ? 'ph' : activeAppTab === 'designer' ? 'ds' : 'pb';
@@ -1078,6 +1097,123 @@ function AppContent() {
               window.history.pushState({ modalOpen: false, tab: tab, course: null }, '');
           }} isDarkMode={isDarkMode} setIsDarkMode={setIsDarkMode} />
       </div>
+
+      {/* 🌟 GLOBAL SUPER ADMIN PANEL 🌟 */}
+      {showSuperAdminModal && isSuperAdmin && (
+          <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-fade-in">
+              <div className={`w-full max-w-2xl max-h-[85vh] rounded-[32px] flex flex-col border shadow-2xl relative overflow-hidden ${isDarkMode ? 'bg-[#121212] border-[#3A3A3C]' : 'bg-white border-[#E5E7EB]'}`}>
+                  
+                  <div className={`flex items-center justify-between p-5 border-b ${isDarkMode ? 'border-[#2C2C2C]' : 'border-[#E5E7EB]'}`}>
+                      <div className="flex items-center gap-3">
+                          <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-purple-500 to-indigo-500 flex items-center justify-center text-white shadow-lg">
+                              <Crown size={20} />
+                          </div>
+                          <div>
+                              <h2 className={`font-black tracking-tight ${isDarkMode ? 'text-white' : 'text-black'}`}>Super Admin Panel</h2>
+                              <p className={`text-[10px] font-bold uppercase tracking-widest ${isDarkMode ? 'text-[#A0A0A0]' : 'text-gray-500'}`}>System Management</p>
+                          </div>
+                      </div>
+                      <button onClick={() => setShowSuperAdminModal(false)} className={`p-2 rounded-full transition-colors ${isDarkMode ? 'hover:bg-[#2C2C2C] text-[#A0A0A0]' : 'hover:bg-gray-100 text-gray-500'}`}>
+                          <X size={20} />
+                      </button>
+                  </div>
+
+                  <div className={`flex p-3 gap-2 border-b ${isDarkMode ? 'border-[#2C2C2C] bg-[#1A1A1A]' : 'border-[#E5E7EB] bg-gray-50'}`}>
+                      <button onClick={() => setSuperAdminTab('ai')} className={`flex-1 py-2.5 rounded-xl font-bold text-[13px] uppercase tracking-wider transition-all flex items-center justify-center gap-2 ${superAdminTab === 'ai' ? (isDarkMode ? 'bg-[#2C2C2C] text-[#41B6E6] shadow-sm border border-[#3A3A3C]' : 'bg-white text-[#0277C5] shadow-sm border border-[#E5E7EB]') : (isDarkMode ? 'text-[#6B7280] hover:text-[#A0A0A0]' : 'text-[#9CA3AF] hover:text-gray-600')}`}><Database size={16}/> AI Studio</button>
+                      <button onClick={() => setSuperAdminTab('cert')} className={`flex-1 py-2.5 rounded-xl font-bold text-[13px] uppercase tracking-wider transition-all flex items-center justify-center gap-2 ${superAdminTab === 'cert' ? (isDarkMode ? 'bg-[#2C2C2C] text-[#41B6E6] shadow-sm border border-[#3A3A3C]' : 'bg-white text-[#0277C5] shadow-sm border border-[#E5E7EB]') : (isDarkMode ? 'text-[#6B7280] hover:text-[#A0A0A0]' : 'text-[#9CA3AF] hover:text-gray-600')}`}><Award size={16}/> Certificates</button>
+                  </div>
+
+                  <div className="flex-1 overflow-y-auto p-5 custom-scrollbar bg-inherit">
+                      {superAdminTab === 'ai' ? (
+                          <div className="animate-fade-in-up space-y-4">
+                              <p className={`text-[13px] font-khmer leading-relaxed ${isDarkMode ? 'text-[#9AA0A6]' : 'text-gray-500'}`}>
+                                  Manage the AI training data you added directly from the AI Chat. When ready, copy the final Data Code to update your main <code className="bg-black/20 px-1 rounded">data.js</code> file.
+                              </p>
+                              
+                              <div className="flex gap-3 pt-2 mb-2">
+                                  <button 
+                                      onClick={() => {
+                                          if (liveAiData.length === 0) return;
+                                          triggerHaptic('success');
+                                          let codeStr = "";
+                                          liveAiData.forEach(item => {
+                                              codeStr += `    {\n        primaryKeys: ${JSON.stringify(item.primaryKeys)},\n        keys: ${JSON.stringify(item.keys)},\n        regex: ${JSON.stringify(item.regex)},\n        answer: ${JSON.stringify(item.answer)},\n        answer_en: ${JSON.stringify(item.answer_en)}\n    },\n`;
+                                          });
+                                          navigator.clipboard.writeText(codeStr);
+                                          alert("AI Data Code Copied! Paste this inside KNOWLEDGE_BASE in your data.js file.");
+                                      }}
+                                      className={`w-full py-3.5 rounded-2xl font-bold text-[13px] transition-all flex items-center justify-center gap-2 shadow-lg ${liveAiData.length === 0 ? 'opacity-50 cursor-not-allowed bg-gray-500 text-white' : 'bg-gradient-to-r from-green-500 to-emerald-500 text-white hover:opacity-90'}`}
+                                  >
+                                      <Copy size={16} /> Copy All Data Code ({liveAiData.length} Entries)
+                                  </button>
+                              </div>
+
+                              {liveAiData.length > 0 && (
+                                  <div className="mt-4 border-t border-dashed border-gray-500/30 pt-4">
+                                      <div className="flex justify-between items-center mb-3">
+                                          <span className={`text-[10px] font-bold uppercase tracking-widest ${isDarkMode ? 'text-green-400' : 'text-green-600'}`}>{liveAiData.length} Live Offline Entries</span>
+                                          <button onClick={() => { if(window.confirm('Clear all offline training data?')) { setLiveAiData([]); localStorage.removeItem('myAffinity_live_ai'); } }} className="text-red-500 hover:text-red-400"><Trash2 size={16}/></button>
+                                      </div>
+                                      <div className="space-y-3 max-h-64 overflow-y-auto custom-scrollbar pr-1">
+                                          {liveAiData.map((data, i) => (
+                                              <div key={i} className={`p-3.5 rounded-xl border text-[11px] font-khmer leading-relaxed relative ${isDarkMode ? 'bg-[#121212] border-[#2C2C2C] text-[#A0A0A0]' : 'bg-[#F8F9FA] border-[#E5E7EB] text-[#6B7280]'}`}>
+                                                  <button 
+                                                      onClick={() => {
+                                                          triggerHaptic();
+                                                          const updated = liveAiData.filter((_, index) => index !== i);
+                                                          setLiveAiData(updated);
+                                                          localStorage.setItem('myAffinity_live_ai', JSON.stringify(updated));
+                                                      }}
+                                                      className="absolute top-2 right-2 text-red-500 hover:text-red-400 p-1.5 bg-red-500/10 rounded-md transition-colors"
+                                                      title="Remove this entry"
+                                                  >
+                                                      <Trash2 size={14} />
+                                                  </button>
+                                                  <div className="pr-8 space-y-1.5">
+                                                      <div><strong className={isDarkMode ? 'text-white' : 'text-black'}>Keys: </strong> {data.keys.join(', ')}</div>
+                                                      <div><strong className={isDarkMode ? 'text-[#41B6E6]' : 'text-[#0277C5]'}>KM: </strong> <span className="line-clamp-2">{data.answer}</span></div>
+                                                      <div><strong className={isDarkMode ? 'text-[#41B6E6]' : 'text-[#0277C5]'}>EN: </strong> <span className="line-clamp-2">{data.answer_en}</span></div>
+                                                  </div>
+                                              </div>
+                                          ))}
+                                      </div>
+                                  </div>
+                              )}
+                          </div>
+                      ) : (
+                          <div className="animate-fade-in-up space-y-4">
+                              <p className={`text-[13px] font-khmer leading-relaxed ${isDarkMode ? 'text-[#9AA0A6]' : 'text-gray-500'}`}>
+                                  Instantly generate and view passing certificates to verify rendering and UI without taking the 40-question exam.
+                              </p>
+                              <div className="grid gap-3">
+                                  <button onClick={() => testCertificate('photo')} className={`w-full p-4 rounded-2xl font-black font-khmer flex items-center justify-between border transition-all active:scale-[0.98] ${isDarkMode ? 'bg-[#1E1E1E] border-[#2C2C2C] hover:border-[#41B6E6]/50' : 'bg-[#F8F9FA] border-[#E5E7EB] hover:border-[#0277C5]/50'}`}>
+                                      <div className="flex items-center gap-3">
+                                          <div className="w-10 h-10 rounded-xl bg-[#B52885]/10 text-[#B52885] flex items-center justify-center"><Camera size={20}/></div>
+                                          <span className={isDarkMode ? 'text-white' : 'text-black'}>Affinity Photo Certificate</span>
+                                      </div>
+                                      <ChevronRight size={18} className="opacity-50"/>
+                                  </button>
+                                  <button onClick={() => testCertificate('designer')} className={`w-full p-4 rounded-2xl font-black font-khmer flex items-center justify-between border transition-all active:scale-[0.98] ${isDarkMode ? 'bg-[#1E1E1E] border-[#2C2C2C] hover:border-[#41B6E6]/50' : 'bg-[#F8F9FA] border-[#E5E7EB] hover:border-[#0277C5]/50'}`}>
+                                      <div className="flex items-center gap-3">
+                                          <div className="w-10 h-10 rounded-xl bg-[#2862B5]/10 text-[#2862B5] flex items-center justify-center"><PenTool size={20}/></div>
+                                          <span className={isDarkMode ? 'text-white' : 'text-black'}>Affinity Designer Certificate</span>
+                                      </div>
+                                      <ChevronRight size={18} className="opacity-50"/>
+                                  </button>
+                                  <button onClick={() => testCertificate('publisher')} className={`w-full p-4 rounded-2xl font-black font-khmer flex items-center justify-between border transition-all active:scale-[0.98] ${isDarkMode ? 'bg-[#1E1E1E] border-[#2C2C2C] hover:border-[#41B6E6]/50' : 'bg-[#F8F9FA] border-[#E5E7EB] hover:border-[#0277C5]/50'}`}>
+                                      <div className="flex items-center gap-3">
+                                          <div className="w-10 h-10 rounded-xl bg-[#D7383D]/10 text-[#D7383D] flex items-center justify-center"><Book size={20}/></div>
+                                          <span className={isDarkMode ? 'text-white' : 'text-black'}>Affinity Publisher Certificate</span>
+                                      </div>
+                                      <ChevronRight size={18} className="opacity-50"/>
+                                  </button>
+                              </div>
+                          </div>
+                      )}
+                  </div>
+              </div>
+          </div>
+      )}
       
       {expandedLesson && (
         <LessonModal 
@@ -1155,9 +1291,10 @@ function AppContent() {
                                     <div className={`p-5 sm:p-8 rounded-3xl border shadow-2xl relative overflow-hidden ${isDarkMode ? 'bg-[#1C1C1E] border-[#2C2C2C]' : 'bg-white border-[#E5E7EB]'}`}>
                                         <div className={`absolute top-0 right-0 w-40 h-40 bg-gradient-to-br ${theme.gradient} rounded-full blur-[60px] opacity-10 pointer-events-none`}></div>
                                         <h4 className={`text-xl font-black font-khmer flex items-center gap-3 mb-6 ${theme.text}`}>
-                                            <ShieldCheck className="w-6 h-6"/> Key Generator {isSuperAdmin && "(Super)"}
+                                            <ShieldCheck className="w-6 h-6"/> Key Generator
                                         </h4>
-                                        
+
+                                        {/* --- ONLY KEY MANAGER UI HERE (AI Studio moved to global panel) --- */}
                                         <div className="animate-fade-in-up">
                                             <p className={`text-[14px] mb-6 font-khmer leading-relaxed ${isDarkMode ? 'text-[#9AA0A6]' : 'text-gray-500'}`}>
                                                 Generate secure, single-use activation keys for <strong>{appDisplayName}</strong>. Keys automatically expire 7 days after generation.

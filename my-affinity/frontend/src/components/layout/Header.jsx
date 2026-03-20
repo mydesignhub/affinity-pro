@@ -1,10 +1,10 @@
-import React, { useState, useRef } from 'react';
-import { Moon, Sun, BookOpen, Award, Zap, Bot, Lock, Mail, KeyRound, X, AlertCircle, CheckCircle2 } from 'lucide-react';
+import React, { useState, useRef, useEffect } from 'react';
+import { Moon, Sun, BookOpen, Award, Zap, Bot, Lock, Mail, KeyRound, X, AlertCircle, CheckCircle2, Crown } from 'lucide-react';
 import { useLanguage } from '../../contexts/LanguageContext';
 
 // FIREBASE IMPORTS
 import { signInWithEmailAndPassword, sendPasswordResetEmail, createUserWithEmailAndPassword } from 'firebase/auth';
-import { auth } from '../../firebase'; // Assuming Header is in src/components/layout/
+import { auth } from '../../firebase'; 
 
 const ADMIN_EMAIL = 'koymy.mlk@gmail.com';
 
@@ -18,6 +18,9 @@ export default function Header({ activeTab, setActiveTab, isDarkMode, setIsDarkM
     const [adminError, setAdminError] = useState('');
     const [adminSuccess, setAdminSuccess] = useState('');
     const [isLoading, setIsLoading] = useState(false);
+    
+    // 🌟 NEW: Track Super Admin State to show the Header Button
+    const [isSuperAdminActive, setIsSuperAdminActive] = useState(false);
 
     const clickCount = useRef(0);
     const clickTimer = useRef(null);
@@ -84,6 +87,7 @@ export default function Header({ activeTab, setActiveTab, isDarkMode, setIsDarkM
                 setPassword('');
                 setAdminSuccess('');
                 setIsSignUpMode(false);
+                setIsSuperAdminActive(true); // Activate the Crown button!
                 window.dispatchEvent(new CustomEvent('superAdminUnlocked'));
             }, 1500);
 
@@ -160,6 +164,17 @@ export default function Header({ activeTab, setActiveTab, isDarkMode, setIsDarkM
                             <button onClick={(e) => { e.preventDefault(); triggerHaptic(); setIsDarkMode(!isDarkMode); }} className={`w-10 h-10 sm:w-11 sm:h-11 rounded-full flex items-center justify-center transition-all active:scale-90 border shadow-sm ${isDarkMode ? 'bg-[#1E1E1E] border-[#2C2C2C] text-[#F1F1F1] hover:bg-[#2C2C2C]' : 'bg-[#FFFFFF] border-[#E5E7EB] text-[#1A1A1A] hover:bg-[#F8F9FA]'}`} title="Toggle Theme">
                                 {isDarkMode ? <Sun size={18} /> : <Moon size={18} />}
                             </button>
+                            
+                            {/* 🌟 NEW: SECRET SUPER ADMIN BUTTON 🌟 */}
+                            {isSuperAdminActive && (
+                                <button 
+                                    onClick={(e) => { e.preventDefault(); triggerHaptic(); window.dispatchEvent(new CustomEvent('toggleSuperAdminPanel')); }} 
+                                    className={`w-10 h-10 sm:w-11 sm:h-11 rounded-full flex items-center justify-center transition-all active:scale-90 shadow-lg bg-gradient-to-r from-purple-500 to-indigo-500 text-white animate-fade-in-up border border-indigo-400`} 
+                                    title="Open Super Admin Panel"
+                                >
+                                    <Crown size={18} />
+                                </button>
+                            )}
                         </div>
                         
                     </div>
