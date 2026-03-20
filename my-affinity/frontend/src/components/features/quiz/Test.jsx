@@ -53,7 +53,6 @@ const Test = ({ isDarkMode, isAdmin }) => {
     const [certsData, setCertsData] = useState(defaultCerts);
     const [isDataLoaded, setIsDataLoaded] = useState(false);
 
-    // 🌟 FIX: Temp state to force synchronous cert rendering
     const [activeCertData, setActiveCertData] = useState(null);
 
     const nameInputRef = useRef(null);
@@ -84,6 +83,30 @@ const Test = ({ isDarkMode, isAdmin }) => {
             setIsDataLoaded(true);
         }
     }, []);
+
+    // 🌟 THE FIX: Listen for the Super Admin Panel signal from App.jsx!
+    useEffect(() => {
+        const handleForceCert = (e) => {
+            const appId = e.detail;
+            const appDisplayName = appId === 'photo' ? 'Affinity Photo' : appId === 'designer' ? 'Affinity Designer' : 'Affinity Publisher';
+            
+            const newCert = { 
+                name: userName || 'Super Admin', 
+                score: 100, 
+                date: new Date().toISOString(), 
+                appCourse: appDisplayName 
+            };
+            
+            // Force the active tab, generate the certificate, and jump to certificate view
+            setActiveAppTab(appId);
+            setCertsData(prev => ({ ...prev, [appId]: newCert }));
+            setActiveCertData(newCert);
+            setGameState('certificate');
+        };
+
+        window.addEventListener('forceTestCertificate', handleForceCert);
+        return () => window.removeEventListener('forceTestCertificate', handleForceCert);
+    }, [userName]); // Depend on userName so the cert gets the right name
 
     // Extract current app's specific data
     const currentUnlocked = unlockedLevels[activeAppTab] || ['beginner'];
@@ -130,6 +153,7 @@ const Test = ({ isDarkMode, isAdmin }) => {
             setTimeLeft(15 * 60);
         } else { setTimeLeft(null); }
 
+        // Admins ignore level locks
         if (!isAdmin && !currentUnlocked.includes(level) && level !== 'final') { triggerHaptic('error'); return; }
         triggerHaptic();
         
@@ -209,10 +233,9 @@ const Test = ({ isDarkMode, isAdmin }) => {
             if (percentage >= 90 || isAdmin) {
                 const displayScore = isAdmin && percentage < 90 ? 100 : percentage;
                 const newCert = { name: userName || 'Administrator', score: displayScore, date: new Date().toISOString(), appCourse: appDisplayName };
-                
-                // 🌟 FIX: Force active cert rendering synchronously to avoid the race condition
-                setActiveCertData(newCert);
                 setCertsData(prev => ({ ...prev, [activeAppTab]: newCert }));
+                
+                setActiveCertData(newCert);
                 setGameState('certificate');
             } else {
                 setCertsData(prev => ({ ...prev, [activeAppTab]: null })); 
@@ -253,12 +276,10 @@ const Test = ({ isDarkMode, isAdmin }) => {
         }
     };
 
-    // 🌟 FIX: Guarantee the Certificate Form ALWAYS renders if state is active
     if (gameState === 'certificate') {
         const certToRender = activeCertData || currentCert;
         
         if (!certToRender) {
-             // Failsafe: if we somehow drop data, quietly go to menu
              setTimeout(() => setGameState('menu'), 0);
              return null;
         }
@@ -388,7 +409,7 @@ const Test = ({ isDarkMode, isAdmin }) => {
                                 {!allUnlocked && <Lock size={16} className="opacity-30"/>}
                             </button>
 
-                            {/* 🌟 ADMIN: ONE-CLICK CERTIFICATE GENERATOR 🌟 */}
+                            {/* 🌟 ADMIN: Internal One-Click Certificate Generator */}
                             {isAdmin && !currentCert && (
                                 <button 
                                     onClick={() => {
@@ -397,9 +418,8 @@ const Test = ({ isDarkMode, isAdmin }) => {
                                         const appDisplayName = activeAppTab === 'photo' ? 'Affinity Photo' : activeAppTab === 'designer' ? 'Affinity Designer' : 'Affinity Publisher';
                                         const newCert = { name: finalName, score: 100, date: new Date().toISOString(), appCourse: appDisplayName };
                                         
-                                        // Update state instantly and securely
-                                        setActiveCertData(newCert);
                                         setCertsData(prev => ({ ...prev, [activeAppTab]: newCert }));
+                                        setActiveCertData(newCert); 
                                         setGameState('certificate');
                                     }}
                                     className={`p-4 rounded-[24px] border flex items-center justify-center gap-3 transition-all duration-500 ease-out hover:-translate-y-1 active:scale-95 shadow-md ${isDarkMode ? 'border-[#41B6E6]/50 bg-[#41B6E6]/10 text-[#41B6E6] hover:shadow-[0_10px_20px_rgba(65,182,230,0.15)]' : 'border-[#0277C5]/50 bg-[#0277C5]/10 text-[#0277C5] hover:shadow-[0_10px_20px_rgba(2,119,197,0.15)]'}`}
