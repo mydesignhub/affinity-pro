@@ -12,6 +12,9 @@ import Test from './components/features/quiz/Test';
 import ChatBot from './components/features/ai/ChatBot';
 import LessonCard from './components/features/learn/LessonCard';
 
+// 🌟 FIX: Directly import the Certificate Form so App.jsx can render it instantly!
+import CertificateForm from './components/features/quiz/CertificateForm';
+
 import { courseData, TIPS_LIST, TIPS_LIST_EN } from './data/data';
 import { useLanguage, LanguageProvider } from './contexts/LanguageContext';
 
@@ -612,9 +615,9 @@ function AppContent() {
   const [isSuperAdmin, setIsSuperAdmin] = useState(false);
   const [showSuperAdminModal, setShowSuperAdminModal] = useState(false);
   const [superAdminTab, setSuperAdminTab] = useState('ai'); 
-  
-  // 🌟 FIX: Direct Prop Handoff State
-  const [adminCertRequest, setAdminCertRequest] = useState(null);
+
+  // 🌟 FIX: Holds the fully generated Certificate so it can be previewed seamlessly
+  const [adminPreviewCert, setAdminPreviewCert] = useState(null);
 
   useEffect(() => {
       const unlockSuperAdmin = () => setIsSuperAdmin(true);
@@ -1045,12 +1048,18 @@ function AppContent() {
       setTimeout(() => setCopiedAll(false), 2000);
   };
 
-  // 🌟 FIX: We now use direct State Prop Handoff instead of buggy Event Listeners
+  // 🌟 FIX: Isolated Admin Certificate Renderer. Renders INSTANTLY over everything!
   const testCertificate = (appId) => {
       triggerHaptic('success');
       setShowSuperAdminModal(false);
-      setAdminCertRequest(appId); // Direct prop handoff!
-      setActiveTab('quiz'); 
+      const appDisplayName = appId === 'photo' ? 'Affinity Photo' : appId === 'designer' ? 'Affinity Designer' : 'Affinity Publisher';
+      const newCert = {
+          name: user?.displayName || 'Super Admin Tester',
+          score: 100,
+          date: new Date().toISOString(),
+          appCourse: appDisplayName
+      };
+      setAdminPreviewCert(newCert);
   };
 
   const currentCourseData = activeAppTab ? (courseData[activeAppTab] || []) : [];
@@ -1100,6 +1109,13 @@ function AppContent() {
         .animate-fade-in-up { animation: fade-in-up 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
       `}</style>
       
+      {/* 🌟 FIX: Absolute Overlay for Admin Certificate Preview! 🌟 */}
+      {adminPreviewCert && (
+          <div className="fixed inset-0 z-[99999] bg-black">
+              <CertificateForm certData={adminPreviewCert} isDarkMode={isDarkMode} onBack={() => setAdminPreviewCert(null)} />
+          </div>
+      )}
+
       <div 
           style={{ paddingTop: 'max(env(safe-area-inset-top), 0px)' }} 
           className={`w-full shrink-0 ${(activeTab === 'tools' || activeTab === 'ai') ? 'hidden md:block' : 'block'}`}
@@ -1391,7 +1407,7 @@ function AppContent() {
                                                             {generatedKeys.split('\n').length} Codes Ready
                                                         </span>
                                                         <button onClick={handleCopyAllCodes} className={`text-xs px-3 py-1.5 rounded-lg flex items-center gap-1.5 font-bold transition-colors ${theme.text} ${theme.lightBg} hover:opacity-80`}>
-                                                            {copiedAll ? <CheckCircle size={14}/> : <Copy size={14}/>} {copiedAll ? 'Copied' : 'Copy All'}
+                                                            {copiedAll ? <CheckCircle2 size={14}/> : <Copy size={14}/>} {copiedAll ? 'Copied' : 'Copy All'}
                                                         </button>
                                                     </div>
                                                     {generatedKeys.split('\n').map(c => (
@@ -1407,7 +1423,7 @@ function AppContent() {
                                                                     }} 
                                                                     className={`p-2.5 rounded-xl transition-colors ${isDarkMode ? 'bg-white/5 hover:bg-white/10' : 'bg-black/5 hover:bg-black/10'}`}
                                                                 >
-                                                                    {copiedCode === c ? <CheckCircle size={18} className="text-green-500"/> : <Copy size={18} className={isDarkMode ? 'text-gray-300' : 'text-gray-700'} />}
+                                                                    {copiedCode === c ? <CheckCircle2 size={18} className="text-green-500"/> : <Copy size={18} className={isDarkMode ? 'text-gray-300' : 'text-gray-700'} />}
                                                                 </button>
                                                                 <button onClick={() => shareSingleKeyTelegram(c)} className={`p-2.5 rounded-xl transition-colors shadow-sm text-white bg-gradient-to-r ${theme.gradient}`}>
                                                                     <Send size={18} />
@@ -1729,15 +1745,7 @@ function AppContent() {
             )}
             {activeTab === 'tools' && <div className="pb-24"><ToolsView isDarkMode={isDarkMode} /></div>}
             
-            {/* 🌟 FIX: PASS THE PROP DOWN TO TEST.JSX 🌟 */}
-            {activeTab === 'quiz' && (
-                <Test 
-                    isDarkMode={isDarkMode} 
-                    isAdmin={isSuperAdmin} 
-                    adminCertRequest={adminCertRequest} 
-                    clearAdminCertRequest={() => setAdminCertRequest(null)} 
-                />
-            )}
+            {activeTab === 'quiz' && <Test isDarkMode={isDarkMode} isAdmin={isSuperAdmin} />}
         </main>
       ) : (
         <div className={`flex-1 relative w-full h-full md:pb-0 z-0 ${activeAppTab ? 'hidden' : 'block'}`} style={{ paddingTop: 'max(env(safe-area-inset-top), 0px)' }}>

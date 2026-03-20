@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Bot, Send, RefreshCw, Trash2, ThumbsUp, ThumbsDown, ArrowRight, Brain, Loader2 } from 'lucide-react';
 import { useLanguage } from '../../../contexts/LanguageContext';
-import { collection, addDoc } from 'firebase/firestore';
+import { collection, addDoc, deleteDoc, doc } from 'firebase/firestore';
 import { db } from '../../../firebase'; 
 
 import { 
@@ -65,9 +65,10 @@ const callRealAI = async (userPrompt, language, history = []) => {
     }
 };
 
+// 🌟 FIX: Bulletproof Regex! Keeps English, Numbers, and ALL Khmer characters (vowels/subscripts). Destroys Emojis and spaces!
 const strictClean = (text) => {
     if (!text) return '';
-    return text.toLowerCase().replace(/[^\p{L}\p{N}]/gu, '');
+    return text.toLowerCase().replace(/[^a-z0-9\u1780-\u17FF]/g, '');
 };
 
 const formatMessage = (text) => {
@@ -115,6 +116,7 @@ const ChatBot = ({ messages, setMessages, isDarkMode, liveAiData = [], setLiveAi
           const prompt = `Analyze this interaction:\nUser Question: "${userQ}"\nBot Answer: "${botA}"\n\nTask:\n1. Check if this is related to Graphic Design, Affinity software, Photo Editing, Layouts, or Typography. If it is UNRELATED (e.g., cooking, politics, general greetings), reply ONLY with the exact word: REJECT\n2. If it IS related, correct grammar, translate it to provide both English and Khmer answers, and format as JSON:\n{"primaryKeys": ["key1", "key2"], "keys": ["k1", "k2", "k3"], "regex": ["reg1"], "answer": "Corrected Khmer", "answer_en": "English translation"}`;
 
           const res = await callRealAI(prompt, 'en', []);
+          
           if (res.includes('REJECT')) return; 
           
           const match = res.match(/\{[\s\S]*\}/);
@@ -132,14 +134,13 @@ const ChatBot = ({ messages, setMessages, isDarkMode, liveAiData = [], setLiveAi
           newEntry.primaryKeys = uniquePrimaryKeys;
           newEntry.keys = uniqueKeys;
           
-          // 🌟 FIX: Add to Firestore AND grab the unique Document ID
           const docRef = await addDoc(collection(db, "ai_knowledge"), newEntry);
-          newEntry.id = docRef.id; // Attach ID so we can delete it later!
+          newEntry.id = docRef.id;
 
           if(setLiveAiData) setLiveAiData(prev => [...prev, newEntry]);
 
       } catch (err) {
-          console.log("Secret training skipped:", err.message);
+          console.log("Secret training skipped.");
       }
   };
 
@@ -175,9 +176,8 @@ const ChatBot = ({ messages, setMessages, isDarkMode, liveAiData = [], setLiveAi
           newEntry.primaryKeys = uniquePrimaryKeys;
           newEntry.keys = uniqueKeys;
           
-          // 🌟 FIX: Add to Firestore AND grab the unique Document ID
           const docRef = await addDoc(collection(db, "ai_knowledge"), newEntry);
-          newEntry.id = docRef.id; // Attach ID so we can delete it later!
+          newEntry.id = docRef.id;
 
           if(setLiveAiData) setLiveAiData(prev => [...prev, newEntry]);
 
@@ -322,10 +322,12 @@ const ChatBot = ({ messages, setMessages, isDarkMode, liveAiData = [], setLiveAi
       return chipsData ? chipsData.slice(0, 3) : getRandomItems(getSuggestList(), 3);
   };
 
+  // 🌟 ZERO-FLAW NLP ROUTER 🌟
   const findAIResponse = (inputTxt, history = []) => {
       const rawInput = inputTxt.trim();
       const cleanInput = strictClean(rawInput); 
 
+      // Remove Question Words
       const questionWords = ['តើ', 'ជាអ្វី', 'អ្វីទៅជា', 'អ្វីទៅ', 'ស្អីគេ', 'ស្អី', 'គឺជាអ្វី', 'របៀប', 'របៀបណា', 'យ៉ាងម៉េច', 'howto', 'whatis', 'explain'];
       let coreSubject = cleanInput;
       let wordStripped = true;
@@ -342,6 +344,7 @@ const ChatBot = ({ messages, setMessages, isDarkMode, liveAiData = [], setLiveAi
       }
       coreSubject = coreSubject.trim();
 
+      // 1. EXACT MATCH GUARANTEE
       for (const item of COMBINED_DB) {
           const exactTriggers = [...(item.primaryKeys || []), ...(item.keys || [])].map(strictClean); 
           if (exactTriggers.includes(cleanInput) || exactTriggers.includes(coreSubject)) {
@@ -362,9 +365,11 @@ const ChatBot = ({ messages, setMessages, isDarkMode, liveAiData = [], setLiveAi
           }
       }
 
+      // 2. LONG SENTENCE FIREWALL (Only block if > 6 words so specific searches pass)
       const wordCount = rawInput.trim().split(/\s+/).length;
-      if (wordCount > 4) return { needsBackend: true, query: rawInput };
+      if (wordCount > 6) return { needsBackend: true, query: rawInput };
 
+      // 3. SHORT TYPO & DEEP KEYWORD GUESSING
       let bestMatch = null;
       let highestScore = 0;
       for (const item of COMBINED_DB) {
@@ -757,7 +762,6 @@ const ChatBot = ({ messages, setMessages, isDarkMode, liveAiData = [], setLiveAi
                                   <button onClick={() => handleFeedback(i, 'up')} className="p-1 hover:text-green-500 rounded-md transition-colors"><ThumbsUp size={14}/></button>
                                   <button onClick={() => handleFeedback(i, 'down')} className="p-1 hover:text-red-500 rounded-md transition-colors"><ThumbsDown size={14}/></button>
                                   
-                                  {/* 🌟 1-CLICK AI AUTO TRAINING (SUPER ADMIN ONLY) 🌟 */}
                                   {isAdmin && m.isTrainable && !m.isTraining && (
                                       <button 
                                           onClick={() => handleAutoTrain(i)} 
