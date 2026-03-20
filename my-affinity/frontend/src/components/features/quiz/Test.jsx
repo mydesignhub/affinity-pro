@@ -4,6 +4,7 @@ import { useLanguage } from '../../../contexts/LanguageContext';
 import { initialQuestionBank } from '../../../data/data';
 import CertificateForm from './CertificateForm';
 
+// === UTILITY FUNCTIONS ===
 const triggerHaptic = (type = 'light') => {
     if (typeof navigator !== 'undefined' && navigator.vibrate) {
         if (type === 'error') navigator.vibrate([50, 50, 50]);
@@ -21,7 +22,6 @@ const shuffleArray = (array) => {
     return newArr;
 };
 
-// Default empty states for the 3 apps
 const defaultLevels = { photo: ['beginner'], designer: ['beginner'], publisher: ['beginner'] };
 const defaultStars = { 
     photo: { beginner: 0, intermediate: 0, advanced: 0 }, 
@@ -32,8 +32,8 @@ const defaultScores = { photo: 0, designer: 0, publisher: 0 };
 const defaultCerts = { photo: null, designer: null, publisher: null };
 
 const Test = ({ isDarkMode, isAdmin }) => {
+    // === STATE MANAGEMENT ===
     const { lang } = useLanguage(); 
-
     const [gameState, setGameState] = useState('menu');
     const [questions, setQuestions] = useState([]);
     const [currentQuestion, setCurrentQuestion] = useState(0);
@@ -42,10 +42,8 @@ const Test = ({ isDarkMode, isAdmin }) => {
     const [isAnswered, setIsAnswered] = useState(false);
     const [quizConfig, setQuizConfig] = useState({ level: 'beginner', amount: 5 });
     
-    // Tracks which Affinity app is active
     const [activeAppTab, setActiveAppTab] = useState('photo');
 
-    // Initialize states safely to prevent Error #418 Hydration Mismatch
     const [userName, setUserName] = useState('');
     const [highScores, setHighScores] = useState(defaultScores);
     const [unlockedLevels, setUnlockedLevels] = useState(defaultLevels);
@@ -53,9 +51,7 @@ const Test = ({ isDarkMode, isAdmin }) => {
     const [certsData, setCertsData] = useState(defaultCerts);
     const [isDataLoaded, setIsDataLoaded] = useState(false);
 
-    // 🌟 FIX: We still use this to instantly feed the form upon creation
     const [activeCertData, setActiveCertData] = useState(null);
-
     const nameInputRef = useRef(null);
 
     const [timeLeft, setTimeLeft] = useState(null);
@@ -63,7 +59,12 @@ const Test = ({ isDarkMode, isAdmin }) => {
     const [streak, setStreak] = useState(0);
     const [isShaking, setIsShaking] = useState(false);
 
-    // Read from localStorage ONLY after the component has mounted
+    const currentUnlocked = unlockedLevels[activeAppTab] || ['beginner'];
+    const currentStars = levelStars[activeAppTab] || { beginner: 0, intermediate: 0, advanced: 0 };
+    const currentHighScore = highScores[activeAppTab] || 0;
+    const currentCert = certsData[activeAppTab] || null;
+
+    // === EFFECTS ===
     useEffect(() => {
         if (typeof window !== 'undefined') {
             const savedName = localStorage.getItem('myAffinity_user_name');
@@ -85,19 +86,12 @@ const Test = ({ isDarkMode, isAdmin }) => {
         }
     }, []);
 
-    // Extract current app's specific data
-    const currentUnlocked = unlockedLevels[activeAppTab] || ['beginner'];
-    const currentStars = levelStars[activeAppTab] || { beginner: 0, intermediate: 0, advanced: 0 };
-    const currentHighScore = highScores[activeAppTab] || 0;
-    const currentCert = certsData[activeAppTab] || null;
-
     useEffect(() => {
         if (nameInputRef.current && userName && !nameInputRef.current.textContent) {
             nameInputRef.current.textContent = userName;
         }
     }, [activeAppTab, userName]); 
 
-    // Save everything to localStorage whenever it changes
     useEffect(() => {
         if (isDataLoaded) {
             localStorage.setItem('myAffinity_quiz_unlocked', JSON.stringify(unlockedLevels));
@@ -115,6 +109,7 @@ const Test = ({ isDarkMode, isAdmin }) => {
         return () => clearInterval(timerId);
     }, [gameState, quizConfig.level, timeLeft, score]);
 
+    // === GAME LOGIC ===
     const formatTime = (seconds) => {
         const m = Math.floor(seconds / 60); const s = seconds % 60;
         return `${m}:${s < 10 ? '0' : ''}${s}`;
@@ -157,7 +152,6 @@ const Test = ({ isDarkMode, isAdmin }) => {
 
         setQuestions(finalQuestions); 
         setQuizConfig(prev => ({...prev, level}));
-        
         setCurrentQuestion(0); 
         setScore(0); 
         setIsAnswered(false); 
@@ -252,15 +246,14 @@ const Test = ({ isDarkMode, isAdmin }) => {
         }
     };
 
-    // 🌟 FIX: Full screen Certificate Layout overlay. Immune to crashes!
+    // === RENDER STATE: CERTIFICATE ===
+    // 🌟 FULL SCREEN ABSOLUTE OVERLAY TO PREVENT LAYOUT CRASHES
     if (gameState === 'certificate') {
         const certToRender = activeCertData || currentCert;
-        
         if (!certToRender) {
              setGameState('menu');
              return null;
         }
-
         return (
             <div className="fixed inset-0 w-full h-full z-[99999] bg-[#0A0A0A] flex flex-col items-center justify-center p-0 sm:p-6 overflow-hidden">
                 <CertificateForm 
@@ -275,6 +268,7 @@ const Test = ({ isDarkMode, isAdmin }) => {
         );
     }
 
+    // === RENDER STATE: MENU ===
     if (gameState === 'menu') {
         const allUnlocked = isAdmin || (currentUnlocked.includes('advanced') && currentStars.advanced >= 2);
         
@@ -386,10 +380,11 @@ const Test = ({ isDarkMode, isAdmin }) => {
                                 {!allUnlocked && <Lock size={16} className="opacity-30"/>}
                             </button>
 
-                            {/* 🌟 FIX: Internal Admin Certificate Button 🌟 */}
+                            {/* 🌟 ADMIN ONLY: Instant Generate Certificate Button */}
                             {isAdmin && !currentCert && (
                                 <button 
-                                    onClick={() => {
+                                    onClick={(e) => {
+                                        e.preventDefault(); e.stopPropagation();
                                         triggerHaptic('success');
                                         const finalName = userName.trim() || 'Admin Tester';
                                         const appDisplayName = activeAppTab === 'photo' ? 'Affinity Photo' : activeAppTab === 'designer' ? 'Affinity Designer' : 'Affinity Publisher';
@@ -406,10 +401,11 @@ const Test = ({ isDarkMode, isAdmin }) => {
                                 </button>
                             )}
 
-                            {/* Normal Users View Certificate Button */}
+                            {/* 🌟 USERS: View Saved Certificate */}
                             {currentCert && (
                                 <button 
-                                    onClick={() => {
+                                    onClick={(e) => {
+                                        e.preventDefault(); e.stopPropagation();
                                         setActiveCertData(currentCert);
                                         setGameState('certificate');
                                     }} 
@@ -426,6 +422,7 @@ const Test = ({ isDarkMode, isAdmin }) => {
         );
     }
 
+    // === RENDER STATE: PLAYING ===
     const q = questions[currentQuestion];
     if (gameState === 'playing' && q) {
         return (
@@ -487,6 +484,7 @@ const Test = ({ isDarkMode, isAdmin }) => {
         );
     }
 
+    // === RENDER STATE: RESULT ===
     if (gameState === 'result') {
         const percentage = Math.round((score / questions.length) * 100);
         return (
@@ -525,6 +523,7 @@ const Test = ({ isDarkMode, isAdmin }) => {
         );
     }
 
+    // === RENDER STATE: REVIEW ===
     return (
         <div className="flex flex-col font-khmer animate-fade-in max-w-[95%] sm:max-w-2xl mx-auto w-full pt-4 sm:pt-8 px-2 sm:px-6 pb-28 sm:pb-32 min-h-full">
             <div className="flex items-center justify-between mb-8 px-2">
