@@ -1,7 +1,10 @@
-const express = require('express');
-const cors = require('cors');
-const { GoogleGenerativeAI } = require('@google/generative-ai');
-require('dotenv').config();
+import express from 'express';
+import cors from 'cors';
+import { GoogleGenerativeAI } from '@google/generative-ai';
+import dotenv from 'dotenv';
+
+// Initialize dotenv
+dotenv.config();
 
 const app = express();
 
@@ -9,7 +12,7 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// 🌟 FIX: Load multiple keys from the .env file and split them into an array
+// Load multiple keys from the .env file and split them into an array
 const apiKeys = process.env.GEMINI_API_KEYS ? process.env.GEMINI_API_KEYS.split(',') : [];
 let currentKeyIndex = 0; // Keeps track of which key we are currently using
 
@@ -34,7 +37,6 @@ app.post('/chat', async (req, res) => {
     let attempts = 0;
 
     // 🌟 SMART KEY ROTATION ENGINE 🌟
-    // Try keys one by one. Stop when successful, or when all keys are exhausted.
     while (attempts < apiKeys.length) {
         try {
             // Initialize Gemini with the current active key
@@ -63,7 +65,6 @@ app.post('/chat', async (req, res) => {
                 attempts++;
             } else {
                 // 🛑 FAILED: This is a different error (e.g., bad prompt, safety block). 
-                // Do not waste other keys, just return the error to the user.
                 console.error("Gemini API Error:", error);
                 return res.status(500).json({ error: "Backend AI Error: " + error.message });
             }
@@ -72,7 +73,7 @@ app.post('/chat', async (req, res) => {
 
     // ❌ FAILED: The loop finished and ALL keys in your array are exhausted
     return res.status(429).json({ 
-        error: lang === 'en' 
+        error: language === 'en' 
             ? "Servers are currently extremely busy. Please try again in a minute." 
             : "ម៉ាស៊ីនមេកំពុងមមាញឹកខ្លាំង។ សូមព្យាយាមម្ដងទៀតនៅមួយនាទីក្រោយ។" 
     });
