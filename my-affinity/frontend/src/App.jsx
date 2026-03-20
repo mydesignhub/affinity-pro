@@ -164,7 +164,10 @@ const LessonModal = ({ lesson, onClose, isDarkMode, completedSteps, setCompleted
 
   if (!lesson) return null;
 
-  const currentStepData = lesson.steps && lesson.steps.length > 0 ? lesson.steps[activeStep] : null;
+  // 🌟 FIX: Guarantee the video panel exists even if the 'steps' array is missing
+  const currentStepData = lesson.steps && lesson.steps.length > 0 
+      ? lesson.steps[activeStep] 
+      : { id: 1, videoUrl: lesson.videoUrl }; 
 
   const handlePlayClick = () => {
       setHasStarted(true);
@@ -443,13 +446,13 @@ const LessonModal = ({ lesson, onClose, isDarkMode, completedSteps, setCompleted
                 </div>
             )}
 
-            {!isCssFullscreen && (
+            {!isCssFullscreen && lesson.steps && lesson.steps.length > 0 && (
                 <div className="flex flex-col gap-3 pb-6">
                     <h4 className={`text-sm font-bold uppercase tracking-widest px-2 opacity-50 ${isDarkMode ? 'text-[#A0A0A0]' : 'text-[#6B7280]'}`}>
                         {lang === 'en' ? 'Course Content' : 'មាតិកាមេរៀន'}
                     </h4>
                     
-                    {lesson.steps?.map((step, idx) => {
+                    {lesson.steps.map((step, idx) => {
                         const isActive = activeStep === idx;
                         const stepKey = `${lesson.id}_${step.id}`;
                         const isCompleted = completedSteps.includes(stepKey);
@@ -1094,8 +1097,8 @@ function AppContent() {
       )}
 
       {/* 🌟 FULL SCREEN COURSE PANEL 🌟 */}
-      {activeAppTab && !expandedLesson && (
-        <div className={`fixed inset-0 z-[60] overflow-y-auto custom-scrollbar flex flex-col ${isDarkMode ? 'bg-[#0A0A0A]' : 'bg-[#F4F5F7]'}`}>
+      {activeAppTab && (
+        <div className={`fixed inset-0 z-[60] overflow-y-auto custom-scrollbar flex-col ${isDarkMode ? 'bg-[#0A0A0A]' : 'bg-[#F4F5F7]'} ${expandedLesson ? 'hidden' : 'flex'}`}>
             
             <div 
                 className={`sticky top-0 z-50 px-4 pb-3 border-b flex items-center justify-between backdrop-blur-xl ${isDarkMode ? 'border-[#2C2C2C] bg-[#0A0A0A]/90' : 'border-[#E5E7EB] bg-[#FFFFFF]/90'}`}
@@ -1213,20 +1216,20 @@ function AppContent() {
                                                                             setCopiedCode(c); 
                                                                             triggerHaptic();
                                                                             setTimeout(() => setCopiedCode(null), 2000); 
-                                                                        }} 
-                                                                        className={`p-2.5 rounded-xl transition-colors ${isDarkMode ? 'bg-white/5 hover:bg-white/10' : 'bg-black/5 hover:bg-black/10'}`}
-                                                                    >
-                                                                        {copiedCode === c ? <CheckCircle size={18} className="text-green-500"/> : <Copy size={18} className={isDarkMode ? 'text-gray-300' : 'text-gray-700'} />}
-                                                                    </button>
-                                                                    <button onClick={() => shareSingleKeyTelegram(c)} className={`p-2.5 rounded-xl transition-colors shadow-sm text-white bg-gradient-to-r ${theme.gradient}`}>
-                                                                        <Send size={18} />
-                                                                    </button>
-                                                                </div>
+                                                                    }} 
+                                                                    className={`p-2.5 rounded-xl transition-colors ${isDarkMode ? 'bg-white/5 hover:bg-white/10' : 'bg-black/5 hover:bg-black/10'}`}
+                                                                >
+                                                                    {copiedCode === c ? <CheckCircle size={18} className="text-green-500"/> : <Copy size={18} className={isDarkMode ? 'text-gray-300' : 'text-gray-700'} />}
+                                                                </button>
+                                                                <button onClick={() => shareSingleKeyTelegram(c)} className={`p-2.5 rounded-xl transition-colors shadow-sm text-white bg-gradient-to-r ${theme.gradient}`}>
+                                                                    <Send size={18} />
+                                                                </button>
                                                             </div>
-                                                        ))}
-                                                    </div>
-                                                )}
-                                            </div>
+                                                        </div>
+                                                    ))}
+                                                </div>
+                                            )}
+                                        </div>
                                         ) : (
                                             /* --- AI MANAGER (Data is added from ChatBot) --- */
                                             <div className="animate-fade-in-up space-y-4">
