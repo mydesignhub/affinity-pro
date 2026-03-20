@@ -65,7 +65,7 @@ const callRealAI = async (userPrompt, language, history = []) => {
     }
 };
 
-// 🌟 FIX: Bulletproof Regex! Keeps English, Numbers, and ALL Khmer characters (vowels/subscripts). Destroys Emojis and spaces!
+// 🌟 FIX: Preserves English, Numbers, AND Khmer Letters/Vowels. Destroys Emojis.
 const strictClean = (text) => {
     if (!text) return '';
     return text.toLowerCase().replace(/[^a-z0-9\u1780-\u17FF]/g, '');
@@ -327,27 +327,23 @@ const ChatBot = ({ messages, setMessages, isDarkMode, liveAiData = [], setLiveAi
       const rawInput = inputTxt.trim();
       const cleanInput = strictClean(rawInput); 
 
-      // Remove Question Words
-      const questionWords = ['តើ', 'ជាអ្វី', 'អ្វីទៅជា', 'អ្វីទៅ', 'ស្អីគេ', 'ស្អី', 'គឺជាអ្វី', 'របៀប', 'របៀបណា', 'យ៉ាងម៉េច', 'howto', 'whatis', 'explain'];
-      let coreSubject = cleanInput;
-      let wordStripped = true;
-      while(wordStripped) {
-          wordStripped = false;
-          for(const qw of questionWords) {
-              const cleanQw = strictClean(qw);
-              if (coreSubject.startsWith(cleanQw)) {
-                  coreSubject = coreSubject.substring(cleanQw.length);
-                  wordStripped = true;
-                  break;
-              }
-          }
-      }
-      coreSubject = coreSubject.trim();
-
-      // 1. EXACT MATCH GUARANTEE
+      // 🌟 FIX: The Intent Extractor
+      // Instead of stripping from the *user's* query and misaligning with the *database* keys,
+      // we check if the user's query exactly matches a database key, OR if the user's query
+      // *contains* the database key as a sub-string (e.g. user says "how to X", DB says "X").
+      
+      // 1. EXACT & SUBSTRING MATCH GUARANTEE
       for (const item of COMBINED_DB) {
           const exactTriggers = [...(item.primaryKeys || []), ...(item.keys || [])].map(strictClean); 
-          if (exactTriggers.includes(cleanInput) || exactTriggers.includes(coreSubject)) {
+          
+          // Check if cleanInput EXACTLY matches a key, OR if cleanInput mathematically ends with a key
+          // This safely ignores prefixes like "how to" or "តើអ្វីទៅជា"
+          const isMatch = exactTriggers.some(trigger => 
+              cleanInput === trigger || 
+              (cleanInput.length > trigger.length && cleanInput.endsWith(trigger))
+          );
+
+          if (isMatch) {
               setCurrentTopic(item.primaryKeys ? item.primaryKeys[0] : null); 
               let answerText = lang === 'en' && item.answer_en ? item.answer_en : item.answer;
               let finalColors = item.colors;
@@ -365,11 +361,7 @@ const ChatBot = ({ messages, setMessages, isDarkMode, liveAiData = [], setLiveAi
           }
       }
 
-      // 2. LONG SENTENCE FIREWALL (Only block if > 6 words so specific searches pass)
-      const wordCount = rawInput.trim().split(/\s+/).length;
-      if (wordCount > 6) return { needsBackend: true, query: rawInput };
-
-      // 3. SHORT TYPO & DEEP KEYWORD GUESSING
+      // 2. SHORT TYPO & DEEP KEYWORD GUESSING
       let bestMatch = null;
       let highestScore = 0;
       for (const item of COMBINED_DB) {
@@ -379,6 +371,11 @@ const ChatBot = ({ messages, setMessages, isDarkMode, liveAiData = [], setLiveAi
               if (key.length >= 4 && cleanInput.includes(key)) score = Math.max(score, key.length * 10); 
               if (cleanInput.length >= 4 && key.includes(cleanInput)) score = Math.max(score, cleanInput.length * 10);
           }
+          
+          if (item.primaryKeys?.some(pk => rawInput.includes(pk) || pk.includes(rawInput.trim()))) {
+              score = Math.max(score, 1000); 
+          }
+          
           if (score > highestScore) { highestScore = score; bestMatch = item; }
       }
 
@@ -394,6 +391,7 @@ const ChatBot = ({ messages, setMessages, isDarkMode, liveAiData = [], setLiveAi
           return { answer: answerText, chips: generateFilteredChips(bestMatch, rawInput), uiElement: bestMatch.uiElement, colors: finalColors, actionButton: bestMatch.actionButton, needsBackend: false };
       }
 
+      // 3. CONVERSATIONAL FALLBACKS
       const FOLLOW_UP_MAP = {
           'តើអ្វីទៅជា Graphic Design?': 'ធាតុផ្សំមូលដ្ឋានទាំង ៦', 'what is graphic design': 'the 6 elements of design',
           'ធាតុផ្សំមូលដ្ឋានទាំង ៦': 'គោលការណ៍រចនា', 'the 6 elements of design': 'design principles',
