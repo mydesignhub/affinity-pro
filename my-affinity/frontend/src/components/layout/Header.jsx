@@ -2,8 +2,8 @@ import React, { useState, useRef } from 'react';
 import { Moon, Sun, BookOpen, Award, Zap, Bot, Trash2, Lock, Mail, KeyRound, X, AlertCircle, CheckCircle2 } from 'lucide-react';
 import { useLanguage } from '../../contexts/LanguageContext';
 
-// FIREBASE IMPORTS
-import { signInWithEmailAndPassword, sendPasswordResetEmail } from 'firebase/auth';
+// FIREBASE IMPORTS (Added createUserWithEmailAndPassword)
+import { signInWithEmailAndPassword, sendPasswordResetEmail, createUserWithEmailAndPassword } from 'firebase/auth';
 import { auth } from '../../firebase';
 
 const ADMIN_EMAIL = 'koymy.mlk@gmail.com';
@@ -13,6 +13,7 @@ export default function Header({ activeTab, setActiveTab, isDarkMode, setIsDarkM
     
     // Admin States
     const [showAdminModal, setShowAdminModal] = useState(false);
+    const [isSignUpMode, setIsSignUpMode] = useState(false); // NEW: Toggle for first-time setup
     const [password, setPassword] = useState('');
     const [adminError, setAdminError] = useState('');
     const [adminSuccess, setAdminSuccess] = useState('');
@@ -56,33 +57,53 @@ export default function Header({ activeTab, setActiveTab, isDarkMode, setIsDarkM
         window.dispatchEvent(new CustomEvent('clearAiChat'));
     };
 
-    const handleAdminLogin = async (e) => {
+    const handleAdminAuth = async (e) => {
         e.preventDefault();
         setIsLoading(true);
         setAdminError('');
         setAdminSuccess('');
 
-        if (!password) {
-            setAdminError("Password is required.");
+        if (!password || password.length < 6) {
+            setAdminError("Password must be at least 6 characters.");
             setIsLoading(false);
             triggerHaptic('error');
             return;
         }
 
         try {
-            await signInWithEmailAndPassword(auth, ADMIN_EMAIL, password);
-            triggerHaptic('success');
-            setAdminSuccess("Admin Access Granted.");
+            if (isSignUpMode) {
+                // FIRST TIME SETUP: Create the permanent admin account
+                await createUserWithEmailAndPassword(auth, ADMIN_EMAIL, password);
+                triggerHaptic('success');
+                setAdminSuccess("Admin Password Initialized Permanently!");
+            } else {
+                // NORMAL LOGIN: Authenticate existing admin
+                await signInWithEmailAndPassword(auth, ADMIN_EMAIL, password);
+                triggerHaptic('success');
+                setAdminSuccess("Admin Access Granted.");
+            }
+            
             setTimeout(() => {
                 setShowAdminModal(false);
                 setPassword('');
                 setAdminSuccess('');
-                // Dispatch event to app to set global admin state if needed
+                setIsSignUpMode(false);
+                // Unlock the rest of the app
                 window.dispatchEvent(new CustomEvent('adminUnlocked'));
-            }, 1000);
+            }, 1200);
+
         } catch (error) {
             triggerHaptic('error');
-            setAdminError("Invalid credentials or unauthorized access.");
+            console.error("Auth Error:", error.code);
+            
+            if (error.code === 'auth/email-already-in-use') {
+                setAdminError("Admin already initialized! Please switch to Login mode.");
+                setIsSignUpMode(false);
+            } else if (error.code === 'auth/invalid-credential' || error.code === 'auth/wrong-password') {
+                setAdminError("Invalid Admin Password.");
+            } else {
+                setAdminError("Authentication failed. " + error.message);
+            }
         } finally {
             setIsLoading(false);
         }
@@ -99,7 +120,7 @@ export default function Header({ activeTab, setActiveTab, isDarkMode, setIsDarkM
             setAdminSuccess(`Password reset link sent to ${ADMIN_EMAIL}`);
         } catch (error) {
             triggerHaptic('error');
-            setAdminError("Failed to send reset email. Please try again.");
+            setAdminError("Failed to send reset email. Initialize account first if you haven't.");
         } finally {
             setIsLoading(false);
         }
@@ -157,7 +178,7 @@ export default function Header({ activeTab, setActiveTab, isDarkMode, setIsDarkM
                         
                         <div className={`absolute top-0 right-0 w-32 h-32 rounded-full blur-[60px] opacity-20 pointer-events-none ${isDarkMode ? 'bg-[#41B6E6]' : 'bg-[#0277C5]'}`}></div>
                         
-                        <button onClick={() => { setShowAdminModal(false); setPassword(''); setAdminError(''); }} className={`absolute top-4 right-4 p-2 rounded-full transition-colors ${isDarkMode ? 'hover:bg-[#2C2C2C] text-[#9AA0A6]' : 'hover:bg-[#F3F4F6] text-[#6B7280]'}`}>
+                        <button onClick={() => { setShowAdminModal(false); setPassword(''); setAdminError(''); setIsSignUpMode(false); }} className={`absolute top-4 right-4 p-2 rounded-full transition-colors ${isDarkMode ? 'hover:bg-[#2C2C2C] text-[#9AA0A6]' : 'hover:bg-[#F3F4F6] text-[#6B7280]'}`}>
                             <X size={20} />
                         </button>
 
@@ -165,11 +186,15 @@ export default function Header({ activeTab, setActiveTab, isDarkMode, setIsDarkM
                             <div className={`w-16 h-16 rounded-2xl flex items-center justify-center mb-4 shadow-inner border ${isDarkMode ? 'bg-[#1E1E1E] border-[#3A3A3C] text-[#41B6E6]' : 'bg-[#F8F9FA] border-[#E5E7EB] text-[#0277C5]'}`}>
                                 <Lock size={32} />
                             </div>
-                            <h2 className={`text-xl font-black font-khmer tracking-tight ${isDarkMode ? 'text-white' : 'text-black'}`}>System Administrator</h2>
-                            <p className={`text-[13px] mt-1 ${isDarkMode ? 'text-[#A0A0A0]' : 'text-[#6B7280]'}`}>Authorized personnel only.</p>
+                            <h2 className={`text-xl font-black font-khmer tracking-tight ${isDarkMode ? 'text-white' : 'text-black'}`}>
+                                {isSignUpMode ? 'Initialize Admin' : 'System Administrator'}
+                            </h2>
+                            <p className={`text-[13px] mt-1 ${isDarkMode ? 'text-[#A0A0A0]' : 'text-[#6B7280]'}`}>
+                                {isSignUpMode ? 'Create your permanent password.' : 'Authorized personnel only.'}
+                            </p>
                         </div>
 
-                        <form onSubmit={handleAdminLogin} className="space-y-4 relative z-10">
+                        <form onSubmit={handleAdminAuth} className="space-y-4 relative z-10">
                             <div>
                                 <div className={`relative flex items-center p-1 rounded-2xl border ${isDarkMode ? 'bg-[#1E1E1E] border-[#3A3A3C]' : 'bg-[#F8F9FA] border-[#E5E7EB]'}`}>
                                     <Mail className={`absolute left-4 w-5 h-5 ${isDarkMode ? 'text-[#5F6368]' : 'text-[#9CA3AF]'}`} />
@@ -189,7 +214,7 @@ export default function Header({ activeTab, setActiveTab, isDarkMode, setIsDarkM
                                         type="password" 
                                         value={password}
                                         onChange={(e) => { setPassword(e.target.value); setAdminError(''); }}
-                                        placeholder="Admin Password"
+                                        placeholder={isSignUpMode ? "Create New Password" : "Enter Password"}
                                         autoFocus
                                         className={`w-full bg-transparent py-3 pl-12 pr-4 outline-none font-bold tracking-widest text-[14px] ${isDarkMode ? 'text-white' : 'text-black'}`}
                                     />
@@ -213,18 +238,29 @@ export default function Header({ activeTab, setActiveTab, isDarkMode, setIsDarkM
                                 disabled={isLoading || !password}
                                 className={`w-full py-3.5 rounded-xl font-black text-[14px] flex items-center justify-center gap-2 shadow-lg transition-all active:scale-[0.98] ${isLoading || !password ? 'opacity-50 cursor-not-allowed' : ''} ${isDarkMode ? 'bg-[#41B6E6] text-[#121212] hover:bg-[#329DCA]' : 'bg-[#0277C5] text-white hover:bg-[#01579B]'}`}
                             >
-                                {isLoading ? 'Verifying...' : 'Unlock System'}
+                                {isLoading ? 'Processing...' : (isSignUpMode ? 'Save Permanent Password' : 'Unlock System')}
                             </button>
                         </form>
 
-                        <div className="mt-6 pt-4 border-t text-center relative z-10" style={{ borderColor: isDarkMode ? '#2C2C2C' : '#E5E7EB' }}>
+                        <div className="mt-6 pt-4 border-t text-center relative z-10 flex flex-col gap-3" style={{ borderColor: isDarkMode ? '#2C2C2C' : '#E5E7EB' }}>
                             <button 
-                                onClick={handleResetPassword}
-                                disabled={isLoading}
-                                className={`text-[12px] font-bold transition-colors ${isDarkMode ? 'text-[#9AA0A6] hover:text-[#F1F1F1]' : 'text-[#6B7280] hover:text-[#1A1A1A]'}`}
+                                type="button"
+                                onClick={() => { setIsSignUpMode(!isSignUpMode); setAdminError(''); setAdminSuccess(''); }}
+                                className={`text-[12px] font-bold transition-colors ${isDarkMode ? 'text-[#41B6E6] hover:text-[#F1F1F1]' : 'text-[#0277C5] hover:text-[#1A1A1A]'}`}
                             >
-                                Send Password Reset Link
+                                {isSignUpMode ? "Already have a password? Login" : "First Time? Initialize Admin Password"}
                             </button>
+                            
+                            {!isSignUpMode && (
+                                <button 
+                                    type="button"
+                                    onClick={handleResetPassword}
+                                    disabled={isLoading}
+                                    className={`text-[12px] font-bold transition-colors ${isDarkMode ? 'text-[#9AA0A6] hover:text-[#F1F1F1]' : 'text-[#6B7280] hover:text-[#1A1A1A]'}`}
+                                >
+                                    Send Password Reset Link
+                                </button>
+                            )}
                         </div>
 
                     </div>
