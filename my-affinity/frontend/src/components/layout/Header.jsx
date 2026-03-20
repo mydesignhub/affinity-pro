@@ -1,10 +1,10 @@
 import React, { useState, useRef } from 'react';
-import { Moon, Sun, BookOpen, Award, Zap, Bot, Trash2, Lock, Mail, KeyRound, X, AlertCircle, CheckCircle2 } from 'lucide-react';
+import { Moon, Sun, BookOpen, Award, Zap, Bot, Lock, Mail, KeyRound, X, AlertCircle, CheckCircle2 } from 'lucide-react';
 import { useLanguage } from '../../contexts/LanguageContext';
 
 // FIREBASE IMPORTS
 import { signInWithEmailAndPassword, sendPasswordResetEmail, createUserWithEmailAndPassword } from 'firebase/auth';
-import { auth } from '../../firebase';
+import { auth } from '../../firebase'; // Assuming Header is in src/components/layout/
 
 const ADMIN_EMAIL = 'koymy.mlk@gmail.com';
 
@@ -55,11 +55,6 @@ export default function Header({ activeTab, setActiveTab, isDarkMode, setIsDarkM
         window.dispatchEvent(new CustomEvent('switchTab', { detail: tabId }));
     };
 
-    const handleClearChat = () => {
-        triggerHaptic();
-        window.dispatchEvent(new CustomEvent('clearAiChat'));
-    };
-
     const handleAdminAuth = async (e) => {
         e.preventDefault();
         setIsLoading(true);
@@ -89,7 +84,6 @@ export default function Header({ activeTab, setActiveTab, isDarkMode, setIsDarkM
                 setPassword('');
                 setAdminSuccess('');
                 setIsSignUpMode(false);
-                // 🌟 UPGRADE: Dispatch Super Admin Event
                 window.dispatchEvent(new CustomEvent('superAdminUnlocked'));
             }, 1500);
 

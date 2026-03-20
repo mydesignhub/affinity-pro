@@ -2,7 +2,9 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Bot, Send, RefreshCw, Trash2, ThumbsUp, ThumbsDown, ArrowRight, Brain, Loader2 } from 'lucide-react';
 import { useLanguage } from '../../../contexts/LanguageContext';
 import { collection, addDoc } from 'firebase/firestore';
-import { db } from '../../firebase';
+
+// 🌟 FIX: Updated path to reach src/firebase.js from src/components/features/ai/ChatBot.jsx
+import { db } from '../../../firebase';
 
 import { 
   SUGGESTED_QUESTIONS, SUGGESTED_QUESTIONS_EN, GREETINGS, GREETINGS_EN,
