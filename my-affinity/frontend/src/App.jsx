@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { ChevronRight, PlayCircle, Sparkles, Zap, Facebook, Send, Globe, BookOpen, Award, Bot, Camera, PenTool, Book, Lock, KeyRound, AlertCircle, ChevronDown, RotateCcw, Crown, LogOut, Copy, ShieldCheck, CheckCircle, Database, Loader2, Maximize, Minimize, Clock, DownloadCloud, Circle, CheckCircle2, X } from 'lucide-react';
+import { ChevronRight, PlayCircle, Sparkles, Zap, Facebook, Send, Globe, BookOpen, Award, Bot, Camera, PenTool, Book, Lock, KeyRound, AlertCircle, ChevronDown, RotateCcw, Crown, LogOut, Copy, ShieldCheck, CheckCircle, Database, Loader2, Maximize, Minimize, Clock, DownloadCloud, Circle, CheckCircle2, X, Trash2 } from 'lucide-react';
 
 // FIREBASE IMPORTS
 import { signInWithPopup, signOut } from 'firebase/auth';
@@ -619,6 +619,19 @@ function AppContent() {
   const [isVerifying, setIsVerifying] = useState(false);
   const [isDataLoaded, setIsDataLoaded] = useState(false);
 
+  // --- NEW AI TRAINING STATES ---
+  const [adminView, setAdminView] = useState('keys'); 
+  const [liveAiData, setLiveAiData] = useState(() => {
+      if (typeof window !== 'undefined') {
+          const saved = localStorage.getItem('myAffinity_live_ai');
+          return saved ? JSON.parse(saved) : [];
+      }
+      return [];
+  });
+  const [newAiKeywords, setNewAiKeywords] = useState('');
+  const [newAiAnswerKm, setNewAiAnswerKm] = useState('');
+  const [newAiAnswerEn, setNewAiAnswerEn] = useState('');
+
   useEffect(() => {
       if (isAdmin && activeAppTab && showRegistration) {
           const savedKeys = localStorage.getItem(`myAffinity_last_keys_${activeAppTab}`);
@@ -1107,66 +1120,162 @@ function AppContent() {
                                 {isAdmin ? (
                                     <div className={`p-5 sm:p-8 rounded-3xl border shadow-2xl relative overflow-hidden ${isDarkMode ? 'bg-[#1C1C1E] border-[#2C2C2C]' : 'bg-white border-[#E5E7EB]'}`}>
                                         <div className={`absolute top-0 right-0 w-40 h-40 bg-gradient-to-br ${theme.gradient} rounded-full blur-[60px] opacity-10 pointer-events-none`}></div>
-                                        <h4 className={`text-xl font-black font-khmer flex items-center gap-3 mb-2 ${theme.text}`}>
+                                        <h4 className={`text-xl font-black font-khmer flex items-center gap-3 mb-6 ${theme.text}`}>
                                             <ShieldCheck className="w-6 h-6"/> Admin Control Panel
                                         </h4>
-                                        <p className={`text-[14px] mb-6 font-khmer leading-relaxed ${isDarkMode ? 'text-[#9AA0A6]' : 'text-gray-500'}`}>
-                                            Generate secure, single-use activation keys for <strong>{appDisplayName}</strong>. Keys automatically expire 7 days after generation.
-                                        </p>
                                         
-                                        <div className="flex gap-3 mb-4">
-                                            <input 
-                                                type="number" 
-                                                value={genAmount} 
-                                                onChange={e => setGenAmount(Number(e.target.value))}
-                                                className={`w-24 p-3.5 rounded-2xl border text-center outline-none font-bold text-lg transition-colors shadow-inner ${isDarkMode ? 'bg-[#121212] border-[#2C2C2C] text-white focus:border-white/30' : 'bg-gray-50 border-[#E5E7EB] text-black focus:border-black/30'}`}
-                                                min="1" max="50"
-                                            />
-                                            <button onClick={handleGenerateAdminKeys} className={`flex-1 rounded-2xl font-bold font-khmer text-[15px] text-white transition-all active:scale-[0.98] shadow-lg flex items-center justify-center gap-2 bg-gradient-to-r ${theme.gradient}`}>
-                                                Generate Keys
-                                            </button>
+                                        {/* ADMIN TAB NAVIGATION */}
+                                        <div className={`flex p-1.5 rounded-2xl mb-6 shadow-inner border ${isDarkMode ? 'bg-[#121212] border-[#2C2C2C]' : 'bg-[#F4F5F7] border-[#E5E7EB]'}`}>
+                                            <button onClick={() => setAdminView('keys')} className={`flex-1 py-2.5 rounded-xl font-bold text-[13px] uppercase tracking-wider transition-all ${adminView === 'keys' ? (isDarkMode ? 'bg-[#2C2C2C] text-white shadow-sm' : 'bg-white text-black shadow-sm') : 'text-gray-500 hover:text-gray-400'}`}>🔑 Key Manager</button>
+                                            <button onClick={() => setAdminView('ai')} className={`flex-1 py-2.5 rounded-xl font-bold text-[13px] uppercase tracking-wider transition-all ${adminView === 'ai' ? (isDarkMode ? 'bg-[#2C2C2C] text-white shadow-sm' : 'bg-white text-black shadow-sm') : 'text-gray-500 hover:text-gray-400'}`}>🧠 AI Studio</button>
                                         </div>
 
-                                        <button 
-                                            onClick={handleFetchUnusedKeys} 
-                                            disabled={isFetchingKeys}
-                                            className={`w-full py-3.5 mb-6 rounded-2xl border font-bold font-khmer text-[14px] transition-all flex items-center justify-center gap-2 shadow-sm ${isDarkMode ? 'bg-[#121212] border-[#2C2C2C] text-[#A0A0A0] hover:text-white hover:border-[#41B6E6]/50' : 'bg-white border-[#E5E7EB] text-gray-600 hover:text-black hover:border-[#0277C5]/50'}`}
-                                        >
-                                            {isFetchingKeys ? <Loader2 size={18} className="animate-spin" /> : <Database size={18} />}
-                                            {lang === 'en' ? 'View Available Unused Keys' : 'មើលលេខកូដដែលនៅទំនេរ'}
-                                        </button>
-
-                                        {generatedKeys && (
-                                            <div className="space-y-3 max-h-64 overflow-y-auto custom-scrollbar animate-fade-in-up pr-2">
-                                                <div className="flex justify-between items-center mb-3 sticky top-0 bg-inherit py-1 z-10">
-                                                    <span className={`text-xs font-bold uppercase tracking-widest ${theme.text}`}>
-                                                        {generatedKeys.split('\n').length} Codes Ready
-                                                    </span>
-                                                    <button onClick={handleCopyAllCodes} className={`text-xs px-3 py-1.5 rounded-lg flex items-center gap-1.5 font-bold transition-colors ${theme.text} ${theme.lightBg} hover:opacity-80`}>
-                                                        {copiedAll ? <CheckCircle size={14}/> : <Copy size={14}/>} {copiedAll ? 'Copied' : 'Copy All'}
+                                        {adminView === 'keys' ? (
+                                            /* --- OLD KEY MANAGER UI --- */
+                                            <div className="animate-fade-in-up">
+                                                <p className={`text-[14px] mb-6 font-khmer leading-relaxed ${isDarkMode ? 'text-[#9AA0A6]' : 'text-gray-500'}`}>
+                                                    Generate secure, single-use activation keys for <strong>{appDisplayName}</strong>. Keys automatically expire 7 days after generation.
+                                                </p>
+                                                
+                                                <div className="flex gap-3 mb-4">
+                                                    <input 
+                                                        type="number" 
+                                                        value={genAmount} 
+                                                        onChange={e => setGenAmount(Number(e.target.value))}
+                                                        className={`w-24 p-3.5 rounded-2xl border text-center outline-none font-bold text-lg transition-colors shadow-inner ${isDarkMode ? 'bg-[#121212] border-[#2C2C2C] text-white focus:border-[#41B6E6]' : 'bg-gray-50 border-[#E5E7EB] text-black focus:border-[#0277C5]'}`}
+                                                        min="1" max="50"
+                                                    />
+                                                    <button onClick={handleGenerateAdminKeys} className={`flex-1 rounded-2xl font-bold font-khmer text-[15px] text-white transition-all active:scale-[0.98] shadow-lg flex items-center justify-center gap-2 bg-gradient-to-r ${theme.gradient}`}>
+                                                        Generate Keys
                                                     </button>
                                                 </div>
-                                                {generatedKeys.split('\n').map(c => (
-                                                    <div key={c} className={`p-3.5 rounded-[20px] border flex items-center justify-between shadow-sm transition-colors ${isDarkMode ? 'bg-[#121212] border-[#2C2C2C]' : 'bg-[#F8F9FA] border-[#E5E7EB]'}`}>
-                                                        <span className={`font-mono font-bold tracking-widest text-[15px] ${isDarkMode ? 'text-white' : 'text-black'}`}>{c}</span>
-                                                        <div className="flex gap-2">
-                                                            <button 
-                                                                onClick={() => { 
-                                                                    navigator.clipboard.writeText(c); 
-                                                                    setCopiedCode(c); 
-                                                                    triggerHaptic();
-                                                                    setTimeout(() => setCopiedCode(null), 2000); 
-                                                                }} 
-                                                                className={`p-2.5 rounded-xl transition-colors ${isDarkMode ? 'bg-white/5 hover:bg-white/10' : 'bg-black/5 hover:bg-black/10'}`}
-                                                            >
-                                                                {copiedCode === c ? <CheckCircle size={18} className="text-green-500"/> : <Copy size={18} className={isDarkMode ? 'text-gray-300' : 'text-gray-700'} />}
-                                                            </button>
-                                                            <button onClick={() => shareSingleKeyTelegram(c)} className={`p-2.5 rounded-xl transition-colors shadow-sm text-white bg-gradient-to-r ${theme.gradient}`}>
-                                                                <Send size={18} />
+
+                                                <button 
+                                                    onClick={handleFetchUnusedKeys} 
+                                                    disabled={isFetchingKeys}
+                                                    className={`w-full py-3.5 mb-6 rounded-2xl border font-bold font-khmer text-[14px] transition-all flex items-center justify-center gap-2 shadow-sm ${isDarkMode ? 'bg-[#121212] border-[#2C2C2C] text-[#A0A0A0] hover:text-white hover:border-[#41B6E6]/50' : 'bg-white border-[#E5E7EB] text-gray-600 hover:text-black hover:border-[#0277C5]/50'}`}
+                                                >
+                                                    {isFetchingKeys ? <Loader2 size={18} className="animate-spin" /> : <Database size={18} />}
+                                                    {lang === 'en' ? 'View Available Unused Keys' : 'មើលលេខកូដដែលនៅទំនេរ'}
+                                                </button>
+
+                                                {generatedKeys && (
+                                                    <div className="space-y-3 max-h-64 overflow-y-auto custom-scrollbar animate-fade-in-up pr-2">
+                                                        <div className="flex justify-between items-center mb-3 sticky top-0 bg-inherit py-1 z-10">
+                                                            <span className={`text-xs font-bold uppercase tracking-widest ${theme.text}`}>
+                                                                {generatedKeys.split('\n').length} Codes Ready
+                                                            </span>
+                                                            <button onClick={handleCopyAllCodes} className={`text-xs px-3 py-1.5 rounded-lg flex items-center gap-1.5 font-bold transition-colors ${theme.text} ${theme.lightBg} hover:opacity-80`}>
+                                                                {copiedAll ? <CheckCircle size={14}/> : <Copy size={14}/>} {copiedAll ? 'Copied' : 'Copy All'}
                                                             </button>
                                                         </div>
+                                                        {generatedKeys.split('\n').map(c => (
+                                                            <div key={c} className={`p-3.5 rounded-[20px] border flex items-center justify-between shadow-sm transition-colors ${isDarkMode ? 'bg-[#121212] border-[#2C2C2C]' : 'bg-[#F8F9FA] border-[#E5E7EB]'}`}>
+                                                                <span className={`font-mono font-bold tracking-widest text-[15px] ${isDarkMode ? 'text-white' : 'text-black'}`}>{c}</span>
+                                                                <div className="flex gap-2">
+                                                                    <button 
+                                                                        onClick={() => { 
+                                                                            navigator.clipboard.writeText(c); 
+                                                                            setCopiedCode(c); 
+                                                                            triggerHaptic();
+                                                                            setTimeout(() => setCopiedCode(null), 2000); 
+                                                                        }} 
+                                                                        className={`p-2.5 rounded-xl transition-colors ${isDarkMode ? 'bg-white/5 hover:bg-white/10' : 'bg-black/5 hover:bg-black/10'}`}
+                                                                    >
+                                                                        {copiedCode === c ? <CheckCircle size={18} className="text-green-500"/> : <Copy size={18} className={isDarkMode ? 'text-gray-300' : 'text-gray-700'} />}
+                                                                    </button>
+                                                                    <button onClick={() => shareSingleKeyTelegram(c)} className={`p-2.5 rounded-xl transition-colors shadow-sm text-white bg-gradient-to-r ${theme.gradient}`}>
+                                                                        <Send size={18} />
+                                                                    </button>
+                                                                </div>
+                                                            </div>
+                                                        ))}
                                                     </div>
-                                                ))}
+                                                )}
+                                            </div>
+                                        ) : (
+                                            /* --- NEW AI TRAINING STUDIO --- */
+                                            <div className="animate-fade-in-up space-y-4">
+                                                <p className={`text-[13px] font-khmer leading-relaxed ${isDarkMode ? 'text-[#9AA0A6]' : 'text-gray-500'}`}>
+                                                    Train new AI answers offline. When ready, copy the final Data Code to update your main <code className="bg-black/20 px-1 rounded">data.js</code> file.
+                                                </p>
+                                                
+                                                <input 
+                                                    type="text" 
+                                                    placeholder="Keywords (comma separated) e.g., print, បោះពុម្ព"
+                                                    value={newAiKeywords}
+                                                    onChange={e => setNewAiKeywords(e.target.value)}
+                                                    className={`w-full p-3.5 rounded-2xl border outline-none font-bold text-[13px] transition-colors shadow-inner ${isDarkMode ? 'bg-[#121212] border-[#2C2C2C] text-white focus:border-[#41B6E6]' : 'bg-gray-50 border-[#E5E7EB] text-black focus:border-[#0277C5]'}`}
+                                                />
+                                                <textarea 
+                                                    placeholder="Khmer Answer..."
+                                                    value={newAiAnswerKm}
+                                                    onChange={e => setNewAiAnswerKm(e.target.value)}
+                                                    rows={3}
+                                                    className={`w-full p-3.5 rounded-2xl border outline-none font-khmer text-[13px] transition-colors shadow-inner resize-none ${isDarkMode ? 'bg-[#121212] border-[#2C2C2C] text-white focus:border-[#41B6E6]' : 'bg-gray-50 border-[#E5E7EB] text-black focus:border-[#0277C5]'}`}
+                                                />
+                                                <textarea 
+                                                    placeholder="English Answer..."
+                                                    value={newAiAnswerEn}
+                                                    onChange={e => setNewAiAnswerEn(e.target.value)}
+                                                    rows={3}
+                                                    className={`w-full p-3.5 rounded-2xl border outline-none font-sans text-[13px] transition-colors shadow-inner resize-none ${isDarkMode ? 'bg-[#121212] border-[#2C2C2C] text-white focus:border-[#41B6E6]' : 'bg-gray-50 border-[#E5E7EB] text-black focus:border-[#0277C5]'}`}
+                                                />
+                                                
+                                                <div className="flex gap-3 pt-2">
+                                                    <button 
+                                                        onClick={() => {
+                                                            if (!newAiKeywords || !newAiAnswerKm) { triggerHaptic('error'); return; }
+                                                            triggerHaptic('success');
+                                                            const keysArray = newAiKeywords.split(',').map(k => k.trim());
+                                                            const newEntry = {
+                                                                primaryKeys: [keysArray[0], keysArray[1] || keysArray[0]],
+                                                                keys: keysArray,
+                                                                regex: keysArray,
+                                                                answer: newAiAnswerKm,
+                                                                answer_en: newAiAnswerEn || newAiAnswerKm
+                                                            };
+                                                            const updatedList = [...liveAiData, newEntry];
+                                                            setLiveAiData(updatedList);
+                                                            localStorage.setItem('myAffinity_live_ai', JSON.stringify(updatedList));
+                                                            setNewAiKeywords(''); setNewAiAnswerKm(''); setNewAiAnswerEn('');
+                                                        }} 
+                                                        className={`flex-1 py-3.5 rounded-2xl font-bold text-[13px] text-white shadow-lg transition-all active:scale-[0.98] ${(!newAiKeywords || !newAiAnswerKm) ? 'opacity-50 cursor-not-allowed bg-gray-500' : 'bg-gradient-to-r from-green-500 to-emerald-500 hover:opacity-90'}`}
+                                                    >
+                                                        Push to Offline DB
+                                                    </button>
+                                                    <button 
+                                                        onClick={() => {
+                                                            if (liveAiData.length === 0) return;
+                                                            triggerHaptic('success');
+                                                            let codeStr = "";
+                                                            liveAiData.forEach(item => {
+                                                                codeStr += `    {\n        primaryKeys: ${JSON.stringify(item.primaryKeys)},\n        keys: ${JSON.stringify(item.keys)},\n        regex: ${JSON.stringify(item.regex)},\n        answer: ${JSON.stringify(item.answer)},\n        answer_en: ${JSON.stringify(item.answer_en)}\n    },\n`;
+                                                            });
+                                                            navigator.clipboard.writeText(codeStr);
+                                                            alert("AI Data Code Copied! Paste this inside KNOWLEDGE_BASE in your data.js file.");
+                                                        }}
+                                                        className={`flex-1 py-3.5 rounded-2xl border font-bold text-[13px] transition-all flex items-center justify-center gap-2 ${liveAiData.length === 0 ? 'opacity-50 cursor-not-allowed' : isDarkMode ? 'bg-[#121212] border-[#2C2C2C] text-white hover:border-[#41B6E6]/50' : 'bg-white border-[#E5E7EB] text-black hover:border-[#0277C5]/50'}`}
+                                                    >
+                                                        <Copy size={16} /> Copy Data Code
+                                                    </button>
+                                                </div>
+
+                                                {liveAiData.length > 0 && (
+                                                    <div className="mt-6 pt-4 border-t border-dashed border-gray-500/30">
+                                                        <div className="flex justify-between items-center mb-3">
+                                                            <span className={`text-[10px] font-bold uppercase tracking-widest ${isDarkMode ? 'text-green-400' : 'text-green-600'}`}>{liveAiData.length} Live Offline Entries</span>
+                                                            <button onClick={() => { if(window.confirm('Clear all offline training data?')) { setLiveAiData([]); localStorage.removeItem('myAffinity_live_ai'); } }} className="text-red-500 hover:text-red-400"><Trash2 size={16}/></button>
+                                                        </div>
+                                                        <div className="space-y-2 max-h-40 overflow-y-auto custom-scrollbar">
+                                                            {liveAiData.map((data, i) => (
+                                                                <div key={i} className={`p-3 rounded-xl border text-[11px] font-khmer line-clamp-2 leading-relaxed ${isDarkMode ? 'bg-[#121212] border-[#2C2C2C] text-[#A0A0A0]' : 'bg-[#F8F9FA] border-[#E5E7EB] text-[#6B7280]'}`}>
+                                                                    <strong className={isDarkMode ? 'text-white' : 'text-black'}>{data.primaryKeys[0]}</strong>: {data.answer}
+                                                                </div>
+                                                            ))}
+                                                        </div>
+                                                    </div>
+                                                )}
                                             </div>
                                         )}
 
@@ -1483,7 +1592,7 @@ function AppContent() {
         </main>
       ) : (
         <div className={`flex-1 relative w-full h-full md:pb-0 z-0 ${activeAppTab ? 'hidden' : 'block'}`} style={{ paddingTop: 'max(env(safe-area-inset-top), 0px)' }}>
-             <ChatBot messages={chatMessages} setMessages={setChatMessages} isDarkMode={isDarkMode} />
+             <ChatBot messages={chatMessages} setMessages={setChatMessages} isDarkMode={isDarkMode} liveAiData={liveAiData} />
         </div>
       )}
 
