@@ -65,7 +65,7 @@ const callRealAI = async (userPrompt, language, history = []) => {
     }
 };
 
-// 🌟 FIX: Bulletproof Regex. Strips out EVERY single emoji, symbol, space, and punctuation.
+// 🌟 FIX: The Ultimate Cleaner! Destroys Emojis, Spaces, and Punctuation 🌟
 const strictClean = (text) => {
     if (!text) return '';
     return text.toLowerCase().replace(/[^\p{L}\p{N}]/gu, '');
@@ -136,7 +136,6 @@ const ChatBot = ({ messages, setMessages, isDarkMode, liveAiData = [], setLiveAi
           
           if(setLiveAiData) setLiveAiData(prev => [...prev, newEntry]);
           await addDoc(collection(db, "ai_knowledge"), newEntry);
-          console.log("Secret Auto-Train Success:", uniquePrimaryKeys[0]);
 
       } catch (err) {
           console.log("Secret training skipped:", err.message);
@@ -314,23 +313,19 @@ const ChatBot = ({ messages, setMessages, isDarkMode, liveAiData = [], setLiveAi
       if (chipsData) {
           const strictQuery = strictClean(rawQuery);
           chipsData = chipsData.filter(c => strictClean(c) !== strictQuery);
-          if (chipsData.length < 2) {
-              const moreSuggestions = getRandomItems(getSuggestList(), 3);
-              chipsData = [...new Set([...chipsData, ...moreSuggestions])].slice(0, 2);
-          }
+          if (chipsData.length < 2) chipsData = [...new Set([...chipsData, ...getRandomItems(getSuggestList(), 3)])].slice(0, 2);
       }
       return chipsData ? chipsData.slice(0, 3) : getRandomItems(getSuggestList(), 3);
   };
 
+  // 🌟 ZERO-FLAW NLP ROUTER 🌟
   const findAIResponse = (inputTxt, history = []) => {
       const rawInput = inputTxt.trim();
       const cleanInput = strictClean(rawInput); 
 
-      // 🌟 FIX: STRIP QUESTION WORDS 🌟
-      const questionWords = ['តើ', 'ជាអ្វី', 'អ្វីទៅជា', 'អ្វីទៅ', 'ស្អីគេ', 'ស្អី', 'គឺជាអ្វី', 'របៀប', 'របៀបណា', 'យ៉ាងម៉េច', 'how to', 'what is', 'explain'];
+      // 🌟 FIX: Remove ALL question words perfectly before checking the core subject
+      const questionWords = ['តើ', 'ជាអ្វី', 'អ្វីទៅជា', 'អ្វីទៅ', 'ស្អីគេ', 'ស្អី', 'គឺជាអ្វី', 'របៀប', 'របៀបណា', 'យ៉ាងម៉េច', 'howto', 'whatis', 'explain'];
       let coreSubject = cleanInput;
-      
-      // Keep replacing question words as long as they appear at the start of the sentence
       let wordStripped = true;
       while(wordStripped) {
           wordStripped = false;
@@ -345,7 +340,7 @@ const ChatBot = ({ messages, setMessages, isDarkMode, liveAiData = [], setLiveAi
       }
       coreSubject = coreSubject.trim();
 
-      // 1. EXACT MATCH GUARANTEE
+      // 1. EXACT MATCH GUARANTEE (Including Emoji support)
       for (const item of COMBINED_DB) {
           const exactTriggers = [...(item.primaryKeys || []), ...(item.keys || [])].map(strictClean); 
           if (exactTriggers.includes(cleanInput) || exactTriggers.includes(coreSubject)) {
@@ -366,7 +361,11 @@ const ChatBot = ({ messages, setMessages, isDarkMode, liveAiData = [], setLiveAi
           }
       }
 
-      // 2. SHORT TYPO & DEEP KEYWORD GUESSING
+      // 2. LONG SENTENCE FIREWALL
+      const wordCount = rawInput.trim().split(/\s+/).length;
+      if (wordCount > 4) return { needsBackend: true, query: rawInput };
+
+      // 3. SHORT TYPO & DEEP KEYWORD GUESSING
       let bestMatch = null;
       let highestScore = 0;
       for (const item of COMBINED_DB) {
@@ -486,7 +485,6 @@ const ChatBot = ({ messages, setMessages, isDarkMode, liveAiData = [], setLiveAi
           }
       }
 
-      // If it still hasn't matched perfectly, but we had a partial match earlier, confirm it with the user!
       if (bestMatch && highestScore >= 30) {
           const topicName = bestMatch.primaryKeys ? bestMatch.primaryKeys[0] : (bestMatch.keys ? bestMatch.keys[0] : null);
           setCurrentTopic(topicName); 
@@ -761,6 +759,7 @@ const ChatBot = ({ messages, setMessages, isDarkMode, liveAiData = [], setLiveAi
                                   <button onClick={() => handleFeedback(i, 'up')} className="p-1 hover:text-green-500 rounded-md transition-colors"><ThumbsUp size={14}/></button>
                                   <button onClick={() => handleFeedback(i, 'down')} className="p-1 hover:text-red-500 rounded-md transition-colors"><ThumbsDown size={14}/></button>
                                   
+                                  {/* 🌟 1-CLICK AI AUTO TRAINING (SUPER ADMIN ONLY) 🌟 */}
                                   {isAdmin && m.isTrainable && !m.isTraining && (
                                       <button 
                                           onClick={() => handleAutoTrain(i)} 

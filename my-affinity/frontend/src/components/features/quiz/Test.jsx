@@ -45,7 +45,6 @@ const Test = ({ isDarkMode, isAdmin }) => {
     // Tracks which Affinity app is active
     const [activeAppTab, setActiveAppTab] = useState('photo');
 
-    // Initialize states safely to prevent Error #418 Hydration Mismatch
     const [userName, setUserName] = useState('');
     const [highScores, setHighScores] = useState(defaultScores);
     const [unlockedLevels, setUnlockedLevels] = useState(defaultLevels);
@@ -53,6 +52,7 @@ const Test = ({ isDarkMode, isAdmin }) => {
     const [certsData, setCertsData] = useState(defaultCerts);
     const [isDataLoaded, setIsDataLoaded] = useState(false);
 
+    // Temp state to force synchronous cert rendering
     const [activeCertData, setActiveCertData] = useState(null);
 
     const nameInputRef = useRef(null);
@@ -84,14 +84,14 @@ const Test = ({ isDarkMode, isAdmin }) => {
         }
     }, []);
 
-    // 🌟 THE FIX: Listen for the Super Admin Panel signal from App.jsx!
+    // 🌟 FIX: Listen for the Super Admin Panel signal from App.jsx! 🌟
     useEffect(() => {
         const handleForceCert = (e) => {
             const appId = e.detail;
             const appDisplayName = appId === 'photo' ? 'Affinity Photo' : appId === 'designer' ? 'Affinity Designer' : 'Affinity Publisher';
             
             const newCert = { 
-                name: userName || 'Super Admin', 
+                name: userName.trim() || 'Super Admin Tester', 
                 score: 100, 
                 date: new Date().toISOString(), 
                 appCourse: appDisplayName 
@@ -120,7 +120,7 @@ const Test = ({ isDarkMode, isAdmin }) => {
         }
     }, [activeAppTab, userName]); 
 
-    // Save everything to localStorage whenever it changes (ONLY if data is loaded)
+    // Save everything to localStorage whenever it changes
     useEffect(() => {
         if (isDataLoaded) {
             localStorage.setItem('myAffinity_quiz_unlocked', JSON.stringify(unlockedLevels));
@@ -153,7 +153,6 @@ const Test = ({ isDarkMode, isAdmin }) => {
             setTimeLeft(15 * 60);
         } else { setTimeLeft(null); }
 
-        // Admins ignore level locks
         if (!isAdmin && !currentUnlocked.includes(level) && level !== 'final') { triggerHaptic('error'); return; }
         triggerHaptic();
         
@@ -409,7 +408,6 @@ const Test = ({ isDarkMode, isAdmin }) => {
                                 {!allUnlocked && <Lock size={16} className="opacity-30"/>}
                             </button>
 
-                            {/* 🌟 ADMIN: Internal One-Click Certificate Generator */}
                             {isAdmin && !currentCert && (
                                 <button 
                                     onClick={() => {
