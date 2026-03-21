@@ -11,6 +11,7 @@ import ToolsView from './components/features/tools/ToolsView';
 import Test from './components/features/quiz/Test';
 import ChatBot from './components/features/ai/ChatBot';
 import LessonCard from './components/features/learn/LessonCard';
+import CertificateForm from './components/features/quiz/CertificateForm';
 
 import { courseData, TIPS_LIST, TIPS_LIST_EN } from './data/data';
 import { useLanguage, LanguageProvider } from './contexts/LanguageContext';
@@ -48,6 +49,9 @@ const LessonModal = ({ lesson, onClose, isDarkMode, completedSteps, setCompleted
   const [previewEnded, setPreviewEnded] = useState(false);
   const [isCssFullscreen, setIsCssFullscreen] = useState(false);
   
+  // 🌟 SMART TOUCH DETECTION
+  const [isTouchDevice, setIsTouchDevice] = useState(false);
+  
   const videoRef = useRef(null);
   const containerRef = useRef(null);
   const modalRef = useRef(null);
@@ -59,6 +63,8 @@ const LessonModal = ({ lesson, onClose, isDarkMode, completedSteps, setCompleted
   useEffect(() => {
     setIsVisible(true);
     document.body.style.overflow = 'hidden'; 
+    // Detect if the user is on iPad/iPhone/Android so we can remove the center shield
+    setIsTouchDevice('ontouchstart' in window || navigator.maxTouchPoints > 0);
     return () => { document.body.style.overflow = 'auto'; };
   }, []);
 
@@ -359,15 +365,16 @@ const LessonModal = ({ lesson, onClose, isDarkMode, completedSteps, setCompleted
                                                     onContextMenu={e => e.preventDefault()} 
                                                 />
 
-                                                {/* 6. MAIN CENTER SHIELD: Blocks right-clicking the core video area, leaves bottom control bar exposed */}
-                                                <div 
-                                                    className="absolute top-[70px] bottom-[55px] left-0 right-0 z-30 bg-transparent no-callout cursor-default" 
-                                                    onContextMenu={e => e.preventDefault()} 
-                                                    onDoubleClick={e => { e.preventDefault(); e.stopPropagation(); }}
-                                                    onTouchStart={e => e.stopPropagation()} 
-                                                    onTouchEnd={e => e.stopPropagation()} 
-                                                    onPointerDown={e => e.stopPropagation()}
-                                                />
+                                                {/* 6. MAIN CENTER SHIELD (SMART TOUCH): 
+                                                     If on Desktop (Mouse), blocks Right-Click.
+                                                     If on iPad/Mobile (Touch), removes itself so user can tap to play/pause! */}
+                                                {!isTouchDevice && (
+                                                    <div 
+                                                        className="absolute top-[70px] bottom-[55px] left-0 right-0 z-30 bg-transparent no-callout cursor-default" 
+                                                        onContextMenu={e => e.preventDefault()} 
+                                                        onDoubleClick={e => { e.preventDefault(); e.stopPropagation(); }}
+                                                    />
+                                                )}
                                             </>
                                         )}
                                     </>
@@ -1092,6 +1099,13 @@ function AppContent() {
         .animate-fade-in-up { animation: fade-in-up 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
       `}</style>
       
+      {/* Admin Certificate Preview Render */}
+      {adminPreviewCert && (
+          <div className="fixed inset-0 z-[99999] bg-[#0A0A0A]">
+              <CertificateForm certData={adminPreviewCert} isDarkMode={isDarkMode} onBack={() => setAdminPreviewCert(null)} />
+          </div>
+      )}
+
       <div 
           style={{ paddingTop: 'max(env(safe-area-inset-top), 0px)' }} 
           className={`w-full shrink-0 ${(activeTab === 'tools' || activeTab === 'ai') ? 'hidden md:block' : 'block'}`}
