@@ -11,7 +11,6 @@ import ToolsView from './components/features/tools/ToolsView';
 import Test from './components/features/quiz/Test';
 import ChatBot from './components/features/ai/ChatBot';
 import LessonCard from './components/features/learn/LessonCard';
-import CertificateForm from './components/features/quiz/CertificateForm';
 
 import { courseData, TIPS_LIST, TIPS_LIST_EN } from './data/data';
 import { useLanguage, LanguageProvider } from './contexts/LanguageContext';
@@ -49,6 +48,9 @@ const LessonModal = ({ lesson, onClose, isDarkMode, completedSteps, setCompleted
   const [previewEnded, setPreviewEnded] = useState(false);
   const [isCssFullscreen, setIsCssFullscreen] = useState(false);
   
+  // 🌟 SMART TOUCH DETECTION
+  const [isTouchDevice, setIsTouchDevice] = useState(false);
+  
   const videoRef = useRef(null);
   const containerRef = useRef(null);
   const modalRef = useRef(null);
@@ -60,6 +62,8 @@ const LessonModal = ({ lesson, onClose, isDarkMode, completedSteps, setCompleted
   useEffect(() => {
     setIsVisible(true);
     document.body.style.overflow = 'hidden'; 
+    // Detect if the user is on iPad/iPhone/Android so we can remove the center shield
+    setIsTouchDevice('ontouchstart' in window || navigator.maxTouchPoints > 0);
     return () => { document.body.style.overflow = 'auto'; };
   }, []);
 
@@ -182,9 +186,8 @@ const LessonModal = ({ lesson, onClose, isDarkMode, completedSteps, setCompleted
   const getVideoUrl = (url) => {
       if (!url) return '';
       const separator = url.includes('?') ? '&' : '?';
-      // Added explicitly &controls=1 for purchased users to guarantee play/pause bar
       return isPurchased 
-          ? `${url}${separator}autoplay=1&playsinline=1&fs=0&modestbranding=1&rel=0&controls=1` 
+          ? `${url}${separator}autoplay=1&playsinline=1&fs=0&modestbranding=1&rel=0` 
           : `${url}${separator}end=20&controls=0&disablekb=1&rel=0&autoplay=1&playsinline=1&fs=0&modestbranding=1`;
   };
 
@@ -201,16 +204,6 @@ const LessonModal = ({ lesson, onClose, isDarkMode, completedSteps, setCompleted
           .video-container:fullscreen iframe { width: 100% !important; height: 100% !important; object-fit: cover; }
           .video-container:-webkit-full-screen iframe { width: 100% !important; height: 100% !important; object-fit: cover; }
           .no-callout { -webkit-touch-callout: none !important; -webkit-user-select: none !important; user-select: none !important; outline: none !important; }
-          
-          /* 🌟 SMART TOUCH CSS DETECTOR 🌟 */
-          /* If device has a mouse cursor, show center shield to block right-clicks */
-          @media (hover: hover) and (pointer: fine) {
-              .desktop-only-shield { display: block; }
-          }
-          /* If device is a touchscreen (iPad/Phone), vaporize center shield so user can tap Play/Pause! */
-          @media (hover: none) and (pointer: coarse) {
-              .desktop-only-shield { display: none !important; pointer-events: none !important; }
-          }
       `}</style>
 
       <div 
@@ -334,31 +327,53 @@ const LessonModal = ({ lesson, onClose, isDarkMode, completedSteps, setCompleted
                                                     onLoad={() => setIsVideoLoading(false)}
                                                 />
                                                 
-                                                {/* 🛡️ 3 BULLETPROOF SECURITY SHIELDS 🛡️ */}
+                                                {/* 🛡️ 6 SMART RESPONSIVE SECURITY SHIELDS 🛡️ */}
                                                 
-                                                {/* 1. UNIVERSAL TOP SHIELD (100% Width)
-                                                    Completely blocks the Title, Avatar, Watch Later, and Share Arrow on ALL devices,
-                                                    in both Portrait and Landscape orientations. */}
+                                                {/* 1. Top-Left (All Devices): Blocks Avatar & Title */}
                                                 <div 
-                                                    className="absolute top-0 left-0 w-full h-[80px] md:h-[90px] z-30 bg-[rgba(255,255,255,0.01)] no-callout cursor-default" 
+                                                    className="absolute top-0 left-0 w-[70%] sm:w-[calc(100%-160px)] h-[70px] z-30 bg-[rgba(255,255,255,0.01)] cursor-default" 
+                                                    style={{ WebkitTouchCallout: 'none' }} 
                                                     onContextMenu={e => e.preventDefault()} 
                                                 />
 
-                                                {/* 2. UNIVERSAL BOTTOM-RIGHT SHIELD
-                                                    Blocks the YouTube Logo and the native YouTube Fullscreen icon so users use our custom Fullscreen button. */}
+                                                {/* 2. Top-Right (Desktop Only): Blocks Watch Later & Share */}
                                                 <div 
-                                                    className="absolute bottom-0 right-0 w-[90px] h-[65px] z-30 bg-[rgba(255,255,255,0.01)] no-callout cursor-default" 
+                                                    className="hidden sm:block absolute top-0 right-0 w-[160px] h-[70px] z-30 bg-[rgba(255,255,255,0.01)] cursor-default" 
+                                                    style={{ WebkitTouchCallout: 'none' }} 
                                                     onContextMenu={e => e.preventDefault()} 
                                                 />
 
-                                                {/* 3. SMART CENTER SHIELD (DESKTOP ONLY)
-                                                    Uses hardware CSS detection to appear ONLY on Desktop (Mouse) to block right-clicks.
-                                                    On iPad/Mobile (Touchscreens), this shield disappears, allowing the user to tap to Play/Pause! */}
+                                                {/* 3. Top-Right Edge (Mobile Only): Blocks 3-dots, allows Gear */}
                                                 <div 
-                                                    className="desktop-only-shield absolute top-[80px] bottom-[65px] left-0 w-full z-30 bg-transparent no-callout cursor-default" 
+                                                    className="sm:hidden absolute top-0 right-0 w-[45px] h-[60px] z-30 bg-[rgba(255,255,255,0.01)] cursor-default" 
+                                                    style={{ WebkitTouchCallout: 'none' }} 
                                                     onContextMenu={e => e.preventDefault()} 
-                                                    onDoubleClick={e => { e.preventDefault(); e.stopPropagation(); }}
                                                 />
+
+                                                {/* 4. Bottom-Left (Mobile Only): Blocks Share Arrow */}
+                                                <div 
+                                                    className="sm:hidden absolute bottom-0 left-0 w-[70px] h-[60px] z-30 bg-[rgba(255,255,255,0.01)] cursor-default" 
+                                                    style={{ WebkitTouchCallout: 'none' }} 
+                                                    onContextMenu={e => e.preventDefault()} 
+                                                />
+
+                                                {/* 5. Bottom-Right (All Devices): Blocks YouTube Logo */}
+                                                <div 
+                                                    className="absolute bottom-0 right-0 w-[80px] h-[60px] z-30 bg-[rgba(255,255,255,0.01)] cursor-default" 
+                                                    style={{ WebkitTouchCallout: 'none' }} 
+                                                    onContextMenu={e => e.preventDefault()} 
+                                                />
+
+                                                {/* 6. MAIN CENTER SHIELD (SMART TOUCH): 
+                                                     If on Desktop (Mouse), blocks Right-Click.
+                                                     If on iPad/Mobile (Touch), removes itself so user can tap to play/pause! */}
+                                                {!isTouchDevice && (
+                                                    <div 
+                                                        className="absolute top-[70px] bottom-[55px] left-0 right-0 z-30 bg-transparent no-callout cursor-default" 
+                                                        onContextMenu={e => e.preventDefault()} 
+                                                        onDoubleClick={e => { e.preventDefault(); e.stopPropagation(); }}
+                                                    />
+                                                )}
                                             </>
                                         )}
                                     </>
@@ -1083,13 +1098,6 @@ function AppContent() {
         .animate-fade-in-up { animation: fade-in-up 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
       `}</style>
       
-      {/* Admin Certificate Preview Render */}
-      {adminPreviewCert && (
-          <div className="fixed inset-0 z-[99999] bg-[#0A0A0A]">
-              <CertificateForm certData={adminPreviewCert} isDarkMode={isDarkMode} onBack={() => setAdminPreviewCert(null)} />
-          </div>
-      )}
-
       <div 
           style={{ paddingTop: 'max(env(safe-area-inset-top), 0px)' }} 
           className={`w-full shrink-0 ${(activeTab === 'tools' || activeTab === 'ai') ? 'hidden md:block' : 'block'}`}
