@@ -62,8 +62,16 @@ const LessonModal = ({ lesson, onClose, isDarkMode, completedSteps, setCompleted
   useEffect(() => {
     setIsVisible(true);
     document.body.style.overflow = 'hidden'; 
-    // Detect if the user is on iPad/iPhone/Android so we can remove the center shield
-    setIsTouchDevice('ontouchstart' in window || navigator.maxTouchPoints > 0);
+    
+    // Aggressive iPad/Mobile detection
+    const checkTouch = () => {
+        return ( 'ontouchstart' in window ) || 
+               ( navigator.maxTouchPoints > 0 ) || 
+               ( navigator.msMaxTouchPoints > 0 ) ||
+               ( /iPad|iPhone|iPod|Android/.test(navigator.userAgent) );
+    };
+    setIsTouchDevice(checkTouch());
+    
     return () => { document.body.style.overflow = 'auto'; };
   }, []);
 
@@ -335,48 +343,30 @@ const LessonModal = ({ lesson, onClose, isDarkMode, completedSteps, setCompleted
                                                     onLoad={() => setIsVideoLoading(false)}
                                                 />
                                                 
-                                                {/* 🛡️ 6 ULTIMATE SMART SECURITY SHIELDS 🛡️ */}
+                                                {/* 🛡️ 4 MASSIVE LANDSCAPE-AWARE SHIELDS 🛡️ */}
                                                 
-                                                {/* 1. UNIVERSAL TOP SHIELD (100% Width)
-                                                    Completely blocks the Title, Avatar, Watch Later, and Share Arrow on ALL devices,
-                                                    in both Portrait and Landscape orientations. */}
+                                                {/* 1. UNIVERSAL TOP SHIELD: Automatically grows 110px tall in landscape to crush the Share button */}
                                                 <div 
-                                                    className="absolute top-0 left-0 w-full h-[70px] sm:h-[90px] z-30 bg-[rgba(255,255,255,0.01)] no-callout cursor-default" 
+                                                    className="absolute top-0 left-0 w-full h-[85px] landscape:h-[110px] sm:h-[110px] z-30 bg-[rgba(255,255,255,0.01)] no-callout cursor-default" 
                                                     onContextMenu={e => e.preventDefault()} 
                                                 />
 
-                                                {/* 2. UNIVERSAL BOTTOM-RIGHT SHIELD
-                                                    Blocks the YouTube Logo and the native YouTube Fullscreen icon. */}
+                                                {/* 2. BOTTOM-LEFT SHIELD: Blocks Mobile Share Popup / Watch Later */}
                                                 <div 
-                                                    className="absolute bottom-0 right-0 w-[100px] h-[65px] z-30 bg-[rgba(255,255,255,0.01)] no-callout cursor-default" 
+                                                    className="absolute bottom-0 left-0 w-[120px] landscape:w-[160px] h-[75px] landscape:h-[85px] z-30 bg-[rgba(255,255,255,0.01)] no-callout cursor-default" 
                                                     onContextMenu={e => e.preventDefault()} 
                                                 />
 
-                                                {/* 3. UNIVERSAL BOTTOM-LEFT SHIELD 
-                                                    Blocks the mobile share arrow that pops up in the bottom left. */}
+                                                {/* 3. BOTTOM-RIGHT SHIELD: Blocks YouTube Logo & Native Fullscreen */}
                                                 <div 
-                                                    className="absolute bottom-0 left-0 w-[100px] h-[65px] z-30 bg-[rgba(255,255,255,0.01)] no-callout cursor-default" 
+                                                    className="absolute bottom-0 right-0 w-[120px] landscape:w-[160px] h-[75px] landscape:h-[85px] z-30 bg-[rgba(255,255,255,0.01)] no-callout cursor-default" 
                                                     onContextMenu={e => e.preventDefault()} 
                                                 />
 
-                                                {/* 4. LEFT EDGE SHIELD (Horizontal Protection) */}
-                                                <div 
-                                                    className="absolute top-[70px] bottom-[65px] left-0 w-[45px] z-30 bg-[rgba(255,255,255,0.01)] no-callout cursor-default" 
-                                                    onContextMenu={e => e.preventDefault()} 
-                                                />
-
-                                                {/* 5. RIGHT EDGE SHIELD (Horizontal Protection) */}
-                                                <div 
-                                                    className="absolute top-[70px] bottom-[65px] right-0 w-[45px] z-30 bg-[rgba(255,255,255,0.01)] no-callout cursor-default" 
-                                                    onContextMenu={e => e.preventDefault()} 
-                                                />
-
-                                                {/* 6. SMART CENTER SHIELD (DESKTOP ONLY)
-                                                    If on Desktop (Mouse), blocks Right-Click.
-                                                    If on iPad/Mobile (Touch), removes itself completely so user can tap to play/pause! */}
+                                                {/* 4. DESKTOP CENTER SHIELD: Only appears on computers. Disappears entirely on iPad/Mobile so you can tap Play/Pause! */}
                                                 {!isTouchDevice && (
                                                     <div 
-                                                        className="absolute top-[90px] bottom-[65px] left-[45px] right-[45px] z-30 bg-transparent no-callout cursor-default" 
+                                                        className="absolute top-[85px] sm:top-[110px] bottom-[75px] left-[10%] right-[10%] z-30 bg-transparent no-callout cursor-default" 
                                                         onContextMenu={e => e.preventDefault()} 
                                                         onDoubleClick={e => { e.preventDefault(); e.stopPropagation(); }}
                                                     />
