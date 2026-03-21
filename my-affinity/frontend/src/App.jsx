@@ -11,7 +11,6 @@ import ToolsView from './components/features/tools/ToolsView';
 import Test from './components/features/quiz/Test';
 import ChatBot from './components/features/ai/ChatBot';
 import LessonCard from './components/features/learn/LessonCard';
-import CertificateForm from './components/features/quiz/CertificateForm';
 
 import { courseData, TIPS_LIST, TIPS_LIST_EN } from './data/data';
 import { useLanguage, LanguageProvider } from './contexts/LanguageContext';
@@ -1099,13 +1098,6 @@ function AppContent() {
         .animate-fade-in-up { animation: fade-in-up 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
       `}</style>
       
-      {/* Admin Certificate Preview Render */}
-      {adminPreviewCert && (
-          <div className="fixed inset-0 z-[99999] bg-[#0A0A0A]">
-              <CertificateForm certData={adminPreviewCert} isDarkMode={isDarkMode} onBack={() => setAdminPreviewCert(null)} />
-          </div>
-      )}
-
       <div 
           style={{ paddingTop: 'max(env(safe-area-inset-top), 0px)' }} 
           className={`w-full shrink-0 ${(activeTab === 'tools' || activeTab === 'ai') ? 'hidden md:block' : 'block'}`}
