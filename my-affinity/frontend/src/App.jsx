@@ -48,28 +48,6 @@ const LessonModal = ({ lesson, onClose, isDarkMode, completedSteps, setCompleted
   const [previewEnded, setPreviewEnded] = useState(false);
   const [isCssFullscreen, setIsCssFullscreen] = useState(false);
   
-  // 🌟 SMART TOUCH DETECTION
-  const [isTouchDevice, setIsTouchDevice] = useState(false);
-
-  // 🌟 CUSTOM PLAY/PAUSE STATE
-  const [isPlaying, setIsPlaying] = useState(true); 
-  
-  const togglePlayPause = (e) => {
-      e.preventDefault();
-      e.stopPropagation();
-      if (!videoRef.current) return;
-      
-      // Sends secret native commands through the iframe to YouTube!
-      if (isPlaying) {
-          videoRef.current.contentWindow.postMessage('{"event":"command","func":"pauseVideo","args":""}', '*');
-          setIsPlaying(false);
-      } else {
-          videoRef.current.contentWindow.postMessage('{"event":"command","func":"playVideo","args":""}', '*');
-          setIsPlaying(true);
-      }
-      triggerHaptic();
-  };
-  
   const videoRef = useRef(null);
   const containerRef = useRef(null);
   const modalRef = useRef(null);
@@ -81,16 +59,6 @@ const LessonModal = ({ lesson, onClose, isDarkMode, completedSteps, setCompleted
   useEffect(() => {
     setIsVisible(true);
     document.body.style.overflow = 'hidden'; 
-    
-    // Aggressive iPad/Mobile detection
-    const checkTouch = () => {
-        return ( 'ontouchstart' in window ) || 
-               ( navigator.maxTouchPoints > 0 ) || 
-               ( navigator.msMaxTouchPoints > 0 ) ||
-               ( /iPad|iPhone|iPod|Android/.test(navigator.userAgent) );
-    };
-    setIsTouchDevice(checkTouch());
-    
     return () => { document.body.style.overflow = 'auto'; };
   }, []);
 
@@ -98,7 +66,6 @@ const LessonModal = ({ lesson, onClose, isDarkMode, completedSteps, setCompleted
     setIsVideoLoading(true);
     setHasStarted(false);
     setPreviewEnded(false);
-    setIsPlaying(true); // Reset playing state on new step
   }, [activeStep]);
 
   useEffect(() => {
@@ -213,17 +180,10 @@ const LessonModal = ({ lesson, onClose, isDarkMode, completedSteps, setCompleted
 
   const getVideoUrl = (url) => {
       if (!url) return '';
-      
-      // Extract the Video ID to use the "Loop Hack" which prevents the suggested video grid at the end!
-      const videoIdMatch = url.match(/\/embed\/([a-zA-Z0-9_-]+)/);
-      const videoId = videoIdMatch ? videoIdMatch[1] : '';
-      
       const separator = url.includes('?') ? '&' : '?';
-      const antiSuggestedGrid = videoId ? `&loop=1&playlist=${videoId}` : '';
-
       return isPurchased 
-          ? `${url}${separator}autoplay=1&playsinline=1&fs=0&modestbranding=1&rel=0&controls=1&enablejsapi=1${antiSuggestedGrid}` 
-          : `${url}${separator}end=20&controls=0&disablekb=1&rel=0&autoplay=1&playsinline=1&fs=0&modestbranding=1&enablejsapi=1`;
+          ? `${url}${separator}autoplay=1&playsinline=1&fs=0&modestbranding=1&rel=0` 
+          : `${url}${separator}end=20&controls=0&disablekb=1&rel=0&autoplay=1&playsinline=1&fs=0&modestbranding=1`;
   };
 
   const displayTitle = lang === 'en' && lesson.title_en ? lesson.title_en : lesson.title;
@@ -362,39 +322,52 @@ const LessonModal = ({ lesson, onClose, isDarkMode, completedSteps, setCompleted
                                                     onLoad={() => setIsVideoLoading(false)}
                                                 />
                                                 
-                                                {/* 🛡️ 4 MASSIVE LANDSCAPE-AWARE SHIELDS 🛡️ */}
+                                                {/* 🛡️ 6 SMART RESPONSIVE SECURITY SHIELDS 🛡️ */}
                                                 
-                                                {/* 1. UNIVERSAL TOP SHIELD: Grows to 120px tall in landscape to crush the Share button */}
+                                                {/* 1. Top-Left (All Devices): Blocks Avatar & Title */}
                                                 <div 
-                                                    className="absolute top-0 left-0 w-full h-[85px] landscape:h-[120px] sm:h-[110px] z-30 bg-[rgba(255,255,255,0.01)] no-callout cursor-default" 
+                                                    className="absolute top-0 left-0 w-[70%] sm:w-[calc(100%-160px)] h-[70px] z-30 bg-[rgba(255,255,255,0.01)] cursor-default" 
+                                                    style={{ WebkitTouchCallout: 'none' }} 
                                                     onContextMenu={e => e.preventDefault()} 
                                                 />
 
-                                                {/* 2. BOTTOM-LEFT SHIELD: Expands massively in landscape mode */}
+                                                {/* 2. Top-Right (Desktop Only): Blocks Watch Later & Share */}
                                                 <div 
-                                                    className="absolute bottom-0 left-0 w-[120px] landscape:w-[180px] h-[75px] landscape:h-[90px] z-30 bg-[rgba(255,255,255,0.01)] no-callout cursor-default" 
+                                                    className="hidden sm:block absolute top-0 right-0 w-[160px] h-[70px] z-30 bg-[rgba(255,255,255,0.01)] cursor-default" 
+                                                    style={{ WebkitTouchCallout: 'none' }} 
                                                     onContextMenu={e => e.preventDefault()} 
                                                 />
 
-                                                {/* 3. BOTTOM-RIGHT SHIELD: Blocks YouTube Logo & Native Fullscreen */}
+                                                {/* 3. Top-Right Edge (Mobile Only): Blocks 3-dots, allows Gear */}
                                                 <div 
-                                                    className="absolute bottom-0 right-0 w-[120px] landscape:w-[180px] h-[75px] landscape:h-[90px] z-30 bg-[rgba(255,255,255,0.01)] no-callout cursor-default" 
+                                                    className="sm:hidden absolute top-0 right-0 w-[45px] h-[60px] z-30 bg-[rgba(255,255,255,0.01)] cursor-default" 
+                                                    style={{ WebkitTouchCallout: 'none' }} 
                                                     onContextMenu={e => e.preventDefault()} 
                                                 />
 
-                                                {/* 4. CUSTOM PLAY/PAUSE CONTROLLER (ALL DEVICES)
-                                                    Blocks right-clicks AND controls the video natively! */}
+                                                {/* 4. Bottom-Left (Mobile Only): Blocks Share Arrow */}
                                                 <div 
-                                                    className="absolute top-[85px] landscape:top-[120px] sm:top-[110px] bottom-[75px] landscape:bottom-[90px] left-[10%] right-[10%] z-30 cursor-pointer flex items-center justify-center no-callout" 
+                                                    className="sm:hidden absolute bottom-0 left-0 w-[70px] h-[60px] z-30 bg-[rgba(255,255,255,0.01)] cursor-default" 
+                                                    style={{ WebkitTouchCallout: 'none' }} 
                                                     onContextMenu={e => e.preventDefault()} 
-                                                    onClick={togglePlayPause}
+                                                />
+
+                                                {/* 5. Bottom-Right (All Devices): Blocks YouTube Logo */}
+                                                <div 
+                                                    className="absolute bottom-0 right-0 w-[80px] h-[60px] z-30 bg-[rgba(255,255,255,0.01)] cursor-default" 
+                                                    style={{ WebkitTouchCallout: 'none' }} 
+                                                    onContextMenu={e => e.preventDefault()} 
+                                                />
+
+                                                {/* 6. MAIN CENTER SHIELD: Blocks right-clicking the core video area, leaves bottom control bar exposed */}
+                                                <div 
+                                                    className="absolute top-[70px] bottom-[55px] left-0 right-0 z-30 bg-transparent no-callout cursor-default" 
+                                                    onContextMenu={e => e.preventDefault()} 
                                                     onDoubleClick={e => { e.preventDefault(); e.stopPropagation(); }}
-                                                >
-                                                    {/* Beautiful Netflix-style Play Button that fades when playing */}
-                                                    <div className={`transition-all duration-300 transform bg-black/50 backdrop-blur-md rounded-full p-4 sm:p-5 shadow-2xl pointer-events-none ${!isPlaying ? 'scale-100 opacity-100' : 'scale-150 opacity-0'}`}>
-                                                        <PlayCircle size={60} className="text-white drop-shadow-lg" />
-                                                    </div>
-                                                </div>
+                                                    onTouchStart={e => e.stopPropagation()} 
+                                                    onTouchEnd={e => e.stopPropagation()} 
+                                                    onPointerDown={e => e.stopPropagation()}
+                                                />
                                             </>
                                         )}
                                     </>
