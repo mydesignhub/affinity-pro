@@ -48,6 +48,27 @@ const LessonModal = ({ lesson, onClose, isDarkMode, completedSteps, setCompleted
   const [previewEnded, setPreviewEnded] = useState(false);
   const [isCssFullscreen, setIsCssFullscreen] = useState(false);
   
+  // 🌟 SMART TOUCH DETECTION
+  const [isTouchDevice, setIsTouchDevice] = useState(false);
+
+  const [isPlaying, setIsPlaying] = useState(true); // Assumes video autoplays
+  
+  const togglePlayPause = (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      if (!videoRef.current) return;
+      
+      // Sends secret commands through the iframe to YouTube!
+      if (isPlaying) {
+          videoRef.current.contentWindow.postMessage('{"event":"command","func":"pauseVideo","args":""}', '*');
+          setIsPlaying(false);
+      } else {
+          videoRef.current.contentWindow.postMessage('{"event":"command","func":"playVideo","args":""}', '*');
+          setIsPlaying(true);
+      }
+      triggerHaptic();
+  };
+  
   const videoRef = useRef(null);
   const containerRef = useRef(null);
   const modalRef = useRef(null);
@@ -59,6 +80,16 @@ const LessonModal = ({ lesson, onClose, isDarkMode, completedSteps, setCompleted
   useEffect(() => {
     setIsVisible(true);
     document.body.style.overflow = 'hidden'; 
+    
+    // Aggressive iPad/Mobile detection
+    const checkTouch = () => {
+        return ( 'ontouchstart' in window ) || 
+               ( navigator.maxTouchPoints > 0 ) || 
+               ( navigator.msMaxTouchPoints > 0 ) ||
+               ( /iPad|iPhone|iPod|Android/.test(navigator.userAgent) );
+    };
+    setIsTouchDevice(checkTouch());
+    
     return () => { document.body.style.overflow = 'auto'; };
   }, []);
 
@@ -66,6 +97,7 @@ const LessonModal = ({ lesson, onClose, isDarkMode, completedSteps, setCompleted
     setIsVideoLoading(true);
     setHasStarted(false);
     setPreviewEnded(false);
+    setIsPlaying(true); // Reset playing state when changing lessons
   }, [activeStep]);
 
   useEffect(() => {
@@ -1089,13 +1121,6 @@ function AppContent() {
         .animate-fade-in-up { animation: fade-in-up 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
       `}</style>
       
-      {/* Admin Certificate Preview Render */}
-      {adminPreviewCert && (
-          <div className="fixed inset-0 z-[99999] bg-[#0A0A0A]">
-              <CertificateForm certData={adminPreviewCert} isDarkMode={isDarkMode} onBack={() => setAdminPreviewCert(null)} />
-          </div>
-      )}
-
       <div 
           style={{ paddingTop: 'max(env(safe-area-inset-top), 0px)' }} 
           className={`w-full shrink-0 ${(activeTab === 'tools' || activeTab === 'ai') ? 'hidden md:block' : 'block'}`}
