@@ -180,10 +180,19 @@ const LessonModal = ({ lesson, onClose, isDarkMode, completedSteps, setCompleted
 
   const getVideoUrl = (url) => {
       if (!url) return '';
+      
+      // Advanced Regex to extract the Video ID from ANY YouTube URL format
+      const videoIdMatch = url.match(/(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))([^"&?\/\s]{11})/);
+      const videoId = videoIdMatch ? videoIdMatch[1] : '';
+      
       const separator = url.includes('?') ? '&' : '?';
+      
+      // THE LOOP HACK: Forces the video to loop instead of showing the ugly Suggested Videos grid at the end!
+      const antiSuggestedGrid = videoId ? `&loop=1&playlist=${videoId}` : '';
+
       return isPurchased 
-          ? `${url}${separator}autoplay=1&playsinline=1&fs=0&modestbranding=1&rel=0` 
-          : `${url}${separator}end=20&controls=0&disablekb=1&rel=0&autoplay=1&playsinline=1&fs=0&modestbranding=1`;
+          ? `${url}${separator}autoplay=1&playsinline=1&fs=0&modestbranding=1&rel=0&controls=1&enablejsapi=1${antiSuggestedGrid}` 
+          : `${url}${separator}end=20&controls=0&disablekb=1&rel=0&autoplay=1&playsinline=1&fs=0&modestbranding=1&enablejsapi=1`;
   };
 
   const displayTitle = lang === 'en' && lesson.title_en ? lesson.title_en : lesson.title;
@@ -313,7 +322,7 @@ const LessonModal = ({ lesson, onClose, isDarkMode, completedSteps, setCompleted
                                                     ref={videoRef}
                                                     tabIndex="-1"
                                                     src={getVideoUrl(currentStepData.videoUrl)}
-                                                    className={`w-full h-full absolute inset-0 transition-opacity duration-700 ease-in-out no-callout ${isVideoLoading ? 'opacity-0' : 'opacity-100 z-20'}`}
+                                                    className={`w-full h-full absolute inset-0 transition-opacity duration-700 ease-in-out no-callout ${isVideoLoading ? 'opacity-0' : 'opacity-100 z-10'}`}
                                                     sandbox="allow-scripts allow-same-origin allow-presentation"
                                                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; fullscreen" 
                                                     referrerPolicy="strict-origin-when-cross-origin"
@@ -322,52 +331,40 @@ const LessonModal = ({ lesson, onClose, isDarkMode, completedSteps, setCompleted
                                                     onLoad={() => setIsVideoLoading(false)}
                                                 />
                                                 
-                                                {/* 🛡️ 6 SMART RESPONSIVE SECURITY SHIELDS 🛡️ */}
+                                                {/* 🛡️ ULTIMATE SHIELDS & CUSTOM CONTROLLER 🛡️ */}
                                                 
-                                                {/* 1. Top-Left (All Devices): Blocks Avatar & Title */}
+                                                {/* 1. TOP SHIELD: Blocks Title, Avatar, Share, Watch Later (Expands in landscape) */}
                                                 <div 
-                                                    className="absolute top-0 left-0 w-[70%] sm:w-[calc(100%-160px)] h-[70px] z-30 bg-[rgba(255,255,255,0.01)] cursor-default" 
-                                                    style={{ WebkitTouchCallout: 'none' }} 
+                                                    className="absolute top-0 left-0 w-full h-[75px] landscape:h-[110px] sm:h-[110px] z-20 bg-[rgba(255,255,255,0.01)] no-callout cursor-default" 
                                                     onContextMenu={e => e.preventDefault()} 
                                                 />
 
-                                                {/* 2. Top-Right (Desktop Only): Blocks Watch Later & Share */}
+                                                {/* 2. BOTTOM-LEFT SHIELD: Blocks Mobile Share Popup */}
                                                 <div 
-                                                    className="hidden sm:block absolute top-0 right-0 w-[160px] h-[70px] z-30 bg-[rgba(255,255,255,0.01)] cursor-default" 
-                                                    style={{ WebkitTouchCallout: 'none' }} 
+                                                    className="absolute bottom-0 left-0 w-[120px] landscape:w-[160px] h-[65px] landscape:h-[80px] z-20 bg-[rgba(255,255,255,0.01)] no-callout cursor-default" 
                                                     onContextMenu={e => e.preventDefault()} 
                                                 />
 
-                                                {/* 3. Top-Right Edge (Mobile Only): Blocks 3-dots, allows Gear */}
+                                                {/* 3. BOTTOM-RIGHT SHIELD: Blocks YouTube Logo */}
                                                 <div 
-                                                    className="sm:hidden absolute top-0 right-0 w-[45px] h-[60px] z-30 bg-[rgba(255,255,255,0.01)] cursor-default" 
-                                                    style={{ WebkitTouchCallout: 'none' }} 
+                                                    className="absolute bottom-0 right-0 w-[120px] landscape:w-[160px] h-[65px] landscape:h-[80px] z-20 bg-[rgba(255,255,255,0.01)] no-callout cursor-default" 
                                                     onContextMenu={e => e.preventDefault()} 
                                                 />
 
-                                                {/* 4. Bottom-Left (Mobile Only): Blocks Share Arrow */}
+                                                {/* 4. MASSIVE CENTER PLAY/PAUSE CONTROLLER (ALL DEVICES)
+                                                    This covers the entire middle of the video. It blocks right-clicks, double clicks, 
+                                                    AND acts as a giant invisible button to pause/play the video on iPad, Mobile, and PC! */}
                                                 <div 
-                                                    className="sm:hidden absolute bottom-0 left-0 w-[70px] h-[60px] z-30 bg-[rgba(255,255,255,0.01)] cursor-default" 
-                                                    style={{ WebkitTouchCallout: 'none' }} 
+                                                    className="absolute top-[75px] landscape:top-[110px] sm:top-[110px] bottom-[65px] landscape:bottom-[80px] left-0 right-0 z-30 cursor-pointer flex items-center justify-center no-callout" 
                                                     onContextMenu={e => e.preventDefault()} 
-                                                />
-
-                                                {/* 5. Bottom-Right (All Devices): Blocks YouTube Logo */}
-                                                <div 
-                                                    className="absolute bottom-0 right-0 w-[80px] h-[60px] z-30 bg-[rgba(255,255,255,0.01)] cursor-default" 
-                                                    style={{ WebkitTouchCallout: 'none' }} 
-                                                    onContextMenu={e => e.preventDefault()} 
-                                                />
-
-                                                {/* 6. MAIN CENTER SHIELD: Blocks right-clicking the core video area, leaves bottom control bar exposed */}
-                                                <div 
-                                                    className="absolute top-[70px] bottom-[55px] left-0 right-0 z-30 bg-transparent no-callout cursor-default" 
-                                                    onContextMenu={e => e.preventDefault()} 
+                                                    onClick={togglePlayPause}
                                                     onDoubleClick={e => { e.preventDefault(); e.stopPropagation(); }}
-                                                    onTouchStart={e => e.stopPropagation()} 
-                                                    onTouchEnd={e => e.stopPropagation()} 
-                                                    onPointerDown={e => e.stopPropagation()}
-                                                />
+                                                >
+                                                    {/* Netflix-style Play Button that fades when playing */}
+                                                    <div className={`transition-all duration-300 transform bg-black/50 backdrop-blur-md rounded-full p-4 sm:p-5 shadow-2xl pointer-events-none ${!isPlaying ? 'scale-100 opacity-100' : 'scale-150 opacity-0'}`}>
+                                                        <PlayCircle size={60} className="text-white drop-shadow-lg" />
+                                                    </div>
+                                                </div>
                                             </>
                                         )}
                                     </>
