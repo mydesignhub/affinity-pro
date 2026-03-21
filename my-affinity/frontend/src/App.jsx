@@ -337,29 +337,50 @@ const LessonModal = ({ lesson, onClose, isDarkMode, completedSteps, setCompleted
                                                 
                                                 {/* 🛡️ 6 ULTIMATE SMART SECURITY SHIELDS 🛡️ */}
                                                 
-                                                {/* 1. Top Bar (All Devices): Blocks Avatar, Title, Watch Later, and Share Arrow dynamically across all screen widths! */}
-                                                <div className="absolute top-0 left-0 w-full h-[70px] z-30 bg-[rgba(255,255,255,0.01)] no-callout cursor-default" onContextMenu={e => e.preventDefault()} />
-
-                                                {/* 2. Top-Right Corner (Desktop Extra Protection) */}
-                                                <div className="hidden sm:block absolute top-0 right-0 w-[160px] h-[70px] z-30 bg-[rgba(255,255,255,0.01)] no-callout cursor-default" onContextMenu={e => e.preventDefault()} />
-
-                                                {/* 3. Bottom-Left (Mobile Only): Blocks the popup Share Arrow on mobile players */}
-                                                <div className="sm:hidden absolute bottom-0 left-0 w-[120px] h-[60px] z-30 bg-[rgba(255,255,255,0.01)] no-callout cursor-default" onContextMenu={e => e.preventDefault()} />
-
-                                                {/* 4. Bottom-Right (All Devices): Blocks YouTube Logo & Native Fullscreen */}
-                                                <div className="absolute bottom-0 right-0 w-[100px] h-[60px] z-30 bg-[rgba(255,255,255,0.01)] no-callout cursor-default" onContextMenu={e => e.preventDefault()} />
-
-                                                {/* 5. Left & Right Edges (Landscape Mobile Protection): Blocks edge taps */}
-                                                <div className="sm:hidden absolute top-[70px] bottom-[60px] left-0 w-[40px] z-30 bg-[rgba(255,255,255,0.01)] no-callout cursor-default" onContextMenu={e => e.preventDefault()} />
-                                                <div className="sm:hidden absolute top-[70px] bottom-[60px] right-0 w-[40px] z-30 bg-[rgba(255,255,255,0.01)] no-callout cursor-default" onContextMenu={e => e.preventDefault()} />
-
-                                                {/* 6. SMART CENTER SHIELD (DESKTOP ONLY): 
-                                                     Blocks right-clicks on PC, but vanishes on Touch Devices so users can tap to Play/Pause! */}
+                                                {/* 1. UNIVERSAL TOP SHIELD (100% Width)
+                                                    Completely blocks the Title, Avatar, Watch Later, and Share Arrow on ALL devices,
+                                                    in both Portrait and Landscape orientations. */}
                                                 <div 
-                                                    className="desktop-only-shield absolute top-[70px] bottom-[60px] left-[40px] right-[40px] sm:left-0 sm:right-0 z-30 bg-transparent no-callout cursor-default" 
+                                                    className="absolute top-0 left-0 w-full h-[70px] sm:h-[90px] z-30 bg-[rgba(255,255,255,0.01)] no-callout cursor-default" 
                                                     onContextMenu={e => e.preventDefault()} 
-                                                    onDoubleClick={e => { e.preventDefault(); e.stopPropagation(); }}
                                                 />
+
+                                                {/* 2. UNIVERSAL BOTTOM-RIGHT SHIELD
+                                                    Blocks the YouTube Logo and the native YouTube Fullscreen icon. */}
+                                                <div 
+                                                    className="absolute bottom-0 right-0 w-[100px] h-[65px] z-30 bg-[rgba(255,255,255,0.01)] no-callout cursor-default" 
+                                                    onContextMenu={e => e.preventDefault()} 
+                                                />
+
+                                                {/* 3. UNIVERSAL BOTTOM-LEFT SHIELD 
+                                                    Blocks the mobile share arrow that pops up in the bottom left. */}
+                                                <div 
+                                                    className="absolute bottom-0 left-0 w-[100px] h-[65px] z-30 bg-[rgba(255,255,255,0.01)] no-callout cursor-default" 
+                                                    onContextMenu={e => e.preventDefault()} 
+                                                />
+
+                                                {/* 4. LEFT EDGE SHIELD (Horizontal Protection) */}
+                                                <div 
+                                                    className="absolute top-[70px] bottom-[65px] left-0 w-[45px] z-30 bg-[rgba(255,255,255,0.01)] no-callout cursor-default" 
+                                                    onContextMenu={e => e.preventDefault()} 
+                                                />
+
+                                                {/* 5. RIGHT EDGE SHIELD (Horizontal Protection) */}
+                                                <div 
+                                                    className="absolute top-[70px] bottom-[65px] right-0 w-[45px] z-30 bg-[rgba(255,255,255,0.01)] no-callout cursor-default" 
+                                                    onContextMenu={e => e.preventDefault()} 
+                                                />
+
+                                                {/* 6. SMART CENTER SHIELD (DESKTOP ONLY)
+                                                    If on Desktop (Mouse), blocks Right-Click.
+                                                    If on iPad/Mobile (Touch), removes itself completely so user can tap to play/pause! */}
+                                                {!isTouchDevice && (
+                                                    <div 
+                                                        className="absolute top-[90px] bottom-[65px] left-[45px] right-[45px] z-30 bg-transparent no-callout cursor-default" 
+                                                        onContextMenu={e => e.preventDefault()} 
+                                                        onDoubleClick={e => { e.preventDefault(); e.stopPropagation(); }}
+                                                    />
+                                                )}
                                             </>
                                         )}
                                     </>
