@@ -9,19 +9,18 @@ import {
   Monitor, Smartphone, ArrowLeft, Minus, Plus, ChevronDown, ChevronUp, Search,
   Grid, List as ListIcon, Filter, Clock, Coffee, Mountain, Smile, Star,
   ThumbsUp, User, Activity, Cloud, Copy, ClipboardPaste, SplitSquareHorizontal, Maximize,
-  Crown, QrCode, Lock, Key, Mail, Shield, Info, Check, ShieldCheck, Type, Unlock
+  Crown, QrCode, Lock, Key, Mail, Shield, Info, Check, ShieldCheck, Type, Unlock, Minimize, Circle, CheckCircle2, DownloadCloud
 } from 'lucide-react';
 
 import { auth, db } from './firebase';
 import { signOut } from 'firebase/auth';
-import { doc, getDocs, collection, query, deleteDoc } from 'firebase/firestore';
+import { doc, getDocs, collection, query } from 'firebase/firestore';
 
 import Header from './components/layout/Header';
 import ToolsView from './components/features/tools/ToolsView';
 import Test from './components/features/quiz/Test';
 import ChatBot from './components/features/ai/ChatBot';
 import LessonCard from './components/features/learn/LessonCard';
-// 🌟 ហៅ PremiumModal មកប្រើប្រាស់
 import PremiumModal from './components/features/premium/PremiumModal';
 
 import { courseData, TIPS_LIST, TIPS_LIST_EN } from './data/data';
@@ -30,11 +29,6 @@ import { useLanguage, LanguageProvider } from './contexts/LanguageContext';
 // ==========================================
 // 1. CONFIGURATION & UTILS
 // ==========================================
-
-const ALLOWED_ADMINS = ['koymy.mlk@gmail.com', 'backup.myneedu@gmail.com'];
-const ADMIN_EMAIL = 'koymy.mlk@gmail.com'; 
-const PRACTICE_FILES_LINK = "https://drive.google.com/drive/folders/1jvPswdDUEIEaNtAH4AY4aBm9JHtXv7hj?usp=sharing";
-const API_BASE_URL = 'https://marketing-pro.onrender.com';
 
 const triggerHaptic = (type = 'light') => {
     if (typeof navigator !== 'undefined' && navigator.vibrate) {
@@ -62,7 +56,6 @@ const LessonModal = ({ lesson, onClose, isDarkMode, completedSteps, setCompleted
   const [hasStarted, setHasStarted] = useState(false);
   const [previewEnded, setPreviewEnded] = useState(false);
   const [isCssFullscreen, setIsCssFullscreen] = useState(false);
-  const [isTouchDevice, setIsTouchDevice] = useState(false);
   const [isPlaying, setIsPlaying] = useState(true); 
   
   const togglePlayPause = (e) => {
@@ -91,13 +84,6 @@ const LessonModal = ({ lesson, onClose, isDarkMode, completedSteps, setCompleted
   useEffect(() => {
     setIsVisible(true);
     document.body.style.overflow = 'hidden'; 
-    const checkTouch = () => {
-        return ( 'ontouchstart' in window ) || 
-               ( navigator.maxTouchPoints > 0 ) || 
-               ( navigator.msMaxTouchPoints > 0 ) ||
-               ( /iPad|iPhone|iPod|Android/.test(navigator.userAgent) );
-    };
-    setIsTouchDevice(checkTouch());
     return () => { document.body.style.overflow = 'auto'; };
   }, []);
 
@@ -541,19 +527,19 @@ const TipsSection = ({ isExpanded, onToggle, isDarkMode }) => {
     const { t, lang } = useLanguage();
     const [tipIndex, setTipIndex] = useState(0);
     const currentTipsList = lang === 'en' ? TIPS_LIST_EN : TIPS_LIST;
-  
+    
     const safeTipIndex = tipIndex < currentTipsList.length ? tipIndex : 0;
-  
+    
     useEffect(() => { setTipIndex(Math.floor(Math.random() * currentTipsList.length)); }, [lang, currentTipsList.length]);
-  
+    
     useEffect(() => {
       if (!isExpanded) return;
       const interval = setInterval(() => { setTipIndex((prev) => (prev + 1) % currentTipsList.length); }, 15000);
       return () => clearInterval(interval);
     }, [isExpanded, currentTipsList.length]);
-  
+    
     const nextTip = (e) => { e.stopPropagation(); setTipIndex((prev) => (prev + 1) % currentTipsList.length); };
-  
+    
     return (
       <div className="mt-12">
         <button onClick={onToggle} className={`w-full flex items-center justify-between p-6 rounded-[24px] border transition-all group active:scale-[0.98] shadow-sm ${isDarkMode ? 'bg-[#1C1C1E] border-[#2C2C2C] hover:bg-[#2C2C2C]' : 'bg-[#FFFFFF] border-[#E5E7EB] hover:shadow-md'}`}>
@@ -635,25 +621,6 @@ function AppContent() {
   const [completedSteps, setCompletedSteps] = useState([]);
   
   const [user, setUser] = useState(null);
-  const [isSuperAdmin, setIsSuperAdmin] = useState(false);
-  const [showSuperAdminModal, setShowSuperAdminModal] = useState(false);
-  const [superAdminTab, setSuperAdminTab] = useState('ai'); 
-
-  useEffect(() => {
-      const unlockSuperAdmin = () => setIsSuperAdmin(true);
-      const toggleSuperAdminPanel = () => setShowSuperAdminModal(prev => !prev);
-      
-      window.addEventListener('superAdminUnlocked', unlockSuperAdmin);
-      window.addEventListener('toggleSuperAdminPanel', toggleSuperAdminPanel);
-      
-      return () => {
-          window.removeEventListener('superAdminUnlocked', unlockSuperAdmin);
-          window.removeEventListener('toggleSuperAdminPanel', toggleSuperAdminPanel);
-      };
-  }, []);
-
-  const isBasicAdmin = user?.email === ADMIN_EMAIL;
-  const showAdminPanel = isBasicAdmin || isSuperAdmin;
 
   const [purchasedCourses, setPurchasedCourses] = useState({ photo: null, designer: null, publisher: null });
   const [isDataLoaded, setIsDataLoaded] = useState(false);
@@ -665,8 +632,6 @@ function AppContent() {
       }
       return [];
   });
-
-  const [aiMemoryCache, setAiMemoryCache] = useState([]);
 
   const fetchCloudAI = async () => {
       try {
@@ -688,15 +653,6 @@ function AppContent() {
           if (saved) setLiveAiData(JSON.parse(saved));
       }
   };
-
-  useEffect(() => {
-      if (showSuperAdminModal && superAdminTab === 'ai') {
-          try {
-              const cache = JSON.parse(localStorage.getItem('myDesign_ai_memory_cache') || '[]');
-              setAiMemoryCache(cache);
-          } catch(e) {}
-      }
-  }, [showSuperAdminModal, superAdminTab]);
 
   useEffect(() => {
       if (typeof window !== 'undefined') {
@@ -829,7 +785,7 @@ function AppContent() {
   const handleSignOutDevice = async () => {
       triggerHaptic();
       let message = '';
-      if (!user && !isSuperAdmin) {
+      if (!user) {
           message = lang === 'en' 
               ? '⚠️ WARNING: You have NOT linked a Google account!\n\nIf you sign out now, you will LOSE ACCESS to your premium course permanently. Are you absolutely sure you want to sign out?' 
               : '⚠️ ព្រមាន៖ អ្នកមិនទាន់បានភ្ជាប់គណនី Google ទេ!\n\nប្រសិនបើអ្នកចាកចេញឥឡូវនេះ អ្នកនឹងបាត់បង់សិទ្ធិចូលរៀនវគ្គ Premium នេះជារៀងរហូត។ តើអ្នកពិតជាចង់ចាកចេញមែនទេ?';
@@ -843,7 +799,6 @@ function AppContent() {
           try {
               await signOut(auth);
               setUser(null);
-              setIsSuperAdmin(false); 
               setPurchasedCourses({ photo: null, designer: null, publisher: null });
               localStorage.removeItem('myAffinity_purchases');
           } catch (error) {
@@ -858,7 +813,7 @@ function AppContent() {
   const completedInThisTab = completedSteps.filter(id => id.startsWith(progressPrefix)).length;
   const progressPercentage = totalSteps === 0 ? 0 : Math.round((completedInThisTab / totalSteps) * 100);
 
-  const isCoursePurchased = showAdminPanel || (activeAppTab ? purchasedCourses[activeAppTab]?.unlocked === true : false);
+  const isCoursePurchased = activeAppTab ? purchasedCourses[activeAppTab]?.unlocked === true : false;
   const theme = activeAppTab ? APP_THEMES[activeAppTab] : APP_THEMES.photo;
   const getAppDisplayName = (id) => id === 'photo' ? 'Affinity Photo 2 iPad' : id === 'designer' ? 'Affinity Designer 2 iPad' : 'Affinity Publisher 2 iPad';
   const appDisplayName = activeAppTab ? getAppDisplayName(activeAppTab) : '';
@@ -886,155 +841,6 @@ function AppContent() {
               window.history.pushState({ modalOpen: false, tab: tab, course: null }, '');
           }} isDarkMode={isDarkMode} setIsDarkMode={setIsDarkMode} />
       </div>
-
-      {/* 🌟 SUPER ADMIN PANEL */}
-      {showSuperAdminModal && isSuperAdmin && (
-          <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-fade-in">
-              <div className={`w-full max-w-2xl max-h-[85vh] rounded-[32px] flex flex-col border shadow-2xl relative overflow-hidden ${isDarkMode ? 'bg-[#121212] border-[#3A3A3C]' : 'bg-white border-[#E5E7EB]'}`}>
-                  
-                  <div className={`flex items-center justify-between p-5 border-b ${isDarkMode ? 'border-[#2C2C2C]' : 'border-[#E5E7EB]'}`}>
-                      <div className="flex items-center gap-3">
-                          <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-purple-500 to-indigo-500 flex items-center justify-center text-white shadow-lg">
-                              <Crown size={20} />
-                          </div>
-                          <div>
-                              <h2 className={`font-black tracking-tight ${isDarkMode ? 'text-white' : 'text-black'}`}>Super Admin Panel</h2>
-                              <p className={`text-[10px] font-bold uppercase tracking-widest ${isDarkMode ? 'text-[#A0A0A0]' : 'text-gray-500'}`}>System Management</p>
-                          </div>
-                      </div>
-                      <button onClick={() => setShowSuperAdminModal(false)} className={`p-2 rounded-full transition-colors ${isDarkMode ? 'hover:bg-[#2C2C2C] text-[#A0A0A0]' : 'hover:bg-gray-100 text-gray-500'}`}>
-                          <X size={20} />
-                      </button>
-                  </div>
-
-                  <div className={`flex p-3 gap-2 border-b ${isDarkMode ? 'border-[#2C2C2C] bg-[#1A1A1A]' : 'border-[#E5E7EB] bg-gray-50'}`}>
-                      <button onClick={() => setSuperAdminTab('ai')} className={`flex-1 py-2.5 rounded-xl font-bold text-[13px] uppercase tracking-wider transition-all flex items-center justify-center gap-2 ${superAdminTab === 'ai' ? (isDarkMode ? 'bg-[#2C2C2C] text-[#41B6E6] shadow-sm border border-[#3A3A3C]' : 'bg-white text-[#0277C5] shadow-sm border border-[#E5E7EB]') : (isDarkMode ? 'text-[#6B7280] hover:text-[#A0A0A0]' : 'text-[#9CA3AF] hover:text-gray-600')}`}><Database size={16}/> AI Studio</button>
-                      <button onClick={() => setSuperAdminTab('cert')} className={`flex-1 py-2.5 rounded-xl font-bold text-[13px] uppercase tracking-wider transition-all flex items-center justify-center gap-2 ${superAdminTab === 'cert' ? (isDarkMode ? 'bg-[#2C2C2C] text-[#41B6E6] shadow-sm border border-[#3A3A3C]' : 'bg-white text-[#0277C5] shadow-sm border border-[#E5E7EB]') : (isDarkMode ? 'text-[#6B7280] hover:text-[#A0A0A0]' : 'text-[#9CA3AF] hover:text-gray-600')}`}><Award size={16}/> Certificates</button>
-                  </div>
-
-                  <div className="flex-1 overflow-y-auto p-5 custom-scrollbar bg-inherit">
-                      {superAdminTab === 'ai' ? (
-                          <div className="animate-fade-in-up space-y-4">
-                              <p className={`text-[13px] font-khmer leading-relaxed ${isDarkMode ? 'text-[#9AA0A6]' : 'text-gray-500'}`}>
-                                  Manage the AI training data you added directly from the AI Chat. When ready, copy the final Data Code to update your main <code className="bg-black/20 px-1 rounded">data.js</code> file.
-                              </p>
-                              
-                              <div className="flex gap-3 pt-2 mb-2">
-                                  <button 
-                                      onClick={() => {
-                                          if (liveAiData.length === 0) return;
-                                          triggerHaptic('success');
-                                          let codeStr = "";
-                                          liveAiData.forEach(item => {
-                                              codeStr += `    {\n        primaryKeys: ${JSON.stringify(item.primaryKeys)},\n        keys: ${JSON.stringify(item.keys)},\n        regex: ${JSON.stringify(item.regex)},\n        answer: ${JSON.stringify(item.answer)},\n        answer_en: ${JSON.stringify(item.answer_en)}\n    },\n`;
-                                          });
-                                          navigator.clipboard.writeText(codeStr);
-                                          alert("AI Data Code Copied! Paste this inside KNOWLEDGE_BASE in your data.js file.");
-                                      }}
-                                      className={`w-full py-3.5 rounded-2xl font-bold text-[13px] transition-all flex items-center justify-center gap-2 shadow-lg ${liveAiData.length === 0 ? 'opacity-50 cursor-not-allowed bg-gray-500 text-white' : 'bg-gradient-to-r from-green-500 to-emerald-500 text-white hover:opacity-90'}`}
-                                  >
-                                      <Copy size={16} /> Copy All Data Code ({liveAiData.length} Entries)
-                                  </button>
-                              </div>
-
-                              {liveAiData.length > 0 && (
-                                  <div className="mt-4 border-t border-dashed border-gray-500/30 pt-4">
-                                      <div className="flex justify-between items-center mb-3">
-                                          <span className={`text-[10px] font-bold uppercase tracking-widest ${isDarkMode ? 'text-green-400' : 'text-green-600'}`}>{liveAiData.length} Live Offline Entries</span>
-                                          <button onClick={async () => { 
-                                              if(window.confirm('Clear all offline training data from database?')) { 
-                                                  triggerHaptic();
-                                                  for (const item of liveAiData) {
-                                                      if (item.id) {
-                                                          try { await deleteDoc(doc(db, "ai_knowledge", item.id)); } catch(e) {}
-                                                      }
-                                                  }
-                                                  setLiveAiData([]); 
-                                                  localStorage.removeItem('myAffinity_live_ai'); 
-                                              } 
-                                          }} className="text-red-500 hover:text-red-400"><Trash2 size={16}/></button>
-                                      </div>
-                                      <div className="space-y-3 max-h-64 overflow-y-auto custom-scrollbar pr-1">
-                                          {liveAiData.map((data, i) => (
-                                              <div key={i} className={`p-3.5 rounded-xl border text-[11px] font-khmer leading-relaxed relative ${isDarkMode ? 'bg-[#121212] border-[#2C2C2C] text-[#A0A0A0]' : 'bg-[#F8F9FA] border-[#E5E7EB] text-[#6B7280]'}`}>
-                                                  <button 
-                                                      onClick={async () => {
-                                                          triggerHaptic();
-                                                          if (data.id) {
-                                                              try { await deleteDoc(doc(db, "ai_knowledge", data.id)); } 
-                                                              catch(e) { console.error("Failed to delete from DB"); }
-                                                          }
-                                                          const updated = liveAiData.filter((_, index) => index !== i);
-                                                          setLiveAiData(updated);
-                                                          localStorage.setItem('myAffinity_live_ai', JSON.stringify(updated));
-                                                      }}
-                                                      className="absolute top-2 right-2 text-red-500 hover:text-red-400 p-1.5 bg-red-500/10 rounded-md transition-colors"
-                                                      title="Remove this entry"
-                                                  >
-                                                      <Trash2 size={14} />
-                                                  </button>
-                                                  <div className="pr-8 space-y-1.5">
-                                                      <div><strong className={isDarkMode ? 'text-white' : 'text-black'}>Keys: </strong> {data.keys.join(', ')}</div>
-                                                      <div><strong className={isDarkMode ? 'text-[#41B6E6]' : 'text-[#0277C5]'}>KM: </strong> <span className="line-clamp-2">{data.answer}</span></div>
-                                                      <div><strong className={isDarkMode ? 'text-[#41B6E6]' : 'text-[#0277C5]'}>EN: </strong> <span className="line-clamp-2">{data.answer_en}</span></div>
-                                                  </div>
-                                              </div>
-                                          ))}
-                                      </div>
-                                  </div>
-                              )}
-                              
-                              {aiMemoryCache.length > 0 && (
-                                  <div className="mt-6 border-t border-dashed border-gray-500/30 pt-4">
-                                      <div className="flex justify-between items-center mb-3">
-                                          <span className={`text-[10px] font-bold uppercase tracking-widest ${isDarkMode ? 'text-orange-400' : 'text-orange-600'}`}>{aiMemoryCache.length} Auto-Cached API Responses</span>
-                                          <button onClick={() => {
-                                              if(window.confirm('Clear all auto-cached API responses?')) {
-                                                  setAiMemoryCache([]);
-                                                  localStorage.removeItem('myDesign_ai_memory_cache');
-                                                  triggerHaptic();
-                                              }
-                                          }} className="text-red-500 hover:text-red-400"><Trash2 size={16}/></button>
-                                      </div>
-                                      <div className="space-y-3 max-h-64 overflow-y-auto custom-scrollbar pr-1">
-                                          {aiMemoryCache.map((data, i) => (
-                                              <div key={i} className={`p-3.5 rounded-xl border text-[11px] font-khmer leading-relaxed relative ${isDarkMode ? 'bg-[#121212] border-[#2C2C2C] text-[#A0A0A0]' : 'bg-[#F8F9FA] border-[#E5E7EB] text-[#6B7280]'}`}>
-                                                  <button
-                                                      onClick={() => {
-                                                          triggerHaptic();
-                                                          const updated = aiMemoryCache.filter((_, index) => index !== i);
-                                                          setAiMemoryCache(updated);
-                                                          localStorage.setItem('myDesign_ai_memory_cache', JSON.stringify(updated));
-                                                      }}
-                                                      className="absolute top-2 right-2 text-red-500 hover:text-red-400 p-1.5 bg-red-500/10 rounded-md transition-colors"
-                                                      title="Remove this cache"
-                                                  >
-                                                      <Trash2 size={14} />
-                                                  </button>
-                                                  <div className="pr-8 space-y-1.5">
-                                                      <div><strong className={isDarkMode ? 'text-white' : 'text-black'}>Q: </strong> {data.q} <span className="text-[9px] opacity-50">({data.lang})</span></div>
-                                                      <div><strong className={isDarkMode ? 'text-[#41B6E6]' : 'text-[#0277C5]'}>A: </strong> <span className="line-clamp-2">{data.a}</span></div>
-                                                  </div>
-                                              </div>
-                                          ))}
-                                      </div>
-                                  </div>
-                              )}
-                          </div>
-                      ) : (
-                          <div className="animate-fade-in-up space-y-4">
-                              <p className={`text-[13px] font-khmer leading-relaxed ${isDarkMode ? 'text-[#9AA0A6]' : 'text-gray-500'}`}>
-                                  To test the certificate renderer, close this panel, navigate to the Quiz tab, and click the new "Admin: Generate Certificate" button at the bottom of the levels list.
-                              </p>
-                              <div className="p-4 bg-yellow-500/10 border border-yellow-500/30 rounded-2xl flex items-center justify-center gap-2 text-yellow-600 font-bold">
-                                  <Award size={18} /> Moved to Quiz Tab for stability.
-                              </div>
-                          </div>
-                      )}
-                  </div>
-              </div>
-          </div>
-      )}
       
       {expandedLesson && (
         <LessonModal 
@@ -1076,12 +882,12 @@ function AppContent() {
                     theme={theme}
                     appDisplayName={appDisplayName}
                     isDarkMode={isDarkMode}
-                    showAdminPanel={showAdminPanel}
+                    showAdminPanel={false} // លែងត្រូវការប្រើ
                     purchasedCourses={purchasedCourses}
                     setPurchasedCourses={setPurchasedCourses}
                     user={user}
                     setUser={setUser}
-                    setIsSuperAdmin={setIsSuperAdmin}
+                    setIsSuperAdmin={() => {}} // លែងត្រូវការប្រើ
                     handleSignOutDevice={handleSignOutDevice}
                     triggerHaptic={triggerHaptic}
                 />
@@ -1147,8 +953,7 @@ function AppContent() {
                                 <p className={`text-[13px] sm:text-[14px] mt-0.5 sm:mt-1 font-medium truncate ${isDarkMode ? 'text-[#9AA0A6]' : 'text-[#6B7280]'}`}>{lang === 'en' ? 'Professional photo editing & manipulation' : 'ការកែច្នៃរូបភាពបែបអាជីព'}</p>
                             </div>
                             <div className="flex items-center gap-2 sm:gap-3 shrink-0 pl-2">
-                                {!showAdminPanel && !purchasedCourses['photo']?.unlocked && <Lock size={18} className={`${APP_THEMES.photo.text} opacity-80`} />}
-                                {showAdminPanel && <ShieldCheck size={18} className="text-[#41B6E6]" />}
+                                {!purchasedCourses['photo']?.unlocked && <Lock size={18} className={`${APP_THEMES.photo.text} opacity-80`} />}
                                 <div className={`w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center transition-colors ${isDarkMode ? 'bg-white/5 group-hover:bg-white/10' : 'bg-black/5 group-hover:bg-black/10'}`}>
                                     <ChevronRight size={20} className={isDarkMode ? 'text-[#A0A0A0] group-hover:text-white' : 'text-[#6B7280] group-hover:text-black'} />
                                 </div>
@@ -1167,8 +972,7 @@ function AppContent() {
                                 <p className={`text-[13px] sm:text-[14px] mt-0.5 sm:mt-1 font-medium truncate ${isDarkMode ? 'text-[#9AA0A6]' : 'text-[#6B7280]'}`}>{lang === 'en' ? 'Vector graphics & illustration' : 'ការឌីហ្សាញក្រាហ្វិក និងគំនូរ'}</p>
                             </div>
                             <div className="flex items-center gap-2 sm:gap-3 shrink-0 pl-2">
-                                {!showAdminPanel && !purchasedCourses['designer']?.unlocked && <Lock size={18} className={`${APP_THEMES.designer.text} opacity-80`} />}
-                                {showAdminPanel && <ShieldCheck size={18} className="text-[#41B6E6]" />}
+                                {!purchasedCourses['designer']?.unlocked && <Lock size={18} className={`${APP_THEMES.designer.text} opacity-80`} />}
                                 <div className={`w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center transition-colors ${isDarkMode ? 'bg-white/5 group-hover:bg-white/10' : 'bg-black/5 group-hover:bg-black/10'}`}>
                                     <ChevronRight size={20} className={isDarkMode ? 'text-[#A0A0A0] group-hover:text-white' : 'text-[#6B7280] group-hover:text-black'} />
                                 </div>
@@ -1187,8 +991,7 @@ function AppContent() {
                                 <p className={`text-[13px] sm:text-[14px] mt-0.5 sm:mt-1 font-medium truncate ${isDarkMode ? 'text-[#9AA0A6]' : 'text-[#6B7280]'}`}>{lang === 'en' ? 'Page layout & typography design' : 'ការរៀបចំទំព័រ និងសៀវភៅ'}</p>
                             </div>
                             <div className="flex items-center gap-2 sm:gap-3 shrink-0 pl-2">
-                                {!showAdminPanel && !purchasedCourses['publisher']?.unlocked && <Lock size={18} className={`${APP_THEMES.publisher.text} opacity-80`} />}
-                                {showAdminPanel && <ShieldCheck size={18} className="text-[#41B6E6]" />}
+                                {!purchasedCourses['publisher']?.unlocked && <Lock size={18} className={`${APP_THEMES.publisher.text} opacity-80`} />}
                                 <div className={`w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center transition-colors ${isDarkMode ? 'bg-white/5 group-hover:bg-white/10' : 'bg-black/5 group-hover:bg-black/10'}`}>
                                     <ChevronRight size={20} className={isDarkMode ? 'text-[#A0A0A0] group-hover:text-white' : 'text-[#6B7280] group-hover:text-black'} />
                                 </div>
@@ -1203,11 +1006,11 @@ function AppContent() {
             )}
             {activeTab === 'tools' && <div className="pb-24"><ToolsView isDarkMode={isDarkMode} /></div>}
             
-            {activeTab === 'quiz' && <Test isDarkMode={isDarkMode} isAdmin={isSuperAdmin} />}
+            {activeTab === 'quiz' && <Test isDarkMode={isDarkMode} isAdmin={false} />}
         </main>
       ) : (
         <div className={`flex-1 relative w-full h-full md:pb-0 z-0 ${activeAppTab ? 'hidden' : 'block'}`} style={{ paddingTop: 'max(env(safe-area-inset-top), 0px)' }}>
-             <ChatBot messages={chatMessages} setMessages={setChatMessages} isDarkMode={isDarkMode} liveAiData={liveAiData} setLiveAiData={setLiveAiData} isAdmin={isSuperAdmin} />
+             <ChatBot messages={chatMessages} setMessages={setChatMessages} isDarkMode={isDarkMode} liveAiData={liveAiData} setLiveAiData={setLiveAiData} isAdmin={false} />
         </div>
       )}
 
