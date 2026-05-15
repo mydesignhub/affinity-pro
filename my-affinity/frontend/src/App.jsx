@@ -1,9 +1,15 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { 
-  Crown, Check, Info, ArrowLeft, X, Loader2, 
-  Send, Key, RotateCcw, Shield, Lock, WifiOff, Layers, PlayCircle, 
-  ChevronRight, KeyRound, ChevronDown, ShieldCheck, Minimize, Maximize, 
-  Clock, DownloadCloud, CheckCircle2, Circle, AlertCircle, Download
+  Sun, Moon, Aperture, Droplet, Sliders, ChevronRight, CheckCircle, XCircle, 
+  BookOpen, Award, PlayCircle, MessageCircle, Send, Sparkles, Loader2, 
+  Bot, Settings, HelpCircle, BarChart, Zap, Triangle, Touchpad, 
+  AlertTriangle, RotateCcw, Globe, RefreshCw, Layout, Image as ImageIcon, 
+  Lightbulb, Palette, X, WifiOff, Download, TrendingUp, Share2, Clipboard, Camera,
+  Layers, Crop, Save, ScanFace, Facebook, Upload, ImageDown, FileJson,
+  Monitor, Smartphone, ArrowLeft, Minus, Plus, ChevronDown, ChevronUp, Search,
+  Grid, List as ListIcon, Filter, Clock, Coffee, Mountain, Smile, Star,
+  ThumbsUp, User, Activity, Cloud, Copy, ClipboardPaste, SplitSquareHorizontal, Maximize,
+  Crown, QrCode, Lock, Key, Mail, Shield, Info, Check, ShieldCheck, Type, Unlock, Minimize, Circle, CheckCircle2, DownloadCloud
 } from 'lucide-react';
 
 import { auth, db } from './firebase';
