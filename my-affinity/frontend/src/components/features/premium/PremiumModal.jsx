@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { 
   Crown, Check, Info, ArrowLeft, X, Loader2, 
-  Send, Key, RotateCcw, Shield, Lock, WifiOff, Layers, PlayCircle, ChevronRight, KeyRound
+  Send, Key, RotateCcw, Shield, Lock, WifiOff, Layers, PlayCircle, 
+  ChevronRight, KeyRound, ChevronDown, ShieldCheck, Minimize, Maximize, 
+  Clock, DownloadCloud, CheckCircle2, Circle, AlertCircle, Download
 } from 'lucide-react';
 
 import { doc, getDoc, setDoc, updateDoc, deleteDoc } from 'firebase/firestore';
