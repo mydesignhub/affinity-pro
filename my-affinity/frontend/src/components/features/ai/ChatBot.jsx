@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Bot, Send, RefreshCw, Trash2, ThumbsUp, ThumbsDown, ArrowRight, Brain, Loader2 } from 'lucide-react';
+import { Bot, Send, RefreshCw, Trash2, ThumbsUp, ThumbsDown, ArrowRight, Brain, Loader2, Copy, Edit2, CheckCircle2, X, Unlock } from 'lucide-react';
 import { useLanguage } from '../../../contexts/LanguageContext';
 import { collection, addDoc, deleteDoc, doc } from 'firebase/firestore';
 import { db } from '../../../firebase'; 
@@ -84,7 +84,7 @@ const strictClean = (text) => {
 
 const formatMessage = (text) => {
     if (typeof text !== 'string') return text;
-    const formattedText = text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+    const formattedText = text.replace(/\*\*(.*?)\*\*/g, '<strong class="font-black">$1</strong>');
     return formattedText.split('\n').map((line, i, arr) => (
         <React.Fragment key={i}>
             <span dangerouslySetInnerHTML={{ __html: line }} />
@@ -103,15 +103,24 @@ const ChatBot = ({ messages = [], setMessages, isDarkMode, liveAiData = [], setL
   const [viewportHeight, setViewportHeight] = useState('100%');
   const [keyboardHeight, setKeyboardHeight] = useState(0);
 
+  // 🌟 NEW UX STATES
+  const [isAndroid, setIsAndroid] = useState(false);
+  const [copiedIndex, setCopiedIndex] = useState(null);
+  const [editingIndex, setEditingIndex] = useState(null);
+  const [editText, setEditText] = useState('');
+  const [animState, setAnimState] = useState('idle');
+  const [headerStatusText, setHeaderStatusText] = useState('MY DESIGN AI');
+  const touchStartX = useRef(0);
+
   const messagesEndRef = useRef(null);
   const inputRef = useRef(null);
   const scrollContainerRef = useRef(null);
+  const suggestionsScrollRef = useRef(null);
   const isInitialMount = useRef(true); 
   const isAutoScrolling = useRef(false);
   const idleTimerRef = useRef(null); 
   
   const [currentSuggestions, setCurrentSuggestions] = useState([]);
-  const [isAnimating, setIsAnimating] = useState(false);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [currentTopic, setCurrentTopic] = useState(() => {
       if (typeof window !== 'undefined') return localStorage.getItem('myDesign_current_topic') || null;
@@ -121,6 +130,23 @@ const ChatBot = ({ messages = [], setMessages, isDarkMode, liveAiData = [], setL
   const { lang, t } = useLanguage();
 
   const COMBINED_DB = [...(KNOWLEDGE_BASE || []), ...liveAiData];
+
+  useEffect(() => {
+      setIsAndroid(/Android/i.test(navigator.userAgent));
+  }, []);
+
+  // 🌟 FIX IOS SAFARI WINDOW SCROLL BUG 🌟
+  useEffect(() => {
+      const fixViewport = () => {
+          if (window.scrollY > 0 || document.documentElement.scrollTop > 0) window.scrollTo(0, 0);
+      };
+      window.addEventListener('scroll', fixViewport, { passive: true });
+      document.body.addEventListener('touchmove', fixViewport, { passive: true });
+      return () => {
+          window.removeEventListener('scroll', fixViewport);
+          document.body.removeEventListener('touchmove', fixViewport);
+      };
+  }, []);
 
   const runSecretBackgroundTraining = async (userQ, botA) => {
       try {
@@ -277,8 +303,6 @@ const ChatBot = ({ messages = [], setMessages, isDarkMode, liveAiData = [], setL
           generateSmartGreeting();
       }
       setCurrentSuggestions(getRandomItems(getSuggestList(), 3)); 
-      const interval = setInterval(() => { handleRefresh(null, true); }, 15000); 
-      return () => clearInterval(interval);
   }, [lang]);
 
   useEffect(() => {
@@ -293,18 +317,84 @@ const ChatBot = ({ messages = [], setMessages, isDarkMode, liveAiData = [], setL
       if (currentTopic) localStorage.setItem('myDesign_current_topic', currentTopic);
   }, [messages, currentTopic]);
 
-  const handleInputInput = (e) => setInput(e.currentTarget.textContent);
+  const handleInputInput = (e) => setInput(e.currentTarget.textContent || e.currentTarget.innerText);
 
-  const handleRefresh = (e, isAuto = false) => {
+  // 🌟 ANIMATED REFRESH 🌟
+  const handleRefresh = (e, isAuto = false, dir = 'right') => {
       if (e) { e.preventDefault(); e.stopPropagation(); }
-      if (!isAuto) triggerHaptic();
-      if (isAnimating) return; 
-      setIsAnimating(true);
+      if (!isAuto) setAnimState(dir === 'right' ? 'out-left' : 'out-right');
+
       setTimeout(() => {
-          setCurrentSuggestions(getRandomItems(getSuggestList(), 3));
-          setIsAnimating(false);
-      }, 300); 
+          setCurrentSuggestions(prev => {
+              const allList = getSuggestList();
+              const available = allList.filter(item => !prev.includes(item));
+              const pool = available.length >= 3 ? available : allList;
+              return getRandomItems(pool, 3);
+          });
+
+          if (!isAuto) {
+              setAnimState(dir === 'right' ? 'in-right' : 'in-left');
+              setTimeout(() => setAnimState('idle'), 50);
+          }
+
+          if (suggestionsScrollRef.current) {
+              suggestionsScrollRef.current.scrollTo({ left: 0, behavior: 'auto' });
+          }
+      }, isAuto ? 0 : 300);
   };
+
+  const getAnimClasses = () => {
+      switch (animState) {
+          case 'out-left': return 'opacity-0 -translate-x-12 scale-95 transition-all duration-300';
+          case 'out-right': return 'opacity-0 translate-x-12 scale-95 transition-all duration-300';
+          case 'in-right': return 'opacity-0 translate-x-12 scale-95 transition-none';
+          case 'in-left': return 'opacity-0 -translate-x-12 scale-95 transition-none';
+          case 'idle':
+          default: return 'opacity-100 translate-x-0 scale-100 transition-all duration-300';
+      }
+  };
+
+  useEffect(() => {
+      const intervalId = setInterval(() => { handleRefresh(null, true); }, 15000); 
+      return () => clearInterval(intervalId);
+  }, [lang]);
+
+  // 🌟 PULL TO REFRESH SUGGESTIONS 🌟
+  useEffect(() => {
+      const container = suggestionsScrollRef.current;
+      if (!container) return;
+
+      const handleTouchStart = (e) => { touchStartX.current = e.touches[0].clientX; };
+      const handleTouchEnd = (e) => {
+          const touchEndX = e.changedTouches[0].clientX;
+          const distance = touchStartX.current - touchEndX;
+
+          if (distance > 60 && container.scrollLeft + container.clientWidth >= container.scrollWidth - 10) {
+              triggerHaptic(); handleRefresh(null, false, 'right');
+          } else if (distance < -60 && container.scrollLeft <= 10) {
+              triggerHaptic(); handleRefresh(null, false, 'left');
+          }
+      };
+
+      container.addEventListener('touchstart', handleTouchStart, { passive: true });
+      container.addEventListener('touchend', handleTouchEnd, { passive: true });
+      return () => {
+          container.removeEventListener('touchstart', handleTouchStart);
+          container.removeEventListener('touchend', handleTouchEnd);
+      };
+  }, [lang]);
+
+  // 🌟 HEADER TEXT ANIMATION 🌟
+  useEffect(() => {
+      const texts = lang === 'en' ? ['Online', 'Ready to Design'] : ['កំពុងភ្ជាប់', 'រួចរាល់សម្រាប់ការរចនា'];
+      setHeaderStatusText(texts[0]);
+      let currentIndex = 0;
+      const textInterval = setInterval(() => {
+          currentIndex = (currentIndex + 1) % texts.length;
+          setHeaderStatusText(texts[currentIndex]);
+      }, 3000);
+      return () => clearInterval(textInterval);
+  }, [lang]);
 
   const handleClearChat = (e) => {
       if (e) e.preventDefault();
@@ -318,6 +408,21 @@ const ChatBot = ({ messages = [], setMessages, isDarkMode, liveAiData = [], setL
       generateSmartGreeting();
       setCurrentTopic(null);
       setShowConfirmModal(false);
+  };
+
+  // 🌟 NEW MSG CONTROLS 🌟
+  const handleCopy = (text, index) => {
+      triggerHaptic(); navigator.clipboard.writeText(text);
+      setCopiedIndex(index); setTimeout(() => setCopiedIndex(null), 2000);
+  };
+
+  const handleEditClick = (index, text) => { triggerHaptic(); setEditingIndex(index); setEditText(text); };
+  const cancelEdit = () => { setEditingIndex(null); setEditText(''); };
+
+  const submitEdit = (index) => {
+      if (!editText.trim()) return;
+      const newHistory = messages.slice(0, index);
+      setEditingIndex(null); handleSend(editText, newHistory);
   };
 
   const handleFeedback = (index, type) => {
@@ -343,7 +448,6 @@ const ChatBot = ({ messages = [], setMessages, isDarkMode, liveAiData = [], setL
       const rawInput = inputTxt.trim();
       const cleanInput = strictClean(rawInput); 
 
-      // Remove Question Words safely
       const questionWords = ['តើ', 'ជាអ្វី', 'អ្វីទៅជា', 'អ្វីទៅ', 'ស្អីគេ', 'ស្អី', 'គឺជាអ្វី', 'របៀប', 'របៀបណា', 'យ៉ាងម៉េច', 'howto', 'whatis', 'explain'];
       let coreSubject = cleanInput;
       let wordStripped = true;
@@ -548,29 +652,40 @@ const ChatBot = ({ messages = [], setMessages, isDarkMode, liveAiData = [], setL
       return { needsBackend: true, query: rawInput };
   };
 
-  const handleSend = async (text = null) => {
+  const dismissKeyboard = () => {
+      if (isKeyboardOpen && inputRef.current) {
+          inputRef.current.blur();
+          setIsKeyboardOpen(false);
+      }
+  };
+
+  const handleSend = async (text = null, customHistory = null, isFromChip = false) => {
       if (loading) return; 
 
       const msg = typeof text === 'string' ? text : input;
       if (!msg.trim()) return; 
 
+      const keepFocus = isKeyboardOpen && !isFromChip;
       const rudeWords = ['ឆ្កួត', 'ចង្រៃ', 'មីចោរ', 'អាឆ្កែ', 'ចុយ', 'ថោកទាប', 'ឡប់', 'ភ្លើ', 'ល្ងង់', 'អាថោក', 'មីថោក', 'ឡប់សតិ', 'អាឡប់', 'មីចោលម្សៀត', 'fuck', 'shit', 'bitch', 'stupid', 'asshole', 'dick', 'idiot'].map(strictClean);
       const cleanMsg = strictClean(msg);
+      
       if (rudeWords.some(word => cleanMsg.includes(word))) {
           setInput(''); if (inputRef.current) inputRef.current.textContent = '';
           setMessages(prev => [...prev, { role: 'model', text: lang === 'en' ? "Please use appropriate language! 🚫🙏" : "សូមមេត្តាប្រើប្រាស់ពាក្យសម្ដីសមរម្យ! 🚫🙏", chips: [], isTrainable: false }]);
+          if (keepFocus) setTimeout(() => inputRef.current?.focus(), 50);
           return; 
       }
       
       setInput(''); 
       if (inputRef.current) inputRef.current.textContent = '';
-      setIsKeyboardOpen(false); 
+      if (isFromChip) setIsKeyboardOpen(false); 
 
-      setMessages(prev => [...prev, { role: 'user', text: msg }]); 
+      const currentHistory = customHistory || messages;
+      setMessages([...currentHistory, { role: 'user', text: msg }]); 
       setLoading(true);
       
       try {
-          let responseData = findAIResponse(msg, messages);
+          let responseData = findAIResponse(msg, currentHistory);
 
           if (responseData.needsBackend) {
               let cachedAnswer = null;
@@ -584,9 +699,14 @@ const ChatBot = ({ messages = [], setMessages, isDarkMode, liveAiData = [], setL
                   await new Promise(resolve => setTimeout(resolve, 600));
                   setMessages(prev => [...prev, { role: 'model', text: cachedAnswer, isTrainable: true }]);
               } else {
-                  const historyDiet = messages.slice(-4); 
-                  let aiBackendAnswer = await callRealAI(msg, lang, historyDiet);
+                  const historyDiet = currentHistory.slice(-4); 
+                  const [rawAiAnswer] = await Promise.all([
+                      callRealAI(msg, lang, historyDiet),
+                      new Promise(resolve => setTimeout(resolve, 600)) 
+                  ]);
                   
+                  let aiBackendAnswer = rawAiAnswer;
+
                   if (aiBackendAnswer.includes('*(Debug Error)*')) {
                       const fallbackList = lang === 'en' ? (API_FALLBACK_RESPONSES_EN || []) : (API_FALLBACK_RESPONSES || []);
                       aiBackendAnswer = getRandomItems(fallbackList, 1)[0] || "Internet Error. Try again.";
@@ -625,6 +745,7 @@ const ChatBot = ({ messages = [], setMessages, isDarkMode, liveAiData = [], setL
           setMessages(prev => [...prev, { role: 'model', text: randomFallback, chips: getRandomItems(getSuggestList(), 3), isTrainable: false }]);
       } finally {
           setLoading(false);
+          if (keepFocus) { setTimeout(() => { if (inputRef.current) inputRef.current.focus(); }, 50); }
       }
   };
 
@@ -660,12 +781,13 @@ const ChatBot = ({ messages = [], setMessages, isDarkMode, liveAiData = [], setL
 
   useEffect(() => {
       const handleScroll = () => {
-          if (isAutoScrolling.current) return; 
-          if (!scrollContainerRef.current) return;
+          if (isAutoScrolling.current || !scrollContainerRef.current) return;
           const currentScrollY = scrollContainerRef.current.scrollTop;
           
-          if (currentScrollY > lastScrollY && currentScrollY > 50) setShowHeader(false);
-          else if (currentScrollY < lastScrollY) setShowHeader(true);
+          if (currentScrollY <= 0) { setShowHeader(true); setLastScrollY(0); return; }
+          if (currentScrollY > lastScrollY + 15 && currentScrollY > 60) setShowHeader(false);
+          else if (currentScrollY < lastScrollY - 15) setShowHeader(true);
+          
           setLastScrollY(currentScrollY);
       };
 
@@ -702,17 +824,21 @@ const ChatBot = ({ messages = [], setMessages, isDarkMode, liveAiData = [], setL
   }, []);
 
   useEffect(() => {
+      let blurTimer;
       const handleFocusIn = (e) => {
           const tag = e.target.tagName;
           if (tag === 'INPUT' || tag === 'TEXTAREA' || e.target.isContentEditable) {
+              clearTimeout(blurTimer);
               setIsKeyboardOpen(true);
               setShowHeader(true);
               setTimeout(() => {
                   if (messagesEndRef.current) messagesEndRef.current.scrollIntoView({ behavior: 'smooth', block: 'end' });
-              }, 150);
+              }, 300);
           }
       };
-      const handleFocusOut = () => setIsKeyboardOpen(false);
+      const handleFocusOut = () => { 
+          blurTimer = setTimeout(() => { setIsKeyboardOpen(false); }, 100); 
+      };
 
       document.addEventListener('focusin', handleFocusIn);
       document.addEventListener('focusout', handleFocusOut);
@@ -720,84 +846,135 @@ const ChatBot = ({ messages = [], setMessages, isDarkMode, liveAiData = [], setL
       return () => {
           document.removeEventListener('focusin', handleFocusIn);
           document.removeEventListener('focusout', handleFocusOut);
+          clearTimeout(blurTimer);
       };
   }, []);
 
   const theme = {
-      bg: isDarkMode ? 'bg-[#121212]' : 'bg-[#F8F9FA]',
+      bg: isDarkMode ? 'bg-[#121212]' : 'bg-[#FAFAFA]',
       textMain: isDarkMode ? 'text-[#F1F1F1]' : 'text-[#1A1A1A]',
       textSub: isDarkMode ? 'text-[#A0A0A0]' : 'text-[#6B7280]',
       userBubble: isDarkMode ? 'bg-gradient-to-r from-[#41B6E6] to-[#0277C5] text-[#FFFFFF]' : 'bg-gradient-to-r from-[#0277C5] to-[#01579B] text-[#FFFFFF]', 
-      botBubble: isDarkMode ? 'bg-[#1E1E1E] text-[#F1F1F1] border border-[#2C2C2C]' : 'bg-[#FFFFFF] text-[#1A1A1A] border border-[#E5E7EB]',
-      inputBg: isDarkMode ? 'bg-[#1E1E1E] border border-[#2C2C2C]' : 'bg-[#FFFFFF] border border-[#E5E7EB]',
+      botBubble: isDarkMode ? 'bg-[#242526] text-[#F1F1F1] border border-[#3E4042]' : 'bg-[#FFFFFF] text-[#1A1A1A] border border-[#E5E7EB]',
+      inputBg: isDarkMode ? 'bg-[#242526] border border-[#3E4042]' : 'bg-[#FFFFFF] border border-[#CED0D4]',
       inputColor: isDarkMode ? 'text-[#F1F1F1] placeholder-[#A0A0A0]' : 'text-[#1A1A1A] placeholder-[#6B7280]',
-      iconColor: 'text-[#C55002]',
+      iconColor: 'text-[#0277C5]',
   };
 
   return (
-    <div className={`absolute left-0 w-full flex flex-col overflow-hidden font-sans transition-colors ${theme.bg}`} style={{ height: '100%', paddingBottom: `${keyboardHeight}px` }}>
+    <div className={`fixed inset-0 overflow-hidden font-sans transition-colors z-[40] ${theme.bg}`} style={{ height: viewportHeight, touchAction: 'none' }}>
       
-      <div className={`absolute top-0 left-0 w-full z-30 transition-transform duration-300 ease-in-out ${showHeader ? 'translate-y-0' : '-translate-y-full'}`}>
-          <div className={`flex items-center justify-between px-4 py-3 backdrop-blur-md border-b shadow-sm ${isDarkMode ? 'bg-[#121212]/80 border-white/5 shadow-black/20' : 'bg-white/80 border-black/5 shadow-[#0277C5]/5'}`}>
+      {/* 🌟 HEADER 🌟 */}
+      <div 
+          className={`absolute top-0 left-0 w-full z-[60] transition-all duration-700 ease-out backdrop-blur-xl shadow-sm ${isDarkMode ? 'bg-[#121212]/85 border-b border-white/5 shadow-black/20' : 'bg-[#FFFFFF]/85 border-b border-black/5 shadow-[#0277C5]/5'} ${showHeader ? 'translate-y-0' : '-translate-y-full'}`}
+          style={{ paddingTop: 'calc(env(safe-area-inset-top) + 4px)' }}
+      >
+          <div className="flex items-center justify-between px-4 pt-1.5 pb-2.5">
               <div className="flex items-center gap-3">
                   <div className={`w-8 h-8 rounded-xl bg-gradient-to-tr ${isDarkMode ? 'from-[#41B6E6] to-[#0277C5]' : 'from-[#0277C5] to-[#01579B]'} flex items-center justify-center shadow-inner`}>
                       <Bot size={18} className="text-white drop-shadow-sm" />
                   </div>
-                  <div className="flex flex-col">
-                      <h2 className={`text-[15px] font-black font-khmer leading-none ${isDarkMode ? 'text-[#F1F1F1]' : 'text-[#1A1A1A]'}`}>MY DESIGN AI</h2>
-                      <span className="text-[9px] font-black uppercase tracking-widest text-green-500 flex items-center gap-1.5 mt-1">
-                          <span className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse"></span> {lang === 'en' ? 'Online' : 'កំពុងភ្ជាប់'}
-                      </span>
+                  <div className="flex flex-col justify-center pt-0.5">
+                      <h2 className={`text-[15px] font-black font-khmer leading-normal flex items-center gap-1 ${theme.textMain}`}>
+                          {t('ai_name') || 'MY DESIGN AI'} {isAdmin && <Unlock size={12} className={theme.iconColor} />}
+                      </h2>
+                      <div className="relative flex items-center -mt-0.5">
+                          <span key={headerStatusText} className="text-[10px] font-bold uppercase tracking-widest text-green-500 animate-fade-in-up whitespace-nowrap flex items-center gap-1.5">
+                              <span className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse"></span> {headerStatusText}
+                          </span>
+                      </div>
                   </div>
               </div>
-              
-              <button type="button" onClick={handleClearChat} className={`p-2 rounded-xl transition-all duration-300 ease-out active:scale-90 border ${isDarkMode ? 'bg-[#1E1E1E]/50 border-[#2C2C2C] text-[#A0A0A0] hover:text-[#FF453A] hover:bg-[#FF453A]/10' : 'bg-[#F8F9FA]/80 border-[#E5E7EB] text-[#6B7280] hover:text-[#FF453A] hover:bg-[#FF453A]/10'}`} title={t('clear_tooltip')}><Trash2 size={16} /></button>
+              <button onClick={handleClearChat} className={`p-2 rounded-xl transition-all duration-300 ease-out active:scale-90 border ${isDarkMode ? 'bg-[#1E1E1E]/50 border-[#2C2C2C] text-[#A0A0A0] hover:text-[#FF453A] hover:bg-[#FF453A]/10' : 'bg-[#F8F9FA]/80 border-[#E5E7EB] text-[#6B7280] hover:text-[#FF453A] hover:bg-[#FF453A]/10'}`} title={t('clear_tooltip')}>
+                  <Trash2 size={16} />
+              </button>
           </div>
       </div>
       
-      <div ref={scrollContainerRef} className={`flex-1 min-h-0 overflow-y-auto overflow-x-hidden overscroll-none pt-20 no-scrollbar ${theme.bg}`} id="messenger-scroll-container">
+      {/* 🌟 SCROLL CONTAINER 🌟 */}
+      <div 
+          ref={scrollContainerRef} 
+          className={`absolute inset-0 overflow-y-auto overflow-x-hidden overscroll-none no-scrollbar`} 
+          style={{
+              paddingTop: `calc(64px + env(safe-area-inset-top))`,
+              paddingBottom: isKeyboardOpen ? '80px' : (!showHeader ? `calc(85px + env(safe-area-inset-bottom))` : `calc(135px + env(safe-area-inset-bottom))`),
+              touchAction: 'pan-y'
+          }}
+          id="messenger-scroll-container"
+          onTouchStart={dismissKeyboard}
+          onClick={dismissKeyboard}
+      >
           <div className="max-w-4xl mx-auto w-full p-3 sm:p-4 space-y-4">
               {messages.map((m, i) => {
                   const isUser = m.role === 'user';
                   return (
-                      <div key={i} className={`flex flex-col w-full ${isUser ? 'items-end' : 'items-start'} animate-fade-in-up`}>
-                          <div className={`flex w-full ${isUser ? 'justify-end' : 'justify-start'} items-end`}>
+                      <div key={i} className={`flex flex-col w-full ${isUser ? 'items-end' : 'items-start'} animate-fade-in-up mb-2 group`}>
+                          <div className={`flex w-full ${isUser ? 'justify-end' : 'justify-start'} items-end relative`}>
                               {!isUser && (
                                   <div className={`w-7 h-7 rounded-[10px] bg-gradient-to-tr ${isDarkMode ? 'from-[#41B6E6] to-[#0277C5]' : 'from-[#0277C5] to-[#01579B]'} flex items-center justify-center mr-2 shrink-0 mb-1 shadow-sm`}>
-                                      <Bot size={14} className="text-white" />
+                                      <Bot size={14} className="text-white drop-shadow-sm" />
                                   </div>
                               )}
                               
                               <div className={`max-w-[85%] sm:max-w-[75%] flex flex-col`}>
-                                  {m.text && (
-                                      <div className={`px-3.5 py-2.5 sm:px-4 sm:py-3 text-[14.5px] sm:text-[15px] leading-relaxed break-words [word-break:break-word] overflow-hidden shadow-sm font-khmer ${isUser ? `${theme.userBubble} rounded-2xl rounded-br-[4px]` : `${theme.botBubble} rounded-2xl rounded-bl-[4px]`}`}>
-                                          {typeof m.text === 'object' ? JSON.stringify(m.text) : formatMessage(m.text)}
+                                  {isUser && editingIndex === i ? (
+                                      <div className={`w-full flex flex-col gap-2 p-3 rounded-[20px] border shadow-sm ${theme.inputBg}`}>
+                                          <textarea value={editText} onChange={(e) => setEditText(e.target.value)} className={`w-full resize-none outline-none bg-transparent text-[14.5px] font-khmer ${theme.textMain}`} rows={3} autoFocus />
+                                          <div className="flex justify-end gap-2 mt-1">
+                                              <button onClick={cancelEdit} className={`px-3 py-1.5 rounded-full text-[12px] font-bold transition-all ${isDarkMode ? 'bg-[#3A3B3C] text-[#E4E6EB] hover:bg-[#4E4F50]' : 'bg-[#F0F2F5] text-[#6B7280] hover:bg-[#E4E6EB]'}`}>Cancel</button>
+                                              <button onClick={() => submitEdit(i)} className={`px-3 py-1.5 rounded-full bg-[#0277C5] text-white text-[12px] font-bold hover:opacity-90 transition-all`}>Update</button>
+                                          </div>
+                                      </div>
+                                  ) : (
+                                      <>
+                                          {m.text && (
+                                              <div className={`px-3.5 py-2.5 sm:px-4 sm:py-3 text-[14.5px] sm:text-[15px] leading-relaxed break-words [word-break:break-word] overflow-hidden shadow-sm font-khmer ${isUser ? `${theme.userBubble} rounded-[20px] rounded-br-[4px]` : `${theme.botBubble} rounded-[20px] rounded-bl-[4px]`}`}>
+                                                  {typeof m.text === 'object' ? JSON.stringify(m.text) : formatMessage(m.text)}
+                                              </div>
+                                          )}
                                           
+                                          {/* UI: Color Palette */}
                                           {!isUser && m.uiElement === 'color_palette' && m.colors && (
                                               <div className="flex gap-2 mt-4 mb-1">
                                                   {m.colors.map(colorHex => (
-                                                      <div key={colorHex} className="flex flex-col items-center gap-1 group">
-                                                          <div className="w-12 h-12 rounded-xl shadow-md border-2 border-black/10 transform transition-transform group-hover:scale-110" style={{backgroundColor: colorHex}}></div>
+                                                      <div key={colorHex} className="flex flex-col items-center gap-1 group/color">
+                                                          <div className="w-12 h-12 rounded-xl shadow-md border-2 border-black/10 transform transition-transform group-hover/color:scale-110" style={{backgroundColor: colorHex}}></div>
                                                           <span className="text-[9px] font-mono font-bold opacity-70">{colorHex}</span>
                                                       </div>
                                                   ))}
                                               </div>
                                           )}
 
+                                          {/* UI: Action Button */}
                                           {!isUser && m.actionButton && (
-                                              <button onClick={() => { triggerHaptic(); if (m.actionButton.subTab) { localStorage.setItem('myDesign_target_subtab', m.actionButton.subTab); } window.dispatchEvent(new CustomEvent('switchTab', { detail: m.actionButton.actionToTrigger })); if (m.actionButton.subTab) { setTimeout(() => { window.dispatchEvent(new CustomEvent('switchToolSubTab', { detail: m.actionButton.subTab })); }, 100); } }} className="mt-4 px-4 py-2.5 bg-[#C55002] text-white font-khmer font-bold text-sm rounded-xl active:scale-95 transition-transform flex items-center gap-2 shadow-lg">
+                                              <button 
+                                                  onClick={() => {
+                                                      triggerHaptic(); 
+                                                      if (m.actionButton.subTab) { localStorage.setItem('myDesign_target_subtab', m.actionButton.subTab); } 
+                                                      window.dispatchEvent(new CustomEvent('switchTab', { detail: m.actionButton.actionToTrigger })); 
+                                                      if (m.actionButton.subTab) { setTimeout(() => { window.dispatchEvent(new CustomEvent('switchToolSubTab', { detail: m.actionButton.subTab })); }, 100); } 
+                                                  }} 
+                                                  className="mt-4 px-4 py-2.5 bg-[#0277C5] text-white font-khmer font-bold text-sm rounded-xl active:scale-95 transition-transform flex items-center justify-center gap-2 shadow-lg w-full"
+                                              >
                                                   {lang === 'en' ? m.actionButton.label_en : m.actionButton.label} <ArrowRight size={16} />
                                               </button>
                                           )}
-                                      </div>
+                                      </>
                                   )}
                               </div>
                           </div>
                           
+                          {isUser && !loading && editingIndex !== i && (
+                              <div className="flex items-center justify-end gap-2 mt-1.5 mr-1 opacity-40 group-hover:opacity-100 transition-opacity w-full">
+                                  <button onClick={() => handleCopy(m.text, i)} className={`p-1 rounded-md transition-colors ${isDarkMode ? 'text-[#B0B3B8] hover:text-[#41B6E6]' : 'text-[#6B7280] hover:text-[#0277C5]'}`} title="Copy message">{copiedIndex === i ? <CheckCircle2 size={14} className="text-green-500" /> : <Copy size={14} />}</button>
+                                  <button onClick={() => handleEditClick(i, m.text)} className={`p-1 rounded-md transition-colors ${isDarkMode ? 'text-[#B0B3B8] hover:text-[#41B6E6]' : 'text-[#6B7280] hover:text-[#0277C5]'}`} title="Edit message"><Edit2 size={14} /></button>
+                              </div>
+                          )}
+
                           {!isUser && m.chips && m.chips.length > 0 && (
                               <div className="flex flex-wrap gap-2 mt-2 ml-9">
                                   {m.chips.map((chip, idx) => (
-                                      <button key={idx} onClick={() => { triggerHaptic(); handleSend(chip); }} className={`px-3 py-1.5 text-[12px] font-khmer rounded-full border transition-all active:scale-95 ${isDarkMode ? 'bg-[#1E1E1E] border-[#41B6E6]/30 text-[#41B6E6] hover:bg-[#2C2C2C]' : 'bg-[#FFFFFF] border-[#0277C5]/30 text-[#0277C5] hover:bg-[#F8F9FA]'}`}>
+                                      <button key={idx} onClick={(e) => { e.preventDefault(); e.stopPropagation(); if (!loading) { triggerHaptic(); handleSend(chip, null, true); } }} className={`px-3.5 py-1.5 text-[12px] font-khmer rounded-full border transition-all active:scale-95 ${isDarkMode ? 'bg-[#242526] border-[#41B6E6]/30 text-[#41B6E6] hover:bg-[#3A3B3C]' : 'bg-[#FFFFFF] border-[#0277C5]/30 text-[#0277C5] hover:bg-[#F0F2F5]'}`}>
                                           {chip}
                                       </button>
                                   ))}
@@ -805,13 +982,14 @@ const ChatBot = ({ messages = [], setMessages, isDarkMode, liveAiData = [], setL
                           )}
 
                           {!isUser && i > 0 && !m.feedback && (
-                              <div className="flex gap-2 mt-1.5 ml-9 opacity-40 hover:opacity-100 transition-opacity items-center">
-                                  <button onClick={() => handleFeedback(i, 'up')} className="p-1 hover:text-green-500 rounded-md transition-colors"><ThumbsUp size={14}/></button>
-                                  <button onClick={() => handleFeedback(i, 'down')} className="p-1 hover:text-red-500 rounded-md transition-colors"><ThumbsDown size={14}/></button>
+                              <div className="flex gap-2 mt-1.5 ml-9 opacity-40 group-hover:opacity-100 transition-opacity items-center">
+                                  <button onClick={() => handleCopy(m.text, i)} className={`p-1 rounded-md transition-colors ${isDarkMode ? 'text-[#B0B3B8] hover:text-[#41B6E6]' : 'text-[#6B7280] hover:text-[#0277C5]'}`} title="Copy text">{copiedIndex === i ? <CheckCircle2 size={14} className="text-green-500" /> : <Copy size={14} />}</button>
+                                  <button onClick={() => handleFeedback(i, 'up')} className={`p-1 rounded-md transition-colors ${isDarkMode ? 'text-[#B0B3B8] hover:text-green-500' : 'text-[#6B7280] hover:text-green-500'}`}><ThumbsUp size={14}/></button>
+                                  <button onClick={() => handleFeedback(i, 'down')} className={`p-1 rounded-md transition-colors ${isDarkMode ? 'text-[#B0B3B8] hover:text-red-500' : 'text-[#6B7280] hover:text-red-500'}`}><ThumbsDown size={14}/></button>
                                   
                                   {isAdmin && m.isTrainable && !m.isTraining && (
-                                      <button onClick={() => handleAutoTrain(i)} className="p-1 hover:text-[#41B6E6] rounded-md transition-colors ml-2 flex items-center gap-1" title="Auto-Train AI with this answer">
-                                          <Brain size={14}/> <span className="text-[10px] font-bold">Auto-Train</span>
+                                      <button onClick={() => handleAutoTrain(i)} className={`p-1 rounded-md transition-colors ml-2 flex items-center gap-1 text-xs font-bold font-khmer ${isDarkMode ? 'text-[#B0B3B8] hover:text-[#41B6E6]' : 'text-[#6B7280] hover:text-[#0277C5]'}`} title="Auto-Train AI with this answer">
+                                          <Brain size={14}/> <span>Train</span>
                                       </button>
                                   )}
                                   {m.isTraining && (
@@ -821,78 +999,87 @@ const ChatBot = ({ messages = [], setMessages, isDarkMode, liveAiData = [], setL
                                   )}
                               </div>
                           )}
-                          {!isUser && m.feedback && (
-                              <div className={`text-[10px] ml-9 mt-1.5 opacity-50 font-khmer font-medium ${m.feedback === 'up' ? 'text-green-500' : 'text-red-500'}`}>
-                                  {m.feedback === 'up' ? t('thanks_feedback') : t('recorded_issue')}
-                              </div>
-                          )}
+                          {!isUser && m.feedback && <div className={`text-[10px] ml-9 mt-1.5 opacity-50 font-khmer font-medium ${m.feedback === 'up' ? 'text-green-500' : 'text-red-500'}`}>{m.feedback === 'up' ? t('thanks_feedback') : t('recorded_issue')}</div>}
                       </div>
                   );
               })}
               
               {loading && (
                   <div className="flex justify-start items-end animate-fade-in-up">
-                      <div className={`w-7 h-7 rounded-[10px] bg-gradient-to-tr ${isDarkMode ? 'from-[#41B6E6] to-[#0277C5]' : 'from-[#0277C5] to-[#01579B]'} flex items-center justify-center mr-2 shrink-0 mb-1 shadow-sm`}><Bot size={14} className="text-white" /></div>
-                      <div className={`px-4 py-3.5 ${theme.botBubble} rounded-2xl rounded-bl-[4px] flex gap-1.5 shadow-sm`}>
+                      <div className={`w-7 h-7 rounded-[10px] bg-gradient-to-tr ${isDarkMode ? 'from-[#41B6E6] to-[#0277C5]' : 'from-[#0277C5] to-[#01579B]'} flex items-center justify-center mr-2 shrink-0 mb-1 shadow-sm`}><Bot size={14} className="text-white drop-shadow-sm" /></div>
+                      <div className={`px-4 py-3.5 ${theme.botBubble} rounded-[20px] rounded-bl-[4px] flex gap-1.5 shadow-sm`}>
                           <div className={`w-1.5 h-1.5 rounded-full animate-bounce ${isDarkMode ? 'bg-[#A0A0A0]' : 'bg-[#6B7280]'}`} style={{animationDelay: '0ms'}}></div>
                           <div className={`w-1.5 h-1.5 rounded-full animate-bounce ${isDarkMode ? 'bg-[#A0A0A0]' : 'bg-[#6B7280]'}`} style={{animationDelay: '150ms'}}></div>
                           <div className={`w-1.5 h-1.5 rounded-full animate-bounce ${isDarkMode ? 'bg-[#A0A0A0]' : 'bg-[#6B7280]'}`} style={{animationDelay: '300ms'}}></div>
                       </div>
                   </div>
               )}
-              <div ref={messagesEndRef} className="h-2" />
+              <div ref={messagesEndRef} className="h-6" />
           </div>
       </div>
       
-      <div className={`flex-none z-20 w-full flex flex-col px-2 transition-all duration-300 ${theme.bg} ${isKeyboardOpen ? 'pb-3' : 'pb-[85px] sm:pb-[90px]'}`}>
-         <div className="max-w-4xl mx-auto w-full">
-             <div className="flex items-center px-2 py-1.5 w-full overflow-hidden">
-                 <button onMouseDown={(e) => e.preventDefault()} onTouchStart={(e) => e.preventDefault()} onClick={handleRefresh} className={`p-2 shrink-0 transition-transform duration-300 active:scale-90 ${isDarkMode ? 'text-[#41B6E6]' : 'text-[#0277C5]'} ${isAnimating ? 'rotate-180 opacity-50' : ''}`} aria-label={t('refresh_tooltip')}><RefreshCw size={18} className={isAnimating ? 'animate-spin' : ''} /></button>
-                 <div className="flex-1 overflow-x-auto no-scrollbar scroll-smooth">
-                     <div className={`flex items-center gap-2 px-1 py-1 transition-opacity duration-300 ${isAnimating ? 'opacity-0' : 'opacity-100'}`}>
-                         {currentSuggestions.map((q, i) => (
-                             <button key={i} onMouseDown={(e) => e.preventDefault()} onTouchStart={(e) => e.preventDefault()} onClick={(e) => { e.preventDefault(); triggerHaptic(); handleSend(q); }} className={`shrink-0 px-3 py-1.5 text-[12px] sm:text-[13px] font-medium font-khmer rounded-full whitespace-nowrap active:scale-95 transition-all shadow-sm border ${isDarkMode ? 'bg-[#1E1E1E] border-[#41B6E6]/30 text-[#41B6E6] hover:bg-[#2C2C2C]' : 'bg-[#FFFFFF] border-[#0277C5]/30 text-[#0277C5] hover:bg-[#F8F9FA]'}`}>{q}</button>
-                         ))}
-                     </div>
-                 </div>
-             </div>
-             
-             <div className="flex items-end px-2 pb-1 w-full relative">
-                <div className={`flex-1 relative flex items-center w-full shadow-sm rounded-[24px] overflow-hidden ${theme.inputBg}`}>
-                    {!input && (
-                        <div className={`absolute left-4 pointer-events-none text-[15px] font-khmer ${isDarkMode ? 'text-[#A0A0A0]' : 'text-[#6B7280]'}`}>
-                            {t('placeholder')}
-                        </div>
-                    )}
-                    <div 
-                        ref={inputRef}
-                        contentEditable={!loading ? "true" : "false"}
-                        onInput={handleInputInput}
-                        onKeyDown={(e) => {
-                            if (e.key === 'Enter' && !loading) {
-                                e.preventDefault();
-                                if (input.trim()) { triggerHaptic(); handleSend(input); }
-                            } else if (e.key === 'Enter') e.preventDefault();
-                        }}
-                        className={`w-full min-h-[44px] max-h-[120px] overflow-y-auto pl-4 pr-12 py-2.5 text-[15px] font-khmer outline-none transition-all whitespace-pre-wrap break-words ${theme.inputColor} ${loading ? 'opacity-50 cursor-not-allowed' : ''}`} 
-                        spellCheck="false" role="textbox" aria-multiline="true" autoCorrect="off" autoCapitalize="off" suppressHydrationWarning
-                    />
-                    <button type="button" disabled={!input.trim() || loading} onMouseDown={(e) => { e.preventDefault(); if (!loading) handleSend(input); }} onTouchStart={(e) => { e.preventDefault(); if (!loading) { triggerHaptic(); handleSend(input); } }} className={`absolute right-1.5 bottom-1 p-1.5 rounded-full hover:bg-black/5 dark:hover:bg-white/5 active:scale-90 transition-transform ${input.trim() && !loading ? theme.iconColor : 'text-[#9AA0A6] dark:text-[#6B7280]'}`} aria-label="Send Message"><Send size={20} className={input.trim() && !loading ? '' : 'opacity-50'} /></button>
-                </div>
-             </div>
-         </div>
+      {/* 🌟 BOTTOM INPUT AREA 🌟 */}
+      <div className="absolute bottom-0 left-0 right-0 z-[50] pointer-events-none flex flex-col justify-end transform-gpu" style={{ transform: 'translateZ(0)' }}>
+          <div className={`absolute inset-0 ${theme.bg}`} style={{ maskImage: 'linear-gradient(to top, black 40%, transparent 100%)', WebkitMaskImage: 'linear-gradient(to top, black 40%, transparent 100%)' }}></div>
+
+          <div className={`relative w-full pointer-events-auto transition-all duration-300 pt-2 ${isKeyboardOpen ? 'pb-3' : (!showHeader ? 'pb-[calc(20px+env(safe-area-inset-bottom))] md:pb-6' : 'pb-[calc(70px+env(safe-area-inset-bottom))] md:pb-6')}`}>
+
+              {/* 🌟 FLOATING SUGGESTIONS 🌟 */}
+              <div className={`relative w-full overflow-hidden transition-all duration-300 ${input.trim().length > 0 || loading ? 'opacity-0 h-0 mb-0 pointer-events-none' : 'opacity-100 h-[38px] mb-2.5'}`}>
+                  <div className={`absolute top-0 left-0 bottom-0 w-12 z-10 pointer-events-none bg-gradient-to-r ${isDarkMode ? 'from-[#121212] to-transparent' : 'from-[#FAFAFA] to-transparent'}`}></div>
+
+                  <div ref={suggestionsScrollRef} className="flex-1 overflow-x-auto no-scrollbar scroll-smooth w-full px-4" style={{ touchAction: 'pan-x' }}>
+                      <div className={`flex items-center gap-2 py-1 w-max mx-auto max-w-4xl ${getAnimClasses()}`}>
+                          {currentSuggestions.map((q, i) => (
+                              <button
+                                  key={i}
+                                  onClick={(e) => {
+                                      e.stopPropagation();
+                                      dismissKeyboard(); 
+                                      if (!loading) { triggerHaptic(); handleSend(q, null, true); }
+                                  }}
+                                  className={`shrink-0 px-3.5 py-1.5 text-[12px] font-medium font-khmer rounded-full whitespace-nowrap active:scale-95 transition-all shadow-sm backdrop-blur-md border ${isDarkMode ? 'bg-[#242526]/80 border-[#41B6E6]/40 text-[#41B6E6] hover:bg-[#3A3B3C]' : 'bg-[#FFFFFF]/90 border-[#0277C5]/40 text-[#0277C5] hover:bg-[#F0F2F5]'}`}>
+                                  {q}
+                              </button>
+                          ))}
+                      </div>
+                  </div>
+                  <div className={`absolute top-0 right-0 bottom-0 w-12 z-10 pointer-events-none bg-gradient-to-l ${isDarkMode ? 'from-[#121212] to-transparent' : 'from-[#FAFAFA] to-transparent'}`}></div>
+              </div>
+
+              {/* INPUT FIELD */}
+              <div className="max-w-4xl mx-auto px-2 flex items-end pb-1 w-full relative">
+                  <div className={`flex-1 relative flex items-center w-full shadow-sm rounded-[22px] overflow-hidden border backdrop-blur-lg ${isDarkMode ? 'bg-[#242526]/80 border-[#3E4042]' : 'bg-[#FFFFFF]/90 border-[#CED0D4]'}`}>
+                      {!input && <div className={`absolute left-4 top-[10px] pointer-events-none text-[14.5px] font-khmer opacity-50 ${isDarkMode ? 'text-white' : 'text-black'}`}>{t('placeholder')}</div>}
+                      <div
+                          ref={inputRef}
+                          contentEditable="true"
+                          onInput={handleInputInput}
+                          onKeyDown={(e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); if (input.trim() && !loading) { triggerHaptic(); handleSend(input); } } }}
+                          className={`w-full min-h-[40px] max-h-[100px] overflow-y-auto pl-4 pr-10 pt-2.5 pb-2.5 text-[14.5px] leading-snug font-khmer outline-none transition-all whitespace-pre-wrap break-words ${theme.inputColor} ${loading && input.trim() === '' ? 'opacity-50' : ''}`}
+                          suppressHydrationWarning
+                      />
+                      <button
+                          type="button"
+                          disabled={!input.trim() || loading}
+                          onClick={(e) => { e.preventDefault(); e.stopPropagation(); if (!loading && input.trim()) { triggerHaptic(); handleSend(input); } }}
+                          className={`absolute right-1 bottom-1 p-1.5 rounded-full transition-transform active:scale-90 ${input.trim() && !loading ? theme.iconColor : 'opacity-30'}`}
+                      >
+                          <Send size={18} />
+                      </button>
+                  </div>
+              </div>
+          </div>
       </div>
 
       {showConfirmModal && (
           <div className="fixed inset-0 z-[99999] flex items-center justify-center p-5 backdrop-blur-md bg-black/60 animate-fade-in-up">
-              <div className={`w-full max-w-[320px] p-6 rounded-[32px] shadow-2xl border transition-all ${isDarkMode ? 'bg-[#1A1A1A] border-[#2C2C2C]' : 'bg-[#FFFFFF] border-[#E5E7EB]'}`}>
-                  <div className="text-center">
-                      <div className="w-14 h-14 rounded-full bg-red-500/10 flex items-center justify-center mx-auto mb-5"><Trash2 size={28} className="text-red-500" /></div>
-                      <p className={`text-[16px] font-bold font-khmer mb-8 leading-relaxed ${isDarkMode ? 'text-[#F1F1F1]' : 'text-[#1A1A1A]'}`}>{t('clear_confirm')}</p>
-                  </div>
+              <div className={`w-full max-w-[320px] p-6 rounded-[32px] shadow-2xl border text-center transition-all ${isDarkMode ? 'bg-[#1E1E1E] border-[#2C2C2C]' : 'bg-[#FFFFFF] border-[#E5E7EB]'}`}>
+                  <div className="w-14 h-14 rounded-full bg-red-500/10 flex items-center justify-center mx-auto mb-5"><Trash2 size={28} className="text-red-500" /></div>
+                  <h2 className={`text-[16px] font-bold font-khmer mb-8 leading-relaxed ${isDarkMode ? 'text-[#F1F1F1]' : 'text-[#1A1A1A]'}`}>{t('clear_confirm')}</h2>
                   <div className="flex flex-col gap-3">
                       <button type="button" onClick={confirmClear} className="w-full py-3.5 rounded-2xl bg-red-500 hover:bg-red-600 text-white font-khmer font-bold text-[15px] active:scale-95 transition-all shadow-lg shadow-red-500/20">{lang === 'en' ? 'Clear Everything' : 'លុបចេញទាំងអស់'}</button>
-                      <button type="button" onClick={() => setShowConfirmModal(false)} className={`w-full py-3.5 rounded-2xl font-khmer font-bold text-[15px] active:scale-95 transition-all border ${isDarkMode ? 'bg-[#2C2C2C] border-[#3A3A3C] text-[#A0A0A0] hover:text-[#F1F1F1]' : 'bg-[#F8F9FA] border-[#E5E7EB] text-[#6B7280] hover:text-[#1A1A1A]'}`}>{lang === 'en' ? 'Cancel' : 'បោះបង់'}</button>
+                      <button type="button" onClick={() => setShowConfirmModal(false)} className={`w-full py-3.5 rounded-2xl font-khmer font-bold text-[15px] active:scale-95 transition-all border ${isDarkMode ? 'bg-[#2C2C2C] border-[#3E4042] text-[#A0A0A0] hover:text-[#F1F1F1]' : 'bg-[#F8F9FA] border-[#CED0D4] text-[#6B7280] hover:text-[#1A1A1A]'}`}>{lang === 'en' ? 'Cancel' : 'បោះបង់'}</button>
                   </div>
               </div>
           </div>

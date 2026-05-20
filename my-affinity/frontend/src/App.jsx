@@ -44,6 +44,8 @@ const APP_THEMES = {
     publisher: { gradient: 'from-[#D7383D] to-[#532463]', text: 'text-[#D7383D]', bg: 'bg-[#D7383D]', border: 'border-[#D7383D]', lightBg: 'bg-[#D7383D]/10' }
 };
 
+const ONE_YEAR_MS = 365 * 24 * 60 * 60 * 1000;
+
 // ==========================================
 // 2. SUB-COMPONENTS (LessonModal, TipsSection, ContactSection)
 // ==========================================
@@ -625,6 +627,12 @@ function AppContent() {
   const [purchasedCourses, setPurchasedCourses] = useState({ photo: null, designer: null, publisher: null });
   const [isDataLoaded, setIsDataLoaded] = useState(false);
 
+  // Layout Scroll States
+  const [isScrollingDown, setIsScrollingDown] = useState(false);
+  const [lastScrollY, setLastScrollY] = useState(0);
+  const [isAndroid] = useState(() => /Android/i.test(navigator.userAgent));
+  const mainScrollRef = useRef(null);
+
   const [liveAiData, setLiveAiData] = useState(() => {
       if (typeof window !== 'undefined') {
           const saved = localStorage.getItem('myAffinity_live_ai');
@@ -765,6 +773,22 @@ function AppContent() {
       }
   }, []);
 
+  // Scroll Behavior Logic
+  useEffect(() => {
+    const handleScroll = () => {
+      const currentY = mainScrollRef.current?.scrollTop || 0;
+      if (currentY > lastScrollY && currentY > 100) {
+        setIsScrollingDown(true);
+      } else {
+        setIsScrollingDown(false);
+      }
+      setLastScrollY(currentY);
+    };
+    const scrollContainer = mainScrollRef.current;
+    scrollContainer?.addEventListener('scroll', handleScroll);
+    return () => scrollContainer?.removeEventListener('scroll', handleScroll);
+  }, [lastScrollY]);
+
   const handleOpenCourse = (courseId) => {
       setActiveAppTab(courseId);
       triggerHaptic();
@@ -781,7 +805,6 @@ function AppContent() {
       return courseData[activeAppTab].find(l => l.id === expandedLesson);
   };
 
-  // 🌟 បញ្ជាការ Sign out ចេញពីឧបករណ៍
   const handleSignOutDevice = async () => {
       triggerHaptic();
       let message = '';
@@ -820,21 +843,38 @@ function AppContent() {
 
   return (
     <div 
-        className={`fixed inset-0 w-full h-full flex flex-col font-khmer overflow-hidden touch-pan-x touch-pan-y transition-colors duration-500 ${isDarkMode ? 'bg-[#0A0A0A] text-[#F1F1F1]' : 'bg-[#F4F5F7] text-[#1A1A1A]'}`}
+        className={`absolute top-0 left-0 right-0 w-full flex flex-col font-khmer overflow-hidden transition-colors duration-500 ease-spring ${isDarkMode ? 'bg-[#0A0A0A] text-[#F1F1F1]' : 'bg-[#F4F5F7] text-[#1A1A1A]'}`}
+        style={{ height: 'calc(100dvh + 25px)', paddingLeft: 'env(safe-area-inset-left)', paddingRight: 'env(safe-area-inset-right)' }}
         onContextMenu={(e) => e.preventDefault()}
     >
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Kantumruy+Pro:wght@100..700&display=swap'); 
-        body, html { overscroll-behavior: none; background-color: ${isDarkMode ? '#0A0A0A' : '#F4F5F7'}; transition: background-color 0.5s ease; } 
+        body, html { overscroll-behavior: none; background-color: ${isDarkMode ? '#0A0A0A' : '#F4F5F7'}; transition: background-color 0.5s ease; -webkit-tap-highlight-color: transparent; } 
         .font-khmer { font-family: 'Kantumruy Pro', sans-serif; } 
         .no-scrollbar::-webkit-scrollbar { display: none; } 
         @keyframes fade-in-up { from { opacity: 0; transform: translateY(20px) scale(0.99); } to { opacity: 1; transform: translateY(0) scale(1); } } 
         .animate-fade-in-up { animation: fade-in-up 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+        .ease-spring { transition-timing-function: cubic-bezier(0.175, 0.885, 0.32, 1.275); }
       `}</style>
       
-      <div 
-          style={{ paddingTop: 'max(env(safe-area-inset-top), 0px)' }} 
-          className={`w-full shrink-0 ${(activeTab === 'tools' || activeTab === 'ai') ? 'hidden md:block' : 'block'}`}
+      {/* 🌟 Background Glows 🌟 */}
+      <div className="fixed inset-0 overflow-hidden pointer-events-none z-0">
+        <div className={`absolute -top-[10%] -left-[10%] w-[60%] h-[50%] rounded-full blur-[80px] sm:blur-[120px] transform-gpu translate-z-0 transition-opacity duration-1000 ${isDarkMode ? 'bg-[#41B6E6]/10' : 'bg-[#0277C5]/10'}`}></div>
+        <div className={`absolute top-[40%] -right-[20%] w-[50%] h-[50%] rounded-full blur-[80px] sm:blur-[120px] transform-gpu translate-z-0 transition-opacity duration-1000 ${isDarkMode ? 'bg-[#41B6E6]/5' : 'bg-[#0277C5]/5'}`}></div>
+      </div>
+
+      {/* 🌟 iPhone Status Area Mask 🌟 */}
+      {!isAndroid && (
+        <div
+          className={`fixed top-0 left-0 right-0 z-[65] pointer-events-none md:hidden backdrop-blur-md transition-colors duration-500 bg-gradient-to-b ${isDarkMode ? 'from-[#0A0A0A] via-[#0A0A0A]/60 to-transparent' : 'from-[#F4F5F7] via-[#F4F5F7]/60 to-transparent'}`}
+          style={{ height: 'calc(env(safe-area-inset-top) + 15px)', WebkitMaskImage: 'linear-gradient(to bottom, black 40%, transparent 100%)', maskImage: 'linear-gradient(to bottom, black 40%, transparent 100%)' }}
+        ></div>
+      )}
+
+      {/* 🌟 Floating Header 🌟 */}
+      <div
+        className={`absolute top-0 left-0 right-0 z-50 w-full transition-all duration-500 ease-spring ${(isScrollingDown || activeAppTab) ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}
+        style={{ transform: `translateY(${(isScrollingDown || activeAppTab) ? '-120%' : '0'})`, touchAction: 'none' }}
       >
           <Header activeTab={activeTab} setActiveTab={(tab) => {
               setActiveTab(tab);
@@ -872,22 +912,21 @@ function AppContent() {
             </div>
 
             <div 
-                className="p-4 md:p-8 max-w-7xl mx-auto w-full flex-1"
+                className="p-4 md:p-8 max-w-7xl mx-auto w-full flex-1 relative z-10"
                 style={{ paddingBottom: 'max(env(safe-area-inset-bottom), 40px)' }}
             >
-                {/* 🌟 PREMIUM PANEL COMPONENT */}
                 <PremiumModal 
                     activeAppTab={activeAppTab}
                     isCoursePurchased={isCoursePurchased}
                     theme={theme}
                     appDisplayName={appDisplayName}
                     isDarkMode={isDarkMode}
-                    showAdminPanel={false} // លែងត្រូវការប្រើ
+                    showAdminPanel={false} 
                     purchasedCourses={purchasedCourses}
                     setPurchasedCourses={setPurchasedCourses}
                     user={user}
                     setUser={setUser}
-                    setIsSuperAdmin={() => {}} // លែងត្រូវការប្រើ
+                    setIsSuperAdmin={() => {}} 
                     handleSignOutDevice={handleSignOutDevice}
                     triggerHaptic={triggerHaptic}
                 />
@@ -930,11 +969,12 @@ function AppContent() {
       )}
       
       {activeTab !== 'ai' && !activeAppTab ? (
-        <main className="flex-1 max-w-7xl mx-auto w-full overflow-y-auto custom-scrollbar p-4 md:p-8 relative z-0" style={{ paddingTop: activeTab === 'tools' ? 'max(env(safe-area-inset-top), 16px)' : undefined }}>
+        <main ref={mainScrollRef} className="flex-1 min-h-0 max-w-7xl mx-auto w-full overflow-y-auto custom-scrollbar p-4 md:p-8 relative z-10" style={{ paddingBottom: 'calc(env(safe-area-inset-bottom) + 150px)', overscrollBehaviorY: 'contain' }}>
+            <div className="w-full flex-none shrink-0" style={{ height: 'calc(env(safe-area-inset-top) + 60px)' }}></div>
+            
             {activeTab === 'learn' && (
-            <div className="space-y-6 pb-24">
-                <div className="text-center py-6 mt-2 relative">
-                    <div className={`absolute inset-0 blur-[120px] rounded-full pointer-events-none ${isDarkMode ? 'bg-[#B52885]/10' : 'bg-[#B52885]/5'}`} />
+            <div className="space-y-6 pb-6">
+                <div className="text-center py-6 mt-2 relative z-10">
                     <h2 className={`text-4xl md:text-5xl font-black mb-4 tracking-tight ${isDarkMode ? 'text-[#F1F1F1]' : 'text-[#1A1A1A]'}`}>iPad Masterclass</h2>
                     <p className={`max-w-xl mx-auto text-[15px] md:text-base leading-relaxed ${isDarkMode ? 'text-[#A0A0A0]' : 'text-[#6B7280]'}`}>
                         {lang === 'en' ? 'Select an app to begin your professional training.' : 'ជ្រើសរើសកម្មវិធីដើម្បីចាប់ផ្តើមការហ្វឹកហាត់កម្រិតអាជីពរបស់អ្នក។'}
@@ -1000,36 +1040,56 @@ function AppContent() {
                     </button>
                 </div>
 
-                <TipsSection isExpanded={expandedSection === 'tips'} onToggle={() => setExpandedSection(expandedSection === 'tips' ? null : 'tips')} isDarkMode={isDarkMode} />
-                <ContactSection isDarkMode={isDarkMode} />
+                <div className="relative z-10">
+                    <TipsSection isExpanded={expandedSection === 'tips'} onToggle={() => setExpandedSection(expandedSection === 'tips' ? null : 'tips')} isDarkMode={isDarkMode} />
+                    <ContactSection isDarkMode={isDarkMode} />
+                </div>
             </div>
             )}
-            {activeTab === 'tools' && <div className="pb-24"><ToolsView isDarkMode={isDarkMode} /></div>}
+            {activeTab === 'tools' && <div className="pb-24 relative z-10"><ToolsView isDarkMode={isDarkMode} /></div>}
             
-            {activeTab === 'quiz' && <Test isDarkMode={isDarkMode} isAdmin={false} />}
+            {activeTab === 'quiz' && <div className="relative z-10"><Test isDarkMode={isDarkMode} isAdmin={false} /></div>}
         </main>
       ) : (
-        <div className={`flex-1 relative w-full h-full md:pb-0 z-0 ${activeAppTab ? 'hidden' : 'block'}`} style={{ paddingTop: 'max(env(safe-area-inset-top), 0px)' }}>
+        <div className={`flex-1 relative w-full h-full md:pb-0 z-10 ${activeAppTab ? 'hidden' : 'block'}`}>
              <ChatBot messages={chatMessages} setMessages={setChatMessages} isDarkMode={isDarkMode} liveAiData={liveAiData} setLiveAiData={setLiveAiData} isAdmin={false} />
         </div>
       )}
 
-      <div className={`md:hidden absolute bottom-0 w-full p-4 z-50 pointer-events-none transition-all duration-300 ease-in-out ${(isKeyboardOpen || activeAppTab) ? 'translate-y-32 opacity-0' : 'translate-y-0 opacity-100'}`}>
-          <nav className={`pointer-events-auto backdrop-blur-2xl border flex justify-around p-3 pb-safe rounded-[32px] shadow-2xl transition-all duration-500 ${isDarkMode ? 'bg-[#1C1C1E]/80 border-white/10 shadow-[0_-5px_30px_rgba(0,0,0,0.3)]' : 'bg-white/80 border-black/5 shadow-[#0277C5]/10'}`}>
-            {['learn', 'quiz', 'tools', 'ai'].map(t_id => (
-                <div key={t_id} onClick={() => { 
-                    setActiveTab(t_id);
-                    setActiveAppTab(null);
-                    triggerHaptic(); 
-                    window.history.pushState({ modalOpen: false, tab: t_id, course: null }, '');
-                }} className={`flex flex-col items-center gap-1.5 transition-all duration-500 ease-out cursor-pointer ${activeTab === t_id ? (isDarkMode ? 'text-[#41B6E6] -translate-y-1.5' : 'text-[#0277C5] -translate-y-1.5') : (isDarkMode ? 'text-[#A0A0A0] hover:text-[#F1F1F1]' : 'text-[#6B7280] hover:text-[#1A1A1A]')}`}>
-                    {t_id === 'learn' && <BookOpen size={24} className={activeTab === t_id ? 'drop-shadow-md' : ''}/>}
-                    {t_id === 'quiz' && <Award size={24} className={activeTab === t_id ? 'drop-shadow-md' : ''}/>}
-                    {t_id === 'tools' && <Zap size={24} className={activeTab === t_id ? 'drop-shadow-md' : ''}/>}
-                    {t_id === 'ai' && <Bot size={24} className={activeTab === t_id ? 'drop-shadow-md' : ''}/>}
-                    <span className="text-[10px] font-black uppercase tracking-widest">{t(`tab_${t_id}`)}</span>
-                </div>
-            ))}
+      {/* 🌟 Floating Bottom Navigation Menu 🌟 */}
+      <div 
+        className={`md:hidden absolute left-0 right-0 z-50 w-full pointer-events-none flex justify-center transition-transform duration-500 ease-spring ${(isKeyboardOpen || activeAppTab) ? 'translate-y-32 opacity-0' : 'translate-y-0 opacity-100'}`}
+        style={{
+            bottom: `calc(env(safe-area-inset-bottom) + ${isAndroid ? '30px' : '20px'})`,
+            transform: `translateY(${isScrollingDown && !activeAppTab ? '150%' : '0'})`
+        }}
+      >
+          <nav className={`pointer-events-auto flex items-center justify-around w-[92%] max-w-[380px] px-2 py-1.5 backdrop-blur-2xl border shadow-2xl rounded-[30px] transition-colors duration-500 ${isDarkMode ? 'bg-[#1C1C1E]/85 border-white/10 shadow-black/50' : 'bg-white/90 border-black/10 shadow-[#0277C5]/10'}`}>
+            {['learn', 'quiz', 'tools', 'ai'].map(t_id => {
+                const isActive = activeTab === t_id;
+                return (
+                    <button 
+                        key={t_id} 
+                        onClick={() => { 
+                            setActiveTab(t_id);
+                            setActiveAppTab(null);
+                            triggerHaptic(); 
+                            window.history.pushState({ modalOpen: false, tab: t_id, course: null }, '');
+                        }} 
+                        className={`relative flex flex-col items-center justify-center gap-0.5 w-[70px] h-12 transition-colors duration-300 group outline-none rounded-2xl ${isActive ? (isDarkMode ? 'text-[#41B6E6]' : 'text-[#0277C5]') : (isDarkMode ? 'text-[#A0A0A0] hover:text-[#F1F1F1]' : 'text-[#6B7280] hover:text-[#1A1A1A]')}`}
+                    >
+                        <div className={`relative z-10 transition-transform duration-300 ${isActive ? '-translate-y-0.5 scale-105' : 'scale-95 group-hover:scale-100'}`}>
+                            {t_id === 'learn' && <BookOpen size={20} strokeWidth={isActive ? 2.5 : 2} className={isActive ? 'drop-shadow-[0_0_8px_rgba(65,182,230,0.3)]' : ''}/>}
+                            {t_id === 'quiz' && <Award size={20} strokeWidth={isActive ? 2.5 : 2} className={isActive ? 'drop-shadow-[0_0_8px_rgba(65,182,230,0.3)]' : ''}/>}
+                            {t_id === 'tools' && <Zap size={20} strokeWidth={isActive ? 2.5 : 2} className={isActive ? 'drop-shadow-[0_0_8px_rgba(65,182,230,0.3)]' : ''}/>}
+                            {t_id === 'ai' && <Bot size={20} strokeWidth={isActive ? 2.5 : 2} className={isActive ? 'drop-shadow-[0_0_8px_rgba(65,182,230,0.3)]' : ''}/>}
+                        </div>
+                        <span className={`relative z-10 text-[9px] font-medium uppercase tracking-wide mt-[1px] transition-opacity duration-300 ${isActive ? 'opacity-100 font-bold' : 'opacity-70'}`}>
+                            {t(`tab_${t_id}`)}
+                        </span>
+                    </button>
+                )
+            })}
           </nav>
       </div>
     </div>

@@ -1,5 +1,5 @@
-import React, { useState, useRef, useEffect } from 'react';
-import { Moon, Sun, BookOpen, Award, Zap, Bot, Lock, Mail, KeyRound, X, AlertCircle, CheckCircle2, Crown } from 'lucide-react';
+import React, { useState, useRef } from 'react';
+import { Moon, Sun, BookOpen, Award, Zap, Bot, ShieldAlert, Lock, Mail, KeyRound, X, AlertCircle, CheckCircle2, Crown } from 'lucide-react';
 import { useLanguage } from '../../contexts/LanguageContext';
 
 // FIREBASE IMPORTS
@@ -19,11 +19,12 @@ export default function Header({ activeTab, setActiveTab, isDarkMode, setIsDarkM
     const [adminSuccess, setAdminSuccess] = useState('');
     const [isLoading, setIsLoading] = useState(false);
     
-    // 🌟 NEW: Track Super Admin State to show the Header Button
     const [isSuperAdminActive, setIsSuperAdminActive] = useState(false);
 
     const clickCount = useRef(0);
     const clickTimer = useRef(null);
+
+    const isHiddenOnMobile = activeTab === 'ai' || activeTab === 'tools';
 
     const triggerHaptic = (type = 'light') => {
         if (typeof navigator !== 'undefined' && navigator.vibrate) {
@@ -127,56 +128,85 @@ export default function Header({ activeTab, setActiveTab, isDarkMode, setIsDarkM
 
     return (
         <>
-            <header className={`sticky top-0 z-40 backdrop-blur-2xl border-b transition-colors duration-500 shadow-sm ${isDarkMode ? 'bg-[#121212]/90 border-[#2C2C2C]' : 'bg-[#FFFFFF]/90 border-[#E5E7EB]'}`}>
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <div className="flex items-center justify-between h-16 sm:h-20 gap-4">
+            <header 
+                className={`${isHiddenOnMobile ? 'hidden md:block' : 'block'} w-full relative z-[60] transition-colors duration-500 ease-in-out backdrop-blur-xl shadow-sm ${isDarkMode ? 'bg-[#121212]/90 shadow-black/20' : 'bg-[#FFFFFF]/90 shadow-[#0277C5]/5'}`}
+                style={{ 
+                    paddingTop: 'calc(env(safe-area-inset-top) + 24px)', 
+                    marginTop: '-20px',
+                    touchAction: 'none' 
+                }} 
+            >
+                <div className="max-w-7xl mx-auto px-4 pt-1.5 pb-2.5 flex justify-between items-center relative z-10">
+                    
+                    <div 
+                        className="flex items-center gap-3 cursor-pointer group active:scale-95 transition-transform duration-300 ease-spring outline-none" 
+                        onPointerDown={handleLogoClick}
+                        style={{ touchAction: 'manipulation', WebkitTapHighlightColor: 'transparent' }}
+                    >
+                        <div className={`w-8 h-8 sm:w-10 sm:h-10 relative rounded-xl overflow-hidden shadow-sm group-hover:shadow-md transition-all duration-500 ease-spring group-hover:scale-105 border ${isDarkMode ? 'bg-[#1E1E1E] border-[#3A3A3C] group-hover:border-[#41B6E6]/50' : 'bg-[#FFFFFF] border-[#E5E7EB] group-hover:border-[#0277C5]/40'}`}>
+                            <img src="/logo.svg" alt="App Logo" className="w-full h-full object-cover" />
+                        </div>
                         
-                        <div className="flex items-center gap-3 sm:gap-4 cursor-pointer group min-w-0" onClick={handleLogoClick}>
-                            <div className={`w-10 h-10 sm:w-12 sm:h-12 shrink-0 rounded-[14px] flex items-center justify-center overflow-hidden shadow-md border transition-all duration-300 group-active:scale-95 group-hover:scale-105 ${isDarkMode ? 'bg-[#1E1E1E] border-[#3A3A3C]' : 'bg-[#F8F9FA] border-[#E5E7EB]'}`}>
-                                <img src="/logo.svg" alt="App Logo" className="w-full h-full object-cover pointer-events-none" />
-                            </div>
-                            <div className="flex flex-col justify-center min-w-0 select-none">
-                                <h1 className={`text-[17px] sm:text-[20px] font-black tracking-tight leading-none mb-0.5 truncate ${isDarkMode ? 'text-[#F1F1F1]' : 'text-[#1A1A1A]'}`}>
-                                    My<span className={isDarkMode ? 'text-[#41B6E6]' : 'text-[#0277C5]'}>Affinity</span>
-                                </h1>
-                                <p className={`text-[9px] sm:text-[11px] font-bold uppercase tracking-[0.2em] truncate ${isDarkMode ? 'text-[#A0A0A0]' : 'text-[#6B7280]'}`}>
+                        <div className="flex flex-col justify-center pt-0.5">
+                            <h1 className={`text-[15px] sm:text-[17px] font-black leading-normal group-hover:text-[#0277C5] transition-colors duration-300 ${isDarkMode ? 'text-[#F1F1F1]' : 'text-[#1A1A1A]'}`}>
+                                My<span className={isDarkMode ? 'text-[#41B6E6]' : 'text-[#0277C5]'}>Affinity</span>
+                            </h1>
+                            <div className="relative flex items-center -mt-0.5">
+                                <span className={`text-[10px] font-bold uppercase tracking-widest whitespace-nowrap block transition-colors ${isDarkMode ? 'text-[#A0A0A0] group-hover:text-[#41B6E6]' : 'text-[#6B7280] group-hover:text-[#0277C5]'}`}>
                                     {lang === 'en' ? 'Masterclass' : 'ថ្នាក់រៀនកម្រិតខ្ពស់'}
-                                </p>
+                                </span>
                             </div>
                         </div>
+                    </div>
 
-                        <nav className={`hidden md:flex items-center gap-1.5 p-1.5 shrink-0 rounded-2xl border shadow-inner ${isDarkMode ? 'bg-[#000000]/20 border-[#2C2C2C]' : 'bg-[#F4F5F7] border-[#E5E7EB]'}`}>
-                            {['learn', 'quiz', 'tools', 'ai'].map(t_id => (
-                                <button key={t_id} onClick={() => handleTabClick(t_id)} className={`flex items-center gap-2 px-5 py-2.5 rounded-xl font-khmer font-bold text-sm transition-all duration-300 ${activeTab === t_id ? (isDarkMode ? 'bg-[#1E1E1E] text-[#41B6E6] shadow-sm border border-[#3A3A3C]' : 'bg-[#FFFFFF] text-[#0277C5] shadow-sm border border-[#E5E7EB]') : (isDarkMode ? 'text-[#A0A0A0] hover:text-[#F1F1F1] hover:bg-[#1E1E1E]/50' : 'text-[#6B7280] hover:text-[#1A1A1A] hover:bg-[#FFFFFF]/50')}`}>
-                                    {t_id === 'learn' && <BookOpen size={16} />}
-                                    {t_id === 'quiz' && <Award size={16} />}
-                                    {t_id === 'tools' && <Zap size={16} />}
-                                    {t_id === 'ai' && <Bot size={16} />}
+                    <nav className={`hidden md:flex absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 space-x-1 p-1 rounded-full border shadow-sm transition-colors duration-500 z-10 ${isDarkMode ? 'bg-[#000000]/20 border-[#2C2C2C]' : 'bg-[#F4F5F7] border-[#E5E7EB]'}`}>
+                        {['learn', 'quiz', 'tools', 'ai'].map(t_id => (
+                            <button 
+                                key={t_id} 
+                                onClick={() => handleTabClick(t_id)} 
+                                className={`px-5 lg:px-6 py-1.5 rounded-full transition-all duration-300 ease-spring active:scale-95 flex items-center gap-2 whitespace-nowrap font-medium text-sm ${activeTab === t_id ? (isDarkMode ? 'bg-[#1E1E1E] text-[#41B6E6] shadow-sm ring-1 ring-[#3A3A3C]' : 'bg-[#FFFFFF] text-[#0277C5] shadow-sm ring-1 ring-[#E5E7EB]') : (isDarkMode ? 'text-[#A0A0A0] hover:text-[#F1F1F1] hover:bg-[#1E1E1E]/50' : 'text-[#6B7280] hover:text-[#1A1A1A] hover:bg-[#FFFFFF]/50')}`}
+                            >
+                                <div className={`transition-transform duration-300 ease-spring ${activeTab === t_id ? 'scale-110' : 'scale-100'}`}>
+                                    {t_id === 'learn' && <BookOpen size={15}/>}
+                                    {t_id === 'quiz' && <Award size={15}/>}
+                                    {t_id === 'tools' && <Zap size={15}/>}
+                                    {t_id === 'ai' && <Bot size={15}/>}
+                                </div>
+                                <span className={`font-khmer font-bold uppercase hidden lg:block tracking-wide text-[12px] transition-opacity duration-300 ${activeTab === t_id ? 'opacity-100' : 'opacity-80'}`}>
                                     {t(`tab_${t_id}`)}
-                                </button>
-                            ))}
-                        </nav>
+                                </span>
+                            </button>
+                        ))}
+                    </nav>
 
-                        <div className="flex items-center gap-2 sm:gap-3 shrink-0">
-                            <button onClick={(e) => { e.preventDefault(); triggerHaptic(); toggleLanguage(); }} className={`w-10 h-10 sm:w-11 sm:h-11 rounded-full flex items-center justify-center font-bold text-xs transition-all active:scale-90 border shadow-sm ${isDarkMode ? 'bg-[#1E1E1E] border-[#2C2C2C] text-[#F1F1F1] hover:bg-[#2C2C2C]' : 'bg-[#FFFFFF] border-[#E5E7EB] text-[#1A1A1A] hover:bg-[#F8F9FA]'}`} title="Switch Language">
-                                {lang === 'en' ? 'ខ្មែរ' : 'EN'}
+                    <div className="flex items-center gap-2 sm:gap-3 z-10">
+                        {isSuperAdminActive && (
+                            <button 
+                                onClick={(e) => { e.preventDefault(); triggerHaptic(); window.dispatchEvent(new CustomEvent('toggleSuperAdminPanel')); }} 
+                                className={`hidden sm:flex items-center justify-center gap-1 px-3 py-1.5 rounded-xl border text-[11px] font-bold font-sans transition-all duration-300 ease-out active:scale-90 shadow-lg bg-gradient-to-r from-[#41B6E6] to-[#0277C5] text-white animate-fade-in-up border-[#41B6E6]/50`}
+                                title="Open Super Admin Panel"
+                            >
+                                <Crown size={14} /> <span className="uppercase tracking-wider mt-[1px]">Admin</span>
                             </button>
-                            <button onClick={(e) => { e.preventDefault(); triggerHaptic(); setIsDarkMode(!isDarkMode); }} className={`w-10 h-10 sm:w-11 sm:h-11 rounded-full flex items-center justify-center transition-all active:scale-90 border shadow-sm ${isDarkMode ? 'bg-[#1E1E1E] border-[#2C2C2C] text-[#F1F1F1] hover:bg-[#2C2C2C]' : 'bg-[#FFFFFF] border-[#E5E7EB] text-[#1A1A1A] hover:bg-[#F8F9FA]'}`} title="Toggle Theme">
-                                {isDarkMode ? <Sun size={18} /> : <Moon size={18} />}
-                            </button>
-                            
-                            {/* 🌟 NEW: SECRET SUPER ADMIN BUTTON 🌟 */}
-                            {isSuperAdminActive && (
-                                <button 
-                                    onClick={(e) => { e.preventDefault(); triggerHaptic(); window.dispatchEvent(new CustomEvent('toggleSuperAdminPanel')); }} 
-                                    className={`w-10 h-10 sm:w-11 sm:h-11 rounded-full flex items-center justify-center transition-all active:scale-90 shadow-lg bg-gradient-to-r from-purple-500 to-indigo-500 text-white animate-fade-in-up border border-indigo-400`} 
-                                    title="Open Super Admin Panel"
-                                >
-                                    <Crown size={18} />
-                                </button>
-                            )}
-                        </div>
+                        )}
+
+                        <button 
+                            onClick={(e) => { e.preventDefault(); triggerHaptic(); toggleLanguage(); }} 
+                            onTouchStart={() => triggerHaptic()}
+                            className={`flex items-center justify-center gap-1 px-3 py-1.5 rounded-xl border text-[11px] font-bold font-sans transition-all duration-300 ease-out active:scale-90 ${isDarkMode ? 'bg-[#1E1E1E]/50 border-[#2C2C2C] text-[#A0A0A0] hover:text-[#F1F1F1] hover:bg-[#2C2C2C]' : 'bg-[#FFFFFF]/80 border-[#E5E7EB] text-[#6B7280] hover:text-[#1A1A1A] hover:bg-[#F8F9FA]'}`}
+                            title="Switch Language"
+                        >
+                            <span className="font-khmer tracking-wider mt-[1px]">{lang === 'en' ? 'ខ្មែរ' : 'EN'}</span>
+                        </button>
                         
+                        <button 
+                            onClick={(e) => { e.preventDefault(); triggerHaptic(); setIsDarkMode(!isDarkMode); }} 
+                            onTouchStart={() => triggerHaptic()}
+                            className={`p-2 rounded-xl transition-all duration-300 ease-out active:scale-90 hover:rotate-[15deg] border ${isDarkMode ? 'bg-[#1E1E1E]/50 border-[#2C2C2C] text-[#A0A0A0] hover:text-[#FFD700] hover:bg-[#2C2C2C]' : 'bg-[#FFFFFF]/80 border-[#E5E7EB] text-[#6B7280] hover:text-[#0277C5] hover:bg-[#F8F9FA]'}`}
+                            title="Toggle Theme"
+                        >
+                            {isDarkMode ? <Sun size={16} /> : <Moon size={16} />}
+                        </button>
                     </div>
                 </div>
             </header>
