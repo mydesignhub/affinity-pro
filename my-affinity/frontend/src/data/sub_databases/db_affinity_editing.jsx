@@ -78,6 +78,33 @@ export const affinityAndEditingData = [
         chips: ["របៀបប្រើ Affinity លើ iPad 📱", "ការភ្ជាប់ Keyboard លើ iPad ⌨️"],
         chips_en: ["Affinity iPad Gestures 📱", "Using External Keyboards ⌨️"]
     },
+    {
+        primaryKeys: ['មុខងារ Apple Pencil និង Hover ✏️', 'apple pencil pro hover ipad'],
+        keys: ['apple pencil', 'hover', 'pencil pro', 'ខ្មៅដៃ', 'ខ្មៅដៃ ipad', 'ចុចខ្មៅដៃ', 'squeeze'],
+        regex: ['\\bhover\\b', 'pencil pro', 'ខ្មៅដៃ ipad', 'មុខងារ.*pencil', '\\bsqueeze\\b'],
+        answer: "បាទ **Affinity ទាញយកអត្ថប្រយោជន៍ពេញលេញពី Apple Pencil ជំនាន់ថ្មី៖**\n\n✨ **មុខងារ Hover (លើ iPad M2/M4):** គ្រាន់តែលើកខ្មៅដៃឱ្យផុតពីអេក្រង់បន្តិច អ្នកនឹងអាចមើលឃើញទំហំជក់ (Brush Size) ឬមើលការផ្លាស់ប្តូរ Blend Mode មុននឹងគូសវាសផ្ទាល់។ វាជួយកាត់បន្ថយការចុច Undo ញឹកញាប់។\n👆 **Double-tap (គោះ ២ដង):** គោះចុងខ្មៅដៃពីរដង ដើម្បីប្តូរទៅជ័រលុប (Eraser) ហើយគោះពីរដងទៀតដើម្បីត្រលប់មក Brush វិញយ៉ាងរហ័ស។\n🤏 **Squeeze (សម្រាប់ Pencil Pro):** ច្របាច់តួខ្មៅដៃ ដើម្បីបើកផ្ទាំង Menu ឧបករណ៍រហ័សចំកន្លែងដែលអ្នកកំពុងគូរតែម្តង!",
+        answer_en: "**Affinity fully maximizes the power of the newest Apple Pencils:**\n\n✨ **Hover (M2/M4 iPads):** Hover your pencil slightly above the glass to preview your exact brush size, shape, and even live Blend Mode updates before making a permanent stroke. It severely reduces the need to Undo!\n👆 **Double-tap:** Quickly double-tap the flat side of the pencil to instantly toggle between your current tool and the Eraser.\n🤏 **Squeeze (Pencil Pro Only):** Squeeze the barrel of the pencil to summon a floating quick-menu palette directly under your cursor, allowing you to switch tools without moving your hand!",
+        chips: ["មុខងារ Quick Menu លើ iPad", "របៀប Zoom និងរំកិលប្លង់លើ iPad 🔍"],
+        chips_en: ["iPad Quick Menu trick", "Zoom & Pan canvas on iPad 🔍"]
+    },
+    {
+        primaryKeys: ['របៀបបូមពណ៌លើ iPad 💧', 'how to use color picker eyedropper ipad'],
+        keys: ['color picker', 'eyedropper', 'បូមពណ៌', 'ចម្លងពណ៌', 'យកពណ៌', 'sample color'],
+        regex: ['\\bcolor picker\\b', '\\beyedropper\\b', 'បូមពណ៌', 'ចម្លងពណ៌', 'យកពណ៌'],
+        answer: "បាទ **របៀបបូមពណ៌ (Color Picker) ពីលើរូបភាពនៅលើ iPad គឺងាយស្រួលណាស់៖**\n\n១. បើកផ្ទាំង **Color Panel** នៅខាងស្តាំ។\n២. អ្នកនឹងឃើញរូបតំណាងបំពង់បូមពណ៌ (Eyedropper) នៅក្បែរកង់ពណ៌។\n៣. 👆 **ទាញនិងអូស (Drag & Drop):** កុំគ្រាន់តែចុចលើវា! ត្រូវយកម្រាមដៃ ឬ Pencil សង្កត់លើបំពង់បូមពណ៌នោះឱ្យជាប់ រួចអូសវាចេញមកលើផ្ទាំងការងារ។\n៤. ដាក់ចំពីលើពណ៌ដែលអ្នកចង់បាន រួចប្រលែងដៃ។\n៥. **ចំណុចសំខាន់៖** ពណ៌នោះគ្រាន់តែបូមយកមកទុកទេ! ដើម្បីប្រើវាចាក់ចូលវត្ថុរបស់អ្នក អ្នកត្រូវ **ចុចលើរង្វង់ពណ៌តូច** នៅក្បែរបំពង់នោះ ទើបវាដំណើរការ។",
+        answer_en: "**Sampling colors (Color Picker/Eyedropper) from your canvas on the iPad has a specific workflow:**\n\n1. Open the **Color Panel** on the right side.\n2. Locate the small Eyedropper icon next to the color wheel.\n3. 👆 **Drag & Drop:** Do not just tap it! Press and hold the eyedropper icon, then physically drag it out onto your canvas.\n4. A loupe will appear. Position it over the color you want and release to sample it.\n5. **Crucial Step:** The color is now sampled, but NOT applied! To actually apply this new color to your selected shape, you MUST **tap the small color circle** sitting directly next to the eyedropper icon.",
+        chips: ["Global Colors (ប្តូរពណ៌ម្តងទាំងអស់)", "តើ HSL គឺជាអ្វី?"],
+        chips_en: ["Global Colors (Swatches)", "What is HSL?"]
+    },
+    {
+        primaryKeys: ['របៀប Save និង Cloud Sync លើ iPad ☁️', 'saving and icloud sync affinity ipad'],
+        keys: ['save file', 'រក្សាទុក', 'icloud', 'sync file', 'បាត់ file', 'auto save', 'export save'],
+        regex: ['\\bsave file\\b', '\\bicloud\\b', 'រក្សាទុក file', 'sync file', 'auto save'],
+        answer: "បាទ **ការគ្រប់គ្រង File (Saving & Syncing) លើ iPad ការពារកុំឱ្យបាត់បង់ស្នាដៃ៖**\n\n📦 **Sandbox Auto-Save:** ពេលអ្នកបង្កើត File ថ្មី វាត្រូវបានរក្សាទុកដោយស្វ័យប្រវត្តិនៅក្នុងកម្មវិធី Affinity ផ្ទាល់ខ្លួនឯង (មិនទាន់ចេញទៅ Files App ទេ)។\n💾 **Save As (រក្សាទុកពិតប្រាកដ):** ដើម្បីសុវត្ថិភាព ចូលទៅកាន់ Document Menu (សញ្ញាឯកសារនៅស្តាំ) > `Save As` រួចជ្រើសរើស Folder នៅក្នុង **iCloud Drive > Affinity Designer/Photo**។\n☁️ **អត្ថប្រយោជន៍ iCloud Sync:** ពេលអ្នក Save ចូល iCloud នោះ File នេះនឹងលោតចូលកុំព្យូទ័រ Mac ឬ Windows របស់អ្នកដោយស្វ័យប្រវត្តិ។ អ្នកអាចបិទ iPad ហើយបើកកុំព្យូទ័រ កាត់តបន្តដោយមិនបាច់ Copy/Paste នោះទេ!",
+        answer_en: "**Mastering File Management (Saving & Syncing) on the iPad ensures you never lose artwork:**\n\n📦 **Sandbox Auto-Save:** By default, new documents are automatically saved strictly inside the Affinity App's internal storage sandbox (You won't see them in your general Files app yet).\n💾 **Save As (Hard Backup):** For true security, tap the Document Menu icon (top left) > `Save As`, and specifically choose a folder inside your **iCloud Drive**.\n☁️ **The Magic of iCloud Sync:** Once a file is saved into the iCloud Affinity folder, it instantly syncs over the air to your Mac or Windows PC. You can close your iPad, open Affinity on your desktop, and immediately continue editing exactly where you left off!",
+        chips: ["ការកាត់រូប Export (Slices)", "History Panel (Time Travel) ⏱️"],
+        chips_en: ["How to use Export Slices ✂️", "Affinity History Panel Snapshot ⏱️"]
+    },
 
     // ==========================================
     // 2. MACROS, ASSETS & EXPORTING
@@ -255,6 +282,42 @@ export const affinityAndEditingData = [
         answer_en: "**In Affinity, it is highly crucial to use the correct typography tool for the correct context:**\n\n🅰️ **Artistic Text Tool (Freeform Typography):** \n- **Best For:** Bold headlines, logos, short taglines, and single words.\n- **Behavior:** It acts as a physical graphical object. If you click and drag the outer bounding box, the actual Font Size dynamically scales up or down with your movement. Perfect for quickly sizing a title visually against an image.\n\n📄 **Frame Text Tool (Paragraph Layout):** \n- **Best For:** Heavy body copy, long articles, and magazine column layouts.\n- **Behavior:** It creates a rigid container. If you resize the bounding box, the text absolutely *does not* get larger. Instead, the words dynamically reflow and wrap to fit the new dimensions of the box, ensuring your font size (e.g., 12pt) remains strictly perfectly consistent for reading legibility.",
         chips: ["សរសេរអក្សរតាមខ្សែកោង", "អ្វីទៅជា Typography?"],
         chips_en: ["Text on a Path", "What is Typography?"]
+    },
+    {
+        primaryKeys: ['របៀបប្រើ Node Tool លើ iPad', 'node tool vector editing'],
+        keys: ['node tool', 'កែចំណុច', 'កាត់ខ្សែកោង', 'កែ vector', 'ពត់បន្ទាត់'],
+        regex: ['\\bnode tool\\b', 'កែចំណុច', 'កែ vector', 'ពត់បន្ទាត់'],
+        answer: "បាទ **Node Tool (ឧបករណ៍កែចំណុច Vector)** គឺជាឧបករណ៍ដ៏មានឥទ្ធិពលបំផុតសម្រាប់អ្នកគូររូប (Illustrators)៖\n\nបន្ទាប់ពីអ្នកគូររូបរាងអ្វីមួយ អ្នកអាចជ្រើសរើស **Node Tool (សញ្ញាព្រួញពណ៌ស)** ដើម្បីកែប្រែទម្រង់វាវិញ៖\n- **កែជ្រុងស្រួចទៅកោង (Sharp to Smooth):** ចុចលើចំណុចជ្រុងណាមួយ រួចមើលទៅ Context Menu ខាងក្រោម ហើយជ្រើសរើសរូប `Smooth` វានឹងលោតចេញដៃកាន់ (Handles) សម្រាប់ឱ្យអ្នកពត់ខ្សែនោះ។\n- **បំបែកចំណុច (Break Curve):** ចុចលើចំណុចមួយ រួចជ្រើសរើស `Break` នោះខ្សែបន្ទាត់បិទជិត នឹងត្រូវកាត់ផ្តាច់ចេញពីគ្នា។\n💡 **គន្លឹះ iPad៖** បើចង់ Select ចំណុច Node ច្រើនក្នុងពេលតែមួយ សូមប្រើម្រាមដៃមួយសង្កត់លើអេក្រង់ (តំណាងឱ្យ Shift) រួចយក Pencil ចុចលើចំណុចទាំងនោះម្តងមួយៗ។",
+        answer_en: "**The Node Tool** is the ultimate manipulation weapon for Vector Illustrators:\n\nAfter drawing any path or shape, activate the **Node Tool (The White Arrow)** to heavily modify its structure:\n- **Sharp to Smooth:** Tap any rigid corner node, then look at your bottom Context Toolbar. Tap the `Smooth` icon. It instantly converts the sharp corner into a curve and extends Bezier handles for you to bend.\n- **Break Curve:** Tap a node and press `Break` on the context bar to physically snap a closed loop into an open, disconnected path.\n💡 **iPad Pro Tip:** To select multiple specific nodes simultaneously, hold one finger down anywhere on the canvas (acting as the Shift key) and tap the desired nodes one by one with your Pencil.",
+        chips: ["Pen Tool និង Pencil Tool ខុសគ្នាម៉េច?", "តើ Shape Builder Tool ប្រើធ្វើអី? 🔲"],
+        chips_en: ["Pen Tool vs Pencil Tool?", "What is the Shape Builder Tool? 🔲"]
+    },
+    {
+        primaryKeys: ['Pen Tool និង Pencil Tool ខុសគ្នាម៉េច?', 'pen tool vs pencil tool affinity'],
+        keys: ['pen tool', 'pencil tool', 'គូរបន្ទាត់', 'គូរដៃ', 'គូរ vector', 'curve tool'],
+        regex: ['\\bpen tool\\b', '\\bpencil tool\\b', 'គូរ.*vector', '\\bcurve tool\\b'],
+        answer: "បាទ **នៅក្នុង Designer Persona ឧបករណ៍គូរ Vector ទាំង ២ នេះ មានគោលដៅប្រើប្រាស់ខុសគ្នាដាច់៖**\n\n✒️ **Pen Tool (គូរដោយភាពជាក់លាក់):** អ្នកត្រូវចុចទម្លាក់ចំណុច (Node) ម្តងមួយៗ ដើម្បីបង្កើតខ្សែបន្ទាត់ត្រង់ ឬទាញពត់ដើម្បីបង្កើតខ្សែកោង។ វាផ្តល់ភាពច្បាស់លាស់ ១០០% ល្អបំផុតសម្រាប់គូរ Logo, Icon, ឬគូរតាមគែមវត្ថុ (Tracing)។\n✏️ **Pencil Tool (គូរដោយសេរី):** ដំណើរការដូចខ្មៅដៃពិតៗ! អ្នកគ្រាន់តែអូសគូសលើអេក្រង់ដោយសេរី កម្មវិធីនឹងបង្កើតចំណុច (Nodes) ឱ្យដោយស្វ័យប្រវត្តិ។\n\n💡 **មន្តអាគមរបស់ Pencil Tool៖** វាមកជាមួយមុខងារ **'Sculpt'** និង **'Rope Stabilizer'** ដែលជួយទាញខ្សែបន្ទាត់ដែលអ្នកគូរញ័រៗ ឱ្យប្រែជារលោងស្អាតឥតខ្ចោះដោយស្វ័យប្រវត្តិ!",
+        answer_en: "**Within the Designer Persona, these two Vector drawing tools serve entirely different workflows:**\n\n✒️ **Pen Tool (Ultimate Precision):** You manually plot exact anchor nodes one by one to construct straight lines, and drag to form mathematical Bezier curves. It offers 100% control, making it strictly mandatory for Logo Design, UI Iconography, and precise photo tracing.\n✏️ **Pencil Tool (Freehand Flow):** Acts like a physical pencil. You simply sketch freehand across the screen, and the engine automatically generates the underlying vector nodes along your path.\n\n💡 **The Pencil's Magic Feature:** Enable the **'Rope Stabilizer'** and **'Sculpt'** modes in the context menu. It mathematically calculates and smooths out human hand-jitters, turning rough, shaky sketches into buttery-smooth, professional vector curves instantly!",
+        chips: ["របៀបប្រើ Node Tool លើ iPad", "Stroke vs Fill"],
+        chips_en: ["Node Tool Vector Editing", "Stroke vs Fill"]
+    },
+    {
+        primaryKeys: ['របៀបគូរទម្រង់ 3D (Isometric Grid)', 'isometric grid affinity ipad'],
+        keys: ['isometric', 'grid', 'គូរ 3d', 'ក្រឡា 3d', 'បន្ទាត់ក្រឡា', '3d drawing'],
+        regex: ['\\bisometric\\b', 'គូរ 3d', 'ក្រឡា 3d'],
+        answer: "បាទ **Affinity Designer គឺជាស្តេចនៃគំនូរ Isometric (គំនូរ 3D ដែលមានមុំស្មើគ្នា ៣០ ដឺក្រេ)!**\n\nដើម្បីចាប់ផ្តើមគូរ៖\n១. ចូលទៅកាន់ម៉ឺនុយ Document > **Grid and Axis**។\n២. បើក (Enable) Grid រួចជ្រើសរើសប្រភេទ `Isometric`។ អេក្រង់នឹងលោតសំណាញ់រាង 3D។\n៣. បើកផ្ទាំង **Isometric Studio Panel** (នៅខាងស្តាំ)។\n៤. **មន្តអាគម៖** អ្នកអាចគូរអក្សរ ឬរាងចតុកោណកែងធម្មតា (2D)។ បន្ទាប់មកជ្រើសរើសវា រួចចុចប៊ូតុង **'Fit to Plane' (Top, Front, ឬ Side)** នៅក្នុង Isometric Panel។ រូបភាព 2D របស់អ្នកនឹងត្រូវទាញពត់ទៅជាប្លង់ 3D ដោយស្វ័យប្រវត្តិនិងត្រឹមត្រូវតាមមាត្រដ្ឋាន ១០០%!",
+        answer_en: "**Affinity Designer is the absolute undisputed king of Isometric Illustration (3D drawings using perfect 30-degree angles)!**\n\nTo initiate the workflow:\n1. Open the Document Menu > **Grid and Axis**.\n2. Enable the Grid and change the mode to `Isometric`. A 3D wireframe grid will overlay your canvas.\n3. Open the dedicated **Isometric Studio Panel** from your right-side toolbars.\n4. **The Magic Step:** You can type standard flat 2D text, or draw a flat UI window. Select it, then tap the **'Fit to Plane'** buttons (Top, Front, or Side) in the Isometric Panel. Your flat 2D artwork is instantly and mathematically projected onto the 3D grid perfectly!",
+        chips: ["Snapping ក្នុង Affinity 🧲", "តើ Shape Builder Tool ប្រើធ្វើអី? 🔲"],
+        chips_en: ["Snapping Tool Affinity 🧲", "What is the Shape Builder Tool? 🔲"]
+    },
+    {
+        primaryKeys: ['របៀបដាក់ Layer Effects (FX) ✨', 'layer effects fx panel ipad'],
+        keys: ['layer effect', 'fx panel', 'ដាក់ស្រមោលអក្សរ', 'ដាក់ពន្លឺ', 'outer glow', 'drop shadow fx', 'effect'],
+        regex: ['\\bfx panel\\b', '\\blayer effect\\b', 'ដាក់ស្រមោលអក្សរ', '\\beffect\\b', 'drop shadow'],
+        answer: "បាទ **Layer Effects (FX Panel)** គឺជាកន្លែងសម្រាប់តុបតែង Layer ឬអក្សរឱ្យកាន់តែលេចធ្លោដោយមិនខូចសាច់រូប (Non-destructive)៖\n\nនៅលើ iPad សូមចុចលើសញ្ញា **FX** នៅរបារឧបករណ៍ខាងស្តាំ (Studio Panels)។ អ្នកអាចបន្ថែម៖\n- **Drop Shadow (ស្រមោលក្រៅ):** ធ្វើឱ្យអក្សរ ឬវត្ថុអណ្តែតផុសពី Background។\n- **Outer Glow (ពន្លឺក្រៅ):** បង្កើតពន្លឺជះចេញក្រៅ (ល្អបំផុតសម្រាប់ធ្វើអក្សរ Neon)។\n- **3D / Bevel / Emboss:** ធ្វើឱ្យរាង Vector ក្លាយទៅជាមានកម្រាស់ដូចប៉ុង ឬកាក់មាស។\n\n💡 **គន្លឹះ៖** Effect ទាំងអស់នេះមានរូបតំណាង `fx` តូចមួយនៅលើ Layer។ បើអ្នកមិនចង់បានវា អ្នកអាចចុចបិទបើកវាវិញបានគ្រប់ពេល។ កុំភ្លេចប្រើមុខងារ `Paste FX` ដើម្បីចម្លង Effect នេះទៅអក្សរផ្សេងទៀត!",
+        answer_en: "**Layer Effects (The FX Panel)** is your non-destructive engine for instantly adding depth, lighting, and styling to typography or vectors:\n\nOn the iPad, tap the **FX** icon in the right-hand Studio Panels. You can instantly toggle and heavily customize:\n- **Drop Shadow:** To create realistic physical depth and separation from the background.\n- **Outer Glow:** Essential for creating intense Neon light-tube aesthetics.\n- **3D / Bevel / Emboss:** Mathematically highlights and shades the edges of a shape to simulate thick plastic, metal, or engraved text.\n\n💡 **Pro Tip:** Applied effects generate a tiny `fx` badge on your layer. You can toggle visibility infinitely without ever destroying the underlying pixels. Don't forget to use the `Paste FX` command to copy this exact styling onto other layers!",
+        chips: ["Copy Effect ពី Layer មួយទៅមួយទៀត", "ប្តូរវត្ថុទៅជាមាស 🏆"],
+        chips_en: ["Paste FX Layer Styles Affinity", "Turn anything into gold effect 🏆"]
     },
     {
         primaryKeys: ['សរសេរអក្សរតាមខ្សែកោង', 'text on a path affinity designer'],
