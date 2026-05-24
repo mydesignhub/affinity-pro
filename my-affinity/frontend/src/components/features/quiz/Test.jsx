@@ -118,8 +118,8 @@ const Test = ({ isDarkMode, isAdmin }) => {
     useEffect(() => {
         if (gameState !== 'playing' || quizConfig.level !== 'final' || timeLeft === null) return;
         if (timeLeft <= 0) { finishQuiz(score); return; }
-        const timerId = setInterval(() => setTimeLeft(prev => prev - 1), 1000);
-        return () => clearInterval(timerId);
+        const timerId = setTimeout(() => setTimeLeft(prev => prev - 1), 1000);
+        return () => clearTimeout(timerId);
     }, [gameState, quizConfig.level, timeLeft, score]);
 
     // 🌟 PER-QUESTION TIMER FOR REGULAR LEVELS
@@ -136,7 +136,7 @@ const Test = ({ isDarkMode, isAdmin }) => {
             
             setTimeout(() => {
                 if (currentQuestion + 1 < questions.length) { 
-                    setCurrentQuestion(currentQuestion + 1); 
+                    setCurrentQuestion(prev => prev + 1); 
                     setIsAnswered(false); 
                     setSelectedOption(null); 
                     setQuestionTimeLeft(getTimeLimitForLevel(quizConfig.level));
@@ -146,11 +146,11 @@ const Test = ({ isDarkMode, isAdmin }) => {
             return;
         }
         
-        const timerId = setInterval(() => {
+        const timerId = setTimeout(() => {
             setQuestionTimeLeft(prev => prev - 1);
         }, 1000);
         
-        return () => clearInterval(timerId);
+        return () => clearTimeout(timerId);
     }, [gameState, isAnswered, questionTimeLeft, currentQuestion, questions.length, score, quizConfig.level]);
 
     // === GAME LOGIC ===
@@ -174,14 +174,6 @@ const Test = ({ isDarkMode, isAdmin }) => {
                 if (!confirmRetake) return;
             }
             
-            if (isAdmin) {
-                const appDisplayName = activeAppTab === 'photo' ? 'Affinity Photo' : activeAppTab === 'designer' ? 'Affinity Designer' : 'Affinity Publisher';
-                const dummyCert = { name: userName || "Admin Tester", score: 100, date: new Date().toISOString(), appCourse: appDisplayName };
-                setCertsData(prev => ({ ...prev, [activeAppTab]: dummyCert }));
-                setActiveCertData(dummyCert);
-                setGameState('certificate');
-                return;
-            }
             setTimeLeft(15 * 60);
         } else { 
             setQuestionTimeLeft(getTimeLimitForLevel(level));
