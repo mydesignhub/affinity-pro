@@ -865,6 +865,7 @@ function AppContent() {
         body, html { overscroll-behavior: none; background-color: ${isDarkMode ? '#0A0A0A' : '#F4F5F7'}; transition: background-color 0.5s ease; -webkit-tap-highlight-color: transparent; } 
         .font-khmer { font-family: 'Kantumruy Pro', sans-serif; } 
         .no-scrollbar::-webkit-scrollbar { display: none; } 
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
         @keyframes fade-in-up { from { opacity: 0; transform: translateY(20px) scale(0.99); } to { opacity: 1; transform: translateY(0) scale(1); } } 
         .animate-fade-in-up { animation: fade-in-up 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
         .ease-spring { transition-timing-function: cubic-bezier(0.175, 0.885, 0.32, 1.275); }
@@ -912,7 +913,7 @@ function AppContent() {
       )}
 
       {activeAppTab && !expandedLesson && (
-        <div className={`fixed inset-0 z-[60] overflow-y-auto custom-scrollbar flex flex-col ${isDarkMode ? 'bg-[#0A0A0A]' : 'bg-[#F4F5F7]'}`}>
+        <div className={`fixed inset-0 z-[60] overflow-y-auto no-scrollbar flex flex-col ${isDarkMode ? 'bg-[#0A0A0A]' : 'bg-[#F4F5F7]'}`}>
             
             <div 
                 className={`sticky top-0 z-50 px-4 pb-3 border-b flex items-center justify-between backdrop-blur-xl ${isDarkMode ? 'border-[#2C2C2C] bg-[#0A0A0A]/90' : 'border-[#E5E7EB] bg-[#FFFFFF]/90'}`}
@@ -983,7 +984,7 @@ function AppContent() {
       )}
       
       {activeTab !== 'ai' && !activeAppTab ? (
-        <main ref={mainScrollRef} className="flex-1 min-h-0 max-w-7xl mx-auto w-full overflow-y-auto custom-scrollbar p-4 md:p-8 relative z-10" style={{ paddingBottom: 'calc(env(safe-area-inset-bottom) + 90px)', overscrollBehaviorY: 'contain' }}>
+        <main ref={mainScrollRef} className="flex-1 min-h-0 max-w-7xl mx-auto w-full overflow-y-auto no-scrollbar p-4 md:p-8 relative z-10" style={{ paddingBottom: 'calc(env(safe-area-inset-bottom) + 90px)', overscrollBehaviorY: 'contain' }}>
             <div className="w-full flex-none shrink-0" style={{ height: 'calc(env(safe-area-inset-top) + 60px)' }}></div>
             
             {activeTab === 'learn' && (

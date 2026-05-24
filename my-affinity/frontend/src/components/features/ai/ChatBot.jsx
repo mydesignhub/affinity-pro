@@ -936,7 +936,7 @@ const ChatBot = ({ messages = [], setMessages, isDarkMode, liveAiData = [], setL
                               <div className={`max-w-[85%] sm:max-w-[75%] flex flex-col`}>
                                   {isUser && editingIndex === i ? (
                                       <div className={`w-full flex flex-col gap-2 p-3 rounded-[20px] border shadow-sm ${theme.inputBg}`}>
-                                          <textarea value={editText} onChange={(e) => setEditText(e.target.value)} className={`w-full resize-none outline-none bg-transparent text-[14.5px] font-khmer ${theme.textMain}`} rows={3} autoFocus />
+                                          <textarea value={editText} onChange={(e) => setEditText(e.target.value)} className={`w-full resize-none outline-none bg-transparent text-[14.5px] font-khmer no-scrollbar ${theme.textMain}`} rows={3} autoFocus />
                                           <div className="flex justify-end gap-2 mt-1">
                                               <button onClick={cancelEdit} className={`px-3 py-1.5 rounded-full text-[12px] font-bold transition-all ${isDarkMode ? 'bg-[#3A3B3C] text-[#E4E6EB] hover:bg-[#4E4F50]' : 'bg-[#F0F2F5] text-[#6B7280] hover:bg-[#E4E6EB]'}`}>Cancel</button>
                                               <button onClick={() => submitEdit(i)} className={`px-3 py-1.5 rounded-full bg-[#0277C5] text-white text-[12px] font-bold hover:opacity-90 transition-all`}>Update</button>
@@ -1073,7 +1073,7 @@ const ChatBot = ({ messages = [], setMessages, isDarkMode, liveAiData = [], setL
                           contentEditable="true"
                           onInput={handleInputInput}
                           onKeyDown={(e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); if (input.trim() && !loading) { triggerHaptic(); handleSend(input); } } }}
-                          className={`w-full min-h-[40px] max-h-[100px] overflow-y-auto pl-4 pr-10 pt-2.5 pb-2.5 text-[14.5px] leading-snug font-khmer outline-none transition-all whitespace-pre-wrap break-words ${theme.inputColor} ${loading && input.trim() === '' ? 'opacity-50' : ''}`}
+                          className={`w-full min-h-[40px] max-h-[100px] overflow-y-auto no-scrollbar pl-4 pr-10 pt-2.5 pb-2.5 text-[14.5px] leading-snug font-khmer outline-none transition-all whitespace-pre-wrap break-words ${theme.inputColor} ${loading && input.trim() === '' ? 'opacity-50' : ''}`}
                           suppressHydrationWarning
                       />
                       <button
