@@ -131,7 +131,8 @@ export default function Header({ activeTab, setActiveTab, isDarkMode, setIsDarkM
             <header 
                 className={`${isHiddenOnMobile ? 'hidden md:block' : 'block'} w-full relative z-[60] transition-colors duration-500 ease-in-out backdrop-blur-xl shadow-sm ${isDarkMode ? 'bg-[#121212]/85 border-b border-white/5 shadow-black/20' : 'bg-[#FFFFFF]/85 border-b border-black/5 shadow-[#0277C5]/5'}`}
                 style={{ 
-                    paddingTop: 'calc(env(safe-area-inset-top) + 4px)', 
+                    paddingTop: 'calc(env(safe-area-inset-top) + 50px)', 
+                    marginTop: '-46px',
                     touchAction: 'none' 
                 }} 
             >

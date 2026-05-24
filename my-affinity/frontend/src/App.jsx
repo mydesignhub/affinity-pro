@@ -629,7 +629,7 @@ function AppContent() {
 
   // Layout Scroll States
   const [isScrollingDown, setIsScrollingDown] = useState(false);
-  const [lastScrollY, setLastScrollY] = useState(0);
+  const lastScrollY = useRef(0);
   const [isAndroid] = useState(() => /Android/i.test(navigator.userAgent));
   const mainScrollRef = useRef(null);
   const isAppInitialMount = useRef(true);
@@ -789,28 +789,28 @@ function AppContent() {
       
       if (!isAppInitialMount.current) {
           if (currentY <= 0) {
-            if (isScrollingDown) setIsScrollingDown(false);
-          } else if (currentY > lastScrollY + 12 && currentY > 60) {
-            if (!isScrollingDown) setIsScrollingDown(true);
-          } else if (currentY < lastScrollY - 12) {
-            if (isScrollingDown) setIsScrollingDown(false);
+            setIsScrollingDown(false);
+          } else if (currentY > lastScrollY.current + 12 && currentY > 60) {
+            setIsScrollingDown(true);
+          } else if (currentY < lastScrollY.current - 12) {
+            setIsScrollingDown(false);
           }
       }
       
-      setLastScrollY(currentY);
+      lastScrollY.current = currentY;
     };
     
     const scrollContainer = mainScrollRef.current;
-    scrollContainer?.addEventListener('scroll', handleScroll, { passive: true });
+    if (scrollContainer) scrollContainer.addEventListener('scroll', handleScroll, { passive: true });
 
     const handleAiScroll = (e) => setIsScrollingDown(e.detail);
     window.addEventListener('aiScrolling', handleAiScroll);
 
     return () => {
-      scrollContainer?.removeEventListener('scroll', handleScroll);
+      if (scrollContainer) scrollContainer.removeEventListener('scroll', handleScroll);
       window.removeEventListener('aiScrolling', handleAiScroll);
     };
-  }, [lastScrollY, isScrollingDown]);
+  }, [activeTab, activeAppTab]);
 
   const handleOpenCourse = (courseId) => {
       setActiveAppTab(courseId);
@@ -1086,7 +1086,7 @@ function AppContent() {
         className={`md:hidden absolute bottom-0 left-0 right-0 z-50 w-full pointer-events-none flex flex-col justify-end transition-all duration-500 ease-spring ${(isKeyboardOpen || activeAppTab) ? 'opacity-0' : 'opacity-100'}`}
         style={{ transform: `translateY(${(isKeyboardOpen || activeAppTab || isScrollingDown) ? '150%' : '0px'})` }}
       >
-          <div className={`absolute inset-x-0 bottom-[-30px] h-[150px] pointer-events-none ${isDarkMode ? 'bg-[#0A0A0A]' : 'bg-[#F4F5F7]'}`} style={{ maskImage: 'linear-gradient(to top, black 40%, transparent 100%)', WebkitMaskImage: 'linear-gradient(to top, black 40%, transparent 100%)' }}></div>
+          <div className={`absolute inset-x-0 bottom-[-50px] h-[170px] pointer-events-none ${isDarkMode ? 'bg-[#0A0A0A]' : 'bg-[#F4F5F7]'}`} style={{ maskImage: 'linear-gradient(to top, black 40%, transparent 100%)', WebkitMaskImage: 'linear-gradient(to top, black 40%, transparent 100%)' }}></div>
           <div className="relative w-full flex justify-center" style={{ paddingBottom: 'calc(env(safe-area-inset-bottom) + 12px)' }}>
               <nav className={`pointer-events-auto flex items-center justify-around w-[92%] max-w-[380px] px-2 py-1.5 backdrop-blur-2xl border shadow-2xl rounded-[30px] transition-colors duration-500 ${isDarkMode ? 'bg-[#1C1C1E]/85 border-white/10 shadow-black/50' : 'bg-white/90 border-black/10 shadow-[#0277C5]/10'}`}>
             {['learn', 'quiz', 'tools', 'ai'].map(t_id => {

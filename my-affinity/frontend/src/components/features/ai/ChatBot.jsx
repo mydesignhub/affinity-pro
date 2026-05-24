@@ -98,7 +98,7 @@ const ChatBot = ({ messages = [], setMessages, isDarkMode, liveAiData = [], setL
   const [loading, setLoading] = useState(false);
   const [isKeyboardOpen, setIsKeyboardOpen] = useState(false); 
   const [showHeader, setShowHeader] = useState(true);
-  const [lastScrollY, setLastScrollY] = useState(0);
+  const lastScrollY = useRef(0);
   
   const [viewportHeight, setViewportHeight] = useState('100%');
   const [keyboardHeight, setKeyboardHeight] = useState(0);
@@ -762,7 +762,7 @@ const ChatBot = ({ messages = [], setMessages, isDarkMode, liveAiData = [], setL
           }
           setTimeout(() => {
               isAutoScrolling.current = false;
-              if (container) setLastScrollY(container.scrollTop);
+              if (container) lastScrollY.current = container.scrollTop;
           }, 350);
       };
       
@@ -785,32 +785,32 @@ const ChatBot = ({ messages = [], setMessages, isDarkMode, liveAiData = [], setL
           const currentScrollY = scrollContainerRef.current.scrollTop;
           
           if (currentScrollY <= 0) { 
-              if (!showHeader) {
-                  setShowHeader(true);
-                  window.dispatchEvent(new CustomEvent('aiScrolling', { detail: false }));
-              }
-              setLastScrollY(0); 
+              setShowHeader(prev => {
+                  if (!prev) window.dispatchEvent(new CustomEvent('aiScrolling', { detail: false }));
+                  return true;
+              });
+              lastScrollY.current = 0; 
               return; 
           }
-          if (currentScrollY > lastScrollY + 12 && currentScrollY > 60) {
-              if (showHeader) {
-                  setShowHeader(false);
-                  window.dispatchEvent(new CustomEvent('aiScrolling', { detail: true }));
-              }
-          } else if (currentScrollY < lastScrollY - 12) {
-              if (!showHeader) {
-                  setShowHeader(true);
-                  window.dispatchEvent(new CustomEvent('aiScrolling', { detail: false }));
-              }
+          if (currentScrollY > lastScrollY.current + 12 && currentScrollY > 60) {
+              setShowHeader(prev => {
+                  if (prev) window.dispatchEvent(new CustomEvent('aiScrolling', { detail: true }));
+                  return false;
+              });
+          } else if (currentScrollY < lastScrollY.current - 12) {
+              setShowHeader(prev => {
+                  if (!prev) window.dispatchEvent(new CustomEvent('aiScrolling', { detail: false }));
+                  return true;
+              });
           }
           
-          setLastScrollY(currentScrollY);
+          lastScrollY.current = currentScrollY;
       };
 
       const container = scrollContainerRef.current;
       if (container) container.addEventListener('scroll', handleScroll, { passive: true });
       return () => { if (container) container.removeEventListener('scroll', handleScroll); };
-  }, [lastScrollY, showHeader]);
+  }, []);
 
   useEffect(() => {
       const updateViewport = () => {
@@ -884,7 +884,7 @@ const ChatBot = ({ messages = [], setMessages, isDarkMode, liveAiData = [], setL
       {/* 🌟 HEADER 🌟 */}
       <div 
           className={`absolute top-0 left-0 w-full z-[60] transition-all duration-700 ease-out backdrop-blur-xl shadow-sm ${isDarkMode ? 'bg-[#121212]/85 border-b border-white/5 shadow-black/20' : 'bg-[#FFFFFF]/85 border-b border-black/5 shadow-[#0277C5]/5'} ${showHeader ? 'translate-y-0' : '-translate-y-full'}`}
-          style={{ paddingTop: 'calc(env(safe-area-inset-top) + 4px)' }}
+          style={{ paddingTop: 'calc(env(safe-area-inset-top) + 50px)', marginTop: '-46px' }}
       >
           <div className="flex items-center justify-between px-4 pt-1.5 pb-2.5">
               <div className="flex items-center gap-3">
