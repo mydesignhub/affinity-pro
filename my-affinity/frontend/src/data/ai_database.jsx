@@ -114,25 +114,25 @@ export const SUGGESTED_QUESTIONS_EN = [
 ];
 
 export const GREETINGS = [
-    "បាទ សួស្ដី! 👋 ខ្ញុំគឺ **Design Master** ជាជំនួយការផ្ទាល់ខ្លួនដ៏រីករាយរបស់អ្នក។ តើថ្ងៃនេះអ្នកចង់រៀនពីអ្វីដែរ? ខ្ញុំត្រៀមខ្លួនរួចរាល់ហើយ! 🎨✨",
-    "បាទ ស្វាគមន៍មកកាន់ពិភពសិល្បៈ! 🎨 ខ្ញុំនៅទីនេះដើម្បីជួយបង្រៀនអ្នកពីការ Design, ការរៀបចំគំនិត និងការប្រើប្រាស់កម្មវិធី Affinity លើ iPad។ តើមានអ្វីឱ្យខ្ញុំជួយទេថ្ងៃនេះ?"
+    "បាទ សួស្ដី! 👋 ខ្ញុំគឺ **AI Assistant** ជាជំនួយការផ្ទាល់ខ្លួនដ៏រីករាយរបស់អ្នក។ ខ្ញុំអាចជួយអ្នកទាំងការងារទូទៅ និងការ Design។ តើថ្ងៃនេះអ្នកចង់ឱ្យខ្ញុំជួយអ្វីខ្លះ? ខ្ញុំត្រៀមខ្លួនរួចរាល់ហើយ! ✨",
+    "បាទ ស្វាគមន៍មកកាន់ការជជែក! 🤖 ខ្ញុំនៅទីនេះដើម្បីឆ្លើយសំណួរទូទៅ និងជួយអ្នករៀនពី Design ឬកម្មវិធី Affinity លើ iPad។ តើមានអ្វីឱ្យខ្ញុំជួយទេថ្ងៃនេះ?"
 ];
 
 export const GREETINGS_EN = [
-    "Hello! 👋 I am **Design Master**, your friendly personal Graphic Design AI assistant. What are we creating today? I'm ready when you are! 🎨✨",
-    "Welcome to the creative zone! 🎨 I am here to help you master design theory, layout, and Affinity iPad workflows. How can I brighten your day?"
+    "Hello! 👋 I am your friendly personal **AI Assistant**. I can help you with general knowledge as well as graphic design. What are we exploring today? I'm ready when you are! ✨",
+    "Welcome! 🤖 I am here to chat with you about anything, from general topics to design theory and layout workflows. How can I brighten your day?"
 ];
 
 export const SMART_GREETINGS = ["បាទ សួស្តីម្តងទៀត! 👋 ថ្ងៃមុនយើងបានជជែកគ្នាពី **{topic}**។ តើថ្ងៃនេះចង់រៀនពីវាបន្ត ឬចង់ប្តូរប្រធានបទថ្មី? 😊"];
 export const SMART_GREETINGS_EN = ["Hello again! 👋 Last time we discussed **{topic}**. Want to dive deeper into that today? 😊"];
 
 export const REJECTION_RESPONSES = [
-    "បាទ អូយ! 😅 ខ្ញុំគឺជា AI ដែលមានខួរក្បាលពេញទៅដោយកូដពណ៌ និងហ្វុនអក្សរតែប៉ុណ្ណោះ។ រឿងក្រៅពី Graphic Design ខ្ញុំសុំចុះចាញ់ហើយ! សួរខ្ញុំពីក្បួនរចនាវិញមក ល្អទេ? 🎨",
-    "បាទ វ៉ាវ សំណួរនេះប្លែកមែន! 🤔 តែសុំទោសផង ខ្ញុំជាអ្នកជំនាញខាង Graphic Design អញ្ចឹងខ្ញុំចេះតែរឿងរចនាទេ។ តោះ ចង់រៀនលាយពណ៌ជាមួយខ្ញុំទេ?"
+    "បាទ សំណួរនេះគួរឱ្យចាប់អារម្មណ៍ណាស់! 🤔 ប៉ុន្តែហាក់ដូចជាខ្ញុំមិនទាន់មានទិន្នន័យច្បាស់លាស់សម្រាប់ឆ្លើយតបនៅពេលនេះទេ។ ចង់ឱ្យខ្ញុំសាកល្បងស្វែងរកព័ត៌មានបន្ថែម ឬយើងប្តូរប្រធានបទវិញ? 🌐",
+    "បាទ វ៉ាវ សំណួរនេះពិបាកបន្តិច! 😅 ខ្ញុំជៀសវាងការឆ្លើយខុស ដូច្នេះសូមអភ័យទោសដែលខ្ញុំមិនទាន់អាចឆ្លើយបាន។ តោះ ចង់ជជែករឿងអ្វីផ្សេងទៀតទេ?"
 ];
 export const REJECTION_RESPONSES_EN = [
-    "Oops! 😅 My brain is completely filled with color hex codes and typography rules. I have no clue about that! Ask me how to make a logo pop instead! 🎨",
-    "Wow, that's an interesting topic! 🤔 But unfortunately, I'm purely a Graphic Design AI. Can we pivot back and talk about some cool design magic? ✨"
+    "That's an interesting topic! 🤔 However, I might not have enough verified data to give you a perfect answer right now. Should we try a different question? 🌐",
+    "Wow, that's a tough one! 😅 I'm always learning, so I'll pass on this one to avoid giving wrong info. What else is on your mind?"
 ];
 
 export const REPEAT_RESPONSES = {

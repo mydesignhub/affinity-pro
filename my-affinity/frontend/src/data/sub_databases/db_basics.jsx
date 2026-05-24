@@ -57,11 +57,65 @@ export const basicsData = [
     
     // 2. BASIC CONVERSATION CATCH-ALL
     {
+        primaryKeys: ['អ្នកឈ្មោះអ្វី', 'what is your name'],
+        keys: ['ឈ្មោះអី', 'name', 'what are you called', 'your name', 'ឈ្មោះអីគេ'],
+        regex: ['(what is your name|your name|ឈ្មោះអី|ឈ្មោះអ្វី)'],
+        answer: "បាទ ខ្ញុំគឺជា AI Assistant! 🤖 ខ្ញុំមិនមានឈ្មោះដូចមនុស្សទេ ប៉ុន្តែអ្នកអាចហៅខ្ញុំថា 'Design Master' ឬ 'AI' ក៏បាន។ តើខ្ញុំអាចជួយអ្វីអ្នកបានខ្លះថ្ងៃនេះ?",
+        answer_en: "I am an AI Assistant! 🤖 I don't have a human name, but you can call me 'Design Master' or just 'AI'. What can I help you with today?",
+        chips: ["តើអ្នកអាចធ្វើអ្វីបានខ្លះ? 🤖", "ពណ៌ចៃដន្យ 🎨"],
+        chips_en: ["What can you do? 🤖", "Random Color 🎨"]
+    },
+    {
+        primaryKeys: ['តើអ្នកអាចធ្វើអ្វីបានខ្លះ', 'what can you do'],
+        keys: ['ធ្វើអីបានខ្លះ', 'help me with', 'what do you do', 'skills', 'សមត្ថភាព'],
+        regex: ['(what can you do|what do you do|ធ្វើអីបានខ្លះ|ធ្វើអ្វីបានខ្លះ|សមត្ថភាព)'],
+        answer: "បាទ ខ្ញុំអាចជួយអ្នកបានច្រើនយ៉ាង! 🌟\n- ឆ្លើយសំណួរទូទៅ និងចែករំលែកចំណេះដឹង\n- ផ្តល់គំនិត និងក្បួន Graphic Design\n- ណែនាំពីរបៀបប្រើប្រាស់កម្មវិធី Affinity\n- បង្កើតពណ៌ និងប្លង់សម្រាប់គម្រោងរបស់អ្នក\n\nតើអ្នកចង់ឱ្យខ្ញុំជួយមួយណាដែរ?",
+        answer_en: "I can help you with many things! 🌟\n- Answer general questions and share knowledge\n- Provide Graphic Design tips and ideas\n- Guide you on using Affinity apps\n- Generate colors and layouts for your projects\n\nWhat would you like to start with?",
+        chips: ["របៀបរកគំនិត Design 💡", "ចង់ធ្វើតេស្ត 🎯"],
+        chips_en: ["How to find inspiration 💡", "Take a Quiz 🎯"]
+    },
+    {
+        primaryKeys: ['អាយុប៉ុន្មាន', 'how old are you'],
+        keys: ['អាយុ', 'age', 'how old', 'កើតថ្ងៃណា'],
+        regex: ['(how old are you|age|អាយុប៉ុន្មាន|អាយុអី|អាយុ)'],
+        answer: "បាទ ហាហា! 😄 ក្នុងនាមជា AI ខ្ញុំមិនមានអាយុដូចមនុស្សទេ។ ខ្ញុំរស់នៅក្នុងពិភព Digital ហើយត្រូវបានបង្កើតឡើងដើម្បីជួយផ្តល់ព័ត៌មានដល់អ្នកជានិច្ច!",
+        answer_en: "Haha! 😄 As an AI, I don't have an age like humans do. I live in the digital world and I'm always ready to help you with information!",
+        chips: ["អ្នកណាគេបង្កើតអ្នក? 👨‍💻", "តើ គោលការណ៍រចនា មានអ្វីខ្លះ?"],
+        chips_en: ["Who created you? 👨‍💻", "Core Design Principles?"]
+    },
+    {
+        primaryKeys: ['អ្នកណាគេបង្កើតអ្នក', 'who created you'],
+        keys: ['អ្នកបង្កើត', 'creator', 'made by', 'who made you', 'អ្នកណាបង្កើត'],
+        regex: ['(who created you|who made you|អ្នកណាគេបង្កើតអ្នក|អ្នកណាបង្កើត|អ្នកបង្កើត)'],
+        answer: "បាទ ខ្ញុំត្រូវបានបង្កើតឡើងដោយអ្នកអភិវឌ្ឍន៍ (Developers) ដែលមានជំនាញ ដើម្បីក្លាយជាជំនួយការដ៏ឆ្លាតវៃសម្រាប់ជួយដល់ការងារ និងការរៀនសូត្ររបស់អ្នក។ 🚀",
+        answer_en: "I was created by skilled developers to be a smart assistant, helping you with your work, creativity, and learning journey! 🚀",
+        chips: ["អ្វីទៅជា Typography?", "របៀបរចនា Poster ឱ្យទាក់ទាញ? 🖼️"],
+        chips_en: ["What is Typography?", "How to design an effective Poster? 🖼️"]
+    },
+    {
+        primaryKeys: ['អផ្សុក', 'bored'],
+        keys: ['អផ្សុកណាស់', 'boring', 'bored', 'nothing to do', 'អត់មានអីធ្វើ'],
+        regex: ['(bored|boring|អផ្សុក|អត់មានអីធ្វើ)'],
+        answer: "បាទ បើអផ្សុក តោះយើងរកអ្វីលេង ឬរៀនអ្វីថ្មីៗ! 🎉\nអ្នកអាចសាកល្បង៖\n- លេងសួរឆ្លើយ (Quiz) ជាមួយខ្ញុំ\n- សាកលេងឧបករណ៍បង្កើតពណ៌ (Color Generator)\n- ឬឱ្យខ្ញុំប្រាប់ពីរឿងកំប្លែងមួយ។ តើចង់យកមួយណា?",
+        answer_en: "If you're bored, let's do something fun or learn something new! 🎉\nYou can:\n- Take a quick Quiz with me\n- Play with the Color Generator tool\n- Or ask me to tell you a joke! What sounds good?",
+        chips: ["ចង់ធ្វើតេស្ត 🎯", "ចង់ស្តាប់រឿងកំប្លែង 😆"],
+        chips_en: ["Take a Quiz 🎯", "Tell me a joke 😆"]
+    },
+    {
+        primaryKeys: ['ជួយផង', 'help me'],
+        keys: ['សុំជំនួយ', 'help', 'need help', 'assist', 'ជួយខ្ញុំ'],
+        regex: ['(help|assist|ជួយផង|ជួយខ្ញុំ|សុំជំនួយ)'],
+        answer: "បាទ ប្រាកដណាស់! 🤝 តើអ្នកត្រូវការឱ្យខ្ញុំជួយរឿងអ្វីដែរ? អ្នកអាចសួរខ្ញុំពីបញ្ហាទូទៅ ចំណេះដឹងផ្សេងៗ ឬសូម្បីតែរឿង Design ខ្ញុំនៅទីនេះរង់ចាំជួយជានិច្ច។",
+        answer_en: "Of course! 🤝 What do you need help with? You can ask me about general topics, knowledge, or even specific design problems. I'm here for you.",
+        chips: ["របៀបរកគំនិត Design 💡", "ឧបករណ៍ជំនួយ UI"],
+        chips_en: ["How to find inspiration 💡", "Open Design Tools 🛠️"]
+    },
+    {
         primaryKeys: ['សួស្តី', 'hello'],
         keys: ['hi', 'hey', 'សួរស្ដី', 'សុខសប្បាយ', 'how are you', 'yo', 'sup', 'ហេលឡូ', 'អាឡូ', 'alo', 'helo', 'hello'],
         regex: ['^(hi|hello|hey|yo|sup|សួស្តី|សួរស្ដី|ហេលឡូ|អាឡូ|helo|alo)', 'សុខសប្បាយ', 'how are you'],
-        answer: "បាទ សួស្តីបង! 👋 ខ្ញុំគឺជា AI ជំនាញខាង Graphic Design។ តើបងមានសំណួរអ្វីទាក់ទងនឹង Design, កម្មវិធីរចនា (ជាពិសេស Affinity លើ iPad), ឬការរៀបប្លង់ដែរ? 🎨✨",
-        answer_en: "Hello there! 👋 I am your Graphic Design AI expert. We can chat about Affinity workflows on iPad, Vector editing, layout structures, or freelance tips! What's on your mind today? 🎨✨",
+        answer: "បាទ សួស្តីបង! 👋 ខ្ញុំគឺជា AI Assistant។ តើបងសុខសប្បាយទេ? តើបងមានសំណួរទូទៅ ឬសំណួរទាក់ទងនឹង Graphic Design ឱ្យខ្ញុំជួយដែរទេថ្ងៃនេះ? 🤖✨",
+        answer_en: "Hello there! 👋 I am your friendly AI Assistant. How are you doing? Let me know if you want to chat, or if you need help with Graphic Design today! 🤖✨",
         chips: ["របៀបប្រើ Affinity លើ iPad 📱", "តើ គោលការណ៍រចនា មានអ្វីខ្លះ?"],
         chips_en: ["Affinity iPad Gestures 📱", "Core Design Principles?"]
     },
