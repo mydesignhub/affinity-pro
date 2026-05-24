@@ -784,9 +784,25 @@ const ChatBot = ({ messages = [], setMessages, isDarkMode, liveAiData = [], setL
           if (isAutoScrolling.current || !scrollContainerRef.current) return;
           const currentScrollY = scrollContainerRef.current.scrollTop;
           
-          if (currentScrollY <= 0) { setShowHeader(true); setLastScrollY(0); return; }
-          if (currentScrollY > lastScrollY + 15 && currentScrollY > 60) setShowHeader(false);
-          else if (currentScrollY < lastScrollY - 15) setShowHeader(true);
+          if (currentScrollY <= 0) { 
+              if (!showHeader) {
+                  setShowHeader(true);
+                  window.dispatchEvent(new CustomEvent('aiScrolling', { detail: false }));
+              }
+              setLastScrollY(0); 
+              return; 
+          }
+          if (currentScrollY > lastScrollY + 12 && currentScrollY > 60) {
+              if (showHeader) {
+                  setShowHeader(false);
+                  window.dispatchEvent(new CustomEvent('aiScrolling', { detail: true }));
+              }
+          } else if (currentScrollY < lastScrollY - 12) {
+              if (!showHeader) {
+                  setShowHeader(true);
+                  window.dispatchEvent(new CustomEvent('aiScrolling', { detail: false }));
+              }
+          }
           
           setLastScrollY(currentScrollY);
       };
@@ -794,7 +810,7 @@ const ChatBot = ({ messages = [], setMessages, isDarkMode, liveAiData = [], setL
       const container = scrollContainerRef.current;
       if (container) container.addEventListener('scroll', handleScroll, { passive: true });
       return () => { if (container) container.removeEventListener('scroll', handleScroll); };
-  }, [lastScrollY]);
+  }, [lastScrollY, showHeader]);
 
   useEffect(() => {
       const updateViewport = () => {
@@ -831,6 +847,7 @@ const ChatBot = ({ messages = [], setMessages, isDarkMode, liveAiData = [], setL
               clearTimeout(blurTimer);
               setIsKeyboardOpen(true);
               setShowHeader(true);
+              window.dispatchEvent(new CustomEvent('aiScrolling', { detail: false }));
               setTimeout(() => {
                   if (messagesEndRef.current) messagesEndRef.current.scrollIntoView({ behavior: 'smooth', block: 'end' });
               }, 300);

@@ -746,6 +746,7 @@ function AppContent() {
             setActiveTab(e.detail); 
             setExpandedLesson(null); 
             setActiveAppTab(null);
+            setIsScrollingDown(false);
             window.history.pushState({ modalOpen: false, tab: e.detail, course: null }, '');
         }
     };
@@ -777,17 +778,29 @@ function AppContent() {
   useEffect(() => {
     const handleScroll = () => {
       const currentY = mainScrollRef.current?.scrollTop || 0;
-      if (currentY > lastScrollY && currentY > 100) {
-        setIsScrollingDown(true);
-      } else {
-        setIsScrollingDown(false);
+      
+      if (currentY <= 0) {
+        if (isScrollingDown) setIsScrollingDown(false);
+      } else if (currentY > lastScrollY + 12 && currentY > 60) {
+        if (!isScrollingDown) setIsScrollingDown(true);
+      } else if (currentY < lastScrollY - 12) {
+        if (isScrollingDown) setIsScrollingDown(false);
       }
+      
       setLastScrollY(currentY);
     };
+    
     const scrollContainer = mainScrollRef.current;
-    scrollContainer?.addEventListener('scroll', handleScroll);
-    return () => scrollContainer?.removeEventListener('scroll', handleScroll);
-  }, [lastScrollY]);
+    scrollContainer?.addEventListener('scroll', handleScroll, { passive: true });
+
+    const handleAiScroll = (e) => setIsScrollingDown(e.detail);
+    window.addEventListener('aiScrolling', handleAiScroll);
+
+    return () => {
+      scrollContainer?.removeEventListener('scroll', handleScroll);
+      window.removeEventListener('aiScrolling', handleAiScroll);
+    };
+  }, [lastScrollY, isScrollingDown]);
 
   const handleOpenCourse = (courseId) => {
       setActiveAppTab(courseId);
@@ -878,6 +891,7 @@ function AppContent() {
       >
           <Header activeTab={activeTab} setActiveTab={(tab) => {
               setActiveTab(tab);
+              setIsScrollingDown(false);
               window.history.pushState({ modalOpen: false, tab: tab, course: null }, '');
           }} isDarkMode={isDarkMode} setIsDarkMode={setIsDarkMode} />
       </div>
@@ -1072,6 +1086,7 @@ function AppContent() {
                         onClick={() => { 
                             setActiveTab(t_id);
                             setActiveAppTab(null);
+                            setIsScrollingDown(false);
                             triggerHaptic(); 
                             window.history.pushState({ modalOpen: false, tab: t_id, course: null }, '');
                         }} 
