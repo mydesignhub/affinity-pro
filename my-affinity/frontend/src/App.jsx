@@ -632,6 +632,14 @@ function AppContent() {
   const [lastScrollY, setLastScrollY] = useState(0);
   const [isAndroid] = useState(() => /Android/i.test(navigator.userAgent));
   const mainScrollRef = useRef(null);
+  const isAppInitialMount = useRef(true);
+
+  useEffect(() => {
+      const timer = setTimeout(() => {
+          isAppInitialMount.current = false;
+      }, 800);
+      return () => clearTimeout(timer);
+  }, []);
 
   const [liveAiData, setLiveAiData] = useState(() => {
       if (typeof window !== 'undefined') {
@@ -779,12 +787,14 @@ function AppContent() {
     const handleScroll = () => {
       const currentY = mainScrollRef.current?.scrollTop || 0;
       
-      if (currentY <= 0) {
-        if (isScrollingDown) setIsScrollingDown(false);
-      } else if (currentY > lastScrollY + 12 && currentY > 60) {
-        if (!isScrollingDown) setIsScrollingDown(true);
-      } else if (currentY < lastScrollY - 12) {
-        if (isScrollingDown) setIsScrollingDown(false);
+      if (!isAppInitialMount.current) {
+          if (currentY <= 0) {
+            if (isScrollingDown) setIsScrollingDown(false);
+          } else if (currentY > lastScrollY + 12 && currentY > 60) {
+            if (!isScrollingDown) setIsScrollingDown(true);
+          } else if (currentY < lastScrollY - 12) {
+            if (isScrollingDown) setIsScrollingDown(false);
+          }
       }
       
       setLastScrollY(currentY);
@@ -888,7 +898,7 @@ function AppContent() {
       {/* 🌟 Floating Header 🌟 */}
       <div
         className={`absolute top-0 left-0 right-0 z-50 w-full transition-all duration-500 ease-spring ${(isScrollingDown || activeAppTab) ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}
-        style={{ transform: `translateY(${(isScrollingDown || activeAppTab) ? '-120%' : '0'})`, touchAction: 'none' }}
+        style={{ transform: `translateY(${(isScrollingDown || activeAppTab) ? '-120%' : '0px'})`, touchAction: 'none' }}
       >
           <Header activeTab={activeTab} setActiveTab={(tab) => {
               setActiveTab(tab);
@@ -1073,8 +1083,8 @@ function AppContent() {
 
       {/* 🌟 Floating Bottom Navigation Menu 🌟 */}
       <div 
-        className={`md:hidden absolute bottom-0 left-0 right-0 z-50 w-full pointer-events-none flex flex-col justify-end transition-transform duration-500 ease-spring ${(isKeyboardOpen || activeAppTab) ? 'translate-y-32 opacity-0' : 'translate-y-0 opacity-100'}`}
-        style={{ transform: `translateY(${isScrollingDown && !activeAppTab ? '150%' : '0'})` }}
+        className={`md:hidden absolute bottom-0 left-0 right-0 z-50 w-full pointer-events-none flex flex-col justify-end transition-all duration-500 ease-spring ${(isKeyboardOpen || activeAppTab) ? 'opacity-0' : 'opacity-100'}`}
+        style={{ transform: `translateY(${(isKeyboardOpen || activeAppTab || isScrollingDown) ? '150%' : '0px'})` }}
       >
           <div className={`absolute inset-x-0 bottom-[-30px] h-[150px] pointer-events-none ${isDarkMode ? 'bg-[#0A0A0A]' : 'bg-[#F4F5F7]'}`} style={{ maskImage: 'linear-gradient(to top, black 40%, transparent 100%)', WebkitMaskImage: 'linear-gradient(to top, black 40%, transparent 100%)' }}></div>
           <div className="relative w-full flex justify-center" style={{ paddingBottom: 'calc(env(safe-area-inset-bottom) + 12px)' }}>
