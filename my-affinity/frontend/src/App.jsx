@@ -1058,13 +1058,12 @@ function AppContent() {
 
       {/* 🌟 Floating Bottom Navigation Menu 🌟 */}
       <div 
-        className={`md:hidden absolute left-0 right-0 z-50 w-full pointer-events-none flex justify-center transition-transform duration-500 ease-spring ${(isKeyboardOpen || activeAppTab) ? 'translate-y-32 opacity-0' : 'translate-y-0 opacity-100'}`}
-        style={{
-            bottom: `calc(env(safe-area-inset-bottom) + 20px)`,
-            transform: `translateY(${isScrollingDown && !activeAppTab ? '150%' : '0'})`
-        }}
+        className={`md:hidden absolute bottom-0 left-0 right-0 z-50 w-full pointer-events-none flex flex-col justify-end transition-transform duration-500 ease-spring ${(isKeyboardOpen || activeAppTab) ? 'translate-y-32 opacity-0' : 'translate-y-0 opacity-100'}`}
+        style={{ transform: `translateY(${isScrollingDown && !activeAppTab ? '150%' : '0'})` }}
       >
-          <nav className={`pointer-events-auto flex items-center justify-around w-[92%] max-w-[380px] px-2 py-1.5 backdrop-blur-2xl border shadow-2xl rounded-[30px] transition-colors duration-500 ${isDarkMode ? 'bg-[#1C1C1E]/85 border-white/10 shadow-black/50' : 'bg-white/90 border-black/10 shadow-[#0277C5]/10'}`}>
+          <div className={`absolute inset-x-0 bottom-[-30px] h-[150px] pointer-events-none ${isDarkMode ? 'bg-[#0A0A0A]' : 'bg-[#F4F5F7]'}`} style={{ maskImage: 'linear-gradient(to top, black 40%, transparent 100%)', WebkitMaskImage: 'linear-gradient(to top, black 40%, transparent 100%)' }}></div>
+          <div className="relative w-full flex justify-center" style={{ paddingBottom: 'calc(env(safe-area-inset-bottom) + 12px)' }}>
+              <nav className={`pointer-events-auto flex items-center justify-around w-[92%] max-w-[380px] px-2 py-1.5 backdrop-blur-2xl border shadow-2xl rounded-[30px] transition-colors duration-500 ${isDarkMode ? 'bg-[#1C1C1E]/85 border-white/10 shadow-black/50' : 'bg-white/90 border-black/10 shadow-[#0277C5]/10'}`}>
             {['learn', 'quiz', 'tools', 'ai'].map(t_id => {
                 const isActive = activeTab === t_id;
                 return (
@@ -1091,6 +1090,7 @@ function AppContent() {
                 )
             })}
           </nav>
+          </div>
       </div>
     </div>
   );
