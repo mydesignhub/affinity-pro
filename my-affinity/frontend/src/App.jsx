@@ -844,7 +844,7 @@ function AppContent() {
   return (
     <div 
         className={`absolute top-0 left-0 right-0 w-full flex flex-col font-khmer overflow-hidden transition-colors duration-500 ease-spring ${isDarkMode ? 'bg-[#0A0A0A] text-[#F1F1F1]' : 'bg-[#F4F5F7] text-[#1A1A1A]'}`}
-        style={{ height: 'calc(100dvh + 25px)', paddingLeft: 'env(safe-area-inset-left)', paddingRight: 'env(safe-area-inset-right)' }}
+        style={{ height: isAndroid ? '100dvh' : 'calc(100dvh + 25px)', paddingLeft: 'env(safe-area-inset-left)', paddingRight: 'env(safe-area-inset-right)' }}
         onContextMenu={(e) => e.preventDefault()}
     >
       <style>{`
