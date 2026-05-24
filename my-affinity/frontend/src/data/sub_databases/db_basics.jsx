@@ -30,7 +30,7 @@ export const basicsData = [
     {
         primaryKeys: ['ឆ្លាត', 'smart'],
         keys: ['ពូកែ', 'love you', 'who are you', 'ai', 'robot', 'អ្នកណាគេ', 'awesome', 'great', 'ល្អណាស់'],
-        regex: ['love you', 'who are you', 'ai', 'robot', 'ឆ្លាត', 'ពូកែ', 'អ្នកណាគេ', 'awesome', 'great', 'ល្អណាស់'],
+        regex: ['love you', 'who are you', '\\bai\\b', 'robot', 'ឆ្លាត', 'ពូកែ', 'អ្នកណាគេ', 'awesome', 'great', 'ល្អណាស់'],
         answer: "បាទ អូហូ! អរគុណច្រើន! 🥰 ខ្ញុំគ្រាន់តែជាជំនួយការ AI ផ្នែក Graphic Design ម្នាក់ដែលចូលចិត្តពណ៌និងសិល្បៈប៉ុណ្ណោះ។ តែអ្នកទើបជាអ្នករចនា (Designer) ដ៏ពិតប្រាកដ! 👩‍🎨👨‍🎨 តោះ ចង់រៀនគន្លឹះអ្វីថ្មីទេថ្ងៃនេះ?",
         answer_en: "Aww, you're making me blush! 🥰 I'm just a friendly Graphic Design AI who loves colors and pixels, but YOU are the real artist here! 👩‍🎨👨‍🎨 Ready to learn a cool new trick today?",
         chips: ["របៀបរចនា Poster ឱ្យទាក់ទាញ? 🖼️", "Color Theory"],
@@ -77,7 +77,7 @@ export const basicsData = [
     {
         primaryKeys: ['អាយុប៉ុន្មាន', 'how old are you'],
         keys: ['អាយុ', 'age', 'how old', 'កើតថ្ងៃណា'],
-        regex: ['(how old are you|age|អាយុប៉ុន្មាន|អាយុអី|អាយុ)'],
+        regex: ['(how old are you|\\bage\\b|អាយុប៉ុន្មាន|អាយុអី|អាយុ)'],
         answer: "បាទ ហាហា! 😄 ក្នុងនាមជា AI ខ្ញុំមិនមានអាយុដូចមនុស្សទេ។ ខ្ញុំរស់នៅក្នុងពិភព Digital ហើយត្រូវបានបង្កើតឡើងដើម្បីជួយផ្តល់ព័ត៌មានដល់អ្នកជានិច្ច!",
         answer_en: "Haha! 😄 As an AI, I don't have an age like humans do. I live in the digital world and I'm always ready to help you with information!",
         chips: ["អ្នកណាគេបង្កើតអ្នក? 👨‍💻", "តើ គោលការណ៍រចនា មានអ្វីខ្លះ?"],
@@ -186,7 +186,7 @@ export const basicsData = [
     {
         primaryKeys: ['ឧបករណ៍ជំនួយ UI', 'ui tools'],
         keys: ['layout generator', 'បើកប្លង់', 'បើកឧបករណ៍', 'ឧបករណ៍ជំនួយ', 'open tools'],
-        regex: ['ឧបករណ៍ជំនួយ', 'layout generator', 'open tools'], // STRIOT: Only perfectly matching these exact phrases
+        regex: ['^ឧបករណ៍ជំនួយ$', '^layout generator$', '^open tools$'], // STRICT: Only perfectly matching these exact phrases
         answer: "បាទ ខ្ញុំមានឧបករណ៍ពិសេសសម្រាប់អ្នក! អ្នកអាចបង្កើតពណ៌ ឬមើលគំរូប្លង់ខ្នាតស្តង់ដារបាននៅទីនេះ៖",
         answer_en: "I have some special tools for you! You can generate colors or view standard layout grids here:",
         actionButton: { label: "បើកឧបករណ៍ជំនួយ 🛠️", label_en: "Open Design Tools 🛠️", actionToTrigger: "tools" },

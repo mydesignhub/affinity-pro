@@ -3,9 +3,9 @@
 // ==========================================
 
 // 🌟 Import Sub-Databases (FULLY DE-DUPLICATED)
-import { basicsData } from './sub_databases/db_basics.jsx';
-import { designData } from './sub_databases/db_design.jsx';
-import { affinityAndEditingData } from './sub_databases/db_affinity_editing.jsx';
+import { basicsData } from './sub_databases/db_basics';
+import { designData } from './sub_databases/db_design';
+import { affinityAndEditingData } from './sub_databases/db_affinity_editing';
 
 export const SUGGESTED_QUESTIONS = [
     "របៀបរចនា Poster ឱ្យទាក់ទាញ? 🖼️",
@@ -136,14 +136,14 @@ export const REJECTION_RESPONSES_EN = [
 ];
 
 export const REPEAT_RESPONSES = {
-    level1_greeting: "បាទ សួស្តីម្តងទៀតបង! 👋 តើថ្ងៃនេះមានអារម្មណ៍ចង់រចនាអ្វីដែរ?",
-    level1_general: "បាទ ហាក់ដូចជាអ្នកទើបតែសួររឿងនេះ! តើមានចំណុចណាដែលមិនទាន់ច្បាស់មែនទេ? កុំបារម្ភ សួរខ្ញុំបានរហូត! 🤗",
+    level1_greeting: ["បាទ សួស្តីម្តងទៀតបង! 👋 តើថ្ងៃនេះមានអារម្មណ៍ចង់រចនាអ្វីដែរ?"],
+    level1_general: ["បាទ ហាក់ដូចជាអ្នកទើបតែសួររឿងនេះ! តើមានចំណុចណាដែលមិនទាន់ច្បាស់មែនទេ? កុំបារម្ភ សួរខ្ញុំបានរហូត! 🤗"],
     level2: ["បាទ ហាហា! សួរដដែលៗច្រើនដងហើយណា៎! 😆 ខ្ញុំសប្បាយចិត្តនឹងឆ្លើយ តែបើសួររឿងថ្មីរឹតតែសប្បាយ!"],
 };
 
 export const REPEAT_RESPONSES_EN = {
-    level1_greeting: "Hello again! 👋 Feeling creative today?",
-    level1_general: "You just asked that! Is there a specific detail you need clarified? Don't worry, I'm here to help! 🤗",
+    level1_greeting: ["Hello again! 👋 Feeling creative today?"],
+    level1_general: ["You just asked that! Is there a specific detail you need clarified? Don't worry, I'm here to help! 🤗"],
     level2: ["Haha! You've asked that a few times now! 😆 I love chatting, but let's explore a new design topic!"],
 };
 
