@@ -12,7 +12,7 @@ export const basicsData = [
     {
         primaryKeys: ['ហត់', 'tired'],
         keys: ['stress', 'ស្ត្រេស', 'ពិបាក', 'ឈឺក្បាល', 'stressed', 'exhausted'],
-        regex: ['tired', 'stress', 'ហត់', 'ស្ត្រេស', 'ឈឺក្បាល', 'ពិបាក', 'exhausted'],
+        regex: ['\\btired\\b', '\\bstress\\b', 'ហត់ណាស់', 'ស្ត្រេស', 'ឈឺក្បាលណាស់', '\\bexhausted\\b'],
         answer: "បាទ អូ! សម្រាកសិនទៅបង! ☕ ការសម្លឹងអេក្រង់ iPad យូរអាចធ្វើឱ្យស្ត្រេសនិងឈឺភ្នែក ថែមទាំងគិតអ្វីលែងចេញទៀត (Creative Block)។ \n\n💡 **គន្លឹះអាជីព (20-20-20 Rule)៖** រៀងរាល់ ២០នាទី មើលទៅកន្លែងឆ្ងាយ២០ហ្វីត រយៈពេល២០វិនាទី។ \n\nទៅផឹកទឹក និងស្តាប់ចម្រៀងបន្តិចទៅ ចាំមក Design បន្ត! ខ្ញុំរង់ចាំនៅទីនេះជានិច្ច! 💙",
         answer_en: "Oh no, please take a break! ☕ Staring at your iPad for too long causes 'Creative Block' and terrible eye strain. \n\n💡 **Pro Tip (The 20-20-20 Rule):** Every 20 mins, look 20 feet away for 20 seconds. \n\nGo grab some water and listen to your favorite song. Your designs will be waiting for you when you get back! 💙",
         chips: ["ចង់ស្តាប់រឿងកំប្លែង 😆", "របៀបរកគំនិត Design 💡"],
@@ -21,7 +21,7 @@ export const basicsData = [
     {
         primaryKeys: ['អរុណសួស្តី', 'good morning'],
         keys: ['morning', 'night', 'រាត្រីសួស្តី', 'ទិវាសួស្តី', 'goodnight', 'afternoon'],
-        regex: ['morning', 'night', 'afternoon', 'អរុណសួស្តី', 'រាត្រីសួស្តី', 'ទិវាសួស្តី'],
+        regex: ['\\bgood morning\\b', '\\bgood night\\b', '\\bgood afternoon\\b', 'អរុណសួស្តី', 'រាត្រីសួស្តី', 'ទិវាសួស្តី'],
         answer: "បាទ សួស្តី! 🌞 រាល់ពេលចាប់ផ្តើមថ្ងៃថ្មី គឺជាផ្ទាំងក្រណាត់ទទេ (Blank Canvas) សម្រាប់អ្នកបង្កើតស្នាដៃថ្មីៗជានិច្ច។ តើថ្ងៃនេះមានគម្រោងចង់រៀន ឬ Design អ្វីខ្លះដែរ? ខ្ញុំត្រៀមខ្លួនរួចហើយ! ✨",
         answer_en: "Hello! 🌞 Every new day is a blank canvas ready for your creativity. What amazing thing are we going to design today? I'm pumped! ✨",
         chips: ["តើ គោលការណ៍រចនា មានអ្វីខ្លះ?", "ចង់ធ្វើតេស្ត 🎯"],
@@ -29,8 +29,8 @@ export const basicsData = [
     },
     {
         primaryKeys: ['ឆ្លាត', 'smart'],
-        keys: ['ពូកែ', 'love you', 'who are you', 'ai', 'robot', 'អ្នកណាគេ', 'awesome', 'great', 'ល្អណាស់'],
-        regex: ['love you', 'who are you', '\\bai\\b', 'robot', 'ឆ្លាត', 'ពូកែ', 'អ្នកណាគេ', 'awesome', 'great', 'ល្អណាស់'],
+        keys: ['ពូកែ', 'love you', 'ai', 'robot', 'awesome', 'great', 'ល្អណាស់'],
+        regex: ['love you', '\\bai\\b', '\\brobot\\b', 'ឆ្លាត', 'ពូកែ', 'awesome', 'great', 'ល្អណាស់'],
         answer: "បាទ អូហូ! អរគុណច្រើន! 🥰 ខ្ញុំគ្រាន់តែជាជំនួយការ AI ផ្នែក Graphic Design ម្នាក់ដែលចូលចិត្តពណ៌និងសិល្បៈប៉ុណ្ណោះ។ តែអ្នកទើបជាអ្នករចនា (Designer) ដ៏ពិតប្រាកដ! 👩‍🎨👨‍🎨 តោះ ចង់រៀនគន្លឹះអ្វីថ្មីទេថ្ងៃនេះ?",
         answer_en: "Aww, you're making me blush! 🥰 I'm just a friendly Graphic Design AI who loves colors and pixels, but YOU are the real artist here! 👩‍🎨👨‍🎨 Ready to learn a cool new trick today?",
         chips: ["របៀបរចនា Poster ឱ្យទាក់ទាញ? 🖼️", "Color Theory"],
@@ -39,7 +39,7 @@ export const basicsData = [
     {
         primaryKeys: ['របៀបរកគំនិត Design 💡', 'how to find inspiration'],
         keys: ['រកគំនិត', 'គិតអត់ចេញ', 'inspiration', 'idea', 'creative block', 'រក idea'],
-        regex: ['រកគំនិត', 'គិតអត់ចេញ', 'inspiration', 'creative block'],
+        regex: ['រកគំនិត', 'គិតអត់ចេញ', '\\binspiration\\b', 'creative block'],
         answer: "បាទ អាការៈគិតអត់ចេញ (Creative Block) កើតមានលើ Designer គ្រប់រូប! តោះសាកល្បងវិធីទាំងនេះ៖\n\n១. **មើលស្នាដៃគេ (Moodboard):** ចូលមើល Pinterest, Behance, ឬ Dribbble ដើម្បីប្រមូលគំនិតពណ៌ និងប្លង់។\n២. **ដើរចេញពីអេក្រង់:** បិទ iPad ហើយទៅដើរលេង ឬផឹកកាហ្វេ។ ខួរក្បាលត្រូវការពេលសម្រាកដើម្បីបង្កើតគំនិតថ្មី។\n៣. **ចម្លងដើម្បីរៀន:** យករូប Poster ស្អាតមួយមកគូរតាម ១០០% (គ្រាន់តែសម្រាប់ហាត់ដៃ ហាមផុស) ដើម្បីស្វែងយល់ពីរបៀបដែលគេរៀបប្លង់។\n\n💡 **គន្លឹះអាជីព៖** កុំរង់ចាំទាល់តែមានអារម្មណ៍ទើបធ្វើការ! ចាប់ផ្តើមគូសវាស (Sketch) រាងអាក្រក់ៗសិន នោះគំនិតនឹងហូរមកតាមក្រោយ។",
         answer_en: "Hitting a Creative Block is completely normal for every designer! Try these steps:\n\n1. **Build a Moodboard:** Browse Pinterest, Behance, or Dribbble to collect color palettes and layout ideas.\n2. **Step Away:** Close your iPad and go for a walk. Your brain needs rest to make new creative connections.\n3. **Copy to Learn:** Find a poster you love and recreate it 100% (for practice only, don't publish it!). It helps you understand their thought process.\n\n💡 **Pro Tip:** Don't wait for inspiration to strike! Start sketching ugly wireframes first; the inspiration will follow the action.",
         chips: ["អ្វីទៅជា Typography?", "របៀបរចនា Poster ឱ្យទាក់ទាញ? 🖼️"],
@@ -58,8 +58,8 @@ export const basicsData = [
     // 2. BASIC CONVERSATION CATCH-ALL
     {
         primaryKeys: ['អ្នកឈ្មោះអ្វី', 'what is your name'],
-        keys: ['ឈ្មោះអី', 'name', 'what are you called', 'your name', 'ឈ្មោះអីគេ'],
-        regex: ['(what is your name|your name|ឈ្មោះអី|ឈ្មោះអ្វី)'],
+        keys: ['ឈ្មោះអី', 'name', 'what are you called', 'your name', 'ឈ្មោះអីគេ', 'who are you', 'អ្នកណាគេ'],
+        regex: ['(what is your name|your name|who are you|ឈ្មោះអី|ឈ្មោះអ្វី|អ្នកណាគេ)'],
         answer: "បាទ ខ្ញុំគឺជា AI Assistant! 🤖 ខ្ញុំមិនមានឈ្មោះដូចមនុស្សទេ ប៉ុន្តែអ្នកអាចហៅខ្ញុំថា 'Design Master' ឬ 'AI' ក៏បាន។ តើខ្ញុំអាចជួយអ្វីអ្នកបានខ្លះថ្ងៃនេះ?",
         answer_en: "I am an AI Assistant! 🤖 I don't have a human name, but you can call me 'Design Master' or just 'AI'. What can I help you with today?",
         chips: ["តើអ្នកអាចធ្វើអ្វីបានខ្លះ? 🤖", "ពណ៌ចៃដន្យ 🎨"],
@@ -112,8 +112,8 @@ export const basicsData = [
     },
     {
         primaryKeys: ['សួស្តី', 'hello'],
-        keys: ['hi', 'hey', 'សួរស្ដី', 'សុខសប្បាយ', 'how are you', 'yo', 'sup', 'ហេលឡូ', 'អាឡូ', 'alo', 'helo', 'hello'],
-        regex: ['^(hi|hello|hey|yo|sup|សួស្តី|សួរស្ដី|ហេលឡូ|អាឡូ|helo|alo)', 'សុខសប្បាយ', 'how are you'],
+        keys: ['hi', 'hey', 'សួរស្ដី', 'yo', 'sup', 'ហេលឡូ', 'អាឡូ', 'alo', 'helo', 'hello'],
+        regex: ['^(hi|hello|hey|yo|sup|សួស្តី|សួរស្ដី|ហេលឡូ|អាឡូ|helo|alo)'],
         answer: "បាទ សួស្តីបង! 👋 ខ្ញុំគឺជា AI Assistant។ តើបងសុខសប្បាយទេ? តើបងមានសំណួរទូទៅ ឬសំណួរទាក់ទងនឹង Graphic Design ឱ្យខ្ញុំជួយដែរទេថ្ងៃនេះ? 🤖✨",
         answer_en: "Hello there! 👋 I am your friendly AI Assistant. How are you doing? Let me know if you want to chat, or if you need help with Graphic Design today! 🤖✨",
         chips: ["របៀបប្រើ Affinity លើ iPad 📱", "តើ គោលការណ៍រចនា មានអ្វីខ្លះ?"],
