@@ -328,7 +328,8 @@ const Test = ({ isDarkMode, isAdmin }) => {
         const allUnlocked = isAdmin || (currentUnlocked.includes('advanced') && currentStars.advanced >= 2);
         
         return (
-            <div className={`w-full flex flex-col relative z-10 pb-[150px] transition-colors duration-500 ${isDarkMode ? 'text-[#F1F1F1] bg-transparent' : 'text-[#1A1A1A] bg-transparent'}`}>
+            <div className={`w-full flex flex-col relative z-10 transition-colors duration-500 ${isDarkMode ? 'text-[#F1F1F1] bg-transparent' : 'text-[#1A1A1A] bg-transparent'}`}>
+            <div className={`w-full flex flex-col relative z-10 transition-colors duration-500 ${isDarkMode ? 'text-[#F1F1F1] bg-transparent' : 'text-[#1A1A1A] bg-transparent'}`}>
                 
                 {/* 🌟 HEADER TITLE 🌟 */}
                 <div className="pt-2 pb-3 px-4 transition-colors flex flex-col items-center text-center">
@@ -558,7 +559,7 @@ const Test = ({ isDarkMode, isAdmin }) => {
         const percentage = Math.round((score / questions.length) * 100);
 
         return (
-            <div className={`w-full flex flex-col relative z-10 pb-[150px] transition-colors duration-500 ${isDarkMode ? 'text-[#F1F1F1] bg-transparent' : 'text-[#1A1A1A] bg-transparent'}`}>
+            <div className={`w-full flex flex-col relative z-10 transition-colors duration-500 ${isDarkMode ? 'text-[#F1F1F1] bg-transparent' : 'text-[#1A1A1A] bg-transparent'}`}>
                 <div className="w-full max-w-3xl mx-auto pt-4 px-2 sm:px-6">
                     <div className={`w-full rounded-[2rem] border p-10 sm:p-14 text-center shadow-sm transition-all ${isDarkMode ? 'bg-[#18191A] border-[#2C2C2C]' : 'bg-white border-[#E5E7EB]'}`}>
                         <div className="relative w-32 h-32 sm:w-40 sm:h-40 mx-auto mb-10">
@@ -593,7 +594,7 @@ const Test = ({ isDarkMode, isAdmin }) => {
 
     // === RENDER STATE: REVIEW ===
     return (
-        <div className={`w-full flex flex-col relative z-10 pb-[150px] transition-colors duration-500 ${isDarkMode ? 'text-[#F1F1F1] bg-transparent' : 'text-[#1A1A1A] bg-transparent'}`}>
+        <div className={`w-full flex flex-col relative z-10 transition-colors duration-500 ${isDarkMode ? 'text-[#F1F1F1] bg-transparent' : 'text-[#1A1A1A] bg-transparent'}`}>
             <div className="w-full max-w-3xl mx-auto pt-2 px-2 sm:px-6">
                 <div className={`w-full rounded-[2rem] border p-6 sm:p-10 shadow-sm transition-all flex flex-col ${isDarkMode ? 'bg-[#18191A] border-[#2C2C2C]' : 'bg-white border-[#E5E7EB]'}`}>
                     

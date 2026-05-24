@@ -589,7 +589,7 @@ const TipsSection = ({ isExpanded, onToggle, isDarkMode }) => {
 const ContactSection = ({ isDarkMode }) => {
     const { t } = useLanguage();
     return (
-        <div className={`mt-16 mb-10 border-t pt-10 text-center ${isDarkMode ? 'border-[#2C2C2C]' : 'border-[#E5E7EB]'}`}>
+        <div className={`mt-16 border-t pt-10 text-center ${isDarkMode ? 'border-[#2C2C2C]' : 'border-[#E5E7EB]'}`}>
             <div className="flex justify-center gap-8 sm:gap-10">
                 <a href="https://web.facebook.com/myaffinity" target="_blank" rel="noopener noreferrer" className="group flex flex-col items-center gap-3 hover:opacity-80 transition-opacity">
                     <div className={`w-14 h-14 flex items-center justify-center rounded-[20px] border shadow-sm ${isDarkMode ? 'bg-[#1C1C1E] border-[#2C2C2C]' : 'bg-[#FFFFFF] border-[#E5E7EB]'}`}><Facebook className={isDarkMode ? 'text-[#41B6E6]' : 'text-[#0277C5]'} size={24} /></div>
@@ -969,7 +969,7 @@ function AppContent() {
       )}
       
       {activeTab !== 'ai' && !activeAppTab ? (
-        <main ref={mainScrollRef} className="flex-1 min-h-0 max-w-7xl mx-auto w-full overflow-y-auto custom-scrollbar p-4 md:p-8 relative z-10" style={{ paddingBottom: 'calc(env(safe-area-inset-bottom) + 150px)', overscrollBehaviorY: 'contain' }}>
+        <main ref={mainScrollRef} className="flex-1 min-h-0 max-w-7xl mx-auto w-full overflow-y-auto custom-scrollbar p-4 md:p-8 relative z-10" style={{ paddingBottom: 'calc(env(safe-area-inset-bottom) + 90px)', overscrollBehaviorY: 'contain' }}>
             <div className="w-full flex-none shrink-0" style={{ height: 'calc(env(safe-area-inset-top) + 60px)' }}></div>
             
             {activeTab === 'learn' && (
@@ -1046,7 +1046,7 @@ function AppContent() {
                 </div>
             </div>
             )}
-            {activeTab === 'tools' && <div className="pb-24 relative z-10"><ToolsView isDarkMode={isDarkMode} /></div>}
+        {activeTab === 'tools' && <div className="relative z-10"><ToolsView isDarkMode={isDarkMode} /></div>}
             
             {activeTab === 'quiz' && <div className="relative z-10"><Test isDarkMode={isDarkMode} isAdmin={false} /></div>}
         </main>
