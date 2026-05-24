@@ -1048,8 +1048,8 @@ const ChatBot = ({ messages = [], setMessages, isDarkMode, liveAiData = [], setL
               </div>
 
               {/* INPUT FIELD */}
-              <div className="max-w-4xl mx-auto px-2 flex items-end pb-1 w-full relative">
-                  <div className={`flex-1 relative flex items-center w-full shadow-sm rounded-[22px] overflow-hidden border backdrop-blur-lg ${isDarkMode ? 'bg-[#242526]/80 border-[#3E4042]' : 'bg-[#FFFFFF]/90 border-[#CED0D4]'}`}>
+              <div className="w-[92%] max-w-[380px] md:w-full md:max-w-4xl mx-auto md:px-4 flex items-end pb-1 relative">
+                  <div className={`flex-1 relative flex items-center w-full shadow-sm rounded-[24px] overflow-hidden border backdrop-blur-lg ${isDarkMode ? 'bg-[#242526]/80 border-[#3E4042]' : 'bg-[#FFFFFF]/90 border-[#CED0D4]'}`}>
                       {!input && <div className={`absolute left-4 top-[10px] pointer-events-none text-[14.5px] font-khmer opacity-50 ${isDarkMode ? 'text-white' : 'text-black'}`}>{t('placeholder')}</div>}
                       <div
                           ref={inputRef}
@@ -1062,6 +1062,8 @@ const ChatBot = ({ messages = [], setMessages, isDarkMode, liveAiData = [], setL
                       <button
                           type="button"
                           disabled={!input.trim() || loading}
+                          onMouseDown={(e) => e.preventDefault()}
+                          onTouchStart={(e) => e.preventDefault()}
                           onClick={(e) => { e.preventDefault(); e.stopPropagation(); if (!loading && input.trim()) { triggerHaptic(); handleSend(input); } }}
                           className={`absolute right-1 bottom-1 p-1.5 rounded-full transition-transform active:scale-90 ${input.trim() && !loading ? theme.iconColor : 'opacity-30'}`}
                       >
