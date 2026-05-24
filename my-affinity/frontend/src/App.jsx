@@ -1060,7 +1060,7 @@ function AppContent() {
       <div 
         className={`md:hidden absolute left-0 right-0 z-50 w-full pointer-events-none flex justify-center transition-transform duration-500 ease-spring ${(isKeyboardOpen || activeAppTab) ? 'translate-y-32 opacity-0' : 'translate-y-0 opacity-100'}`}
         style={{
-            bottom: `calc(env(safe-area-inset-bottom) + ${isAndroid ? '30px' : '20px'})`,
+            bottom: `calc(env(safe-area-inset-bottom) + 20px)`,
             transform: `translateY(${isScrollingDown && !activeAppTab ? '150%' : '0'})`
         }}
       >
