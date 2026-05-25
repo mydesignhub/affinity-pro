@@ -82,9 +82,13 @@ const strictClean = (text) => {
     return text.toLowerCase().replace(/[\s\u200B.,!?។៕"“”'*_()\-:;&]/g, '');
 };
 
+const escapeHtml = (str) =>
+    str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#039;');
+
 const formatMessage = (text) => {
     if (typeof text !== 'string') return text;
-    const formattedText = text.replace(/\*\*(.*?)\*\*/g, '<strong class="font-black">$1</strong>');
+    const safe = escapeHtml(text);
+    const formattedText = safe.replace(/\*\*(.*?)\*\*/g, '<strong class="font-black">$1</strong>');
     return formattedText.split('\n').map((line, i, arr) => (
         <React.Fragment key={i}>
             <span dangerouslySetInnerHTML={{ __html: line }} />

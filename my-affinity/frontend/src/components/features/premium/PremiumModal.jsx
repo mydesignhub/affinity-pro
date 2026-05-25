@@ -6,16 +6,20 @@ import {
   Clock, DownloadCloud, CheckCircle2, Circle, AlertCircle, Download, LogOut
 } from 'lucide-react';
 
-import { doc, getDoc, setDoc, updateDoc, deleteDoc } from 'firebase/firestore';
+import { doc, getDoc, setDoc, deleteDoc, onSnapshot } from 'firebase/firestore';
 import { signInWithPopup, signOut } from 'firebase/auth';
 import { auth, googleProvider, db } from '../../../firebase'; 
 import { useLanguage } from '../../../contexts/LanguageContext';
 
 const ONE_YEAR_MS = 365 * 24 * 60 * 60 * 1000;
-const VALID_PASSCODES = {
-    photo: ['PHOTO-A1B2C', 'PHOTO-X9Y8Z'],
-    designer: ['DESIGN-A1B2C', 'DESIGN-X9Y8Z'],
-    publisher: ['PUB-A1B2C', 'PUB-X9Y8Z']
+
+const getDeviceId = () => {
+    let id = localStorage.getItem('myDesign_deviceId');
+    if (!id) {
+        id = Math.random().toString(36).substring(2, 15) + Date.now().toString(36);
+        localStorage.setItem('myDesign_deviceId', id);
+    }
+    return id;
 };
 
 const formatExpiry = (timestamp, lang) => {
@@ -58,29 +62,73 @@ export default function PremiumModal({
     const [successMsg, setSuccessMsg] = useState('');
     const [isVerifying, setIsVerifying] = useState(false);
 
-    const SECRET_PASSCODE = "MYDESIGN2026"; // Universal emergency backdoor
     const appColor = theme.bg.replace('bg-[', '').replace(']', '');
 
-    // 🌟 Telegram Deep Link Logic 🌟
-    let telegramMsg = "";
-    if (plan === 'month') {
-        telegramMsg = lang === 'en' 
-            ? `Hello! I would like to purchase the ${appDisplayName} course (1 Month - $5). Here is my payment slip:` 
-            : `សួស្តីបង! ខ្ញុំចង់ទិញវគ្គសិក្សា ${appDisplayName} (១ខែ - $5)។ នេះជាវិក្កយបត្របង់ប្រាក់របស់ខ្ញុំ៖`;
-    } else {
-        telegramMsg = lang === 'en' 
-            ? `Hello! I would like to purchase the ${appDisplayName} course (1 Year - $20). Here is my payment slip:` 
-            : `សួស្តីបង! ខ្ញុំចង់ទិញវគ្គសិក្សា ${appDisplayName} (១ឆ្នាំ - $20)។ នេះជាវិក្កយបត្របង់ប្រាក់របស់ខ្ញុំ៖`;
-    }
-    const telegramUrl = `tg://resolve?domain=koymy&text=${encodeURIComponent(telegramMsg)}`;
+    // Purchase request states
+    const [requestStatus, setRequestStatus] = useState('idle'); // idle | submitting | pending | approved | rejected
+    const [paymentNote, setPaymentNote] = useState('');
+    const [currentRequestId, setCurrentRequestId] = useState(null);
 
     useEffect(() => {
         if (!showRegistration) {
             setCheckoutMode('select');
             setPasscodeInput('');
             setPasscodeError('');
+            setRequestStatus('idle');
+            setPaymentNote('');
+            setCurrentRequestId(null);
         }
     }, [showRegistration]);
+
+    // When QR view opens, check if there's already a pending request for this device+app
+    useEffect(() => {
+        if (checkoutMode !== 'qr') {
+            setRequestStatus('idle');
+            setPaymentNote('');
+            return;
+        }
+        const reqId = `${activeAppTab}_${getDeviceId()}`;
+        getDoc(doc(db, "purchaseRequests", reqId)).then(snap => {
+            if (snap.exists()) {
+                const s = snap.data().status;
+                if (s === 'pending' || s === 'approved' || s === 'rejected') {
+                    setCurrentRequestId(reqId);
+                    setRequestStatus(s);
+                }
+            }
+        }).catch(() => {});
+    }, [checkoutMode, activeAppTab]);
+
+    // Real-time listener: auto-unlock when admin approves in Firebase Console
+    useEffect(() => {
+        if (!currentRequestId || requestStatus !== 'pending') return;
+
+        const unsubscribe = onSnapshot(doc(db, "purchaseRequests", currentRequestId), (snap) => {
+            if (!snap.exists()) return;
+            const data = snap.data();
+
+            if (data.status === 'approved') {
+                const duration = data.plan === 'month'
+                    ? 30 * 24 * 60 * 60 * 1000
+                    : 365 * 24 * 60 * 60 * 1000;
+                const updatedPurchases = {
+                    ...purchasedCourses,
+                    [activeAppTab]: { unlocked: true, expiry: Date.now() + duration, keyUsed: 'firebase_purchase' }
+                };
+                setPurchasedCourses(updatedPurchases);
+                if (user) {
+                    setDoc(doc(db, "users", user.uid), { purchasedCourses: updatedPurchases }, { merge: true });
+                }
+                setRequestStatus('approved');
+                triggerHaptic('success');
+            } else if (data.status === 'rejected') {
+                setRequestStatus('rejected');
+                triggerHaptic('error');
+            }
+        });
+
+        return () => unsubscribe();
+    }, [currentRequestId, requestStatus]);
 
     // 🌟 ការឡូកអ៊ីនជាមួយ Google
     const handleGoogleLogin = async () => { 
@@ -115,133 +163,202 @@ export default function PremiumModal({
         const userRef = doc(db, "users", loggedInUser.uid);
         const userSnap = await getDoc(userRef);
 
+        let finalPurchases = { ...purchasedCourses };
+
         if (userSnap.exists()) {
             const data = userSnap.data();
             if (data.purchasedCourses) {
-                const mergedPurchases = { ...purchasedCourses };
-                let hasChanges = false;
+                const now = Date.now();
                 for (const course in data.purchasedCourses) {
-                    if (data.purchasedCourses[course] && data.purchasedCourses[course].expiry > Date.now()) {
-                        mergedPurchases[course] = data.purchasedCourses[course];
-                        hasChanges = true;
+                    if (data.purchasedCourses[course] && data.purchasedCourses[course].expiry > now) {
+                        finalPurchases[course] = data.purchasedCourses[course];
                     }
                 }
-                if (hasChanges) setPurchasedCourses(mergedPurchases);
+                setPurchasedCourses(finalPurchases);
             }
         } else {
             if (Object.values(purchasedCourses).some(c => c !== null)) {
                 await setDoc(userRef, { purchasedCourses });
             }
         }
-    };
 
-    // 🌟 Auto-Hyphen ឆ្លាតវៃសម្រាប់កូដចាស់ (Backdoor) និងកូដថ្មី (Admin Gen) 🌟
-    const handlePasscodeChange = (e) => {
-        let raw = e.target.value.toUpperCase();
-        let cleanText = raw.replace(/[^A-Z0-9]/g, ''); 
-        
-        // 1. ឆែកមើលថាតើវាជាកូដ Backdoor ចាស់ឬទេ? (PHOTO-, DESIGN-, PUB-)
-        if (cleanText.startsWith('PHOTO') || cleanText.startsWith('DESIGN') || cleanText.startsWith('PUB')) {
-            let prefixLength = cleanText.startsWith('PHOTO') ? 5 : cleanText.startsWith('DESIGN') ? 6 : 3;
-            if (cleanText.length > prefixLength) {
-                setPasscodeInput(cleanText.substring(0, prefixLength) + '-' + cleanText.substring(prefixLength, prefixLength + 5));
-            } else {
-                setPasscodeInput(cleanText);
-            }
-        } 
-        // 2. ឆែកមើលថាតើវាជាកូដថ្មីពី Admin ឬទេ? (PH-Y-XXXXX, DS-M-XXXXX, PB-T-XXXXX)
-        else if (cleanText.startsWith('PH') || cleanText.startsWith('DS') || cleanText.startsWith('PB')) {
-            let formatted = cleanText;
-            if (formatted.length > 2) formatted = formatted.substring(0, 2) + '-' + formatted.substring(2);
-            if (formatted.length > 4) formatted = formatted.substring(0, 4) + '-' + formatted.substring(4);
-            setPasscodeInput(formatted.substring(0, 10)); 
-        } 
-        // 3. វាយធម្មតា
-        else {
-            setPasscodeInput(raw);
+        // Upgrade maxDevices to 2 for key-based purchases now that Google is linked
+        const keyPurchases = Object.values(finalPurchases)
+            .filter(p => p && p.keyUsed && p.keyUsed !== 'firebase_purchase');
+        for (const purchase of keyPurchases) {
+            try {
+                const actRef = doc(db, "keyActivations", purchase.keyUsed);
+                const actSnap = await getDoc(actRef);
+                if (actSnap.exists() && (actSnap.data().maxDevices || 1) < 2) {
+                    await setDoc(actRef, { maxDevices: 2, userId: loggedInUser.uid }, { merge: true });
+                }
+            } catch (e) { /* non-critical */ }
         }
     };
 
-    // 🌟 ផ្ទៀងផ្ទាត់លេខកូដ (Verify Passcode ជាមួយ Firebase) 🌟
+    // Auto-format activation key: PH-Y-XXXXX / DS-Y-XXXXX / PB-Y-XXXXX
+    const handlePasscodeChange = (e) => {
+        const clean = e.target.value.toUpperCase().replace(/[^A-Z0-9]/g, '');
+
+        if (clean.startsWith('PH') || clean.startsWith('DS') || clean.startsWith('PB')) {
+            let f = clean;
+            if (f.length > 2) f = f.substring(0, 2) + '-' + f.substring(2);
+            if (f.length > 4) f = f.substring(0, 4) + '-' + f.substring(4);
+            setPasscodeInput(f.substring(0, 10));
+        } else {
+            setPasscodeInput(clean);
+        }
+    };
+
+    const handleSubmitPurchase = async () => {
+        setRequestStatus('submitting');
+        const reqId = `${activeAppTab}_${getDeviceId()}`;
+        try {
+            await setDoc(doc(db, "purchaseRequests", reqId), {
+                deviceId: getDeviceId(),
+                userId: user?.uid || null,
+                userEmail: user?.email || null,
+                app: activeAppTab,
+                appName: appDisplayName,
+                plan,
+                status: 'pending',
+                paymentNote: paymentNote.trim() || null,
+                createdAt: Date.now(),
+            });
+            setCurrentRequestId(reqId);
+            setRequestStatus('pending');
+        } catch (err) {
+            console.error('Failed to submit purchase request:', err);
+            triggerHaptic('error');
+            setRequestStatus('idle');
+        }
+    };
+
     const handleVerifyPasscode = async () => {
         if (!activeAppTab) return;
         const code = passcodeInput.trim().toUpperCase();
+        const deviceId = getDeviceId();
+        const maxDevices = user ? 2 : 1;
+        const targetMatch = `affinity_${activeAppTab}`;
         setIsVerifying(true);
         setPasscodeError('');
 
-        // 1. ឆែក Backdoor & Master Code មុនគេ
-        if (code === SECRET_PASSCODE || (VALID_PASSCODES[activeAppTab] && VALID_PASSCODES[activeAppTab].includes(code))) {
-            triggerHaptic('success');
-            const updatedPurchases = { ...purchasedCourses, [activeAppTab]: { unlocked: true, expiry: Date.now() + ONE_YEAR_MS, keyUsed: code }};
+        const applyUnlock = async (expiry) => {
+            const updatedPurchases = {
+                ...purchasedCourses,
+                [activeAppTab]: { unlocked: true, expiry, keyUsed: code, deviceId }
+            };
             setPurchasedCourses(updatedPurchases);
             if (user) await setDoc(doc(db, "users", user.uid), { purchasedCourses: updatedPurchases }, { merge: true });
-            
-            setSuccessMsg(lang === 'en' ? 'Unlocked Successfully!' : 'ទទួលបានសិទ្ធិជោគជ័យ!');
-            setTimeout(() => { setSuccessMsg(''); setShowRegistration(false); setPasscodeInput(''); }, 2000);
+        };
+
+        const finish = (msg) => {
+            triggerHaptic('success');
+            setSuccessMsg(msg);
+            setTimeout(() => { setSuccessMsg(''); setCheckoutMode('select'); setShowRegistration(false); setPasscodeInput(''); }, 2500);
             setIsVerifying(false);
-            return;
-        }
+        };
 
-        // 2. ឆែក Database
         try {
-            const keyRef = doc(db, "activationCodes", code);
-            const keySnap = await getDoc(keyRef);
+            // ── PATH A: Brand-new key (still in activationCodes) ──
+            const freshRef = doc(db, "activationCodes", code);
+            const freshSnap = await getDoc(freshRef);
 
-            if (keySnap.exists() && keySnap.data().used === false) {
-                const keyData = keySnap.data();
+            if (freshSnap.exists() && freshSnap.data().used === false) {
+                const keyData = freshSnap.data();
                 const now = Date.now();
-
-                // កំណត់ App ID ដើម្បីផ្គូផ្គង (ឧទាហរណ៍៖ activeAppTab='photo' ត្រូវគ្នាជាមួយ 'affinity_photo')
-                const targetMatch = `affinity_${activeAppTab}`;
 
                 if (keyData.targetApp !== targetMatch) {
                     triggerHaptic('error');
                     setPasscodeError(lang === 'en' ? 'Code is not for this course.' : 'លេខកូដនេះមិនត្រឹមត្រូវសម្រាប់វគ្គនេះទេ។');
                     setIsVerifying(false); return;
                 }
-
                 if (keyData.expiresAt && now > keyData.expiresAt) {
-                    await deleteDoc(keyRef);
+                    await deleteDoc(freshRef);
                     triggerHaptic('error');
                     setPasscodeError(lang === 'en' ? 'Activation key expired.' : 'លេខកូដនេះបានផុតកំណត់ហើយ។');
                     setIsVerifying(false); return;
                 }
 
-                // គណនាថ្ងៃផុតកំណត់ដោយផ្អែកលើកញ្ចប់
-                let duration = 365 * 24 * 60 * 60 * 1000; // Default Year
+                let duration = 365 * 24 * 60 * 60 * 1000;
                 if (keyData.plan === 'month') duration = 30 * 24 * 60 * 60 * 1000;
-                if (keyData.plan === 'trial') duration = 7 * 24 * 60 * 60 * 1000; // 🌟 កូដសាកល្បង ៧ ថ្ងៃពី Admin
+                if (keyData.plan === 'trial') duration = 7 * 24 * 60 * 60 * 1000;
 
-                const currentExp = purchasedCourses[activeAppTab]?.expiry || now;
-                const baseTime = currentExp > now ? currentExp : now;
-                const newExpiry = baseTime + duration;
+                const base = Math.max(purchasedCourses[activeAppTab]?.expiry || 0, now);
+                const newExpiry = base + duration;
 
-                // 🌟 លុបកូដចេញពី Database ដើម្បីធានាប្រើបានតែ ១ ដង
-                await deleteDoc(keyRef);
+                await deleteDoc(freshRef);
 
-                const updatedPurchases = {
-                    ...purchasedCourses,
-                    [activeAppTab]: { unlocked: true, expiry: newExpiry, keyUsed: code }
-                };
-                setPurchasedCourses(updatedPurchases);
+                // Create persistent activation record with device tracking
+                await setDoc(doc(db, "keyActivations", code), {
+                    app: targetMatch, plan: keyData.plan, expiry: newExpiry,
+                    userId: user?.uid || null, maxDevices,
+                    devices: [{ id: deviceId, addedAt: now }],
+                    createdAt: now,
+                });
 
-                if (user) {
-                    await setDoc(doc(db, "users", user.uid), { purchasedCourses: updatedPurchases }, { merge: true });
+                await applyUnlock(newExpiry);
+                const hint = maxDevices === 1
+                    ? (lang === 'en' ? ' Tip: Link Google to unlock on 2 devices.' : ' គន្លឹះ: ភ្ជាប់ Google ដើម្បីប្រើ ២ ឧបករណ៍។')
+                    : '';
+                finish((lang === 'en' ? 'Premium Unlocked!' : 'ទទួលបានសិទ្ធិជោគជ័យ!') + hint);
+                return;
+            }
+
+            // ── PATH B: Key already consumed → device reset or add second device ──
+            const actRef = doc(db, "keyActivations", code);
+            const actSnap = await getDoc(actRef);
+
+            if (actSnap.exists()) {
+                const act = actSnap.data();
+                const now = Date.now();
+
+                if (act.app !== targetMatch) {
+                    triggerHaptic('error');
+                    setPasscodeError(lang === 'en' ? 'Code is not for this course.' : 'លេខកូដនេះមិនត្រឹមត្រូវសម្រាប់វគ្គនេះទេ។');
+                    setIsVerifying(false); return;
+                }
+                if (act.expiry && now > act.expiry) {
+                    triggerHaptic('error');
+                    setPasscodeError(lang === 'en' ? 'Activation key expired.' : 'លេខកូដនេះបានផុតកំណត់ហើយ។');
+                    setIsVerifying(false); return;
                 }
 
-                triggerHaptic('success');
-                setSuccessMsg(lang === 'en' ? 'Premium Unlocked!' : 'ទទួលបានសិទ្ធិជោគជ័យ!');
-                setTimeout(() => { 
-                    setSuccessMsg(''); 
-                    setCheckoutMode('select'); 
-                    setShowRegistration(false); 
-                    setPasscodeInput(''); 
-                }, 2000);
+                const devices = act.devices || [];
+                const effectiveMax = Math.max(act.maxDevices || 1, maxDevices);
 
-            } else {
-                triggerHaptic('error');
-                setPasscodeError(lang === 'en' ? 'Invalid or already used key.' : 'លេខកូដមិនត្រឹមត្រូវ ឬត្រូវបានប្រើរួច។');
+                // Already active on this device → just re-sync
+                if (devices.some(d => d.id === deviceId)) {
+                    await applyUnlock(act.expiry);
+                    finish(lang === 'en' ? 'Already active on this device!' : 'ឧបករណ៍នេះបានដោះសោរួចហើយ!');
+                    return;
+                }
+
+                let newDevices;
+                let wasReset = false;
+
+                if (devices.length < effectiveMax) {
+                    newDevices = [...devices, { id: deviceId, addedAt: now }];
+                } else {
+                    // Evict oldest device, add this one
+                    newDevices = [...devices.slice(1), { id: deviceId, addedAt: now }];
+                    wasReset = true;
+                }
+
+                await setDoc(actRef, { ...act, maxDevices: effectiveMax, devices: newDevices, userId: user?.uid || act.userId }, { merge: true });
+                await applyUnlock(act.expiry);
+
+                const msg = wasReset
+                    ? (lang === 'en' ? 'Device transferred! Previous device access revoked.' : 'ឧបករណ៍ថ្មីត្រូវបានផ្ទេរ! ឧបករណ៍ចាស់ត្រូវបានលុបចោល។')
+                    : (lang === 'en' ? `Device ${newDevices.length} of ${effectiveMax} activated!` : `ឧបករណ៍ទី ${newDevices.length} ត្រូវបានដោះសោ!`);
+                finish(msg);
+                return;
             }
+
+            // Key exists in neither collection
+            triggerHaptic('error');
+            setPasscodeError(lang === 'en' ? 'Invalid or already used key.' : 'លេខកូដមិនត្រឹមត្រូវ ឬត្រូវបានប្រើរួច។');
+
         } catch(error) {
             console.error("Verification error", error);
             triggerHaptic('error');
@@ -483,19 +600,104 @@ export default function PremiumModal({
 
                                         <div className="w-full flex items-center gap-4 opacity-50">
                                             <div className={`h-px flex-1 ${isDarkMode ? 'bg-white/20' : 'bg-black/10'}`}></div>
-                                            <span className={`text-[11px] font-bold tracking-widest uppercase ${isDarkMode ? 'text-white/50' : 'text-black/40'}`}>THEN</span>
+                                            <span className={`text-[11px] font-bold tracking-widest uppercase ${isDarkMode ? 'text-white/50' : 'text-black/40'}`}>
+                                                {lang === 'en' ? 'THEN' : 'បន្ទាប់មក'}
+                                            </span>
                                             <div className={`h-px flex-1 ${isDarkMode ? 'bg-white/20' : 'bg-black/10'}`}></div>
                                         </div>
-                                        
-                                        <div className="w-full text-center">
-                                            <p className={`text-[14px] font-khmer mb-4 leading-relaxed ${isDarkMode ? 'text-[#E3E3E3]' : 'text-gray-600'}`}>
-                                                {lang === 'en' ? 'Send your receipt via Telegram to get your activation key.' : 'ផ្ញើវិក័យប័ត្រតាម Telegram ដើម្បីទទួលបានលេខកូដ។'}
-                                            </p>
-                                            <a href={telegramUrl} target="_blank" rel="noopener noreferrer" className={`w-full py-4 rounded-[20px] flex items-center justify-center gap-2 font-bold font-khmer transition-all active:scale-[0.98] shadow-lg text-white bg-gradient-to-r ${theme.gradient}`}>
-                                                <Send className="w-5 h-5" />
-                                                {lang === 'en' ? 'Send Receipt to Telegram' : 'ផ្ញើវិក័យប័ត្រទីនេះ'}
-                                            </a>
-                                        </div>
+
+                                        {/* IDLE: Submit form */}
+                                        {(requestStatus === 'idle') && (
+                                            <div className="w-full flex flex-col gap-3">
+                                                <p className={`text-[13px] font-khmer text-center leading-relaxed ${isDarkMode ? 'text-[#A0A0A0]' : 'text-gray-500'}`}>
+                                                    {lang === 'en' ? 'After paying, tap the button below. We\'ll review and unlock your course automatically.' : 'បន្ទាប់ពីបង់ប្រាក់ ចុចប៊ូតុងខាងក្រោម យើងនឹងពិនិត្យ ហើយដោះសោដោយស្វ័យប្រវត្តិ។'}
+                                                </p>
+                                                <textarea
+                                                    value={paymentNote}
+                                                    onChange={e => setPaymentNote(e.target.value.slice(0, 200))}
+                                                    placeholder={lang === 'en' ? 'Optional: Enter your ABA transaction ID or name on receipt...' : 'ស្រេចចិត្ត: បញ្ចូល ID ប្រតិបត្តិការ ABA ឬឈ្មោះលើវិក័យប័ត្រ...'}
+                                                    rows={2}
+                                                    className={`w-full px-4 py-3 rounded-[16px] border text-[13px] font-khmer resize-none outline-none transition-colors ${isDarkMode ? 'bg-[#121212] border-[#2C2C2C] text-white placeholder:text-[#555]' : 'bg-[#F8F9FA] border-[#E5E7EB] text-black placeholder:text-gray-400'}`}
+                                                />
+                                                <button
+                                                    onClick={() => { triggerHaptic(); handleSubmitPurchase(); }}
+                                                    className={`w-full py-4 rounded-[20px] flex items-center justify-center gap-2 font-bold font-khmer text-[15px] transition-all active:scale-[0.98] shadow-lg text-white bg-gradient-to-r ${theme.gradient}`}
+                                                >
+                                                    <CheckCircle2 className="w-5 h-5" />
+                                                    {lang === 'en' ? 'I\'ve Paid — Submit for Review' : 'ខ្ញុំបានបង់ — ដាក់ស្នើសុំពិនិត្យ'}
+                                                </button>
+                                            </div>
+                                        )}
+
+                                        {/* SUBMITTING */}
+                                        {requestStatus === 'submitting' && (
+                                            <div className="flex flex-col items-center gap-3 py-4">
+                                                <Loader2 className={`w-8 h-8 animate-spin ${theme.text}`} />
+                                                <p className={`text-[13px] font-khmer font-bold ${isDarkMode ? 'text-[#A0A0A0]' : 'text-gray-500'}`}>
+                                                    {lang === 'en' ? 'Submitting...' : 'កំពុងដាក់ស្នើ...'}
+                                                </p>
+                                            </div>
+                                        )}
+
+                                        {/* PENDING: Waiting for admin */}
+                                        {requestStatus === 'pending' && (
+                                            <div className={`w-full rounded-[24px] p-5 border flex flex-col items-center gap-3 text-center ${isDarkMode ? 'bg-[#1A1A1A] border-[#2C2C2C]' : 'bg-[#F8F9FA] border-[#E5E7EB]'}`}>
+                                                <div className="relative">
+                                                    <Loader2 className={`w-10 h-10 animate-spin ${theme.text}`} />
+                                                </div>
+                                                <p className={`font-black font-khmer text-[16px] ${isDarkMode ? 'text-white' : 'text-black'}`}>
+                                                    {lang === 'en' ? 'Request Submitted!' : 'ដាក់ស្នើដោយជោគជ័យ!'}
+                                                </p>
+                                                <p className={`text-[12px] font-khmer leading-relaxed ${isDarkMode ? 'text-[#A0A0A0]' : 'text-gray-500'}`}>
+                                                    {lang === 'en' ? 'Waiting for admin review. Keep this screen open — your course will unlock automatically once approved.' : 'រង់ចាំការពិនិត្យ។ ទុកអេក្រង់នេះបើក — វគ្គរបស់អ្នកនឹងដោះសោដោយស្វ័យប្រវត្តិ។'}
+                                                </p>
+                                                <div className={`flex items-center gap-2 text-[11px] font-bold uppercase tracking-widest opacity-50 ${isDarkMode ? 'text-white' : 'text-black'}`}>
+                                                    <Clock size={12} />
+                                                    {lang === 'en' ? 'Usually within minutes' : 'ជាធម្មតាក្នុងរយៈពេលប៉ុន្មាននាទី'}
+                                                </div>
+                                            </div>
+                                        )}
+
+                                        {/* APPROVED */}
+                                        {requestStatus === 'approved' && (
+                                            <div className="w-full rounded-[24px] p-5 border border-green-500/30 bg-green-500/10 flex flex-col items-center gap-3 text-center">
+                                                <CheckCircle2 className="w-12 h-12 text-green-500" />
+                                                <p className="font-black font-khmer text-[16px] text-green-500">
+                                                    {lang === 'en' ? 'Payment Approved!' : 'ការបង់ប្រាក់ត្រូវបានអនុម័ត!'}
+                                                </p>
+                                                <p className={`text-[12px] font-khmer ${isDarkMode ? 'text-[#A0A0A0]' : 'text-gray-500'}`}>
+                                                    {lang === 'en' ? 'Your course is now unlocked. Enjoy learning!' : 'វគ្គរបស់អ្នកត្រូវបានដោះសោ។ រីករាយជាមួយការសិក្សា!'}
+                                                </p>
+                                            </div>
+                                        )}
+
+                                        {/* REJECTED */}
+                                        {requestStatus === 'rejected' && (
+                                            <div className="w-full rounded-[24px] p-5 border border-red-500/30 bg-red-500/10 flex flex-col items-center gap-3 text-center">
+                                                <AlertCircle className="w-10 h-10 text-red-500" />
+                                                <p className="font-black font-khmer text-[15px] text-red-500">
+                                                    {lang === 'en' ? 'Payment Not Verified' : 'ការបង់ប្រាក់មិនអាចផ្ទៀងផ្ទាត់បាន'}
+                                                </p>
+                                                <p className={`text-[12px] font-khmer leading-relaxed ${isDarkMode ? 'text-[#A0A0A0]' : 'text-gray-500'}`}>
+                                                    {lang === 'en' ? 'Please contact support on Telegram.' : 'សូមទាក់ទងផ្នែកជំនួយតាម Telegram។'}
+                                                </p>
+                                                <a
+                                                    href="https://t.me/koymy"
+                                                    target="_blank"
+                                                    rel="noopener noreferrer"
+                                                    className="px-6 py-3 rounded-[16px] font-bold font-khmer text-[13px] text-white flex items-center gap-2 active:scale-95"
+                                                    style={{ backgroundColor: '#2AABEE' }}
+                                                >
+                                                    <Send size={16} /> {lang === 'en' ? 'Contact Support' : 'ទំនាក់ទំនងផ្នែកជំនួយ'}
+                                                </a>
+                                                <button
+                                                    onClick={() => { setRequestStatus('idle'); setCurrentRequestId(null); }}
+                                                    className={`text-[11px] font-bold underline opacity-60 ${isDarkMode ? 'text-white' : 'text-black'}`}
+                                                >
+                                                    {lang === 'en' ? 'Try again' : 'ព្យាយាមម្ដងទៀត'}
+                                                </button>
+                                            </div>
+                                        )}
                                     </div>
                                 )}
 
@@ -509,11 +711,14 @@ export default function PremiumModal({
                                         )}
                                         <div className={`relative flex items-center p-2 rounded-[24px] border transition-colors shadow-sm ${isDarkMode ? 'bg-[#121212] border-[#2C2C2C]' : 'bg-white border-[#E5E7EB]'} focus-within:border-[${appColor}]`}>
                                             <KeyRound className={`absolute left-5 w-6 h-6 ${isDarkMode ? 'text-[#9AA0A6]' : 'text-gray-400'}`} />
-                                            <input 
-                                                type="text" 
+                                            <input
+                                                type="text"
                                                 value={passcodeInput}
                                                 onChange={handlePasscodeChange}
                                                 placeholder={getInputPlaceholder()}
+                                                maxLength={30}
+                                                autoComplete="off"
+                                                spellCheck={false}
                                                 className={`flex-1 bg-transparent py-3 pl-14 pr-2 outline-none font-bold tracking-widest uppercase text-[15px] w-full ${isDarkMode ? 'text-white' : 'text-black'}`}
                                             />
                                             <button 

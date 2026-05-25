@@ -14,7 +14,7 @@ import {
 
 import { auth, db } from './firebase';
 import { signOut } from 'firebase/auth';
-import { getDocs, collection, query } from 'firebase/firestore';
+import { getDocs, collection, query, onSnapshot, doc } from 'firebase/firestore';
 
 import Header from './components/layout/Header';
 import ToolsView from './components/features/tools/ToolsView';
@@ -623,6 +623,7 @@ function AppContent() {
   const [completedSteps, setCompletedSteps] = useState([]);
   
   const [user, setUser] = useState(null);
+  const [showAdminPanel, setShowAdminPanel] = useState(false);
 
   const [purchasedCourses, setPurchasedCourses] = useState({ photo: null, designer: null, publisher: null });
   const [isDataLoaded, setIsDataLoaded] = useState(false);
@@ -701,6 +702,37 @@ function AppContent() {
       }
   }, []);
 
+  // Device revocation: if another device evicts this one via key re-entry, clear local access
+  useEffect(() => {
+      if (!isDataLoaded) return;
+      const deviceId = localStorage.getItem('myDesign_deviceId');
+      if (!deviceId) return;
+
+      const apps = ['photo', 'designer', 'publisher'];
+      const unsubscribers = [];
+
+      apps.forEach(app => {
+          const purchase = purchasedCourses[app];
+          if (!purchase?.keyUsed || purchase.keyUsed === 'firebase_purchase') return;
+
+          const actRef = doc(db, 'keyActivations', purchase.keyUsed);
+          const unsub = onSnapshot(actRef, (snap) => {
+              if (!snap.exists()) return;
+              const devices = snap.data().devices || [];
+              if (!devices.some(d => d.id === deviceId)) {
+                  setPurchasedCourses(prev => {
+                      const updated = { ...prev, [app]: null };
+                      localStorage.setItem('myAffinity_purchases', JSON.stringify(updated));
+                      return updated;
+                  });
+              }
+          }, () => {});
+          unsubscribers.push(unsub);
+      });
+
+      return () => unsubscribers.forEach(u => u());
+  }, [purchasedCourses, isDataLoaded]);
+
   const [chatMessages, setChatMessages] = useState([]);
   const [isKeyboardOpen, setIsKeyboardOpen] = useState(false);
 
@@ -750,15 +782,20 @@ function AppContent() {
 
   useEffect(() => {
     const handleSwitchTab = (e) => {
-        if (e.detail) { 
-            setActiveTab(e.detail); 
-            setExpandedLesson(null); 
+        if (e.detail) {
+            setActiveTab(e.detail);
+            setExpandedLesson(null);
             setActiveAppTab(null);
             setIsScrollingDown(false);
             window.history.pushState({ modalOpen: false, tab: e.detail, course: null }, '');
         }
     };
     window.addEventListener('switchTab', handleSwitchTab);
+
+    const handleSuperAdminUnlocked = () => setShowAdminPanel(true);
+    const handleToggleAdminPanel = () => setShowAdminPanel(prev => !prev);
+    window.addEventListener('superAdminUnlocked', handleSuperAdminUnlocked);
+    window.addEventListener('toggleSuperAdminPanel', handleToggleAdminPanel);
 
     const handleFocusIn = (e) => {
         const tag = e.target.tagName;
@@ -771,6 +808,8 @@ function AppContent() {
 
     return () => {
         window.removeEventListener('switchTab', handleSwitchTab);
+        window.removeEventListener('superAdminUnlocked', handleSuperAdminUnlocked);
+        window.removeEventListener('toggleSuperAdminPanel', handleToggleAdminPanel);
         document.removeEventListener('focusin', handleFocusIn);
         document.removeEventListener('focusout', handleFocusOut);
     };
@@ -940,18 +979,18 @@ function AppContent() {
                 className="p-4 md:p-8 max-w-7xl mx-auto w-full flex-1 relative z-10"
                 style={{ paddingBottom: 'max(env(safe-area-inset-bottom), 40px)' }}
             >
-                <PremiumModal 
+                <PremiumModal
                     activeAppTab={activeAppTab}
                     isCoursePurchased={isCoursePurchased}
                     theme={theme}
                     appDisplayName={appDisplayName}
                     isDarkMode={isDarkMode}
-                    showAdminPanel={false} 
+                    showAdminPanel={showAdminPanel}
                     purchasedCourses={purchasedCourses}
                     setPurchasedCourses={setPurchasedCourses}
                     user={user}
                     setUser={setUser}
-                    setIsSuperAdmin={() => {}} 
+                    setIsSuperAdmin={setShowAdminPanel}
                     handleSignOutDevice={handleSignOutDevice}
                     triggerHaptic={triggerHaptic}
                 />

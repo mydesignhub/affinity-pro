@@ -3,20 +3,52 @@ import cors from 'cors';
 import { GoogleGenerativeAI } from '@google/generative-ai';
 import dotenv from 'dotenv';
 
-// Initialize dotenv
 dotenv.config();
 
 const app = express();
 
-// Middleware
-app.use(cors());
-app.use(express.json());
+// Restrict CORS to the known frontend origins only
+const ALLOWED_ORIGINS = process.env.ALLOWED_ORIGINS
+    ? process.env.ALLOWED_ORIGINS.split(',').map(o => o.trim())
+    : ['http://localhost:5173', 'http://localhost:4173'];
+
+app.use(cors({
+    origin: (origin, callback) => {
+        // Allow requests with no origin (e.g. mobile apps, Postman during dev)
+        if (!origin || ALLOWED_ORIGINS.includes(origin)) return callback(null, true);
+        callback(new Error('CORS: origin not allowed'));
+    },
+    methods: ['POST'],
+}));
+
+app.use(express.json({ limit: '20kb' }));
+
+// Simple in-memory rate limiter: max 20 requests per IP per minute
+const rateCounts = new Map();
+const RATE_LIMIT = 20;
+const RATE_WINDOW_MS = 60_000;
+
+const rateLimiter = (req, res, next) => {
+    const ip = req.ip || req.socket.remoteAddress || 'unknown';
+    const now = Date.now();
+    const entry = rateCounts.get(ip);
+
+    if (!entry || now > entry.resetAt) {
+        rateCounts.set(ip, { count: 1, resetAt: now + RATE_WINDOW_MS });
+        return next();
+    }
+    if (entry.count >= RATE_LIMIT) {
+        return res.status(429).json({ error: 'Too many requests. Please wait a moment.' });
+    }
+    entry.count++;
+    next();
+};
 
 // Load multiple keys from the .env file and split them into an array
 const apiKeys = process.env.GEMINI_API_KEYS ? process.env.GEMINI_API_KEYS.split(',') : [];
 let currentKeyIndex = 0; // Keeps track of which key we are currently using
 
-app.post('/chat', async (req, res) => {
+app.post('/chat', rateLimiter, async (req, res) => {
     // Safety check
     if (apiKeys.length === 0) {
         return res.status(500).json({ error: "Server Error: No API keys configured." });
