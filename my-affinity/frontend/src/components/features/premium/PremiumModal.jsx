@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { 
-  Crown, Check, Info, ArrowLeft, X, Loader2, 
-  Send, Key, RotateCcw, Shield, Lock, WifiOff, Layers, PlayCircle, 
-  ChevronRight, KeyRound, ChevronDown, ShieldCheck, Minimize, Maximize, 
-  Clock, DownloadCloud, CheckCircle2, Circle, AlertCircle, Download
+import {
+  Crown, Check, Info, ArrowLeft, X, Loader2,
+  Send, Key, RotateCcw, Shield, Lock, WifiOff, Layers, PlayCircle,
+  ChevronRight, KeyRound, ChevronDown, ShieldCheck, Minimize, Maximize,
+  Clock, DownloadCloud, CheckCircle2, Circle, AlertCircle, Download, LogOut
 } from 'lucide-react';
 
 import { doc, getDoc, setDoc, updateDoc, deleteDoc } from 'firebase/firestore';
@@ -12,21 +12,10 @@ import { auth, googleProvider, db } from '../../../firebase';
 import { useLanguage } from '../../../contexts/LanguageContext';
 
 const ONE_YEAR_MS = 365 * 24 * 60 * 60 * 1000;
-const SEVEN_DAYS_MS = 7 * 24 * 60 * 60 * 1000;
 const VALID_PASSCODES = {
     photo: ['PHOTO-A1B2C', 'PHOTO-X9Y8Z'],
     designer: ['DESIGN-A1B2C', 'DESIGN-X9Y8Z'],
     publisher: ['PUB-A1B2C', 'PUB-X9Y8Z']
-};
-
-const getDeviceId = () => {
-    if (typeof window === 'undefined') return 'server';
-    let id = localStorage.getItem('myDesign_deviceId');
-    if (!id) {
-        id = Math.random().toString(36).substring(2) + Date.now().toString(36);
-        localStorage.setItem('myDesign_deviceId', id);
-    }
-    return id;
 };
 
 const formatExpiry = (timestamp, lang) => {
@@ -69,8 +58,8 @@ export default function PremiumModal({
     const [successMsg, setSuccessMsg] = useState('');
     const [isVerifying, setIsVerifying] = useState(false);
 
-    const localDeviceId = getDeviceId();
     const SECRET_PASSCODE = "MYDESIGN2026"; // Universal emergency backdoor
+    const appColor = theme.bg.replace('bg-[', '').replace(']', '');
 
     // 🌟 Telegram Deep Link Logic 🌟
     let telegramMsg = "";

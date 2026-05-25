@@ -14,7 +14,7 @@ import {
 
 import { auth, db } from './firebase';
 import { signOut } from 'firebase/auth';
-import { doc, getDocs, collection, query } from 'firebase/firestore';
+import { getDocs, collection, query } from 'firebase/firestore';
 
 import Header from './components/layout/Header';
 import ToolsView from './components/features/tools/ToolsView';
