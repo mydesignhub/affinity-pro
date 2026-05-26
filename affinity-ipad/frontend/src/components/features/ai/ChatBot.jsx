@@ -60,11 +60,26 @@ const CONTINUATION_PATTERNS_KH = [
 // ─── API ──────────────────────────────────────────────────────────────────────
 const AI_REQUEST_TIMEOUT_MS = 45000;
 
+const MARKETING_SYSTEM_EN = `[SYSTEM: You are "Affinity iPad AI" — the official smart assistant & marketing coach for the Affinity iPad learning platform. Your mission:
+1. EDUCATE: Teach Affinity Photo, Designer & Publisher on iPad with clear, practical answers
+2. ENGAGE: Be warm, expert, and encouraging — make design feel achievable
+3. CONVERT: Naturally guide users toward taking Quizzes, earning Design Certificates, and exploring app features
+4. Brand voice: Confident, friendly, concise. Max 3 short paragraphs. Always end with a next step or CTA.
+Relevant app features to mention when appropriate: Skill Quizzes (Beginner/Intermediate/Advanced), Final Certification Exam (90% pass), downloadable PDF Certificates, Color Generator, Layout Tools, AI Assistant.]\n`;
+
+const MARKETING_SYSTEM_KH = `[ប្រព័ន្ធ: អ្នកគឺ "Affinity iPad AI" — ជំនួយការ AI ផ្លូវការ និង Marketing Coach សម្រាប់ Platform រៀន Affinity iPad។ ភារកិច្ច:
+1. EDUCATE: បង្រៀន Affinity Photo, Designer & Publisher ដោយច្បាស់លាស់
+2. ENGAGE: ស្រលាញ់ ជំនាញ ហ្មមត់ — ធ្វើឱ្យ Design ហាក់ងាយស្រួល
+3. CONVERT: ណែនាំ Quiz, Certificate, Tools ដោយធម្មជាតិ
+4. ភាសា: ខ្លី, ច្បាស់, ចប់ដោយ CTA ។ ៣ កថាខណ្ឌ ត្រឹម។
+Features App: Skill Quiz (Beginner/Intermediate/Advanced), Final Exam (90%), Certificate PDF, Color Generator, Layout Tools.]\n`;
+
 const callRealAI = async (userPrompt, language, history = []) => {
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), AI_REQUEST_TIMEOUT_MS);
     try {
-        const recentHistoryText = history.slice(-10).map(msg =>
+        const systemContext = language === 'en' ? MARKETING_SYSTEM_EN : MARKETING_SYSTEM_KH;
+        const recentHistoryText = systemContext + history.slice(-10).map(msg =>
             `${msg.role === 'user' ? 'User' : 'AI Assistant'}: ${msg.text}`
         ).join('\n');
         const response = await fetch('https://my-affinity-backend.onrender.com/chat', {
@@ -190,6 +205,21 @@ const parseMultiChoiceQuestion = (botText) => {
 
 // ─── FOLLOW_UP_MAP (Design/Affinity topic chain) ──────────────────────────────
 const FOLLOW_UP_MAP = {
+    // Marketing funnel chain
+    'App នេះជាអ្វី': 'App ប្រើបានដោយឥតគិតថ្លៃទេ?',
+    'what is this app': 'is the app free to use',
+    'App ប្រើបានដោយឥតគិតថ្លៃទេ?': 'ចាប់ផ្តើមដោយរបៀបណា',
+    'is the app free to use': 'how to get started',
+    'ចាប់ផ្តើមដោយរបៀបណា': 'ចង់ធ្វើតេស្ត',
+    'how to get started': 'take a quiz',
+    'វិញ្ញាបនបត្ររចនា 🏆': 'ចាប់ផ្តើមដោយរបៀបណា',
+    'design certificate': 'how to get started',
+    'ហេតុអ្វីប្រើ Affinity iPad': 'App ប្រើបានដោយឥតគិតថ្លៃទេ?',
+    'why use affinity on ipad': 'is the app free to use',
+    'Affinity ធៀបនឹង Photoshop': 'ហេតុអ្វីប្រើ Affinity iPad',
+    'affinity vs photoshop': 'why use affinity on ipad',
+
+    // Design learning chain
     'តើអ្វីទៅជា Graphic Design?': 'ធាតុផ្សំមូលដ្ឋានទាំង ៦', 'what is graphic design': 'the 6 elements of design',
     'ធាតុផ្សំមូលដ្ឋានទាំង ៦': 'គោលការណ៍រចនា', 'the 6 elements of design': 'design principles',
     'គោលការណ៍រចនា': 'ឋានានុក្រមទស្សនីយភាព', 'design principles': 'visual hierarchy',
@@ -420,35 +450,56 @@ const ChatBot = ({ messages = [], setMessages, isDarkMode, liveAiData = [], setL
     // ─── Greeting ─────────────────────────────────────────────────────────────
     const generateSmartGreeting = () => {
         const interests = JSON.parse(localStorage.getItem('myDesign_user_interests') || '[]');
-        const suggestList = getSuggestList();
         const hour = new Date().getHours();
 
-        let timeGreetingKh = hour >= 5 && hour < 12 ? "បាទ អរុណសួស្តី! 🌅" : hour >= 12 && hour < 17 ? "បាទ ទិវាសួស្តី! ☀️" : hour >= 17 && hour < 22 ? "បាទ សាយន្តសួស្តី! 🌇" : "បាទ រាត្រីសួស្តី! 🌙";
-        let timeGreetingEn = hour >= 5 && hour < 12 ? "Good morning! 🌅" : hour >= 12 && hour < 17 ? "Good afternoon! ☀️" : hour >= 17 && hour < 22 ? "Good evening! 🌇" : "Working late? 🌙";
+        const timeKh = hour >= 5 && hour < 12 ? "អរុណសួស្តី! 🌅" : hour >= 12 && hour < 17 ? "ទិវាសួស្តី! ☀️" : hour >= 17 && hour < 22 ? "សាយន្តសួស្តី! 🌇" : "រាត្រីសួស្តី! 🌙";
+        const timeEn = hour >= 5 && hour < 12 ? "Good morning! 🌅" : hour >= 12 && hour < 17 ? "Good afternoon! ☀️" : hour >= 17 && hour < 22 ? "Good evening! 🌇" : "Working late? 🌙";
 
-        let greetingMsg = `${lang === 'en' ? timeGreetingEn : timeGreetingKh} ${lang === 'en' ? "I am **Design Master**, your AI assistant. What are we creating today? 🎨" : "ខ្ញុំគឺ **Design Master**។ តើថ្ងៃនេះចង់ឱ្យខ្ញុំជួយអ្វីខ្លះ? 🎨"}`;
-        let defaultChips = pickFreshChips(3);
+        let greetingMsg, defaultChips;
 
         if (interests.length > 0) {
             const smartList = lang === 'en' ? (SMART_GREETINGS_EN || []) : (SMART_GREETINGS || []);
-            const smartMsgTemplate = getRandomItems(smartList, 1)[0];
-            if (smartMsgTemplate) {
-                greetingMsg = (typeof smartMsgTemplate === 'object' ? smartMsgTemplate.greeting || '' : smartMsgTemplate).replace('{topic}', interests[interests.length - 1]);
-                defaultChips = [interests[interests.length - 1], ...pickFreshChips(2)];
+            const template = getRandomItems(smartList, 1)[0];
+            if (template) {
+                greetingMsg = (typeof template === 'object' ? template.greeting || '' : template).replace('{topic}', interests[interests.length - 1]);
+                defaultChips = lang === 'en'
+                    ? [interests[interests.length - 1], "Design Certificate 🏆", "Take a Quiz 🎯"]
+                    : [interests[interests.length - 1], "វិញ្ញាបនបត្ររចនា 🏆", "ចង់ធ្វើតេស្ត 🎯"];
             }
+        }
+
+        if (!greetingMsg) {
+            greetingMsg = lang === 'en'
+                ? `${timeEn} I'm **Affinity iPad AI** — your personal design coach. 🎨\n\nI can **teach you Affinity**, **quiz your skills**, and guide you to an official **Design Certificate**. What's your goal today?`
+                : `${timeKh} ខ្ញុំគឺ **Affinity iPad AI** — គ្រូ Design ផ្ទាល់ខ្លួនរបស់អ្នក! 🎨\n\nខ្ញុំបង្រៀន **Affinity**, ធ្វើ **Quiz**, ហើយណែនាំអ្នកទៅ **វិញ្ញាបនបត្ររចនា** ផ្លូវការ។ ថ្ងៃនេះចង់ចាប់ផ្តើមពីណា?`;
+            defaultChips = lang === 'en'
+                ? ["What is this app?", "Take a Quiz 🎯", "Is the app free to use?"]
+                : ["App នេះជាអ្វី", "ចង់ធ្វើតេស្ត 🎯", "App ប្រើបានដោយឥតគិតថ្លៃទេ?"];
         }
 
         setMessages([{ role: 'model', text: greetingMsg, chips: defaultChips.slice(0, 3), isTrainable: false }]);
     };
 
-    // ─── Idle quiz trigger ────────────────────────────────────────────────────
+    // ─── Idle marketing nudge ─────────────────────────────────────────────────
     const triggerIdleQuiz = () => {
         setMessages(prev => {
             if (prev.length === 0) return prev;
             const lastMsg = prev[prev.length - 1];
             const allInvitations = [...LOCAL_QUIZ_INVITATIONS, ...LOCAL_QUIZ_INVITATIONS_EN];
             if (lastMsg.role === 'model' && allInvitations.includes(lastMsg.text)) return prev;
-            return [...prev, { role: 'model', text: getRandomQuizInvitation(lang), chips: pickFreshChips(3), isTrainable: false }];
+
+            const nudges = lang === 'en' ? [
+                { text: getRandomQuizInvitation('en'), chips: ["Take a Quiz 🎯", "Design Certificate 🏆", "What is this app?"] },
+                { text: "Still here? 👋 Did you know you can earn an official **Affinity Design Certificate** by passing the Final Exam? It's a great addition to your portfolio!", chips: ["Design Certificate 🏆", "How to get started", "Is the app free?"] },
+                { text: "💡 **Quick tip:** The fastest way to master Affinity is to take a Skill Quiz first — it shows exactly which areas to focus on. Ready to try?", chips: ["Take a Quiz 🎯", "Affinity vs Photoshop", "Why use Affinity on iPad?"] },
+            ] : [
+                { text: getRandomQuizInvitation('kh'), chips: ["ចង់ធ្វើតេស្ត 🎯", "វិញ្ញាបនបត្ររចនា 🏆", "App នេះជាអ្វី"] },
+                { text: "នៅទីនេះ? 👋 តើអ្នកដឹងទេថា អ្នកអាចទទួល **វិញ្ញាបនបត្ររចនា Affinity** ផ្លូវការ ដោយការប្រឡង Final Exam? ល្អណាស់សម្រាប់ Portfolio!", chips: ["វិញ្ញាបនបត្ររចនា 🏆", "ចាប់ផ្តើមដោយរបៀបណា", "App ប្រើបានដោយឥតគិតថ្លៃទេ?"] },
+                { text: "💡 **គន្លឹះ:** វិធីលឿនបំផុតដើម្បីស្ទាត់ Affinity គឺចាប់ផ្តើមដោយ Skill Quiz — វាបង្ហាញច្បាស់ថាត្រូវ Focus ផ្នែកណា។ ត្រៀមហើយ?", chips: ["ចង់ធ្វើតេស្ត 🎯", "Affinity ធៀបនឹង Photoshop", "ហេតុអ្វីប្រើ Affinity iPad"] },
+            ];
+
+            const picked = nudges[Math.floor(Math.random() * nudges.length)];
+            return [...prev, { role: 'model', text: picked.text, chips: picked.chips, isTrainable: false }];
         });
     };
 
@@ -545,7 +596,9 @@ const ChatBot = ({ messages = [], setMessages, isDarkMode, liveAiData = [], setL
 
     // Rotating header status text
     useEffect(() => {
-        const texts = lang === 'en' ? ['Online', 'Ready to Design'] : ['កំពុងភ្ជាប់', 'រួចរាល់សម្រាប់ការរចនា'];
+        const texts = lang === 'en'
+            ? ['Online · AI Coach', 'Quiz Available 🎯', 'Earn Certificates 🏆', 'Design Expert Ready', 'Free to Start ✨']
+            : ['Online · AI Coach', 'Quiz រង់ចាំ 🎯', 'ទទួល Certificate 🏆', 'ជំនួយការ Design', 'ឥតគិតថ្លៃ ✨'];
         setHeaderStatusText(texts[0]);
         if (reducedMotion) return;
         let currentIndex = 0;

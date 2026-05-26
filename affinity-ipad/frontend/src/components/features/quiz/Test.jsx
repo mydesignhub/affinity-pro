@@ -1,478 +1,554 @@
 /* eslint-disable */
 import React, { useState, useEffect, useRef } from 'react';
-import { Trophy, Flame, CheckCircle2, XCircle, Play, Star, Award, Lock, ChevronRight, User, Timer, Camera, PenTool, Book, ShieldCheck, X } from 'lucide-react';
+import {
+    Trophy, Flame, CheckCircle2, XCircle, Play, Star, Award,
+    Lock, ChevronRight, User, Timer, Camera, PenTool, Book,
+    ShieldCheck, X, RotateCcw,
+} from 'lucide-react';
 import { useLanguage } from '../../../contexts/LanguageContext';
 import { initialQuestionBank } from '../../../data/data';
 import CertificateForm from './CertificateForm';
 
-// === UTILITY FUNCTIONS ===
+// ─── Module-level utilities ───────────────────────────────────────────────────
+
 const triggerHaptic = (type = 'light') => {
     if (typeof navigator !== 'undefined' && navigator.vibrate) {
-        if (type === 'error') navigator.vibrate([50, 50, 50]);
+        if (type === 'error')   navigator.vibrate([50, 50, 50]);
         else if (type === 'success') navigator.vibrate([30, 50, 30]);
         else navigator.vibrate(10);
     }
 };
 
-const shuffleArray = (array) => {
-    const newArr = [...array];
-    for (let i = newArr.length - 1; i > 0; i--) {
+const shuffleArray = (arr) => {
+    const a = [...arr];
+    for (let i = a.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
-        [newArr[i], newArr[j]] = [newArr[j], newArr[i]];
+        [a[i], a[j]] = [a[j], a[i]];
     }
-    return newArr;
+    return a;
 };
 
-// 🌟 Time Limit Rules per Level 🌟
-const getTimeLimitForLevel = (level) => {
-    switch(level) {
-        case 'beginner': return 30;
-        case 'intermediate': return 20;
-        case 'advanced': return 15;
-        case 'final': return 15;
-        default: return 30;
-    }
+const getTimeLimit = (level) => {
+    if (level === 'beginner')    return 30;
+    if (level === 'intermediate') return 20;
+    return 15;
 };
 
-const defaultLevels = { photo: ['beginner'], designer: ['beginner'], publisher: ['beginner'] };
-const defaultStars = { 
-    photo: { beginner: 0, intermediate: 0, advanced: 0 }, 
-    designer: { beginner: 0, intermediate: 0, advanced: 0 }, 
-    publisher: { beginner: 0, intermediate: 0, advanced: 0 } 
+const formatTime = (s) =>
+    `${Math.floor(s / 60)}:${(s % 60).toString().padStart(2, '0')}`;
+
+const appDisplayName = (tab) =>
+    tab === 'photo' ? 'Affinity Photo'
+    : tab === 'designer' ? 'Affinity Designer'
+    : 'Affinity Publisher';
+
+const safeParse = (key) => {
+    try { return JSON.parse(localStorage.getItem(key)); } catch { return null; }
 };
-const defaultScores = { photo: 0, designer: 0, publisher: 0 };
-const defaultCerts = { photo: null, designer: null, publisher: null };
+
+// ─── Animated score ring (result screen) ─────────────────────────────────────
+
+const ScoreRing = ({ pct, ringColor, dk }) => {
+    const r = 64;
+    const circ = 2 * Math.PI * r;
+    const [offset, setOffset] = React.useState(circ);
+    React.useEffect(() => {
+        const id = setTimeout(() => setOffset(circ * (1 - pct / 100)), 120);
+        return () => clearTimeout(id);
+    }, [pct]);
+    return (
+        <div className="relative w-36 h-36 mx-auto mb-7">
+            <svg className="w-full h-full -rotate-90" viewBox="0 0 144 144">
+                <circle cx="72" cy="72" r={r} strokeWidth="12" fill="none" stroke={dk ? '#2C2C2C' : '#F0F2F5'} />
+                <circle cx="72" cy="72" r={r} strokeWidth="12" fill="none" stroke={ringColor}
+                    strokeDasharray={circ.toFixed(2)}
+                    strokeDashoffset={offset.toFixed(2)}
+                    strokeLinecap="round"
+                    style={{ transition: 'stroke-dashoffset 1.4s ease-in-out' }} />
+            </svg>
+            <div className="absolute inset-0 flex flex-col items-center justify-center">
+                <span className="text-4xl sm:text-5xl font-black tabular-nums">{pct}</span>
+                <span className={`text-[10px] font-black uppercase tracking-widest mt-0.5 ${dk ? 'text-[#4B5563]' : 'text-[#D1D5DB]'}`}>%</span>
+            </div>
+        </div>
+    );
+};
+
+// ─── Circular countdown ring (per-question timer) ─────────────────────────────
+
+const TimerRing = ({ timeLeft, totalTime, isDark }) => {
+    const r = 17;
+    const circ = +(2 * Math.PI * r).toFixed(3);
+    const offset = +(circ * Math.max(0, 1 - timeLeft / totalTime)).toFixed(3);
+    const low = timeLeft <= 5;
+    const clr = low ? '#ef4444' : isDark ? '#41B6E6' : '#0277C5';
+    const track = isDark ? '#3A3B3C' : '#E5E7EB';
+    return (
+        <div className="relative w-[46px] h-[46px] flex items-center justify-center shrink-0">
+            <svg className="absolute inset-0 -rotate-90" viewBox="0 0 46 46" width="46" height="46">
+                <circle cx="23" cy="23" r={r} fill="none" strokeWidth="3" stroke={track} />
+                <circle cx="23" cy="23" r={r} fill="none" strokeWidth="3"
+                    strokeDasharray={circ} strokeDashoffset={offset}
+                    strokeLinecap="round" stroke={clr}
+                    style={{ transition: 'stroke-dashoffset 0.9s linear, stroke 0.3s ease' }}
+                />
+            </svg>
+            <span className={`text-[11px] font-black tabular-nums leading-none ${low ? 'text-red-500 animate-pulse' : isDark ? 'text-[#41B6E6]' : 'text-[#0277C5]'}`}>
+                {timeLeft}
+            </span>
+        </div>
+    );
+};
+
+// ─── Default state ─────────────────────────────────────────────────────────────
+
+const DEFAULT_LEVELS = { photo: ['beginner'], designer: ['beginner'], publisher: ['beginner'] };
+const DEFAULT_STARS  = {
+    photo:     { beginner: 0, intermediate: 0, advanced: 0 },
+    designer:  { beginner: 0, intermediate: 0, advanced: 0 },
+    publisher: { beginner: 0, intermediate: 0, advanced: 0 },
+};
+const DEFAULT_SCORES = { photo: 0, designer: 0, publisher: 0 };
+const DEFAULT_CERTS  = { photo: null, designer: null, publisher: null };
+
+const APP_TABS = [
+    { id: 'photo',     labelEn: 'Photo',     labelKh: 'ហ្វូតូ',  Icon: Camera   },
+    { id: 'designer',  labelEn: 'Designer',  labelKh: 'ឌីស៊ីញ', Icon: PenTool  },
+    { id: 'publisher', labelEn: 'Publisher', labelKh: 'ផ្លីសឺ', Icon: Book     },
+];
+
+// ─── Component ────────────────────────────────────────────────────────────────
 
 const Test = ({ isDarkMode, isAdmin }) => {
-    // === STATE MANAGEMENT ===
-    const { lang } = useLanguage(); 
-    const [gameState, setGameState] = useState('menu');
-    const [questions, setQuestions] = useState([]);
-    const [currentQuestion, setCurrentQuestion] = useState(0);
-    const [score, setScore] = useState(0);
-    const [selectedOption, setSelectedOption] = useState(null);
-    const [isAnswered, setIsAnswered] = useState(false);
-    const [quizConfig, setQuizConfig] = useState({ level: 'beginner', amount: 5 });
-    
-    const [activeAppTab, setActiveAppTab] = useState('photo');
+    const { lang } = useLanguage();
+    const dk = isDarkMode;
 
-    const [userName, setUserName] = useState('');
-    const [highScores, setHighScores] = useState(defaultScores);
-    const [unlockedLevels, setUnlockedLevels] = useState(defaultLevels);
-    const [levelStars, setLevelStars] = useState(defaultStars);
-    const [certsData, setCertsData] = useState(defaultCerts);
-    const [isDataLoaded, setIsDataLoaded] = useState(false);
+    // Quiz state
+    const [gameState,       setGameState]       = useState('menu');
+    const [questions,       setQuestions]       = useState([]);
+    const [currentQ,        setCurrentQ]        = useState(0);
+    const [score,           setScore]           = useState(0);
+    const [selected,        setSelected]        = useState(null);
+    const [answered,        setAnswered]        = useState(false);
+    const [quizConfig,      setQuizConfig]      = useState({ level: 'beginner', amount: 5 });
+    const [activeTab,       setActiveTab]       = useState('photo');
 
-    const [activeCertData, setActiveCertData] = useState(null);
-    const nameInputRef = useRef(null);
+    // User & progress
+    const [userName,        setUserName]        = useState('');
+    const [highScores,      setHighScores]      = useState(DEFAULT_SCORES);
+    const [unlockedLevels,  setUnlockedLevels]  = useState(DEFAULT_LEVELS);
+    const [levelStars,      setLevelStars]      = useState(DEFAULT_STARS);
+    const [certsData,       setCertsData]       = useState(DEFAULT_CERTS);
+    const [dataLoaded,      setDataLoaded]      = useState(false);
+    const [activeCert,      setActiveCert]      = useState(null);
 
-    const [timeLeft, setTimeLeft] = useState(null);
-    const [questionTimeLeft, setQuestionTimeLeft] = useState(null);
-    const [userAnswers, setUserAnswers] = useState([]);
-    const [streak, setStreak] = useState(0);
-    const [isShaking, setIsShaking] = useState(false);
+    // Timers
+    const [globalTimer,     setGlobalTimer]     = useState(null);
+    const [qTimer,          setQTimer]          = useState(null);
 
-    const currentUnlocked = unlockedLevels[activeAppTab] || ['beginner'];
-    const currentStars = levelStars[activeAppTab] || { beginner: 0, intermediate: 0, advanced: 0 };
-    const currentHighScore = highScores[activeAppTab] || 0;
-    const currentCert = certsData[activeAppTab] || null;
+    // Round feedback
+    const [userAnswers,     setUserAnswers]     = useState([]);
+    const [streak,          setStreak]          = useState(0);
+    const [maxStreak,       setMaxStreak]       = useState(0);
+    const [shaking,         setShaking]         = useState(false);
 
-    // === EFFECTS ===
+    const nameRef = useRef(null);
+
+    // Derived
+    const unlocked   = unlockedLevels[activeTab] || ['beginner'];
+    const stars      = levelStars[activeTab]     || DEFAULT_STARS.photo;
+    const bestScore  = highScores[activeTab]     || 0;
+    const cert       = certsData[activeTab]      || null;
+    const allOpen    = isAdmin || (unlocked.includes('advanced') && stars.advanced >= 2);
+
+    // ─── Persistence ──────────────────────────────────────────────────────────
+
     useEffect(() => {
-        if (typeof window !== 'undefined') {
-            const savedName = localStorage.getItem('myAffinity_user_name');
-            if (savedName) setUserName(savedName);
-
-            const savedScores = localStorage.getItem('myAffinity_quiz_scores');
-            if (savedScores) setHighScores(JSON.parse(savedScores));
-
-            const savedUnlocked = localStorage.getItem('myAffinity_quiz_unlocked');
-            if (savedUnlocked) setUnlockedLevels(JSON.parse(savedUnlocked));
-
-            const savedStars = localStorage.getItem('myAffinity_quiz_stars');
-            if (savedStars) setLevelStars(JSON.parse(savedStars));
-
-            const savedCerts = localStorage.getItem('myAffinity_quiz_certs');
-            if (savedCerts) setCertsData(JSON.parse(savedCerts));
-
-            setIsDataLoaded(true);
-        }
+        if (typeof window === 'undefined') return;
+        const n = localStorage.getItem('myAffinity_user_name');
+        if (n) setUserName(n);
+        const sc = safeParse('myAffinity_quiz_scores');   if (sc) setHighScores(sc);
+        const ul = safeParse('myAffinity_quiz_unlocked'); if (ul) setUnlockedLevels(ul);
+        const sl = safeParse('myAffinity_quiz_stars');    if (sl) setLevelStars(sl);
+        const cd = safeParse('myAffinity_quiz_certs');    if (cd) setCertsData(cd);
+        setDataLoaded(true);
     }, []);
 
     useEffect(() => {
-        if (gameState === 'menu' && nameInputRef.current && userName && !nameInputRef.current.textContent) {
-            nameInputRef.current.textContent = userName;
-        }
-    }, [gameState, activeAppTab, userName]); 
+        if (gameState === 'menu' && nameRef.current && userName && !nameRef.current.textContent)
+            nameRef.current.textContent = userName;
+    }, [gameState, activeTab, userName]);
 
     useEffect(() => {
-        if (isDataLoaded) {
-            localStorage.setItem('myAffinity_quiz_unlocked', JSON.stringify(unlockedLevels));
-            localStorage.setItem('myAffinity_quiz_stars', JSON.stringify(levelStars));
-            localStorage.setItem('myAffinity_quiz_scores', JSON.stringify(highScores));
-            localStorage.setItem('myAffinity_quiz_certs', JSON.stringify(certsData));
-            if (userName) localStorage.setItem('myAffinity_user_name', userName);
-        }
-    }, [unlockedLevels, levelStars, highScores, certsData, userName, isDataLoaded]);
+        if (!dataLoaded) return;
+        localStorage.setItem('myAffinity_quiz_unlocked', JSON.stringify(unlockedLevels));
+        localStorage.setItem('myAffinity_quiz_stars',    JSON.stringify(levelStars));
+        localStorage.setItem('myAffinity_quiz_scores',   JSON.stringify(highScores));
+        localStorage.setItem('myAffinity_quiz_certs',    JSON.stringify(certsData));
+        if (userName) localStorage.setItem('myAffinity_user_name', userName);
+    }, [unlockedLevels, levelStars, highScores, certsData, userName, dataLoaded]);
 
-    // 🌟 GLOBAL TIMER FOR FINAL EXAM
-    useEffect(() => {
-        if (gameState !== 'playing' || quizConfig.level !== 'final' || timeLeft === null) return;
-        if (timeLeft <= 0) { finishQuiz(score); return; }
-        const timerId = setInterval(() => setTimeLeft(prev => prev - 1), 1000);
-        return () => clearInterval(timerId);
-    }, [gameState, quizConfig.level, timeLeft, score]);
+    // ─── Timers ───────────────────────────────────────────────────────────────
 
-    // 🌟 PER-QUESTION TIMER FOR REGULAR LEVELS
+    // Global timer — final exam countdown
     useEffect(() => {
-        if (gameState !== 'playing' || quizConfig.level === 'final' || isAnswered || questionTimeLeft === null) return;
-        
-        if (questionTimeLeft <= 0) {
-            setIsAnswered(true);
+        if (gameState !== 'playing' || quizConfig.level !== 'final' || globalTimer === null) return;
+        if (globalTimer <= 0) { finishQuiz(score); return; }
+        const id = setTimeout(() => setGlobalTimer(t => t - 1), 1000);
+        return () => clearTimeout(id);
+    }, [gameState, quizConfig.level, globalTimer, score]);
+
+    // Per-question timer
+    useEffect(() => {
+        if (gameState !== 'playing' || quizConfig.level === 'final' || answered || qTimer === null) return;
+        if (qTimer <= 0) {
+            setAnswered(true);
             setStreak(0);
-            setIsShaking(true);
+            setShaking(true);
             triggerHaptic('error');
-            setTimeout(() => setIsShaking(false), 500);
-            setUserAnswers(prev => [...prev, { qId: currentQuestion, selected: -1, isCorrect: false }]);
-            
+            setTimeout(() => setShaking(false), 500);
+            setUserAnswers(prev => [...prev, { qId: currentQ, selected: -1, isCorrect: false }]);
             setTimeout(() => {
-                if (currentQuestion + 1 < questions.length) { 
-                    setCurrentQuestion(currentQuestion + 1); 
-                    setIsAnswered(false); 
-                    setSelectedOption(null); 
-                    setQuestionTimeLeft(getTimeLimitForLevel(quizConfig.level));
+                if (currentQ + 1 < questions.length) {
+                    setCurrentQ(n => n + 1);
+                    setAnswered(false);
+                    setSelected(null);
+                    setQTimer(getTimeLimit(quizConfig.level));
+                } else {
+                    finishQuiz(score);
                 }
-                else finishQuiz(score);
-            }, 1500);
+            }, 1100);
             return;
         }
-        
-        const timerId = setInterval(() => {
-            setQuestionTimeLeft(prev => prev - 1);
-        }, 1000);
-        
-        return () => clearInterval(timerId);
-    }, [gameState, isAnswered, questionTimeLeft, currentQuestion, questions.length, score, quizConfig.level]);
+        const id = setTimeout(() => setQTimer(t => t - 1), 1000);
+        return () => clearTimeout(id);
+    }, [gameState, quizConfig.level, answered, qTimer, currentQ, questions.length, score]);
 
-    // === GAME LOGIC ===
-    const formatTime = (seconds) => {
-        const m = Math.floor(seconds / 60); const s = seconds % 60;
-        return `${m}:${s < 10 ? '0' : ''}${s}`;
-    };
+    // ─── Game logic ───────────────────────────────────────────────────────────
 
     const startQuiz = (level) => {
-        if (!isAdmin && !currentUnlocked.includes(level) && level !== 'final') { triggerHaptic('error'); return; }
+        if (!isAdmin && !unlocked.includes(level) && level !== 'final') { triggerHaptic('error'); return; }
         triggerHaptic();
 
         if (level === 'final') {
             if (!userName.trim()) {
-                if (isAdmin) {
-                    setUserName("Admin Tester");
-                } else {
-                    alert(lang === 'en' ? "Please enter your name first!" : "សូមបញ្ចូលឈ្មោះរបស់អ្នកជាមុនសិន!");
-                    return;
-                }
+                if (isAdmin) { setUserName('Admin Tester'); }
+                else { alert(lang === 'en' ? 'Please enter your name first!' : 'សូមបញ្ចូលឈ្មោះរបស់អ្នកជាមុនសិន!'); return; }
             }
-            if (currentCert) {
-                const confirmRetake = window.confirm(lang === 'en' ? "You already have a certificate. Retaking will reset your current certificate. Continue?" : "អ្នកមានវិញ្ញាបនបត្ររួចហើយ។ ការប្រឡងម្តងទៀតនឹងលុបវិញ្ញាបនបត្រចាស់។ បន្តឬទេ?");
-                if (!confirmRetake) return;
-            }
-
+            if (cert && !window.confirm(lang === 'en'
+                ? 'You already have a certificate. Retaking will reset it. Continue?'
+                : 'អ្នកមានវិញ្ញាបនបត្ររួចហើយ។ ការប្រឡងម្ដងទៀតនឹងលុបវា។ បន្ត?')) return;
             if (isAdmin) {
-                const appDisplayName = activeAppTab === 'photo' ? 'Affinity Photo' : activeAppTab === 'designer' ? 'Affinity Designer' : 'Affinity Publisher';
-                const dummyCert = { name: userName || "Admin Tester", score: 100, date: new Date().toISOString(), appCourse: appDisplayName };
-                setCertsData(prev => ({ ...prev, [activeAppTab]: dummyCert }));
-                setActiveCertData(dummyCert);
-                setGameState('certificate');
-                return;
+                const c = { name: userName || 'Admin Tester', score: 100, date: new Date().toISOString(), appCourse: appDisplayName(activeTab) };
+                setCertsData(p => ({ ...p, [activeTab]: c }));
+                setActiveCert(c); setGameState('certificate'); return;
             }
-            setTimeLeft(15 * 60);
+            setGlobalTimer(15 * 60);
         } else {
-            setQuestionTimeLeft(getTimeLimitForLevel(level));
-            setTimeLeft(null);
-        }
-        
-        let filtered = initialQuestionBank.filter(q => q.app === activeAppTab);
-        if (level !== 'final') {
-            filtered = filtered.filter(q => q.level === level);
+            setQTimer(getTimeLimit(level));
+            setGlobalTimer(null);
         }
 
-        const amount = level === 'final' ? Math.min(40, filtered.length) : Math.min(quizConfig.amount, filtered.length);
-        let shuffledQuestions = shuffleArray(filtered).slice(0, amount);
+        let pool = initialQuestionBank.filter(q => q.app === activeTab);
+        if (level !== 'final') pool = pool.filter(q => q.level === level);
+        const amount = level === 'final' ? Math.min(40, pool.length) : Math.min(quizConfig.amount, pool.length);
 
-        const finalQuestions = shuffledQuestions.map(q => {
-            const currentOptions = lang === 'en' && q.options_en ? q.options_en : q.options;
-            const currentQuestionText = lang === 'en' && q.question_en ? q.question_en : q.question;
-            const optionsWithOriginalIndex = currentOptions.map((opt, index) => ({ text: opt, isCorrect: index === q.correct }));
-            const shuffledOptions = shuffleArray(optionsWithOriginalIndex);
-            const newCorrectIndex = shuffledOptions.findIndex(opt => opt.isCorrect);
-            return { ...q, question: currentQuestionText, options: shuffledOptions.map(opt => opt.text), correct: newCorrectIndex };
+        const built = shuffleArray(pool).slice(0, amount).map(q => {
+            const opts = (lang === 'en' && q.options_en) ? q.options_en : q.options;
+            const text = (lang === 'en' && q.question_en) ? q.question_en : q.question;
+            const tagged   = opts.map((t, i) => ({ text: t, isCorrect: i === q.correct }));
+            const shuffled = shuffleArray(tagged);
+            return { ...q, question: text, options: shuffled.map(o => o.text), correct: shuffled.findIndex(o => o.isCorrect) };
         });
 
-        setQuestions(finalQuestions); 
-        setQuizConfig(prev => ({...prev, level}));
-        setCurrentQuestion(0); 
-        setScore(0); 
-        setIsAnswered(false); 
-        setSelectedOption(null); 
-        setUserAnswers([]); 
-        setStreak(0);
-        setGameState('playing'); 
+        setQuestions(built);
+        setQuizConfig(p => ({ ...p, level }));
+        setCurrentQ(0); setScore(0); setStreak(0); setMaxStreak(0);
+        setAnswered(false); setSelected(null); setUserAnswers([]);
+        setGameState('playing');
     };
 
-    const handleOptionClick = (selectedIndex) => {
-        if (isAnswered) return;
-        
-        setSelectedOption(selectedIndex);
-        setIsAnswered(true);
+    const handleAnswer = (idx) => {
+        if (answered) return;
+        setSelected(idx);
+        setAnswered(true);
+        const q = questions[currentQ];
+        const ok = idx === q.correct;
+        const newScore = ok ? score + 1 : score;
 
-        const qInfo = questions[currentQuestion];
-        const isCorrect = selectedIndex === qInfo.correct;
-        const newScore = isCorrect ? score + 1 : score;
-
-        if (isCorrect) {
+        if (ok) {
             setScore(newScore);
-            setStreak(s => s + 1);
+            setStreak(s => { const n = s + 1; setMaxStreak(m => Math.max(m, n)); return n; });
             triggerHaptic('success');
         } else {
             setStreak(0);
-            setIsShaking(true);
+            setShaking(true);
             triggerHaptic('error');
-            setTimeout(() => setIsShaking(false), 500);
+            setTimeout(() => setShaking(false), 500);
         }
 
-        setUserAnswers(prev => [...prev, { qId: currentQuestion, selected: selectedIndex, isCorrect }]);
+        setUserAnswers(prev => [...prev, { qId: currentQ, selected: idx, isCorrect: ok }]);
 
         setTimeout(() => {
-            if (currentQuestion + 1 < questions.length) {
-                setSelectedOption(null);
-                setIsAnswered(false);
-                setCurrentQuestion(prev => prev + 1);
-                setQuestionTimeLeft(getTimeLimitForLevel(quizConfig.level));
+            if (currentQ + 1 < questions.length) {
+                setSelected(null); setAnswered(false);
+                setCurrentQ(n => n + 1);
+                setQTimer(getTimeLimit(quizConfig.level));
             } else {
                 finishQuiz(newScore);
             }
-        }, 1200); 
+        }, 800);
     };
 
     const finishQuiz = (finalScore) => {
-        const percentage = Math.round((finalScore / questions.length) * 100);
-        const appDisplayName = activeAppTab === 'photo' ? 'Affinity Photo' : activeAppTab === 'designer' ? 'Affinity Designer' : 'Affinity Publisher';
-
+        const total = questions.length;
+        const pct   = Math.round((finalScore / total) * 100);
         if (quizConfig.level === 'final') {
-            if (percentage >= 90 || isAdmin) {
-                const displayScore = isAdmin && percentage < 90 ? 100 : percentage;
-                const newCert = { name: userName || 'Administrator', score: displayScore, date: new Date().toISOString(), appCourse: appDisplayName };
-                setCertsData(prev => ({ ...prev, [activeAppTab]: newCert }));
-                
-                setActiveCertData(newCert);
-                setGameState('certificate');
+            if (pct >= 90 || isAdmin) {
+                const displayScore = (isAdmin && pct < 90) ? 100 : pct;
+                const c = { name: userName || 'Administrator', score: displayScore, date: new Date().toISOString(), appCourse: appDisplayName(activeTab) };
+                setCertsData(p => ({ ...p, [activeTab]: c }));
+                setActiveCert(c); setGameState('certificate');
             } else {
-                setCertsData(prev => ({ ...prev, [activeAppTab]: null })); 
+                setCertsData(p => ({ ...p, [activeTab]: null }));
                 setGameState('result');
             }
         } else {
-            let stars = finalScore >= (questions.length * 0.8) ? 3 : finalScore >= (questions.length * 0.5) ? 2 : finalScore >= (questions.length * 0.3) ? 1 : 0;
-            
+            const s = finalScore >= total * 0.8 ? 3 : finalScore >= total * 0.5 ? 2 : finalScore >= total * 0.3 ? 1 : 0;
             setLevelStars(prev => {
-                const appStars = prev[activeAppTab] || { beginner: 0, intermediate: 0, advanced: 0 };
-                if (stars > (appStars[quizConfig.level] || 0)) {
-                    return { ...prev, [activeAppTab]: { ...appStars, [quizConfig.level]: stars } };
-                }
-                return prev;
+                const app = prev[activeTab] || {};
+                return s > (app[quizConfig.level] || 0) ? { ...prev, [activeTab]: { ...app, [quizConfig.level]: s } } : prev;
             });
-
-            if (stars >= 1 || percentage >= 80) {
+            if (s >= 1) {
                 setUnlockedLevels(prev => {
-                    const appLevels = prev[activeAppTab] || ['beginner'];
-                    if (quizConfig.level === 'beginner' && !appLevels.includes('intermediate')) {
-                        return { ...prev, [activeAppTab]: [...appLevels, 'intermediate'] };
-                    } else if (quizConfig.level === 'intermediate' && !appLevels.includes('advanced')) {
-                        return { ...prev, [activeAppTab]: [...appLevels, 'advanced'] };
-                    }
+                    const ls = prev[activeTab] || ['beginner'];
+                    if (quizConfig.level === 'beginner'     && !ls.includes('intermediate')) return { ...prev, [activeTab]: [...ls, 'intermediate'] };
+                    if (quizConfig.level === 'intermediate' && !ls.includes('advanced'))     return { ...prev, [activeTab]: [...ls, 'advanced'] };
                     return prev;
                 });
             }
-
-            setHighScores(prev => {
-                const appScore = prev[activeAppTab] || 0;
-                if (finalScore > appScore) {
-                    return { ...prev, [activeAppTab]: finalScore };
-                }
-                return prev;
-            });
-
+            setHighScores(prev => finalScore > (prev[activeTab] || 0) ? { ...prev, [activeTab]: finalScore } : prev);
             setGameState('result');
         }
     };
 
-    // === RENDER STATE: CERTIFICATE ===
+    // ─── Helpers ──────────────────────────────────────────────────────────────
+
+    const lvlLabel = (lvl) => lang === 'en'
+        ? (lvl.charAt(0).toUpperCase() + lvl.slice(1))
+        : lvl === 'beginner' ? 'កម្រិតដំបូង' : lvl === 'intermediate' ? 'កម្រិតមធ្យម' : 'កម្រិតខ្ពស់';
+
+    const StarRow = ({ count }) => (
+        <div className="flex gap-0.5">
+            {[1, 2, 3].map(i => (
+                <Star key={i} size={10} className={i <= count ? 'fill-[#C5B002] text-[#C5B002]' : dk ? 'text-[#3A3B3C]' : 'text-[#E5E7EB]'} />
+            ))}
+        </div>
+    );
+
+    // ─── Render: Certificate ──────────────────────────────────────────────────
+
     if (gameState === 'certificate') {
-        const certToRender = activeCertData || currentCert;
-        if (!certToRender) {
-             setGameState('menu');
-             return null;
-        }
+        const c = activeCert || cert;
+        if (!c) { setGameState('menu'); return null; }
         return (
-            <div className="fixed inset-0 w-full h-full z-[99999] bg-[#0A0A0A] flex flex-col items-center justify-center p-0 sm:p-6 overflow-hidden">
-                <CertificateForm 
-                    certData={certToRender} 
-                    isDarkMode={isDarkMode} 
-                    onBack={() => {
-                        setActiveCertData(null);
-                        setGameState('menu');
-                    }} 
-                />
+            <div className="fixed inset-0 z-[99999] bg-[#0A0A0A] flex flex-col items-center justify-center p-0 sm:p-6 overflow-hidden">
+                <CertificateForm certData={c} isDarkMode={isDarkMode}
+                    onBack={() => { setActiveCert(null); setGameState('menu'); }} />
             </div>
         );
     }
 
-    // === RENDER STATE: MENU ===
+    // ─── Render: Menu ─────────────────────────────────────────────────────────
+
     if (gameState === 'menu') {
-        const allUnlocked = isAdmin || (currentUnlocked.includes('advanced') && currentStars.advanced >= 2);
-        
+        const LEVEL_DEFS = [
+            { id: 'beginner',     hint: null },
+            { id: 'intermediate', hint: lang === 'en' ? 'Get ★ on Beginner to unlock'     : 'ទទួល ★ នៅ Beginner ដើម្បីដោះសោ' },
+            { id: 'advanced',     hint: lang === 'en' ? 'Get ★ on Intermediate to unlock' : 'ទទួល ★ នៅ Intermediate ដើម្បីដោះសោ' },
+        ];
+
         return (
-            <div className={`w-full flex flex-col relative z-10 pb-[150px] transition-colors duration-500 ${isDarkMode ? 'text-[#F1F1F1] bg-transparent' : 'text-[#1A1A1A] bg-transparent'}`}>
-                
-                {/* 🌟 HEADER TITLE 🌟 */}
-                <div className="pt-2 pb-3 px-4 transition-colors flex flex-col items-center text-center">
-                    <h1 className={`text-2xl sm:text-3xl font-black font-khmer mb-1 tracking-tight ${isDarkMode ? 'text-[#41B6E6]' : 'text-[#0277C5]'}`}>
+            <div className={`w-full flex flex-col relative z-10 pb-[150px] ${dk ? 'text-[#F1F1F1]' : 'text-[#1A1A1A]'}`}>
+
+                {/* Page header */}
+                <div className="pt-3 pb-2 px-4 flex flex-col items-center text-center">
+                    <h1 className={`text-2xl sm:text-3xl font-black font-khmer mb-1 tracking-tight ${dk ? 'text-[#41B6E6]' : 'text-[#0277C5]'}`}>
                         {lang === 'en' ? 'Skill Test Pro' : 'តេស្តសមត្ថភាពវិជ្ជាជីវៈ'}
                     </h1>
-                    <p className={`text-[12px] sm:text-[13px] max-w-md mx-auto font-medium font-khmer ${isDarkMode ? 'text-[#A0A0A0]' : 'text-[#6B7280]'}`}>
+                    <p className={`text-[12px] max-w-md font-medium font-khmer ${dk ? 'text-[#6B7280]' : 'text-[#9CA3AF]'}`}>
                         {lang === 'en' ? 'Test your knowledge and get certified' : 'សាកល្បងចំណេះដឹង និងទទួលយកវិញ្ញាបនបត្រ'}
                     </p>
                 </div>
 
-                <div className="max-w-3xl mx-auto w-full flex flex-col gap-6 pt-2 px-2 sm:px-6">
-                    <div className={`w-full rounded-[2rem] border p-5 sm:p-10 shadow-sm transition-all ${isDarkMode ? 'bg-[#18191A] border-[#2C2C2C]' : 'bg-white border-[#E5E7EB]'}`}>
+                <div className="max-w-3xl mx-auto w-full px-3 sm:px-6 flex flex-col gap-4 pt-2">
+                    <div className={`rounded-[2rem] border p-5 sm:p-8 shadow-sm ${dk ? 'bg-[#18191A] border-[#2C2C2C]' : 'bg-white border-[#E5E7EB]'}`}>
 
-                        {/* App Tab Switcher */}
-                        <div className={`flex gap-2 mb-8 p-1.5 rounded-2xl ${isDarkMode ? 'bg-[#242526]' : 'bg-[#F0F2F5]'}`}>
-                            {[
-                                { id: 'photo', labelEn: 'Photo', labelKh: 'ហ្វូតូ', Icon: Camera },
-                                { id: 'designer', labelEn: 'Designer', labelKh: 'ឌីស៊ីញ', Icon: PenTool },
-                                { id: 'publisher', labelEn: 'Publisher', labelKh: 'ផ្លីសឺ', Icon: Book },
-                            ].map(({ id, labelEn, labelKh, Icon }) => {
-                                const isActive = activeAppTab === id;
+                        {/* ── App tab switcher ── */}
+                        <div className={`flex gap-2 mb-7 p-1.5 rounded-2xl ${dk ? 'bg-[#242526]' : 'bg-[#F0F2F5]'}`}>
+                            {APP_TABS.map(({ id, labelEn, labelKh, Icon }) => {
+                                const active  = activeTab === id;
+                                const hasCert = !!certsData[id];
                                 return (
-                                    <button
-                                        key={id}
-                                        onClick={() => setActiveAppTab(id)}
-                                        className={`flex-1 flex items-center justify-center gap-1.5 py-2.5 px-2 rounded-xl font-black font-khmer text-[12px] sm:text-[13px] transition-all duration-200 active:scale-95 ${isActive ? (isDarkMode ? 'bg-[#41B6E6] text-[#0A0A0A] shadow-md' : 'bg-[#0277C5] text-white shadow-md') : (isDarkMode ? 'text-[#A0A0A0] hover:text-[#F1F1F1]' : 'text-[#6B7280] hover:text-[#1A1A1A]')}`}
-                                    >
-                                        <Icon size={14} />
-                                        <span>{lang === 'en' ? labelEn : labelKh}</span>
+                                    <button key={id} onClick={() => setActiveTab(id)}
+                                        className={`relative flex-1 flex flex-col items-center justify-center gap-1 py-2.5 px-2 rounded-xl font-black font-khmer text-[11px] sm:text-[12px] transition-all duration-200 active:scale-[0.97] select-none
+                                            ${active
+                                                ? dk ? 'bg-[#41B6E6] text-[#0A0A0A] shadow-md' : 'bg-[#0277C5] text-white shadow-md'
+                                                : dk ? 'text-[#6B7280] hover:text-[#A0A0A0]'  : 'text-[#9CA3AF] hover:text-[#4B5563]'}`}>
+                                        <div className="flex items-center gap-1.5">
+                                            <Icon size={13} />
+                                            <span>{lang === 'en' ? labelEn : labelKh}</span>
+                                        </div>
+                                        {hasCert && (
+                                            <span className="absolute -top-1.5 -right-1.5 w-4 h-4 bg-[#C5B002] rounded-full flex items-center justify-center shadow">
+                                                <Award size={9} className="text-white" strokeWidth={2.5} />
+                                            </span>
+                                        )}
                                     </button>
                                 );
                             })}
                         </div>
 
-                        <div className="flex items-center justify-between mb-8 px-1">
+                        {/* ── Title row + question count ── */}
+                        <div className="flex items-center justify-between mb-5 px-0.5">
                             <div>
-                                <h2 className={`text-lg sm:text-xl font-black font-khmer leading-none ${isDarkMode ? 'text-[#F1F1F1]' : 'text-[#1A1A1A]'}`}>{lang === 'en' ? 'Select Level' : 'ជ្រើសរើសកម្រិត'}</h2>
-                                <p className={`text-[10px] sm:text-xs ${isDarkMode ? 'text-[#A0A0A0]' : 'text-[#6B7280]'} mt-2 uppercase font-black tracking-widest`}>{lang === 'en' ? 'High Score:' : 'ពិន្ទុខ្ពស់បំផុត:'} <span className={isDarkMode ? "text-[#41B6E6]" : "text-[#0277C5]"}>{currentHighScore}</span></p>
+                                <h2 className={`text-base sm:text-lg font-black font-khmer ${dk ? 'text-[#F1F1F1]' : 'text-[#1A1A1A]'}`}>
+                                    {lang === 'en' ? 'Select Level' : 'ជ្រើសរើសកម្រិត'}
+                                </h2>
+                                <p className={`text-[10px] mt-1 font-black uppercase tracking-widest ${dk ? 'text-[#4B5563]' : 'text-[#D1D5DB]'}`}>
+                                    {lang === 'en' ? 'Best:' : 'ល្អបំផុត:'}&nbsp;
+                                    <span className={dk ? 'text-[#41B6E6]' : 'text-[#0277C5]'}>{bestScore}</span>
+                                </p>
                             </div>
-                            <div className={`flex flex-col items-end px-4 py-2.5 rounded-2xl border ${isDarkMode ? 'bg-[#242526] border-[#3E4042]' : 'bg-[#F8F9FA] border-[#CED0D4]'}`}>
-                                <label className={`text-[9px] font-black uppercase ${isDarkMode ? 'text-[#A0A0A0]' : 'text-[#6B7280]'} mb-1.5`}>{lang === 'en' ? 'Questions' : 'ចំនួនសំណួរ'}</label>
-                                <div className="flex gap-3 sm:gap-4">
-                                    {[5, 10].map(amt => (
-                                        <button key={amt} onClick={() => setQuizConfig({...quizConfig, amount: amt})} className={`text-[13px] sm:text-[14px] font-black transition-all ${quizConfig.amount === amt ? (isDarkMode ? 'text-[#41B6E6] scale-110 drop-shadow-md' : 'text-[#0277C5] scale-110 drop-shadow-md') : isDarkMode ? 'text-[#A0A0A0] hover:text-[#F1F1F1]' : 'text-[#6B7280] hover:text-[#1A1A1A]'}`}>{amt}</button>
+                            <div className={`flex flex-col items-end px-4 py-2.5 rounded-2xl border ${dk ? 'bg-[#242526] border-[#3E4042]' : 'bg-[#F8F9FA] border-[#E5E7EB]'}`}>
+                                <span className={`text-[9px] font-black uppercase tracking-widest mb-1.5 ${dk ? 'text-[#4B5563]' : 'text-[#D1D5DB]'}`}>
+                                    {lang === 'en' ? 'Questions' : 'ចំនួន'}
+                                </span>
+                                <div className="flex gap-3">
+                                    {[5, 10].map(n => (
+                                        <button key={n} onClick={() => setQuizConfig(c => ({ ...c, amount: n }))}
+                                            className={`text-[14px] font-black transition-all ${quizConfig.amount === n
+                                                ? dk ? 'text-[#41B6E6] scale-110' : 'text-[#0277C5] scale-110'
+                                                : dk ? 'text-[#4B5563] hover:text-[#A0A0A0]' : 'text-[#D1D5DB] hover:text-[#6B7280]'}`}>
+                                            {n}
+                                        </button>
                                     ))}
                                 </div>
                             </div>
                         </div>
 
-                        <div className={`flex items-center gap-3 p-4 sm:p-5 mb-8 rounded-2xl border transition-all ${isDarkMode ? 'bg-[#242526] border-[#3E4042] focus-within:border-[#41B6E6]/50' : 'bg-[#F8F9FA] border-[#CED0D4] focus-within:border-[#0277C5]/50'} focus-within:bg-transparent shadow-sm group`}>
-                            <User size={18} className={`opacity-50 transition-colors ${isDarkMode ? 'text-[#41B6E6] group-focus-within:opacity-100' : 'text-[#0277C5] group-focus-within:opacity-100'}`} />
-                            <div className="relative flex-1 flex items-center">
+                        {/* ── Name input ── */}
+                        <div className={`flex items-center gap-3 p-4 mb-5 rounded-2xl border transition-all group shadow-sm
+                            ${dk ? 'bg-[#242526] border-[#3E4042] focus-within:border-[#41B6E6]/50 focus-within:bg-transparent'
+                                 : 'bg-[#F8F9FA] border-[#E5E7EB] focus-within:border-[#0277C5]/40 focus-within:bg-white'}`}>
+                            <User size={16} className={`shrink-0 opacity-40 group-focus-within:opacity-100 transition-opacity ${dk ? 'text-[#41B6E6]' : 'text-[#0277C5]'}`} />
+                            <div className="relative flex-1 flex items-center overflow-hidden">
                                 {!userName && (
-                                    <div className={`absolute left-0 pointer-events-none text-[14px] font-khmer ${isDarkMode ? 'text-[#A0A0A0]' : 'text-[#6B7280]'}`}>
-                                        {lang === 'en' ? "Enter your name..." : "បញ្ជូលឈ្មោះរបស់អ្នក..."}
-                                    </div>
+                                    <span className={`absolute left-0 pointer-events-none text-[14px] font-khmer ${dk ? 'text-[#4B5563]' : 'text-[#D1D5DB]'}`}>
+                                        {lang === 'en' ? 'Enter your name…' : 'បញ្ចូលឈ្មោះ…'}
+                                    </span>
                                 )}
-                                <div 
-                                    ref={nameInputRef}
-                                    contentEditable="true"
-                                    onInput={(e) => setUserName(e.currentTarget.textContent)}
-                                    onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); e.target.blur(); } }}
-                                    className={`bg-transparent outline-none w-full font-khmer text-[15px] font-bold whitespace-nowrap overflow-hidden ${isDarkMode ? 'text-[#F1F1F1]' : 'text-[#1A1A1A]'}`}
+                                <div ref={nameRef} contentEditable suppressHydrationWarning spellCheck={false}
+                                    onInput={e => setUserName(e.currentTarget.textContent)}
+                                    onKeyDown={e => { if (e.key === 'Enter') { e.preventDefault(); e.target.blur(); } }}
+                                    className={`bg-transparent outline-none w-full font-khmer text-[15px] font-bold whitespace-nowrap overflow-hidden ${dk ? 'text-[#F1F1F1]' : 'text-[#1A1A1A]'}`}
                                     style={{ WebkitUserModify: 'read-write-plaintext-only' }}
-                                    spellCheck="false" autoCorrect="off" autoCapitalize="words" suppressHydrationWarning
                                 />
                             </div>
                         </div>
 
-                        <div className="grid gap-4">
-                            {['beginner', 'intermediate', 'advanced'].map(lvl => {
-                                const isLocked = !isAdmin && !currentUnlocked.includes(lvl);
-                                const stars = currentStars[lvl] || 0;
-                                const displayLevel = lang === 'en' ? lvl.charAt(0).toUpperCase() + lvl.slice(1) : (lvl === 'beginner' ? 'កម្រិតដំបូង' : lvl === 'intermediate' ? 'កម្រិតមធ្យម' : 'កម្រិតខ្ពស់');
-
+                        {/* ── Level buttons ── */}
+                        <div className="grid gap-3 mb-5">
+                            {LEVEL_DEFS.map(({ id, hint }) => {
+                                const locked = !isAdmin && !unlocked.includes(id);
+                                const s = stars[id] || 0;
                                 return (
-                                    <button key={lvl} onClick={() => startQuiz(lvl)} className={`p-4 sm:p-5 rounded-[1.25rem] sm:rounded-2xl border flex items-center justify-between transition-all duration-300 ease-spring active:scale-[0.98] ${isLocked ? (isDarkMode ? 'opacity-40 grayscale border-[#3E4042] cursor-not-allowed bg-[#242526]' : 'opacity-40 grayscale border-[#CED0D4] cursor-not-allowed bg-[#F8F9FA]') : (isDarkMode ? 'border-[#3E4042] bg-[#242526] hover:-translate-y-1 hover:border-[#41B6E6]/40 shadow-sm hover:shadow-[0_10px_20px_rgba(65,182,230,0.1)]' : 'border-[#CED0D4] bg-white hover:-translate-y-1 hover:border-[#0277C5]/40 shadow-sm hover:shadow-[0_10px_20px_rgba(2,119,197,0.1)]')}`}>
-                                        <div className="flex items-center gap-4 text-left">
-                                            <div className={`p-3 rounded-xl shadow-sm ${isLocked ? (isDarkMode ? 'bg-[#3A3B3C] text-[#A0A0A0]' : 'bg-[#E5E7EB] text-[#6B7280]') : (isDarkMode ? 'bg-[#41B6E6] text-[#121212]' : 'bg-[#0277C5] text-white')}`}>{isLocked ? <Lock size={18}/> : <Play size={18} fill="currentColor" className="ml-0.5"/>}</div>
-                                            <div><span className={`font-khmer font-black text-[15px] block ${isDarkMode && !isLocked ? 'text-[#F1F1F1]' : ''}`}>{displayLevel}</span><div className="flex gap-1 mt-1.5">{[1, 2, 3].map(s => <Star key={s} size={11} className={s <= stars ? "fill-[#C5B002] text-[#C5B002]" : (isDarkMode ? "text-[#3A3B3C]" : "text-[#E5E7EB]")} />)}</div></div>
+                                    <button key={id} onClick={() => startQuiz(id)} disabled={locked}
+                                        className={`p-4 sm:p-5 rounded-[1.25rem] border flex items-center justify-between transition-all duration-200 active:scale-[0.98] select-none
+                                            ${locked
+                                                ? dk ? 'opacity-40 border-[#2C2C2C] bg-[#1E1F20] cursor-not-allowed'
+                                                     : 'opacity-40 border-[#F0F2F5] bg-[#F8F9FA] cursor-not-allowed'
+                                                : dk ? 'border-[#3E4042] bg-[#242526] hover:border-[#41B6E6]/40 hover:-translate-y-0.5'
+                                                     : 'border-[#E5E7EB] bg-white hover:border-[#0277C5]/30 hover:-translate-y-0.5 shadow-sm'
+                                            }`}>
+                                        <div className="flex items-center gap-3.5">
+                                            <div className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0
+                                                ${locked
+                                                    ? dk ? 'bg-[#2C2C2C] text-[#4B5563]' : 'bg-[#F0F2F5] text-[#D1D5DB]'
+                                                    : dk ? 'bg-[#41B6E6]/15 text-[#41B6E6]' : 'bg-[#0277C5]/10 text-[#0277C5]'}`}>
+                                                {locked ? <Lock size={16} /> : <Play size={16} fill="currentColor" className="ml-0.5" />}
+                                            </div>
+                                            <div className="text-left">
+                                                <span className={`font-khmer font-black text-[15px] block leading-none mb-1.5 ${dk ? 'text-[#F1F1F1]' : 'text-[#1A1A1A]'}`}>
+                                                    {lvlLabel(id)}
+                                                </span>
+                                                {locked && hint
+                                                    ? <span className={`text-[10px] font-medium ${dk ? 'text-[#4B5563]' : 'text-[#D1D5DB]'}`}>{hint}</span>
+                                                    : <StarRow count={s} />
+                                                }
+                                            </div>
                                         </div>
-                                        {!isLocked && <ChevronRight size={20} className={`opacity-50 ${isDarkMode ? 'text-[#41B6E6]' : 'text-[#0277C5]'}`}/>}
+                                        {!locked && <ChevronRight size={18} className={`opacity-40 ${dk ? 'text-[#41B6E6]' : 'text-[#0277C5]'}`} />}
                                     </button>
                                 );
                             })}
-                            
-                            <div className={`mt-4 pt-6 border-t ${isDarkMode ? 'border-[#3E4042]' : 'border-[#E5E7EB]'} flex flex-col gap-3`}>
-                                <button onClick={() => startQuiz('final')} disabled={!allUnlocked} className={`p-5 rounded-[1.25rem] sm:rounded-2xl border flex items-center justify-between transition-all duration-300 ease-spring active:scale-[0.98] ${allUnlocked ? 'border-[#C5B002] bg-[#C5B002]/10 shadow-lg hover:-translate-y-1 hover:shadow-[#C5B002]/20' : (isDarkMode ? 'opacity-40 border-[#3E4042] cursor-not-allowed bg-[#242526]' : 'opacity-40 border-[#CED0D4] cursor-not-allowed bg-[#F8F9FA]')}`}>
-                                    <div className="flex items-center gap-4 text-left">
-                                        <div className={`p-3 rounded-xl ${allUnlocked ? 'bg-[#C5B002] text-white shadow-inner' : (isDarkMode ? 'bg-[#3A3B3C] text-[#A0A0A0]' : 'bg-[#E5E7EB] text-[#6B7280]')}`}><Trophy size={20}/></div>
-                                        <div>
-                                            <span className={`font-khmer font-black text-[15px] block ${allUnlocked ? 'text-[#C5B002]' : (isDarkMode ? 'text-[#A0A0A0]' : 'text-[#6B7280]')}`}>
-                                                {currentCert ? (lang === 'en' ? 'Retake Final Exam' : 'ប្រឡងយកវិញ្ញាបនបត្រម្តងទៀត') : (lang === 'en' ? 'Final Certification Exam' : 'តេស្តបញ្ចប់យកវិញ្ញាបនបត្រ')}
-                                                {isAdmin && <span className="ml-2 text-[10px] bg-red-500 text-white px-1.5 py-0.5 rounded-full inline-flex align-middle">ADMIN</span>}
-                                            </span>
-                                            <span className={`text-[10px] sm:text-[11px] ${isDarkMode ? 'text-[#A0A0A0]' : 'text-[#6B7280]'} font-black uppercase tracking-tighter mt-1 block`}>
-                                                {lang === 'en' ? '40 Questions • 15 Mins • 90% to Pass' : '៤០ សំណួរ • ១៥ នាទី • ជាប់ ៩០%'}
-                                            </span>
-                                        </div>
+                        </div>
+
+                        {/* ── Final exam + certs ── */}
+                        <div className={`pt-5 border-t ${dk ? 'border-[#2C2C2C]' : 'border-[#F0F2F5]'} flex flex-col gap-3`}>
+                            <button onClick={() => startQuiz('final')} disabled={!allOpen}
+                                className={`p-4 sm:p-5 rounded-[1.25rem] border flex items-center justify-between transition-all duration-200 active:scale-[0.98] select-none
+                                    ${allOpen
+                                        ? 'border-[#C5B002]/50 bg-[#C5B002]/[0.07] hover:-translate-y-0.5 shadow-sm'
+                                        : dk ? 'opacity-40 border-[#2C2C2C] bg-[#1E1F20] cursor-not-allowed'
+                                             : 'opacity-40 border-[#F0F2F5] bg-[#F8F9FA] cursor-not-allowed'}`}>
+                                <div className="flex items-center gap-3.5">
+                                    <div className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0
+                                        ${allOpen ? 'bg-[#C5B002]/20 text-[#C5B002]'
+                                                  : dk ? 'bg-[#2C2C2C] text-[#4B5563]' : 'bg-[#F0F2F5] text-[#D1D5DB]'}`}>
+                                        {allOpen ? <Trophy size={18} /> : <Lock size={16} />}
                                     </div>
-                                    {!allUnlocked && <Lock size={16} className={isDarkMode ? 'text-[#A0A0A0]' : 'text-[#6B7280]'}/>}
+                                    <div className="text-left">
+                                        <span className={`font-khmer font-black text-[15px] block leading-none mb-1 ${allOpen ? 'text-[#C5B002]' : dk ? 'text-[#4B5563]' : 'text-[#D1D5DB]'}`}>
+                                            {cert
+                                                ? lang === 'en' ? 'Retake Final Exam' : 'ប្រឡងម្ដងទៀត'
+                                                : lang === 'en' ? 'Final Certification Exam' : 'តេស្តបញ្ចប់'}
+                                            {isAdmin && <span className="ml-2 text-[9px] bg-red-500 text-white px-1.5 py-0.5 rounded-full">ADMIN</span>}
+                                        </span>
+                                        <span className={`text-[10px] font-medium ${dk ? 'text-[#4B5563]' : 'text-[#D1D5DB]'}`}>
+                                            {allOpen
+                                                ? lang === 'en' ? '40 Qs · 15 min · 90% to pass' : '៤០ · ១៥ នាទី · ជាប់ ៩០%'
+                                                : lang === 'en' ? 'Need ★★ on Advanced to unlock' : 'ត្រូវការ ★★ Advanced ដើម្បីដោះសោ'}
+                                        </span>
+                                    </div>
+                                </div>
+                                {!allOpen && <Lock size={14} className={dk ? 'text-[#3A3B3C]' : 'text-[#E5E7EB]'} />}
+                            </button>
+
+                            {isAdmin && !cert && (
+                                <button onClick={() => {
+                                    triggerHaptic('success');
+                                    const name = userName.trim() || 'Admin Tester';
+                                    const c = { name, score: 100, date: new Date().toISOString(), appCourse: appDisplayName(activeTab) };
+                                    setCertsData(p => ({ ...p, [activeTab]: c }));
+                                    setActiveCert(c); setGameState('certificate');
+                                }}
+                                className={`p-4 rounded-[1.25rem] border flex items-center justify-center gap-2 transition-all hover:-translate-y-0.5 active:scale-[0.98]
+                                    ${dk ? 'border-[#41B6E6]/30 bg-[#41B6E6]/[0.06] text-[#41B6E6]' : 'border-[#0277C5]/30 bg-[#0277C5]/[0.06] text-[#0277C5]'}`}>
+                                    <ShieldCheck size={17} />
+                                    <span className="font-black font-khmer text-[14px]">Admin: Generate Certificate</span>
                                 </button>
+                            )}
 
-                                {/* 🌟 ADMIN ONLY: Instant Generate Certificate Button */}
-                                {isAdmin && !currentCert && (
-                                    <button 
-                                        onClick={(e) => {
-                                            e.preventDefault(); e.stopPropagation();
-                                            triggerHaptic('success');
-                                            const finalName = userName.trim() || 'Admin Tester';
-                                            const appDisplayName = activeAppTab === 'photo' ? 'Affinity Photo' : activeAppTab === 'designer' ? 'Affinity Designer' : 'Affinity Publisher';
-                                            const newCert = { name: finalName, score: 100, date: new Date().toISOString(), appCourse: appDisplayName };
-                                            
-                                            setCertsData(prev => ({ ...prev, [activeAppTab]: newCert }));
-                                            setActiveCertData(newCert); 
-                                            setGameState('certificate');
-                                        }}
-                                        className={`p-4 rounded-[24px] border flex items-center justify-center gap-3 transition-all duration-500 ease-out hover:-translate-y-1 active:scale-95 shadow-md ${isDarkMode ? 'border-[#41B6E6]/50 bg-[#41B6E6]/10 text-[#41B6E6] hover:shadow-[0_10px_20px_rgba(65,182,230,0.15)]' : 'border-[#0277C5]/50 bg-[#0277C5]/10 text-[#0277C5] hover:shadow-[0_10px_20px_rgba(2,119,197,0.15)]'}`}
-                                    >
-                                        <ShieldCheck size={20} />
-                                        <span className="font-khmer font-black text-[15px] tracking-tight">Admin: Generate Certificate</span>
-                                    </button>
-                                )}
-
-                                {/* 🌟 USERS: View Saved Certificate */}
-                                {currentCert && (
-                                    <button 
-                                        onClick={(e) => {
-                                            e.preventDefault(); e.stopPropagation();
-                                            setActiveCertData(currentCert);
-                                            setGameState('certificate');
-                                        }} 
-                                        className={`p-4 rounded-[24px] border flex items-center justify-center gap-3 transition-all duration-500 ease-out hover:-translate-y-1 active:scale-95 shadow-md ${isDarkMode ? 'border-[#41B6E6]/50 bg-[#41B6E6]/10 text-[#41B6E6] hover:shadow-[0_10px_20px_rgba(65,182,230,0.15)]' : 'border-[#0277C5]/50 bg-[#0277C5]/10 text-[#0277C5] hover:shadow-[0_10px_20px_rgba(2,119,197,0.15)]'}`}
-                                    >
-                                        <Award size={20} />
-                                        <span className="font-khmer font-black text-[15px] tracking-tight">{lang === 'en' ? 'View My Certificate' : 'មើលវិញ្ញាបនបត្ររបស់ខ្ញុំ'}</span>
-                                    </button>
-                                )}
-                            </div>
+                            {cert && (
+                                <button onClick={() => { setActiveCert(cert); setGameState('certificate'); }}
+                                    className="p-4 rounded-[1.25rem] border border-[#C5B002]/40 bg-[#C5B002]/[0.07] flex items-center justify-center gap-2 transition-all hover:-translate-y-0.5 active:scale-[0.98]">
+                                    <Award size={17} className="text-[#C5B002]" />
+                                    <span className="font-black font-khmer text-[14px] text-[#C5B002]">
+                                        {lang === 'en' ? 'View My Certificate' : 'មើលវិញ្ញាបនបត្រ'}
+                                    </span>
+                                </button>
+                            )}
                         </div>
                     </div>
                 </div>
@@ -480,134 +556,170 @@ const Test = ({ isDarkMode, isAdmin }) => {
         );
     }
 
-    // === RENDER STATE: PLAYING ===
-    const q = questions[currentQuestion];
+    // ─── Render: Playing ──────────────────────────────────────────────────────
+
+    const q = questions[currentQ];
     if (gameState === 'playing' && q) {
-        const progressPercent = ((currentQuestion) / questions.length) * 100;
-        
+        const progPct  = (currentQ / questions.length) * 100;
+        const isFinal  = quizConfig.level === 'final';
+        const timeLimit = getTimeLimit(quizConfig.level);
+
         return (
-            <div className={`w-full flex flex-col relative z-10 pb-[150px] transition-colors duration-500 ${isDarkMode ? 'text-[#F1F1F1] bg-transparent' : 'text-[#1A1A1A] bg-transparent'}`}>
-                
-                {/* Standard Unified Panel containing Top Bar and Question */}
-                <div className="w-full max-w-3xl mx-auto pt-2 px-2 sm:px-6">
-                    <div className={`w-full rounded-[2rem] border p-5 sm:p-8 shadow-sm flex flex-col gap-6 transition-all ${isShaking ? 'animate-shake border-red-500' : isDarkMode ? 'bg-[#18191A] border-[#2C2C2C]' : 'bg-white border-[#E5E7EB]'}`}>
-                        
-                        {/* Top Bar */}
-                        <div className="flex items-center justify-between gap-4 border-b pb-5 border-gray-500/10">
-                            <button onClick={() => setGameState('menu')} className={`p-1.5 sm:p-2 rounded-full outline-none focus:outline-none transition-colors active:scale-95 ${isDarkMode ? 'hover:bg-[#242526] text-[#A0A0A0]' : 'hover:bg-[#F0F2F5] text-[#6B7280]'}`}>
-                                <X size={20} className="sm:w-6 sm:h-6" />
+            <div className={`w-full flex flex-col relative z-10 pb-[150px] ${dk ? 'text-[#F1F1F1]' : 'text-[#1A1A1A]'}`}>
+                <div className="w-full max-w-3xl mx-auto pt-2 px-3 sm:px-6">
+                    <div className={`w-full rounded-[2rem] border p-5 sm:p-8 shadow-sm flex flex-col gap-6 transition-colors ${dk ? 'bg-[#18191A]' : 'bg-white'}
+                        ${shaking ? 'animate-shake border-red-500/40' : dk ? 'border-[#2C2C2C]' : 'border-[#E5E7EB]'}`}>
+
+                        {/* ── Top bar ── */}
+                        <div className="flex items-center gap-3 border-b pb-5 border-gray-500/10">
+                            {/* Back */}
+                            <button onClick={() => setGameState('menu')}
+                                className={`p-1.5 rounded-full shrink-0 transition-colors active:scale-90 ${dk ? 'hover:bg-[#242526] text-[#6B7280]' : 'hover:bg-[#F0F2F5] text-[#9CA3AF]'}`}>
+                                <X size={20} />
                             </button>
-                            
-                            <div className="flex-1 max-w-sm mx-auto">
-                                <div className={`h-2 sm:h-2.5 w-full rounded-full overflow-hidden ${isDarkMode ? 'bg-[#2C2C2C]' : 'bg-[#E5E7EB]'}`}>
-                                    <div className={`h-full bg-gradient-to-r from-[#41B6E6] to-[#0277C5] rounded-full transition-all duration-300 ease-out`} style={{ width: `${progressPercent}%` }}></div>
+
+                            {/* Progress bar + Q counter */}
+                            <div className="flex-1 min-w-0">
+                                <div className={`h-2 w-full rounded-full overflow-hidden mb-1.5 ${dk ? 'bg-[#2C2C2C]' : 'bg-[#F0F2F5]'}`}>
+                                    <div className="h-full bg-gradient-to-r from-[#41B6E6] to-[#0277C5] rounded-full transition-all duration-500 ease-out"
+                                        style={{ width: `${progPct}%` }} />
+                                </div>
+                                <div className="flex justify-between items-center">
+                                    <span className={`text-[10px] font-bold truncate ${dk ? 'text-[#4B5563]' : 'text-[#D1D5DB]'}`}>
+                                        {isFinal ? appDisplayName(activeTab) : lvlLabel(quizConfig.level)}
+                                    </span>
+                                    <span className={`text-[10px] font-black tabular-nums shrink-0 ml-2 ${dk ? 'text-[#6B7280]' : 'text-[#9CA3AF]'}`}>
+                                        {currentQ + 1}&thinsp;/&thinsp;{questions.length}
+                                    </span>
                                 </div>
                             </div>
-                            
+
+                            {/* Timer + streak */}
                             <div className="flex items-center gap-2 shrink-0">
-                                {quizConfig.level === 'final' ? (
-                                    timeLeft !== null && (
-                                        <div className={`flex items-center gap-1.5 px-3 py-1 sm:py-1.5 rounded-xl border ${timeLeft <= 60 ? 'bg-red-500/10 border-red-500/20 text-red-500 animate-pulse' : (isDarkMode ? 'bg-[#41B6E6]/10 border-[#41B6E6]/20 text-[#41B6E6]' : 'bg-[#0277C5]/10 border-[#0277C5]/20 text-[#0277C5]')}`}>
-                                            <Timer size={14} className="sm:w-4 sm:h-4" />
-                                            <span className="font-black text-[11px] sm:text-sm font-mono">{formatTime(timeLeft)}</span>
+                                {isFinal
+                                    ? globalTimer !== null && (
+                                        <div className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl border text-[11px] font-black tabular-nums
+                                            ${globalTimer <= 60
+                                                ? 'bg-red-500/10 border-red-500/20 text-red-500 animate-pulse'
+                                                : dk ? 'bg-[#41B6E6]/10 border-[#41B6E6]/20 text-[#41B6E6]'
+                                                     : 'bg-[#0277C5]/10 border-[#0277C5]/20 text-[#0277C5]'}`}>
+                                            <Timer size={13} />
+                                            <span>{formatTime(globalTimer)}</span>
                                         </div>
                                     )
-                                ) : (
-                                    questionTimeLeft !== null && (
-                                        <div className={`flex items-center gap-1.5 px-3 py-1 sm:py-1.5 rounded-xl border ${questionTimeLeft <= 5 ? 'bg-red-500/10 border-red-500/20 text-red-500 animate-pulse' : (isDarkMode ? 'bg-[#41B6E6]/10 border-[#41B6E6]/20 text-[#41B6E6]' : 'bg-[#0277C5]/10 border-[#0277C5]/20 text-[#0277C5]')}`}>
-                                            <Timer size={14} className="sm:w-4 sm:h-4" />
-                                            <span className="font-black text-[11px] sm:text-sm font-mono">{formatTime(questionTimeLeft)}</span>
-                                        </div>
+                                    : qTimer !== null && (
+                                        <TimerRing timeLeft={qTimer} totalTime={timeLimit} isDark={dk} />
                                     )
-                                )}
-                                <div className={`flex items-center gap-1 px-2.5 py-1 sm:py-1.5 rounded-xl border ${isDarkMode ? 'bg-[#C55002]/10 border-[#C55002]/20' : 'bg-[#C55002]/10 border-[#C55002]/20'}`}>
-                                    <Flame size={14} className={`sm:w-4 sm:h-4 ${streak > 0 ? 'text-[#C55002] fill-[#C55002] animate-pulse' : (isDarkMode ? 'text-[#4E4F50]' : 'text-[#CED0D4]')}`} />
-                                    <span className="font-black text-[11px] sm:text-sm text-[#C55002]">{streak}</span>
+                                }
+                                {/* Streak */}
+                                <div className={`flex items-center gap-1 px-2.5 py-1.5 rounded-xl border ${dk ? 'bg-[#242526] border-[#3E4042]' : 'bg-[#F8F9FA] border-[#E5E7EB]'}`}>
+                                    <Flame size={14} className={streak > 0 ? 'text-orange-500 fill-orange-500' : dk ? 'text-[#3A3B3C]' : 'text-[#E5E7EB]'} />
+                                    <span className={`text-[12px] font-black tabular-nums ${streak > 0 ? 'text-orange-500' : dk ? 'text-[#4B5563]' : 'text-[#D1D5DB]'}`}>{streak}</span>
                                 </div>
                             </div>
                         </div>
 
-                        {/* Question */}
-                        <div className="w-full mb-2">
-                            <h2 className="text-xl sm:text-2xl font-black font-khmer leading-snug sm:leading-relaxed text-left">
+                        {/* ── Question + options (re-animates per question) ── */}
+                        <div key={currentQ} className="animate-fade-in-up flex flex-col gap-5">
+                            <h2 className="text-[18px] sm:text-xl font-black font-khmer leading-snug sm:leading-relaxed">
                                 {q.question}
                             </h2>
-                        </div>
+                            <div className="grid gap-3">
+                                {q.options.map((opt, i) => {
+                                    const isChoice  = selected === i;
+                                    const isCorrect = q.correct === i;
 
-                        {/* Options */}
-                        <div className="grid gap-3.5 w-full">
-                            {q.options.map((opt, i) => {
-                                const isUserChoice = selectedOption === i;
-                                const isCorrectChoice = q.correct === i;
-                                
-                                let btnStyle = isDarkMode ? 'bg-[#242526] border-[#3E4042] text-[#F1F1F1]' : 'bg-[#F8F9FA] border-[#CED0D4] text-[#1A1C1E] shadow-sm';
-                                let iconStyle = isDarkMode ? 'bg-[#3A3B3C] text-[#A0A0A0] border-[#4E4F50]' : 'bg-white text-[#6B7280] border-[#E4E6EB]';
+                                    let card  = dk ? 'bg-[#242526] border-[#3E4042] text-[#E4E6EB]'
+                                                   : 'bg-[#F8F9FA] border-[#E5E7EB] text-[#1A1C1E] shadow-sm';
+                                    let badge = dk ? 'bg-[#3A3B3C] text-[#9CA3AF] border-[#4E4F50]'
+                                                   : 'bg-white text-[#9CA3AF] border-[#E5E7EB]';
 
-                                if (!isAnswered) {
-                                    btnStyle += isDarkMode ? ' hover:border-[#41B6E6]/50' : ' hover:border-[#0277C5]/50';
-                                } else {
-                                    if (isCorrectChoice) {
-                                        btnStyle = 'bg-green-500/10 border-green-500/40 text-green-600 font-bold';
-                                        iconStyle = 'bg-green-500 text-white border-green-500 shadow-md shadow-green-500/20';
-                                    } else if (isUserChoice) {
-                                        btnStyle = 'bg-red-500/10 border-red-500/40 text-red-600 font-bold';
-                                        iconStyle = 'bg-red-500 text-white border-red-500 shadow-md shadow-red-500/20';
+                                    if (!answered) {
+                                        card += dk ? ' hover:border-[#41B6E6]/40 hover:bg-[#2E2F30]'
+                                                   : ' hover:border-[#0277C5]/30 hover:bg-white';
+                                    } else if (isCorrect) {
+                                        card  = 'bg-emerald-500/10 border-emerald-500/40 text-emerald-600 font-bold';
+                                        badge = 'bg-emerald-500 text-white border-emerald-500';
+                                    } else if (isChoice) {
+                                        card  = 'bg-red-500/10 border-red-500/40 text-red-600 font-bold';
+                                        badge = 'bg-red-500 text-white border-red-500';
                                     } else {
-                                        btnStyle = 'opacity-40 grayscale border-transparent bg-transparent shadow-none text-[#6B7280]';
-                                        iconStyle = 'opacity-0';
+                                        card  = 'opacity-30 border-transparent bg-transparent shadow-none';
+                                        badge = 'opacity-0';
                                     }
-                                }
 
-                                return (
-                                    <button 
-                                        key={i} 
-                                        disabled={isAnswered} 
-                                        style={{ WebkitTapHighlightColor: 'transparent' }}
-                                        onClick={() => handleOptionClick(i)} 
-                                        className={`p-4 sm:p-5 text-left rounded-[1.25rem] border-2 transition-all duration-300 ease-spring font-khmer text-[15px] sm:text-[16px] font-bold flex items-center group relative overflow-hidden active:scale-[0.98] outline-none focus:outline-none ${btnStyle}`}
-                                    >
-                                        <span className={`w-9 h-9 min-w-[36px] flex items-center justify-center rounded-xl border mr-4 text-[12px] sm:text-[13px] font-black transition-all ${iconStyle}`}>{String.fromCharCode(65 + i)}</span>
-                                        <span className="flex-1 leading-snug">{opt}</span>
-                                    </button>
-                                );
-                            })}
-                        </div>
-                    </div>
-                </div>
-            </div>
-        );
-    }
-
-    // === RENDER STATE: RESULT ===
-    if (gameState === 'result') {
-        const percentage = Math.round((score / questions.length) * 100);
-
-        return (
-            <div className={`w-full flex flex-col relative z-10 pb-[150px] transition-colors duration-500 ${isDarkMode ? 'text-[#F1F1F1] bg-transparent' : 'text-[#1A1A1A] bg-transparent'}`}>
-                <div className="w-full max-w-3xl mx-auto pt-4 px-2 sm:px-6">
-                    <div className={`w-full rounded-[2rem] border p-10 sm:p-14 text-center shadow-sm transition-all ${isDarkMode ? 'bg-[#18191A] border-[#2C2C2C]' : 'bg-white border-[#E5E7EB]'}`}>
-                        <div className="relative w-32 h-32 sm:w-40 sm:h-40 mx-auto mb-10">
-                            <svg className="w-full h-full transform -rotate-90" viewBox="0 0 144 144">
-                                <circle cx="72" cy="72" r="64" className={isDarkMode ? 'text-[#2C2C2C]' : 'text-[#F0F2F5]'} strokeWidth="12" fill="none" stroke="currentColor" />
-                                <circle cx="72" cy="72" r="64" className="text-[#0277C5]" strokeWidth="12" fill="none" strokeDasharray="401.9" strokeDashoffset={401.9 - (401.9 * percentage) / 100} strokeLinecap="round" stroke="currentColor" style={{ transition: 'stroke-dashoffset 1.5s ease-in-out' }}/>
-                            </svg>
-                            <div className="absolute inset-0 flex flex-col items-center justify-center leading-none">
-                                <span className="text-4xl sm:text-5xl font-black">{percentage}</span>
-                                <span className={`text-[10px] sm:text-[11px] font-black ${isDarkMode ? 'text-[#A0A0A0]' : 'text-[#6B7280]'} mt-2 uppercase tracking-widest`}>{lang === 'en' ? '% Score' : '% ពិន្ទុ'}</span>
+                                    return (
+                                        <button key={i} disabled={answered} onClick={() => handleAnswer(i)}
+                                            className={`animate-slide-in p-4 sm:p-5 text-left rounded-[1.25rem] border-2 flex items-center gap-4 font-khmer text-[15px] sm:text-[16px] font-bold transition-all duration-200 active:scale-[0.98] outline-none select-none ${card}`}
+                                            style={{ animationDelay: `${i * 45}ms`, animationFillMode: 'both' }}>
+                                            <span className={`w-9 h-9 min-w-[36px] flex items-center justify-center rounded-xl border text-[12px] font-black shrink-0 transition-all ${badge}`}>
+                                                {String.fromCharCode(65 + i)}
+                                            </span>
+                                            <span className="flex-1 leading-snug">{opt}</span>
+                                        </button>
+                                    );
+                                })}
                             </div>
                         </div>
-                        <h2 className="text-2xl sm:text-3xl font-black font-khmer mb-4">
-                            {percentage >= 80 ? (lang === 'en' ? "Excellent!" : "អស្ចារ្យណាស់បង!") : (lang === 'en' ? "Try again!" : "ព្យាយាមម្តងទៀត!")}
+                    </div>
+                </div>
+            </div>
+        );
+    }
+
+    // ─── Render: Result ───────────────────────────────────────────────────────
+
+    if (gameState === 'result') {
+        const total  = questions.length;
+        const pct    = Math.round((score / total) * 100);
+        const isFinal = quizConfig.level === 'final';
+        const ringColor = pct >= (isFinal ? 90 : 80) ? '#10b981' : pct >= 50 ? '#0277C5' : '#ef4444';
+
+        return (
+            <div className={`w-full flex flex-col relative z-10 pb-[150px] ${dk ? 'text-[#F1F1F1]' : 'text-[#1A1A1A]'}`}>
+                <div className="w-full max-w-3xl mx-auto pt-4 px-3 sm:px-6 animate-fade-in-up">
+                    <div className={`rounded-[2rem] border p-10 sm:p-14 text-center shadow-sm ${dk ? 'bg-[#18191A] border-[#2C2C2C]' : 'bg-white border-[#E5E7EB]'}`}>
+
+                        {/* Score ring */}
+                        <ScoreRing pct={pct} ringColor={ringColor} dk={dk} />
+
+                        {/* Message */}
+                        <h2 className="text-2xl sm:text-3xl font-black font-khmer mb-2">
+                            {pct >= (isFinal ? 90 : 80)
+                                ? (lang === 'en' ? 'Excellent!' : 'អស្ចារ្យ!')
+                                : (lang === 'en' ? 'Keep going!' : 'ព្យាយាមម្ដងទៀត!')}
                         </h2>
-                        <p className={`font-khmer font-medium ${isDarkMode ? 'text-[#A0A0A0]' : 'text-[#6B7280]'} mb-10 text-[15px] sm:text-[16px]`}>
-                            {lang === 'en' ? `You answered ${score} / ${questions.length} questions correctly` : `អ្នកឆ្លើយត្រូវ ${score} / ${questions.length} សំណួរ`}
+                        <p className={`font-khmer font-medium text-[15px] mb-5 ${dk ? 'text-[#9CA3AF]' : 'text-[#6B7280]'}`}>
+                            {lang === 'en' ? `${score} / ${total} correct` : `ឆ្លើយត្រូវ ${score} / ${total}`}
                         </p>
-                        <div className="flex flex-col gap-4 max-w-sm mx-auto">
-                            <button onClick={() => setGameState('review')} style={{ WebkitTapHighlightColor: 'transparent' }} className={`w-full py-4 sm:py-5 rounded-[1.25rem] outline-none focus:outline-none font-black font-khmer border-2 transition-all active:scale-[0.98] ${isDarkMode ? 'bg-[#242526] border-[#3E4042] text-[#41B6E6] hover:border-[#41B6E6]/50' : 'bg-[#F0F2F5] border-[#CED0D4] text-[#0277C5] hover:border-[#0277C5]/50'}`}>
-                                {lang === 'en' ? 'Review Answers' : 'មើលចម្លើយឡើងវិញ'}
+
+                        {/* Best streak badge */}
+                        {maxStreak >= 2 && (
+                            <div className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full mb-2 text-[12px] font-black
+                                ${dk ? 'bg-orange-500/10 border border-orange-500/20 text-orange-400' : 'bg-orange-50 border border-orange-200 text-orange-600'}`}>
+                                <Flame size={13} className="fill-orange-500 text-orange-500" />
+                                {lang === 'en' ? `Best streak: ${maxStreak}` : `ស្ទ្រេកល្អបំផុត: ${maxStreak}`}
+                            </div>
+                        )}
+
+                        {/* Actions */}
+                        <div className="flex flex-col gap-3 max-w-[280px] mx-auto mt-8">
+                            <button onClick={() => startQuiz(quizConfig.level)}
+                                className={`w-full py-4 rounded-[1.25rem] font-black font-khmer text-[15px] flex items-center justify-center gap-2 active:scale-[0.98] transition-all shadow-lg
+                                    ${dk ? 'bg-[#41B6E6] text-[#0A0A0A] hover:bg-[#30A5D5] shadow-[#41B6E6]/20'
+                                         : 'bg-[#0277C5] text-white hover:bg-[#0166A8] shadow-[#0277C5]/20'}`}>
+                                <RotateCcw size={16} />
+                                {lang === 'en' ? 'Play Again' : 'លេងម្ដងទៀត'}
                             </button>
-                            <button onClick={() => setGameState('menu')} style={{ WebkitTapHighlightColor: 'transparent' }} className="w-full py-4 sm:py-5 rounded-[1.25rem] outline-none focus:outline-none bg-[#0277C5] text-white font-black font-khmer active:scale-[0.98] transition-all shadow-xl shadow-[#0277C5]/30 hover:bg-[#01579B]">
-                                {lang === 'en' ? 'Back to Menu' : 'ត្រលប់ទៅកាន់ Menu'}
+                            <button onClick={() => setGameState('review')}
+                                className={`w-full py-4 rounded-[1.25rem] font-black font-khmer text-[15px] border-2 active:scale-[0.98] transition-all
+                                    ${dk ? 'border-[#3E4042] text-[#9CA3AF] hover:border-[#41B6E6]/40 hover:text-[#F1F1F1]'
+                                         : 'border-[#E5E7EB] text-[#6B7280] hover:border-[#0277C5]/40 hover:text-[#1A1A1A]'}`}>
+                                {lang === 'en' ? 'Review Answers' : 'មើលចម្លើយ'}
+                            </button>
+                            <button onClick={() => setGameState('menu')}
+                                className={`w-full py-3 font-bold font-khmer text-[14px] active:scale-[0.98] transition-all ${dk ? 'text-[#4B5563] hover:text-[#9CA3AF]' : 'text-[#D1D5DB] hover:text-[#9CA3AF]'}`}>
+                                {lang === 'en' ? 'Back to Menu' : 'ត្រឡប់ Menu'}
                             </button>
                         </div>
                     </div>
@@ -616,39 +728,45 @@ const Test = ({ isDarkMode, isAdmin }) => {
         );
     }
 
-    // === RENDER STATE: REVIEW ===
+    // ─── Render: Review ───────────────────────────────────────────────────────
+
     return (
-        <div className={`w-full flex flex-col relative z-10 pb-[150px] transition-colors duration-500 ${isDarkMode ? 'text-[#F1F1F1] bg-transparent' : 'text-[#1A1A1A] bg-transparent'}`}>
-            <div className="w-full max-w-3xl mx-auto pt-2 px-2 sm:px-6">
-                <div className={`w-full rounded-[2rem] border p-6 sm:p-10 shadow-sm transition-all flex flex-col ${isDarkMode ? 'bg-[#18191A] border-[#2C2C2C]' : 'bg-white border-[#E5E7EB]'}`}>
-                    
-                    <div className="flex items-center justify-between mb-8 pb-6 border-b border-gray-500/10 shrink-0">
-                        <div className="flex flex-col">
-                            <h2 className="text-xl sm:text-2xl font-black font-khmer leading-none">{lang === 'en' ? 'Review' : 'ការត្រួតពិនិត្យ'}</h2>
-                            <p className={`text-[10px] sm:text-xs ${isDarkMode ? 'text-[#A0A0A0]' : 'text-[#6B7280]'} font-black font-khmer uppercase mt-2 tracking-widest`}>{lang === 'en' ? 'Review your answers' : 'ពិនិត្យមើលចម្លើយរបស់អ្នកឡើងវិញ'}</p>
+        <div className={`w-full flex flex-col relative z-10 pb-[150px] ${dk ? 'text-[#F1F1F1]' : 'text-[#1A1A1A]'}`}>
+            <div className="w-full max-w-3xl mx-auto pt-2 px-3 sm:px-6">
+                <div className={`rounded-[2rem] border p-6 sm:p-10 shadow-sm ${dk ? 'bg-[#18191A] border-[#2C2C2C]' : 'bg-white border-[#E5E7EB]'}`}>
+                    <div className="flex items-center justify-between mb-6 pb-5 border-b border-gray-500/10">
+                        <div>
+                            <h2 className="text-xl font-black font-khmer">{lang === 'en' ? 'Review' : 'ការត្រួតពិនិត្យ'}</h2>
+                            <p className={`text-[11px] font-bold uppercase tracking-widest mt-1 ${dk ? 'text-[#4B5563]' : 'text-[#D1D5DB]'}`}>
+                                {score}&thinsp;/&thinsp;{questions.length}&nbsp;{lang === 'en' ? 'correct' : 'ត្រូវ'}
+                            </p>
                         </div>
-                        <button onClick={() => setGameState('result')} style={{ WebkitTapHighlightColor: 'transparent' }} className={`p-3 rounded-full outline-none focus:outline-none transition-colors ${isDarkMode ? 'bg-[#242526] hover:bg-[#3A3B3C]' : 'bg-[#F8F9FA] hover:bg-[#E5E7EB]'} shadow-sm`}><X size={20} className={isDarkMode ? 'text-[#A0A0A0]' : 'text-[#6B7280]'} /></button>
+                        <button onClick={() => setGameState('result')}
+                            className={`p-2.5 rounded-full transition-colors ${dk ? 'bg-[#242526] hover:bg-[#3A3B3C] text-[#9CA3AF]' : 'bg-[#F0F2F5] hover:bg-[#E5E7EB] text-[#6B7280]'}`}>
+                            <X size={18} />
+                        </button>
                     </div>
-                    
-                    <div className="flex flex-col space-y-5">
+                    <div className="flex flex-col gap-4">
                         {userAnswers.map((ans, idx) => {
-                            const qInfo = questions[ans.qId];
-                            if (!qInfo) return null;
+                            const qi = questions[ans.qId];
+                            if (!qi) return null;
                             return (
-                                <div key={idx} className={`p-5 sm:p-6 rounded-[1.5rem] border transition-all ${isDarkMode ? 'bg-[#242526] border-[#3E4042]' : 'bg-[#F8F9FA] border-[#CED0D4]'}`}>
-                                    <p className="font-black font-khmer text-[15px] sm:text-[16px] mb-5 leading-relaxed">{idx + 1}. {qInfo.question}</p>
-                                    <div className="grid gap-3">
-                                        {qInfo.options.map((opt, i) => {
-                                            const isCorrect = qInfo.correct === i;
-                                            const isSelected = ans.selected === i;
-                                            let style = isDarkMode ? 'text-[#A0A0A0] bg-transparent border-[#3E4042]' : 'text-[#6B7280] bg-white border-[#E4E6EB]';
-                                            
-                                            if (isCorrect) style = 'bg-green-500/10 text-green-600 border-green-500/30 font-bold';
-                                            else if (isSelected) style = 'bg-red-500/10 text-red-600 border-red-500/30 font-bold';
-                                            
+                                <div key={idx} className={`p-5 rounded-[1.5rem] border ${dk ? 'bg-[#242526] border-[#3E4042]' : 'bg-[#F8F9FA] border-[#E5E7EB]'}`}>
+                                    <p className="font-black font-khmer text-[15px] mb-4 leading-relaxed">
+                                        {idx + 1}.&nbsp;{qi.question}
+                                    </p>
+                                    <div className="grid gap-2">
+                                        {qi.options.map((opt, i) => {
+                                            const ok  = qi.correct === i;
+                                            const sel = ans.selected === i;
+                                            let s = dk ? 'text-[#6B7280] bg-transparent border-[#3E4042]' : 'text-[#9CA3AF] bg-white border-[#E5E7EB]';
+                                            if (ok)  s = 'bg-emerald-500/10 text-emerald-600 border-emerald-500/30 font-bold';
+                                            if (sel && !ok) s = 'bg-red-500/10 text-red-600 border-red-500/30 font-bold';
                                             return (
-                                                <div key={i} className={`p-3.5 sm:p-4 rounded-xl border flex items-center gap-3 text-[14px] font-khmer transition-all ${style}`}>
-                                                    {isCorrect ? <CheckCircle2 size={18} /> : isSelected ? <XCircle size={18} /> : <div className={`w-[18px] h-[18px] rounded-full border-2 shrink-0 ${isDarkMode ? 'border-[#4E4F50]' : 'border-[#CED0D4]'}`}/>}
+                                                <div key={i} className={`p-3.5 rounded-xl border flex items-center gap-3 text-[13px] font-khmer ${s}`}>
+                                                    {ok  ? <CheckCircle2 size={16} className="shrink-0" />
+                                                    : sel ? <XCircle      size={16} className="shrink-0" />
+                                                    : <div className={`w-4 h-4 rounded-full border-2 shrink-0 ${dk ? 'border-[#4E4F50]' : 'border-[#E5E7EB]'}`} />}
                                                     <span className="leading-snug">{opt}</span>
                                                 </div>
                                             );

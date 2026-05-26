@@ -186,11 +186,80 @@ export const basicsData = [
     {
         primaryKeys: ['ឧបករណ៍ជំនួយ UI', 'ui tools'],
         keys: ['layout generator', 'បើកប្លង់', 'បើកឧបករណ៍', 'ឧបករណ៍ជំនួយ', 'open tools'],
-        regex: ['^ឧបករណ៍ជំនួយ$', '^layout generator$', '^open tools$'], // STRICT: Only perfectly matching these exact phrases
+        regex: ['^ឧបករណ៍ជំនួយ$', '^layout generator$', '^open tools$'],
         answer: "បាទ ខ្ញុំមានឧបករណ៍ពិសេសសម្រាប់អ្នក! អ្នកអាចបង្កើតពណ៌ ឬមើលគំរូប្លង់ខ្នាតស្តង់ដារបាននៅទីនេះ៖",
         answer_en: "I have some special tools for you! You can generate colors or view standard layout grids here:",
         actionButton: { label: "បើកឧបករណ៍ជំនួយ 🛠️", label_en: "Open Design Tools 🛠️", actionToTrigger: "tools" },
         chips: ["តើទំហំ Poster ស្តង់ដារមានអ្វីខ្លះ? 📏", "តើ Rule of Thirds គឺជាអ្វី?"],
         chips_en: ["Standard Poster Sizes & Layouts? 📏", "What is the Rule of Thirds?"]
+    },
+
+    // ─── MARKETING: App overview & value proposition ──────────────────────────
+    {
+        primaryKeys: ['App នេះជាអ្វី', 'what is this app'],
+        keys: ['app overview', 'about this app', 'what does this app do', 'affinity learning app', 'this platform', 'App ជាអ្វី'],
+        regex: ['(what is|about|overview).*(this app|affinity ipad)', 'app.*overview', 'App.*ជាអ្វី'],
+        answer: "**Affinity iPad App** គឺជាវេទិការៀន Design ផ្លូវការ ដែលជួយអ្នករៀន Affinity Photo, Designer, និង Publisher ដោយ**ជំហានជំហាន**!\n\n🎓 **អ្វីដែលអ្នកទទួលបាន:**\n- មេរៀន Affinity ពី Beginner ដល់ Advanced\n- **Quiz** ដើម្បីសាកល្បងចំណេះដឹង\n- **វិញ្ញាបនបត្ររចនា** ជាបញ្ជាក់សមត្ថភាព\n- AI Assistant, Color Generator, Layout Tools\n\n✨ ចាប់ផ្តើមដោយ**ឥតគិតថ្លៃ** — ហើយក្លាយជា Designer វិជ្ជាជីវៈ!",
+        answer_en: "**Affinity iPad App** is your official step-by-step design learning platform for Affinity Photo, Designer & Publisher!\n\n🎓 **What you get:**\n- Structured lessons from Beginner to Advanced\n- **Knowledge Quizzes** to test your skills\n- **Professional Design Certificates** to prove your expertise\n- AI Assistant, Color Generator & Layout Tools\n\n✨ Start completely **free** — and grow into a professional designer!",
+        actionButton: { label: "ចាប់ផ្តើមរៀន 🚀", label_en: "Start Learning 🚀", actionToTrigger: "quiz" },
+        chips: ["ចង់ធ្វើតេស្ត 🎯", "App ប្រើបានដោយឥតគិតថ្លៃទេ?"],
+        chips_en: ["Take a Quiz 🎯", "Is the app free to use?"]
+    },
+
+    // ─── MARKETING: Pricing / free tier ──────────────────────────────────────
+    {
+        primaryKeys: ['App ប្រើបានដោយឥតគិតថ្លៃទេ?', 'is the app free to use'],
+        keys: ['ឥតគិតថ្លៃ', 'ថ្លៃ', 'free', 'paid', 'cost', 'price', 'subscription', 'premium', 'upgrade', 'how much'],
+        regex: ['(free|paid|cost|price|ឥតគិតថ្លៃ|ថ្លៃ|subscription|how much)', '\\bpremium\\b'],
+        answer: "**ឥតគិតថ្លៃ ១០០%** ដើម្បីចាប់ផ្តើម! 🎉\n\n**✅ Free:**\n- មេរៀន Beginner ទាំងអស់\n- Quiz & AI Assistant\n- Color Generator & Design Tools\n\n**🌟 Premium:**\n- Unlock Advanced Lessons\n- 🏆 វិញ្ញាបនបត្ររចនាផ្លូវការ (Certificate)\n- ⚡ Final Certification Exam\n\n💡 ចាប់ផ្តើមដោយ Free ហើយ Upgrade នៅពេលអ្នករួចគ្រប់!",
+        answer_en: "**100% Free to start!** 🎉\n\n**✅ Free includes:**\n- All Beginner lessons\n- Quiz, AI Assistant & Design Tools\n- Color Generator\n\n**🌟 Premium unlocks:**\n- Advanced & locked lessons\n- 🏆 Official Design Certificate\n- ⚡ Final Certification Exam (90% to pass)\n\n💡 Start free today — upgrade when you're ready!",
+        chips: ["ចាប់ផ្តើមដោយរបៀបណា", "វិញ្ញាបនបត្ររចនា 🏆"],
+        chips_en: ["How to get started", "Design Certificate 🏆"]
+    },
+
+    // ─── MARKETING: Why Affinity on iPad ─────────────────────────────────────
+    {
+        primaryKeys: ['ហេតុអ្វីប្រើ Affinity iPad', 'why use affinity on ipad'],
+        keys: ['advantage', 'ហេតុអ្វី', 'why affinity', 'why ipad', 'benefit', 'best for'],
+        regex: ['(ហេតុអ្វី|why).*(affinity|ipad|app)', 'advantage.*affinity', 'best.*ipad.*design'],
+        answer: "Affinity iPad គឺជា**ជម្រើសល្អបំផុត**សម្រាប់ Designer ជំនាន់ថ្មី! 🏆\n\n- 📱 **Mobile-First:** ស្រួលប្រើ Apple Pencil + Touch + Keyboard\n- 💰 **ថ្លៃតែម្តង:** គ្មានថ្លៃប្រចាំខែដូច Adobe\n- ⚡ **GPU ពេញ:** Render លឿន, មិន Lag\n- 🎓 **App នេះ:** AI Coach + Quiz + Certificate ៣in1\n\n**Affinity ≈ Adobe** ប៉ុន្តែ **ថ្លៃ 93% ទាបជាង ✅**",
+        answer_en: "Affinity iPad is the **top choice** for modern designers! 🏆\n\n- 📱 **Mobile-First:** Built for Apple Pencil, touch & keyboards\n- 💰 **One-Time Purchase:** No monthly subscription like Adobe\n- ⚡ **Full GPU Power:** Fast renders, zero lag\n- 🎓 **This App:** AI Coach + Quizzes + Certificates — 3-in-1\n\n**Affinity ≈ Adobe quality, but 93% cheaper ✅**",
+        chips: ["App ប្រើបានដោយឥតគិតថ្លៃទេ?", "Affinity ធៀបនឹង Photoshop"],
+        chips_en: ["Is the app free?", "Affinity vs Photoshop"]
+    },
+
+    // ─── MARKETING: Getting started / onboarding ──────────────────────────────
+    {
+        primaryKeys: ['ចាប់ផ្តើមដោយរបៀបណា', 'how to get started'],
+        keys: ['getting started', 'new user', 'first time', 'beginner guide', 'ចាប់ផ្តើម', 'ទើបចូល', 'onboard', 'first steps'],
+        regex: ['(get|getting|ចាប់ផ្តើម).*(started|start)', 'new.*(user|to design)', 'first.*(step|time)'],
+        answer: "ស្វាគមន៍! 🎉 នេះគឺជា**ផ្លូវរៀន** ៣ ជំហានដ៏ល្អបំផុត៖\n\n**ជំហានទី ១ — Quiz** 📝\nធ្វើ Skill Test ដើម្បីដឹងកម្រិតបច្ចុប្បន្ន\n\n**ជំហានទី ២ — Tools** 🛠️\nស្វែងរក Color Generator, Layout, Typography\n\n**ជំហានទី ៣ — Certificate** 🏆\nប្រឡង Final Exam ទទួល Certificate ផ្លូវការ\n\n💡 ចុចប៊ូតុងខាងក្រោម ចាប់ផ្តើម Quiz ឥឡូវ!",
+        answer_en: "Welcome! 🎉 Here's the **best 3-step path:**\n\n**Step 1 — Take the Quiz** 📝\nStart the Skill Test to discover your current level\n\n**Step 2 — Explore Tools** 🛠️\nTry Color Generator, Layout Tools & Typography\n\n**Step 3 — Earn Certificate** 🏆\nPass the Final Exam for an official Design Certificate\n\n💡 Click below to start your first Quiz right now!",
+        actionButton: { label: "ចាប់ផ្តើម Quiz 🎯", label_en: "Start Quiz 🎯", actionToTrigger: "quiz" },
+        chips: ["App ប្រើបានដោយឥតគិតថ្លៃទេ?", "វិញ្ញាបនបត្ររចនា 🏆"],
+        chips_en: ["Is the app free?", "Design Certificate 🏆"]
+    },
+
+    // ─── MARKETING: Design Certificate ───────────────────────────────────────
+    {
+        primaryKeys: ['វិញ្ញាបនបត្ររចនា 🏆', 'design certificate'],
+        keys: ['certificate', 'certified', 'qualify', 'credential', 'proof', 'portfolio', 'វិញ្ញាបនបត្រ', 'earn cert'],
+        regex: ['(certificate|certified|credential|វិញ្ញាបនបត្រ)', '(earn|get|have).*(certificate|cert)'],
+        answer: "**វិញ្ញាបនបត្ររចនា Affinity** — ភស្តុតាងជំនាញផ្លូវការ! 🏆\n\n**ជំហានដើម្បីទទួលបាន:**\n1. ✅ ទទួលពិន្ទុ ★ ក្នុង Beginner → Intermediate → Advanced\n2. 🎯 ប្រឡង **Final Certification Exam** (40 សំណួរ, 90%+)\n3. 📄 ទាញយក Certificate PDF!\n\n**ប្រើ Certificate នេះ:**\n- 💼 Portfolio + Resume/CV\n- 🌐 Share លើ LinkedIn\n- 🏢 បង្ហាញ Client\n\n👉 តើអ្នករួចប្រឡងដែរ?",
+        answer_en: "The **Affinity Design Certificate** — your official proof of expertise! 🏆\n\n**How to earn it:**\n1. ✅ Score ★ in Beginner → Intermediate → Advanced\n2. 🎯 Pass the **Final Certification Exam** (40 Qs, 90%+)\n3. 📄 Download your official PDF Certificate!\n\n**Use your certificate for:**\n- 💼 Portfolio & Resume/CV\n- 🌐 Share on LinkedIn\n- 🏢 Show clients your expertise\n\n👉 Are you ready for the challenge?",
+        actionButton: { label: "ចាប់ផ្តើម Final Exam 🎯", label_en: "Start Final Exam 🎯", actionToTrigger: "quiz" },
+        chips: ["ចាប់ផ្តើមដោយរបៀបណា", "App ប្រើបានដោយឥតគិតថ្លៃទេ?"],
+        chips_en: ["How to get started", "Is the app free?"]
+    },
+
+    // ─── MARKETING: Affinity vs Photoshop ────────────────────────────────────
+    {
+        primaryKeys: ['Affinity ធៀបនឹង Photoshop', 'affinity vs photoshop'],
+        keys: ['compare adobe', 'vs photoshop', 'vs illustrator', 'switch from adobe', 'better than adobe', 'photoshop alternative'],
+        regex: ['(affinity|app).*(vs|versus|compare|ធៀប).*(photoshop|adobe|illustrator)', '(switch|move).*(from|away).*(photoshop|adobe)'],
+        answer: "**Affinity vs Adobe** — ការប្រៀបធៀបស្មោះត្រង់! ⚖️\n\n| | **Affinity** | **Adobe** |\n|---|---|---|\n| 💰 ថ្លៃ | ចំណាយម្តង | ប្រចាំខែ |\n| 📱 iPad | Native ✅ | Desktop-first |\n| ⚡ ល្បឿន | GPU ពេញ | ស្តង់ដារ |\n| 🔧 Tools | ស្ទើរតែគ្រប់ | ច្រើនជាង |\n| 📚 រៀន | App នេះ 🎓 | ថ្លៃ/Courses |\n\n**✅ Affinity = Adobe ⅘ ប៉ុន្តែ ថ្លៃ ⅕** — ល្អឥតខ្ចោះសម្រាប់ iPad Designer!",
+        answer_en: "**Affinity vs Adobe** — an honest comparison! ⚖️\n\n| | **Affinity** | **Adobe** |\n|---|---|---|\n| 💰 Cost | One-time | Monthly sub |\n| 📱 iPad | Native ✅ | Desktop-first |\n| ⚡ Speed | Full GPU | Standard |\n| 🔧 Tools | Nearly all | More plugins |\n| 📚 Learn | This App 🎓 | Paid courses |\n\n**✅ Affinity = ⅘ Adobe quality at ⅕ the price** — perfect for the iPad designer!",
+        chips: ["ហេតុអ្វីប្រើ Affinity iPad", "ចាប់ផ្តើមដោយរបៀបណា"],
+        chips_en: ["Why use Affinity on iPad?", "How to get started"]
     }
 ];

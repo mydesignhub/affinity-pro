@@ -8,6 +8,12 @@ import { designData } from './sub_databases/db_design';
 import { affinityAndEditingData } from './sub_databases/db_affinity_editing';
 
 export const SUGGESTED_QUESTIONS = [
+    "App នេះជាអ្វី",
+    "App ប្រើបានដោយឥតគិតថ្លៃទេ?",
+    "ចាប់ផ្តើមដោយរបៀបណា",
+    "វិញ្ញាបនបត្ររចនា 🏆",
+    "ហេតុអ្វីប្រើ Affinity iPad",
+    "Affinity ធៀបនឹង Photoshop",
     "Affinity Command Controller 🎛️",
     "មុខងារ Quick Menu លើ iPad",
     "ការភ្ជាប់ Keyboard លើ iPad ⌨️",
@@ -61,6 +67,12 @@ export const SUGGESTED_QUESTIONS = [
 ];
 
 export const SUGGESTED_QUESTIONS_EN = [
+    "What is this app?",
+    "Is the app free to use?",
+    "How to get started",
+    "Design Certificate 🏆",
+    "Why use Affinity on iPad?",
+    "Affinity vs Photoshop",
     "Affinity Command Controller 🎛️",
     "iPad Quick Menu trick",
     "Using External Keyboards ⌨️",
