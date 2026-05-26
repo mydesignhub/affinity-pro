@@ -6,11 +6,15 @@ export default defineConfig({
   plugins: [
     react(),
     VitePWA({
-      registerType: 'autoUpdate', // Automatically updates the app when you push new code
-      includeAssets: ['logo.svg'], // Include your logo
+      registerType: 'autoUpdate',
+      includeAssets: ['logo.svg'],
+      workbox: {
+        clientsClaim: true,
+        skipWaiting: true,
+      },
       manifest: {
-        name: 'My Affinity Masterclass',
-        short_name: 'MyAffinity',
+        name: 'Affinity iPad Masterclass',
+        short_name: 'Affinity iPad',
         description: 'Master graphic design from basic to advanced professional levels.',
         theme_color: '#0A0A0A',
         background_color: '#0A0A0A',

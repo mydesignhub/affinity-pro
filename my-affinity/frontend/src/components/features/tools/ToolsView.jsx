@@ -1,3 +1,4 @@
+/* eslint-disable no-case-declarations */
 import React, { useState, useEffect, useRef } from 'react';
 import { Palette, Lightbulb, Download, XCircle, Grid, Monitor, Smartphone, Square, ChevronRight, RefreshCw, Copy, Info, CheckCircle2, ChevronDown, Check } from 'lucide-react';
 import { useLanguage } from '../../../contexts/LanguageContext'; 

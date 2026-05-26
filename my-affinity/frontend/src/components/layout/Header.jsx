@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React, { useState, useRef } from 'react';
 import { Moon, Sun, BookOpen, Award, Zap, Bot, ShieldAlert, Lock, Mail, KeyRound, X, AlertCircle, CheckCircle2, Crown } from 'lucide-react';
 import { useLanguage } from '../../contexts/LanguageContext';

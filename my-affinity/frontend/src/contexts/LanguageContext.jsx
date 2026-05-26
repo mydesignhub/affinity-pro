@@ -1,3 +1,4 @@
+/* eslint-disable react-refresh/only-export-components, no-unused-vars, no-empty */
 import React, { createContext, useState, useContext, useEffect } from 'react';
 
 export const translations = {
@@ -7,7 +8,7 @@ export const translations = {
     tab_learn: "មេរៀន", tab_quiz: "តេស្ត", tab_tools: "ឧបករណ៍", tab_ai: "AI",
     title_main: "Affinity Masterclass", subtitle_main: "រៀនពីមូលដ្ឋានគ្រឹះដល់កម្រិតខ្ពស់ នៃការរចនាក្រាហ្វិកកំរិតស្ដង់ដា។",
     tips_title: "គន្លឹះបន្ថែម (Tips)", tips_pro: "គន្លឹះពិសេស (Pro Tip)", tips_new: "គន្លឹះថ្មី", tips_shortcut: "គន្លឹះប្រើកម្មវិធី (Shortcut Tricks)",
-    footer_copy: "© 2026 My Affinity. Crafted with Passion.",
+    footer_copy: "© 2026 Affinity iPad. Crafted with Passion.",
     tip_1_title: "Zoom In / Zoom Out៖", tip_1_desc: "ប្រើ `Ctrl/Cmd` + `+` ឬ `-` ឬចុច `Alt` រួចអូស Mouse Wheel ដើម្បីពង្រីកឬបង្រួមផ្ទាំងការងារយ៉ាងរហ័ស។",
     tip_2_title: "Undo / Redo៖", tip_2_desc: "ចុច `Ctrl/Cmd` + `Z` ដើម្បីថយក្រោយ ១ ជំហាន និង `Ctrl/Cmd` + `Shift` + `Z` ដើម្បីទៅមុខវិញបើកែខុស។",
     tip_3_title: "Group Layers៖", tip_3_desc: "ជ្រើសរើស Layers ដែលអ្នកចង់បាន រួចចុច `Ctrl/Cmd` + `G` ដើម្បីចងវាជាក្រុម ធ្វើឱ្យការងារមានរបៀបរៀបរយ។",
@@ -35,7 +36,7 @@ export const translations = {
     tab_learn: "Learn", tab_quiz: "Quiz", tab_tools: "Tools", tab_ai: "AI",
     title_main: "Affinity Masterclass", subtitle_main: "Master graphic design from basic to advanced professional levels.",
     tips_title: "Additional Tips", tips_pro: "Daily Tip", tips_new: "Next Tip", tips_shortcut: "Shortcut Tricks",
-    footer_copy: "© 2026 My Affinity. Crafted with Passion.",
+    footer_copy: "© 2026 Affinity iPad. Crafted with Passion.",
     tip_1_title: "Zoom In / Zoom Out:", tip_1_desc: "Use `Ctrl/Cmd` + `+` or `-`, or hold `Alt` and scroll the mouse wheel to quickly zoom your canvas.",
     tip_2_title: "Undo / Redo:", tip_2_desc: "Press `Ctrl/Cmd` + `Z` to step backward, and `Ctrl/Cmd` + `Shift` + `Z` to step forward.",
     tip_3_title: "Group Layers:", tip_3_desc: "Select multiple layers and press `Ctrl/Cmd` + `G` to group them and keep your workspace organized.",

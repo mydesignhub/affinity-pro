@@ -627,6 +627,8 @@ function AppContent() {
 
   const [purchasedCourses, setPurchasedCourses] = useState({ photo: null, designer: null, publisher: null });
   const [isDataLoaded, setIsDataLoaded] = useState(false);
+  const [chatMessages, setChatMessages] = useState([]);
+  const [isKeyboardOpen, setIsKeyboardOpen] = useState(false);
 
   // Layout Scroll States
   const [isScrollingDown, setIsScrollingDown] = useState(false);
@@ -732,9 +734,6 @@ function AppContent() {
 
       return () => unsubscribers.forEach(u => u());
   }, [purchasedCourses, isDataLoaded]);
-
-  const [chatMessages, setChatMessages] = useState([]);
-  const [isKeyboardOpen, setIsKeyboardOpen] = useState(false);
 
   useEffect(() => {
       const newBgColor = isDarkMode ? '#0A0A0A' : '#F4F5F7';
