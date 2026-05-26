@@ -33,8 +33,8 @@ export const designData = [
         regex: ['\\bcontrast\\b', 'ភាពផ្ទុយ'],
         answer: "បាទ **Contrast (ភាពផ្ទុយគ្នា)** គឺការប្រើប្រាស់ភាពខុសគ្នាដាច់ស្រឡះ ដើម្បីទាក់ទាញភ្នែក និងងាយស្រួលអាន។\n\n💡 **ឧទាហរណ៍៖** \n- **ពណ៌:** អក្សរពណ៌ស លើផ្ទៃខាងក្រោយពណ៌ខ្មៅ។\n- **ទំហំ:** ចំណងជើងធំខ្លាំង ជាមួយអត្ថបទតូច។\n- **ទម្ងន់:** Font **Bold** ធៀបជាមួយ Font *Light*។\nបើគ្មាន Contrast ទេ ការរចនានឹងមើលទៅរាបស្មើ និងគួរឱ្យធុញ!",
         answer_en: "**Contrast** is the use of striking differences to grab attention and improve readability.\n\n💡 **Examples:**\n- **Color:** Crisp white text on a dark black background.\n- **Scale:** A massive headline paired with tiny body text.\n- **Weight:** A heavy **Bold** font next to a delicate *Light* font.\nWithout contrast, your design will look flat and boring!",
-        chips: ["Color Theory", "អ្វីទៅជា Typography?"],
-        chips_en: ["Color Theory", "What is Typography?"]
+        chips: ["ក្បួនផ្គូផ្គងពណ៌ (Color Harmonies)", "អ្វីទៅជា Typography?"],
+        chips_en: ["Color Harmonies", "What is Typography?"]
     },
     {
         primaryKeys: ['តើ Alignment ជាអ្វី?', 'what is alignment'],
@@ -60,8 +60,8 @@ export const designData = [
         regex: ['\\brepetition\\b', '\\bconsistency\\b', 'ភាពស៊ីសង្វាក់'],
         answer: "បាទ **Repetition / Consistency (ភាពស៊ីសង្វាក់)** គឺការប្រើប្រាស់រចនាបថដដែលៗដើម្បីបង្កើតការចងចាំម៉ាកយីហោ (Brand Identity)។\n\n💡 **ឧទាហរណ៍៖** ក្រុមហ៊ុន Coca-Cola តែងតែប្រើប្រាស់ពណ៌ក្រហម និង Font អក្សរដដែលៗនៅគ្រប់ផ្ទាំងប៉ាណូ។ ក្នុងការរចនារបស់អ្នក អ្នកគួរប្រើ Font តែ ១ ឬ ២ ប្រភេទ និងពណ៌ ៣ មុខប៉ុណ្ណោះ ទើបមើលទៅប្រណីត។",
         answer_en: "**Repetition / Consistency** is using the same visual styles throughout a design to build a strong, unified identity.\n\n💡 **Example:** Coca-Cola always uses the exact same shade of red and the same curvy ribbon font on every advertisement. In your designs, strictly limit yourself to 1-2 fonts and a 3-color palette to keep things looking cohesive and premium.",
-        chips: ["ក្បួនរចនាឡូហ្គោ (Logo Design)", "Color Theory"],
-        chips_en: ["Rules of Logo Design", "Color Theory"]
+        chips: ["ក្បួនរចនាឡូហ្គោ (Logo Design)", "អត្ថន័យនៃពណ៌ (Color Psychology)"],
+        chips_en: ["Rules of Logo Design", "Color Psychology"]
     },
 
     // 2. COLOR THEORY (CANVA STANDARD)
@@ -127,8 +127,8 @@ export const designData = [
         regex: ['\\bpsychology\\b', 'អត្ថន័យពណ៌', 'ចិត្តសាស្ត្រពណ៌', 'color meaning'],
         answer: "បាទ **ចិត្តសាស្ត្រពណ៌ (Color Psychology)** គឺសំខាន់ណាស់ក្នុងការទាក់ទាញអារម្មណ៍អតិថិជន៖\n\n🔴 **ក្រហម:** ថាមពល ក្តៅគគុក អាហារ គ្រោះថ្នាក់ (KFC, YouTube)។\n🔵 **ខៀវ:** ភាពជឿជាក់ សុវត្ថិភាព បច្ចេកវិទ្យា (Facebook, ធនាគារ)។\n🟢 **បៃតង:** ធម្មជាតិ សុខភាព លុយ (Starbucks, Grab)។\n🟡 **លឿង:** ភាពសប្បាយរីករាយ យុវវ័យ ព្រមាន (McDonald's)។\n⚫ **ខ្មៅ:** ភាពប្រណីត អំណាច អាថ៌កំបាំង (Apple, Nike)។\n🟣 **ស្វាយ:** វេទមន្ត ភាពថ្លៃថ្នូរ និងការស្រមើស្រមៃ (Twitch, Milka)។", 
         answer_en: "**Color Psychology** is crucial for evoking the right emotion in your audience:\n\n🔴 **Red:** Energy, passion, appetite, urgency (KFC, YouTube).\n🔵 **Blue:** Trust, security, technology, calm (Facebook, Banks).\n🟢 **Green:** Nature, health, wealth, growth (Starbucks, Grab).\n🟡 **Yellow:** Happiness, youth, optimism, warning (McDonald's).\n⚫ **Black:** Luxury, power, sophistication (Apple, Nike).\n🟣 **Purple:** Magic, royalty, and imagination (Twitch, Cadbury).",
-        chips: ["ពណ៌ក្តៅ និងពណ៌ត្រជាក់ (Warm vs Cool Colors)", "Color Theory"],
-        chips_en: ["Warm vs Cool Colors", "Color Theory"]
+        chips: ["ពណ៌ក្តៅ និងពណ៌ត្រជាក់ (Warm vs Cool Colors)", "ក្បួនផ្គូផ្គងពណ៌ (Color Harmonies)"],
+        chips_en: ["Warm vs Cool Colors", "Color Harmonies"]
     },
 
     // 3. TYPOGRAPHY
@@ -287,8 +287,8 @@ export const designData = [
         regex: ['\\bcmyk\\b', 'ប្រព័ន្ធពណ៌', '\\bpantone\\b', '\\bpms\\b'], // Removed RGB to not clash with RGB wheel
         answer: "បាទ **ប្រព័ន្ធពណ៌សំខាន់ៗដែលអ្នកត្រូវដឹង៖**\n\n💻 **RGB (Red, Green, Blue):** ជាពណ៌ប្រើដោយពន្លឺអេក្រង់។ ប្រើវាសម្រាប់រចនា Website, Facebook Post ឬ Video។\n🖨️ **CMYK (Cyan, Magenta, Yellow, Black):** ជាពណ៌ទឹកថ្នាំម៉ាស៊ីនព្រីន។ ប្រើវាសម្រាប់រចនានាមប័ណ្ណ ខិត្តប័ណ្ណ។\n🎨 **Pantone (PMS):** ជាកូដពណ៌ទឹកថ្នាំពិសេស (Spot Colors) ដែលរោងពុម្ពលាយទុកមុន ធានាថាព្រីនចេញមកពណ៌ដូចដើម ១០០% (ច្រើនប្រើលើ Logo)។\n\n⚠️ **បំរាម៖** កុំយក File RGB ទៅព្រីន ព្រោះពណ៌នឹងចេញមកស្រអាប់ខុសពីមើលលើកុំព្យូទ័រ!", 
         answer_en: "**The Critical Color Profiles:**\n\n💻 **RGB (Red, Green, Blue):** Emitted light. Use this strictly for Digital Screens (UI, Social Media, Web).\n🖨️ **CMYK (Cyan, Magenta, Yellow, Key/Black):** Physical ink. Use this for standard Physical Printing (Flyers, Posters).\n🎨 **Pantone (PMS):** Pre-mixed spot colors used in high-end printing to ensure absolute color consistency for brand logos.\n\n⚠️ **Warning:** Never print an RGB file directly; the incredibly bright screen colors will look heavily washed out when translated to CMYK ink!",
-        chips: ["តើ Resolution (PPI) ប៉ុន្មាន?", "Color Theory"],
-        chips_en: ["Best Resolution for printing?", "Color Theory"]
+        chips: ["តើ Resolution (PPI) ប៉ុន្មាន?", "ក្បួនផ្គូផ្គងពណ៌ (Color Harmonies)"],
+        chips_en: ["Best Resolution for printing?", "Color Harmonies"]
     },
     { 
         primaryKeys: ['តើ Bleed គឺជាអ្វី?', 'what is a bleed'],

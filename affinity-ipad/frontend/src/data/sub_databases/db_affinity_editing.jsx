@@ -124,8 +124,8 @@ export const affinityAndEditingData = [
         regex: ['\\bmacro\\b', '\\bbrush\\b', 'ជក់'],
         answer: "បាទ **Macros និង Custom Brushes គឺជាកូនសោរឆ្ពោះទៅរកការកាត់តកម្រិតស្វ័យប្រវត្តិ! 🚀**\n\n🪄 **Macros (ដូចកត់ត្រាវីដេអូសកម្មភាព):** បើបងតែងតែត្រូវកែរូប ៥០ សន្លឹក ដោយត្រូវទាញ Contrast បន្ថែមភាពច្បាស់ និងដាក់ស៊ុម។ បងគ្រាន់តែបើក Macro Panel រួចចុច **Record**។ ធ្វើការកែរូបទី១ ឱ្យរួចរាល់ រួចចុច **Stop**។ ឥឡូវបងអាចប្រើប្រាស់មុខងារ `Batch Job` ដើម្បីអនុវត្ត Macro នេះទៅលើរូបភាព ៤៩ សន្លឹកទៀតដោយស្វ័យប្រវត្តិ ក្នុងរយៈពេលតែប៉ុន្មានវិនាទីប៉ុណ្ណោះ!\n\n🖌️ **Brushes:** ជក់ក្នុង Affinity មិនមែនមានត្រឹមតែពណ៌ទេ។ បងអាចបង្កើតជក់ដែលមានរូបរាងជាផ្សែង ទឹក ពពក ឬសក់ ដែលជួយឱ្យការបង្កើត Photomanipulation កាន់តែមានភាពពិតប្រាកដ។\n\n💡 **គន្លឹះ៖** អ្នកអាចរកលុយបានតាមរយៈការ Export Macros ទាំងនេះជាឯកសារ `.afmacro` ដាក់លក់លើអ៊ីនធឺណិត!",
         answer_en: "**Macros and Custom Brushes are your gateways to automated workflow supremacy! 🚀**\n\n🪄 **Macros (Action Recording):** If you constantly apply the same adjustments (e.g., boosting contrast, adding unsharp mask, and adding a watermark) to 50 photos, open the Macro Panel and hit **Record**. Edit the first photo perfectly, then hit **Stop**. You can now use a `Batch Job` to apply this exact Macro to the remaining 49 photos instantly. It turns 1 hour of work into 10 seconds!\n\n🖌️ **Custom Brushes:** Brushes aren't just for painting colors. You can import or create raster brushes shaped like organic smoke, clouds, hair, or light flares, allowing you to 'stamp' realistic effects directly into your photomanipulations.\n\n💡 **Pro Tip:** You can bundle your custom Macros into an `.afmacros` library and sell them as professional color grading packs!",
-        chips: ["របៀបរក្សាទុកក្នុង Assets Panel", "Batch Processing (កែរូបច្រើន)"],
-        chips_en: ["How to use the Assets Panel", "Batch Processing Photos"]
+        chips: ["របៀបរក្សាទុកក្នុង Assets Panel", "ការកាត់រូប Export (Slices)"],
+        chips_en: ["How to use the Assets Panel", "Export Persona Slices"]
     },
     {
         primaryKeys: ['របៀបរក្សាទុកក្នុង Assets Panel', 'affinity assets panel'],
