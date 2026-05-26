@@ -23,6 +23,10 @@ const LOCAL_QUIZ_INVITATIONS_EN = [
     "If you want to level up your design skills, let's do a quick Q&A session! 🎯"
 ];
 
+// ─── Marketing CTA chips (reused across all intent handlers) ─────────────────
+const MKTG_CHIPS_EN = ["Take a Quiz 🎯", "Design Certificate 🏆", "How to get started"];
+const MKTG_CHIPS_KH = ["ចង់ធ្វើតេស្ត 🎯", "វិញ្ញាបនបត្ររចនា 🏆", "ចាប់ផ្តើមដោយរបៀបណា"];
+
 // ─── Retry chips ──────────────────────────────────────────────────────────────
 const RETRY_CHIP_EN = "🔁 Try again";
 const RETRY_CHIP_KH = "🔁 សាកម្តងទៀត";
@@ -743,14 +747,16 @@ const ChatBot = ({ messages = [], setMessages, isDarkMode, liveAiData = [], setL
             return { needsBackend: true, query: rawInput, isTrustedChip: true };
         }
 
+        const mkChips = lang === 'en' ? MKTG_CHIPS_EN : MKTG_CHIPS_KH;
+
         // ── CORRECTION intent ─────────────────────────────────────────────────
         const isCorrection = CORRECTION_PATTERNS_EN.test(rawInput) || CORRECTION_PATTERNS_KH.some(p => rawInput.includes(p));
         if (isCorrection && history.length >= 2) {
             return {
                 answer: lang === 'en'
-                    ? "Apologies — I misread your question. 🙏 Could you rephrase what you'd like to know? Or pick a topic:"
+                    ? "Apologies — I misread your question. 🙏 Could you rephrase what you'd like to know? Or pick a topic below:"
                     : "សុំទោស — ខ្ញុំយល់សំណួរខុសហើយ។ 🙏 សូមបងសរសេរម្តងទៀត ឬជ្រើសរើសប្រធានបទ៖",
-                chips: pickFreshChips(3),
+                chips: mkChips,
                 needsBackend: false
             };
         }
@@ -758,13 +764,13 @@ const ChatBot = ({ messages = [], setMessages, isDarkMode, liveAiData = [], setL
         // ── UNCERTAIN intent ──────────────────────────────────────────────────
         const isUncertain = UNCERTAIN_PATTERNS_EN.test(rawInput) || UNCERTAIN_PATTERNS_KH.some(p => rawInput.includes(p));
         if (isUncertain) {
-            const guidanceKH = "មិនអីទេ — តោះចាប់ផ្តើមមេរៀនដំបូង។ 🧭 ជ្រើសរើសផ្នែកដែលចង់រៀន៖\n\n1️⃣ **Affinity Designer** (Vector, Pen Tool, Layers)\n2️⃣ **Affinity Photo** (Retouching, Masking, Color)\n3️⃣ **Affinity Publisher** (Layout, Typography, Export)\n4️⃣ **Design Principles** (Color Theory, Hierarchy, Grid)\n\nបងជ្រើសរើសមួយណាដែលត្រូវការបំផុត?";
-            const guidanceEN = "No worries — let's start from the beginning. 🧭 Pick the area you want to learn:\n\n1️⃣ **Affinity Designer** (Vector, Pen Tool, Layers)\n2️⃣ **Affinity Photo** (Retouching, Masking, Color)\n3️⃣ **Affinity Publisher** (Layout, Typography, Export)\n4️⃣ **Design Principles** (Color Theory, Hierarchy, Grid)\n\nWhich one do you need most?";
+            const guidanceKH = "មិនអីទេ! 🧭 តោះចាប់ផ្តើមមេរៀនដំបូង — ជ្រើសរើសផ្នែកដែលចង់រៀន៖\n\n1️⃣ **Affinity Designer** (Vector, Pen Tool, Layers)\n2️⃣ **Affinity Photo** (Retouching, Masking, Color)\n3️⃣ **Affinity Publisher** (Layout, Typography, Export)\n4️⃣ **Design Principles** (Color Theory, Hierarchy, Grid)\n\n💡 ឬចុចប៊ូតុង **«ចាប់ផ្តើមដោយរបៀបណា»** ខាងក្រោម ដើម្បីដើរតាម **ផ្លូវ ៣ ជំហាន** ដ៏ល្អបំផុតរបស់ App នេះ!";
+            const guidanceEN = "No worries! 🧭 Let's start from the beginning — pick what you want to learn:\n\n1️⃣ **Affinity Designer** (Vector, Pen Tool, Layers)\n2️⃣ **Affinity Photo** (Retouching, Masking, Color)\n3️⃣ **Affinity Publisher** (Layout, Typography, Export)\n4️⃣ **Design Principles** (Color Theory, Hierarchy, Grid)\n\n💡 Or tap **«How to get started»** below to follow this app's best **3-Step Path**!";
             return {
                 answer: lang === 'en' ? guidanceEN : guidanceKH,
                 chips: lang === 'en'
-                    ? ["What is Affinity Designer?", "What is Affinity Photo?", "What is Affinity Publisher?"]
-                    : ["Affinity Designer ជាអ្វី?", "Affinity Photo ជាអ្វី?", "Affinity Publisher ជាអ្វី?"],
+                    ? ["How to get started", "What is Affinity Designer?", "Design Certificate 🏆"]
+                    : ["ចាប់ផ្តើមដោយរបៀបណា", "Affinity Designer ជាអ្វី?", "វិញ្ញាបនបត្ររចនា 🏆"],
                 needsBackend: false
             };
         }
@@ -779,7 +785,7 @@ const ChatBot = ({ messages = [], setMessages, isDarkMode, liveAiData = [], setL
         }
         if (repeatCount > 1) {
             const repeatData = lang === 'en' ? (REPEAT_RESPONSES_EN || {}) : (REPEAT_RESPONSES || {});
-            return { answer: getRandomItems(repeatData?.level2 || ["Let's explore a new topic!"], 1)[0], chips: pickFreshChips(3), needsBackend: false };
+            return { answer: getRandomItems(repeatData?.level2 || ["Let's explore a new topic!"], 1)[0], chips: mkChips, needsBackend: false };
         }
 
         const lastBotMessage = [...history].reverse().find(m => m.role === 'model');
@@ -792,7 +798,7 @@ const ChatBot = ({ messages = [], setMessages, isDarkMode, liveAiData = [], setL
         if (exactNo.includes(cleanInput) || isShortNoPrefix) {
             if (history.length <= 1) {
                 setCurrentTopic(null);
-                return { answer: lang === 'en' ? "No problem! I'll be right here when you're ready to design. 🎨✨" : "បាទ មិនអីទេ! ខ្ញុំនឹងនៅទីនេះរង់ចាំជួយបង។ 🎨✨", chips: pickFreshChips(3), needsBackend: false };
+                return { answer: lang === 'en' ? "No problem! I'll be right here when you're ready to design. 🎨✨" : "បាទ មិនអីទេ! ខ្ញុំនឹងនៅទីនេះរង់ចាំជួយបង។ 🎨✨", chips: mkChips, needsBackend: false };
             }
             return { needsBackend: true, backendPrompt: buildContextualBackendPrompt(rawInput, 'NO', lastBotText) };
         }
@@ -802,7 +808,7 @@ const ChatBot = ({ messages = [], setMessages, isDarkMode, liveAiData = [], setL
         const isShortYesPrefix = wordCount <= 2 && (/^(yes|yep|yeah|sure)$/i.test(cleanInput) || cleanInput === 'បាទ' || cleanInput === 'ចាស');
         if (exactYes.includes(cleanInput) || isShortYesPrefix) {
             if (history.length <= 1) {
-                return { answer: lang === 'en' ? "Great! 🎨 What would you like to learn or create today?" : "ល្អណាស់! 🎨 តើថ្ងៃនេះបងចង់រៀន ឬរចនាអ្វីខ្លះ?", chips: pickFreshChips(3), needsBackend: false };
+                return { answer: lang === 'en' ? "Great! 🎨 What would you like to learn or create today?" : "ល្អណាស់! 🎨 តើថ្ងៃនេះបងចង់រៀន ឬរចនាអ្វីខ្លះ?", chips: mkChips, needsBackend: false };
             }
             const choicesYes = parseMultiChoiceQuestion(lastBotText);
             if (choicesYes) {
@@ -826,8 +832,8 @@ const ChatBot = ({ messages = [], setMessages, isDarkMode, liveAiData = [], setL
         const exactThanks = ['thanks', 'thankyou', 'អរគុណ', 'អគុណ', 'អរគុណច្រើន', 'អគុណច្រើន'].map(strictClean);
         const emojiRegex = /^(👋|🙏|❤️|👍|✌️|✨|😊|😁|📸|🎨|🔥)$/;
 
-        if (emojiRegex.test(rawInput.trim())) return { answer: lang === 'en' ? `Hello there! ${rawInput.trim()} How can I help you today?` : `សួស្តី! ${rawInput.trim()} តើថ្ងៃនេះចង់ឱ្យខ្ញុំជួយអ្វីខ្លះ?`, chips: pickFreshChips(3), needsBackend: false };
-        if (exactThanks.includes(cleanInput)) return { answer: lang === 'en' ? "You're very welcome! Let me know if you need more help. ✨" : "ដោយក្តីរីករាយបំផុត! 😊 បើមានចម្ងល់អ្វីកុំភ្លេចសួរណា!", chips: pickFreshChips(3), needsBackend: false };
+        if (emojiRegex.test(rawInput.trim())) return { answer: lang === 'en' ? `Hello there! ${rawInput.trim()} How can I help you today?` : `សួស្តី! ${rawInput.trim()} តើថ្ងៃនេះចង់ឱ្យខ្ញុំជួយអ្វីខ្លះ?`, chips: mkChips, needsBackend: false };
+        if (exactThanks.includes(cleanInput)) return { answer: lang === 'en' ? "You're very welcome! Let me know if you need more help. ✨" : "ដោយក្តីរីករាយបំផុត! 😊 បើមានចម្ងល់អ្វីកុំភ្លេចសួរណា!", chips: mkChips, needsBackend: false };
         if (exactOk.includes(cleanInput)) {
             if (lastBotEndsInQuestion && history.length > 1) {
                 const choicesOk = parseMultiChoiceQuestion(lastBotText);
@@ -836,7 +842,7 @@ const ChatBot = ({ messages = [], setMessages, isDarkMode, liveAiData = [], setL
                 }
                 return { needsBackend: true, backendPrompt: buildContextualBackendPrompt(rawInput, 'YES (acknowledged via OK)', lastBotText) };
             }
-            return { answer: lang === 'en' ? "Awesome! 🎨 Want to explore another design topic?" : "ល្អណាស់! 🎨 ចង់រៀនរឿងរចនាអ្វីបន្ទាប់ទៀតទេ?", chips: pickFreshChips(3), needsBackend: false };
+            return { answer: lang === 'en' ? "Awesome! 🎨 Want to explore another design topic?" : "ល្អណាស់! 🎨 ចង់រៀនរឿងរចនាអ្វីបន្ទាប់ទៀតទេ?", chips: mkChips, needsBackend: false };
         }
 
         // ── CONTINUATION intent ───────────────────────────────────────────────
@@ -848,7 +854,7 @@ const ChatBot = ({ messages = [], setMessages, isDarkMode, liveAiData = [], setL
         // ── HOW ARE YOU ───────────────────────────────────────────────────────
         const howAreYouWords = ['howareyou', 'howru', 'sup', 'សុខសប្បាយទេ', 'អ្នកសុខសប្បាយទេ', 'សុខទេ', 'ម៉េចហើយ'].map(strictClean);
         if (howAreYouWords.includes(cleanInput) || /\b(how are you|how r u)\b/i.test(rawInput)) {
-            return { answer: lang === 'en' ? "I'm doing wonderfully! Ready to help you design. 🎨" : "បាទ ខ្ញុំសុខសប្បាយ! 😊 ត្រៀមខ្លួនជួយបងជានិច្ច។", chips: pickFreshChips(3), needsBackend: false };
+            return { answer: lang === 'en' ? "I'm doing wonderfully! Ready to help you design. 🎨" : "បាទ ខ្ញុំសុខសប្បាយ! 😊 ត្រៀមខ្លួនជួយបងជានិច្ច។", chips: mkChips, needsBackend: false };
         }
 
         // ── KB lookup (normal path) ───────────────────────────────────────────
@@ -931,7 +937,7 @@ const ChatBot = ({ messages = [], setMessages, isDarkMode, liveAiData = [], setL
                         return { answer: lang === 'en' ? nextData.answer_en || nextData.answer : nextData.answer, chips: generateFilteredChips(nextData, rawInput), needsBackend: false };
                     }
                 } else {
-                    return { answer: lang === 'en' ? "That covers the basics of this topic! 🎨 What would you like to learn next?" : "បាទ សម្រាប់ប្រធានបទនេះគឺអស់ហើយ! 🎨 តើបងចង់រៀនពីរឿងអ្វីបន្ទាប់?", chips: pickFreshChips(3), needsBackend: false };
+                    return { answer: lang === 'en' ? "That covers the basics of this topic! 🎨 What would you like to learn next?" : "បាទ សម្រាប់ប្រធានបទនេះគឺអស់ហើយ! 🎨 តើបងចង់រៀនពីរឿងអ្វីបន្ទាប់?", chips: mkChips, needsBackend: false };
                 }
             }
         }
@@ -939,7 +945,7 @@ const ChatBot = ({ messages = [], setMessages, isDarkMode, liveAiData = [], setL
         // ── Boredom / casual fallback ─────────────────────────────────────────
         const boredomWords = ['អផ្សុក', 'មិនដឹងសួរអី', 'bored', 'play', 'លេង', 'សួរអីគេ'].map(strictClean);
         if (boredomWords.some(w => cleanInput.includes(w))) {
-            return { answer: getRandomQuizInvitation(lang), chips: pickFreshChips(3), needsBackend: false };
+            return { answer: getRandomQuizInvitation(lang), chips: mkChips, needsBackend: false };
         }
 
         return { needsBackend: true, query: rawInput };

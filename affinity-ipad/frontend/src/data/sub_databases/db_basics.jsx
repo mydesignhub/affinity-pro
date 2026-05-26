@@ -209,8 +209,8 @@ export const basicsData = [
     // ─── MARKETING: Pricing / free tier ──────────────────────────────────────
     {
         primaryKeys: ['App ប្រើបានដោយឥតគិតថ្លៃទេ?', 'is the app free to use'],
-        keys: ['ឥតគិតថ្លៃ', 'ថ្លៃ', 'free', 'paid', 'cost', 'price', 'subscription', 'premium', 'upgrade', 'how much'],
-        regex: ['(free|paid|cost|price|ឥតគិតថ្លៃ|ថ្លៃ|subscription|how much)', '\\bpremium\\b'],
+        keys: ['ឥតគិតថ្លៃ', 'ថ្លៃ', 'subscription plan', 'premium plan', 'how much does it cost', 'is it free', 'app cost', 'app price'],
+        regex: ['(is it free|is this free|is the app free|app.*free|free.*app|how much.*cost|ថ្លៃ|ឥតគិតថ្លៃ|subscription|premium plan|pricing)'],
         answer: "**ឥតគិតថ្លៃ ១០០%** ដើម្បីចាប់ផ្តើម! 🎉\n\n**✅ Free:**\n- មេរៀន Beginner ទាំងអស់\n- Quiz & AI Assistant\n- Color Generator & Design Tools\n\n**🌟 Premium:**\n- Unlock Advanced Lessons\n- 🏆 វិញ្ញាបនបត្ររចនាផ្លូវការ (Certificate)\n- ⚡ Final Certification Exam\n\n💡 ចាប់ផ្តើមដោយ Free ហើយ Upgrade នៅពេលអ្នករួចគ្រប់!",
         answer_en: "**100% Free to start!** 🎉\n\n**✅ Free includes:**\n- All Beginner lessons\n- Quiz, AI Assistant & Design Tools\n- Color Generator\n\n**🌟 Premium unlocks:**\n- Advanced & locked lessons\n- 🏆 Official Design Certificate\n- ⚡ Final Certification Exam (90% to pass)\n\n💡 Start free today — upgrade when you're ready!",
         chips: ["ចាប់ផ្តើមដោយរបៀបណា", "វិញ្ញាបនបត្ររចនា 🏆"],
@@ -220,8 +220,8 @@ export const basicsData = [
     // ─── MARKETING: Why Affinity on iPad ─────────────────────────────────────
     {
         primaryKeys: ['ហេតុអ្វីប្រើ Affinity iPad', 'why use affinity on ipad'],
-        keys: ['advantage', 'ហេតុអ្វី', 'why affinity', 'why ipad', 'benefit', 'best for'],
-        regex: ['(ហេតុអ្វី|why).*(affinity|ipad|app)', 'advantage.*affinity', 'best.*ipad.*design'],
+        keys: ['why use affinity', 'why affinity ipad', 'affinity advantage', 'reason to use affinity', 'why choose affinity'],
+        regex: ['(ហេតុអ្វី|why).*(affinity|ipad|this app)', 'affinity.*advantage', 'reason.*affinity'],
         answer: "Affinity iPad គឺជា**ជម្រើសល្អបំផុត**សម្រាប់ Designer ជំនាន់ថ្មី! 🏆\n\n- 📱 **Mobile-First:** ស្រួលប្រើ Apple Pencil + Touch + Keyboard\n- 💰 **ថ្លៃតែម្តង:** គ្មានថ្លៃប្រចាំខែដូច Adobe\n- ⚡ **GPU ពេញ:** Render លឿន, មិន Lag\n- 🎓 **App នេះ:** AI Coach + Quiz + Certificate ៣in1\n\n**Affinity ≈ Adobe** ប៉ុន្តែ **ថ្លៃ 93% ទាបជាង ✅**",
         answer_en: "Affinity iPad is the **top choice** for modern designers! 🏆\n\n- 📱 **Mobile-First:** Built for Apple Pencil, touch & keyboards\n- 💰 **One-Time Purchase:** No monthly subscription like Adobe\n- ⚡ **Full GPU Power:** Fast renders, zero lag\n- 🎓 **This App:** AI Coach + Quizzes + Certificates — 3-in-1\n\n**Affinity ≈ Adobe quality, but 93% cheaper ✅**",
         chips: ["App ប្រើបានដោយឥតគិតថ្លៃទេ?", "Affinity ធៀបនឹង Photoshop"],
@@ -243,7 +243,7 @@ export const basicsData = [
     // ─── MARKETING: Design Certificate ───────────────────────────────────────
     {
         primaryKeys: ['វិញ្ញាបនបត្ររចនា 🏆', 'design certificate'],
-        keys: ['certificate', 'certified', 'qualify', 'credential', 'proof', 'portfolio', 'វិញ្ញាបនបត្រ', 'earn cert'],
+        keys: ['certificate', 'certified', 'credential', 'earn certificate', 'get certified', 'design certificate', 'វិញ្ញាបនបត្រ'],
         regex: ['(certificate|certified|credential|វិញ្ញាបនបត្រ)', '(earn|get|have).*(certificate|cert)'],
         answer: "**វិញ្ញាបនបត្ររចនា Affinity** — ភស្តុតាងជំនាញផ្លូវការ! 🏆\n\n**ជំហានដើម្បីទទួលបាន:**\n1. ✅ ទទួលពិន្ទុ ★ ក្នុង Beginner → Intermediate → Advanced\n2. 🎯 ប្រឡង **Final Certification Exam** (40 សំណួរ, 90%+)\n3. 📄 ទាញយក Certificate PDF!\n\n**ប្រើ Certificate នេះ:**\n- 💼 Portfolio + Resume/CV\n- 🌐 Share លើ LinkedIn\n- 🏢 បង្ហាញ Client\n\n👉 តើអ្នករួចប្រឡងដែរ?",
         answer_en: "The **Affinity Design Certificate** — your official proof of expertise! 🏆\n\n**How to earn it:**\n1. ✅ Score ★ in Beginner → Intermediate → Advanced\n2. 🎯 Pass the **Final Certification Exam** (40 Qs, 90%+)\n3. 📄 Download your official PDF Certificate!\n\n**Use your certificate for:**\n- 💼 Portfolio & Resume/CV\n- 🌐 Share on LinkedIn\n- 🏢 Show clients your expertise\n\n👉 Are you ready for the challenge?",
