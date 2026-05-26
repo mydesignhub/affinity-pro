@@ -160,21 +160,24 @@ const Test = ({ isDarkMode, isAdmin }) => {
         return `${m}:${s < 10 ? '0' : ''}${s}`;
     };
 
-    const startQuiz = (level) => { 
+    const startQuiz = (level) => {
+        if (!isAdmin && !currentUnlocked.includes(level) && level !== 'final') { triggerHaptic('error'); return; }
+        triggerHaptic();
+
         if (level === 'final') {
             if (!userName.trim()) {
                 if (isAdmin) {
                     setUserName("Admin Tester");
                 } else {
-                    alert(lang === 'en' ? "Please enter your name first!" : "សូមបញ្ចូលឈ្មោះរបស់អ្នកជាមុនសិន!"); 
-                    return; 
+                    alert(lang === 'en' ? "Please enter your name first!" : "សូមបញ្ចូលឈ្មោះរបស់អ្នកជាមុនសិន!");
+                    return;
                 }
             }
             if (currentCert) {
                 const confirmRetake = window.confirm(lang === 'en' ? "You already have a certificate. Retaking will reset your current certificate. Continue?" : "អ្នកមានវិញ្ញាបនបត្ររួចហើយ។ ការប្រឡងម្តងទៀតនឹងលុបវិញ្ញាបនបត្រចាស់។ បន្តឬទេ?");
                 if (!confirmRetake) return;
             }
-            
+
             if (isAdmin) {
                 const appDisplayName = activeAppTab === 'photo' ? 'Affinity Photo' : activeAppTab === 'designer' ? 'Affinity Designer' : 'Affinity Publisher';
                 const dummyCert = { name: userName || "Admin Tester", score: 100, date: new Date().toISOString(), appCourse: appDisplayName };
@@ -184,25 +187,17 @@ const Test = ({ isDarkMode, isAdmin }) => {
                 return;
             }
             setTimeLeft(15 * 60);
-        } else { 
+        } else {
             setQuestionTimeLeft(getTimeLimitForLevel(level));
-            setTimeLeft(null); 
+            setTimeLeft(null);
         }
-
-        if (!isAdmin && !currentUnlocked.includes(level) && level !== 'final') { triggerHaptic('error'); return; }
-        triggerHaptic();
         
         let filtered = initialQuestionBank.filter(q => q.app === activeAppTab);
         if (level !== 'final') {
-             filtered = filtered.filter(q => q.level === level);
+            filtered = filtered.filter(q => q.level === level);
         }
 
-        if (filtered.length < quizConfig.amount && level !== 'final') {
-            const extra = initialQuestionBank.filter(q => q.app === activeAppTab && q.level !== level);
-            filtered = [...filtered, ...extra];
-        }
-
-        const amount = level === 'final' ? 40 : Math.min(quizConfig.amount, filtered.length);
+        const amount = level === 'final' ? Math.min(40, filtered.length) : Math.min(quizConfig.amount, filtered.length);
         let shuffledQuestions = shuffleArray(filtered).slice(0, amount);
 
         const finalQuestions = shuffledQuestions.map(q => {
@@ -351,7 +346,28 @@ const Test = ({ isDarkMode, isAdmin }) => {
 
                 <div className="max-w-3xl mx-auto w-full flex flex-col gap-6 pt-2 px-2 sm:px-6">
                     <div className={`w-full rounded-[2rem] border p-5 sm:p-10 shadow-sm transition-all ${isDarkMode ? 'bg-[#18191A] border-[#2C2C2C]' : 'bg-white border-[#E5E7EB]'}`}>
-                        
+
+                        {/* App Tab Switcher */}
+                        <div className={`flex gap-2 mb-8 p-1.5 rounded-2xl ${isDarkMode ? 'bg-[#242526]' : 'bg-[#F0F2F5]'}`}>
+                            {[
+                                { id: 'photo', labelEn: 'Photo', labelKh: 'ហ្វូតូ', Icon: Camera },
+                                { id: 'designer', labelEn: 'Designer', labelKh: 'ឌីស៊ីញ', Icon: PenTool },
+                                { id: 'publisher', labelEn: 'Publisher', labelKh: 'ផ្លីសឺ', Icon: Book },
+                            ].map(({ id, labelEn, labelKh, Icon }) => {
+                                const isActive = activeAppTab === id;
+                                return (
+                                    <button
+                                        key={id}
+                                        onClick={() => setActiveAppTab(id)}
+                                        className={`flex-1 flex items-center justify-center gap-1.5 py-2.5 px-2 rounded-xl font-black font-khmer text-[12px] sm:text-[13px] transition-all duration-200 active:scale-95 ${isActive ? (isDarkMode ? 'bg-[#41B6E6] text-[#0A0A0A] shadow-md' : 'bg-[#0277C5] text-white shadow-md') : (isDarkMode ? 'text-[#A0A0A0] hover:text-[#F1F1F1]' : 'text-[#6B7280] hover:text-[#1A1A1A]')}`}
+                                    >
+                                        <Icon size={14} />
+                                        <span>{lang === 'en' ? labelEn : labelKh}</span>
+                                    </button>
+                                );
+                            })}
+                        </div>
+
                         <div className="flex items-center justify-between mb-8 px-1">
                             <div>
                                 <h2 className={`text-lg sm:text-xl font-black font-khmer leading-none ${isDarkMode ? 'text-[#F1F1F1]' : 'text-[#1A1A1A]'}`}>{lang === 'en' ? 'Select Level' : 'ជ្រើសរើសកម្រិត'}</h2>
