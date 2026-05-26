@@ -238,7 +238,7 @@ const ChatBot = ({ messages = [], setMessages, isDarkMode, liveAiData = [], setL
     const [editingIndex, setEditingIndex] = useState(null);
     const [editText, setEditText] = useState('');
     const [animState, setAnimState] = useState('idle');
-    const [headerStatusText, setHeaderStatusText] = useState('MY DESIGN AI');
+    const [headerStatusText, setHeaderStatusText] = useState('Affinity iPad AI');
     const touchStartX = useRef(0);
 
     const messagesEndRef = useRef(null);
@@ -1114,11 +1114,11 @@ const ChatBot = ({ messages = [], setMessages, isDarkMode, liveAiData = [], setL
                 <div className="flex items-center justify-between px-4 pt-1.5 pb-2.5">
                     <div className="flex items-center gap-3">
                         <div className={`w-8 h-8 rounded-xl bg-gradient-to-tr ${isDarkMode ? 'from-[#41B6E6] to-[#0277C5]' : 'from-[#0277C5] to-[#01579B]'} flex items-center justify-center shadow-inner`}>
-                            <BotAvatar size={20} className="text-white drop-shadow-sm" ariaLabel="MY DESIGN AI" />
+                            <BotAvatar size={20} className="text-white drop-shadow-sm" ariaLabel="Affinity iPad AI" />
                         </div>
                         <div className="flex flex-col justify-center pt-0.5">
                             <h2 className={`text-[15px] font-black font-khmer leading-normal flex items-center gap-1 ${theme.textMain}`}>
-                                {t('ai_name') || 'MY DESIGN AI'} {isAdmin && <Unlock size={12} className={theme.iconColor} />}
+                                {t('ai_name') || 'Affinity iPad AI'} {isAdmin && <Unlock size={12} className={theme.iconColor} />}
                             </h2>
                             <div className="relative flex items-center -mt-0.5">
                                 <span key={headerStatusText} className="text-[10px] font-bold uppercase tracking-widest text-green-500 animate-fade-in-up whitespace-nowrap flex items-center gap-1.5">

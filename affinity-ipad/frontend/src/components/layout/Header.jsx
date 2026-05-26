@@ -150,7 +150,7 @@ export default function Header({ activeTab, setActiveTab, isDarkMode, setIsDarkM
                         
                         <div className="flex flex-col justify-center pt-0.5">
                             <h1 className={`text-[15px] sm:text-[17px] font-black leading-normal group-hover:text-[#0277C5] transition-colors duration-300 ${isDarkMode ? 'text-[#F1F1F1]' : 'text-[#1A1A1A]'}`}>
-                                My<span className={isDarkMode ? 'text-[#41B6E6]' : 'text-[#0277C5]'}>Affinity</span>
+                                Affinity<span className={isDarkMode ? 'text-[#41B6E6]' : 'text-[#0277C5]'}>iPad</span>
                             </h1>
                             <div className="relative flex items-center -mt-0.5">
                                 <span className={`text-[10px] font-bold uppercase tracking-widest whitespace-nowrap block transition-colors ${isDarkMode ? 'text-[#A0A0A0] group-hover:text-[#41B6E6]' : 'text-[#6B7280] group-hover:text-[#0277C5]'}`}>
