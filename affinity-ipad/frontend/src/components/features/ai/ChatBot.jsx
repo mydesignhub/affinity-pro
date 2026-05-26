@@ -90,10 +90,10 @@ const callRealAI = async (userPrompt, language, history = []) => {
 // ─── Text utilities ───────────────────────────────────────────────────────────
 const strictClean = (text) => {
     if (!text) return '';
-    return text.toLowerCase().replace(/[\s​.,!?។៕"""'*_()\-:;&]/g, '');
+    return text.toLowerCase().replace(/[^\p{L}\p{N}\p{M}]/gu, '');
 };
 
-const superClean = (t) => (t || '').toLowerCase().replace(/[\s?។៕]/g, '');
+const superClean = (t) => (t || '').toLowerCase().replace(/[^\p{L}\p{N}\p{M}]/gu, '');
 
 const triggerHaptic = (type = 'light') => {
     if (typeof navigator !== 'undefined' && navigator.vibrate) {

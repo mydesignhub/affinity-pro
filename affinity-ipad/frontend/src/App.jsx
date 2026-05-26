@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, Suspense } from 'react';
 import { 
   Sun, Moon, Aperture, Droplet, Sliders, ChevronRight, CheckCircle, XCircle, 
   BookOpen, Award, PlayCircle, MessageCircle, Send, Sparkles, Loader2, 
@@ -17,11 +17,16 @@ import { signOut } from 'firebase/auth';
 import { getDocs, collection, query, onSnapshot, doc } from 'firebase/firestore';
 
 import Header from './components/layout/Header';
-import ToolsView from './components/features/tools/ToolsView';
-import Test from './components/features/quiz/Test';
-import ChatBot from './components/features/ai/ChatBot';
 import LessonCard from './components/features/learn/LessonCard';
-import PremiumModal from './components/features/premium/PremiumModal';
+import LessonModal from './components/features/learn/LessonModal';
+import TipsSection from './components/features/learn/TipsSection';
+import ContactSection from './components/layout/ContactSection';
+import { triggerHaptic } from './utils/haptics';
+
+const ToolsView = React.lazy(() => import('./components/features/tools/ToolsView'));
+const Test = React.lazy(() => import('./components/features/quiz/Test'));
+const ChatBot = React.lazy(() => import('./components/features/ai/ChatBot'));
+const PremiumModal = React.lazy(() => import('./components/features/premium/PremiumModal'));
 
 import { courseData, TIPS_LIST, TIPS_LIST_EN } from './data/data';
 import { useLanguage, LanguageProvider } from './contexts/LanguageContext';
@@ -30,14 +35,6 @@ import { useLanguage, LanguageProvider } from './contexts/LanguageContext';
 // 1. CONFIGURATION & UTILS
 // ==========================================
 
-const triggerHaptic = (type = 'light') => {
-    if (typeof navigator !== 'undefined' && navigator.vibrate) {
-        if (type === 'error') navigator.vibrate([50, 50, 50]);
-        else if (type === 'success') navigator.vibrate([30, 50, 30]);
-        else navigator.vibrate(10);
-    }
-};
-
 const APP_THEMES = {
     photo: { gradient: 'from-[#B52885] to-[#223180]', text: 'text-[#B52885]', bg: 'bg-[#B52885]', border: 'border-[#B52885]', lightBg: 'bg-[#B52885]/10' },
     designer: { gradient: 'from-[#2862B5] to-[#F4B32A]', text: 'text-[#2862B5]', bg: 'bg-[#2862B5]', border: 'border-[#2862B5]', lightBg: 'bg-[#2862B5]/10' },
@@ -45,569 +42,6 @@ const APP_THEMES = {
 };
 
 const ONE_YEAR_MS = 365 * 24 * 60 * 60 * 1000;
-
-// ==========================================
-// 2. SUB-COMPONENTS (LessonModal, TipsSection, ContactSection)
-// ==========================================
-
-const LessonModal = ({ lesson, onClose, isDarkMode, completedSteps, setCompletedSteps, isPurchased, onUnlockDemo }) => {
-  const { lang } = useLanguage();
-  const [isVisible, setIsVisible] = useState(false);
-  const [activeStep, setActiveStep] = useState(0);
-  const [isVideoLoading, setIsVideoLoading] = useState(true);
-  const [hasStarted, setHasStarted] = useState(false);
-  const [previewEnded, setPreviewEnded] = useState(false);
-  const [isCssFullscreen, setIsCssFullscreen] = useState(false);
-  const [isPlaying, setIsPlaying] = useState(true); 
-  
-  const togglePlayPause = (e) => {
-      e.preventDefault();
-      e.stopPropagation();
-      if (!videoRef.current) return;
-      
-      if (isPlaying) {
-          videoRef.current.contentWindow.postMessage('{"event":"command","func":"pauseVideo","args":""}', '*');
-          setIsPlaying(false);
-      } else {
-          videoRef.current.contentWindow.postMessage('{"event":"command","func":"playVideo","args":""}', '*');
-          setIsPlaying(true);
-      }
-      triggerHaptic();
-  };
-  
-  const videoRef = useRef(null);
-  const containerRef = useRef(null);
-  const modalRef = useRef(null);
-  const dragStartY = useRef(null);
-  const [dragOffset, setDragOffset] = useState(0);
-  const [closing, setClosing] = useState(false);
-  const [expandedItem, setExpandedItem] = useState(null);
-
-  useEffect(() => {
-    setIsVisible(true);
-    document.body.style.overflow = 'hidden'; 
-    return () => { document.body.style.overflow = 'auto'; };
-  }, []);
-
-  useEffect(() => {
-    setIsVideoLoading(true);
-    setHasStarted(false);
-    setPreviewEnded(false);
-    setIsPlaying(true); 
-  }, [activeStep]);
-
-  useEffect(() => {
-      if (expandedItem !== null) {
-          setTimeout(() => {
-              const el = document.getElementById(`lesson-item-${expandedItem}`);
-              if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-          }, 150);
-      }
-  }, [expandedItem]);
-
-  useEffect(() => {
-      const handleFsChange = () => {
-          const isStandard = document.fullscreenElement || document.webkitFullscreenElement;
-          if (!isStandard) setIsCssFullscreen(false);
-      };
-      document.addEventListener('fullscreenchange', handleFsChange);
-      document.addEventListener('webkitfullscreenchange', handleFsChange);
-      return () => {
-          document.removeEventListener('fullscreenchange', handleFsChange);
-          document.removeEventListener('webkitfullscreenchange', handleFsChange);
-      };
-  }, []);
-
-  const handleClose = () => {
-    if (closing) return;
-    setClosing(true);
-    setTimeout(onClose, 300); 
-  };
-
-  const handleToggleComplete = (e, stepKey) => {
-      e.stopPropagation();
-      if (!isPurchased) {
-          triggerHaptic('error');
-          alert(lang === 'en' ? "Please unlock the full course to track your progress!" : "សូមដោះសោវគ្គសិក្សាដើម្បីតាមដានការសិក្សារបស់អ្នក!");
-          return;
-      }
-      triggerHaptic();
-      if (completedSteps.includes(stepKey)) {
-          setCompletedSteps(prev => prev.filter(id => id !== stepKey));
-      } else {
-          setCompletedSteps(prev => [...prev, stepKey]);
-      }
-  };
-
-  const toggleFullScreen = async () => {
-      const elem = containerRef.current; 
-      if (!elem) return;
-      triggerHaptic();
-      
-      try {
-          const isStandardFs = document.fullscreenElement || document.webkitFullscreenElement;
-          
-          if (!isStandardFs && !isCssFullscreen) {
-              if (elem.requestFullscreen) {
-                  await elem.requestFullscreen();
-                  try { window.screen.orientation.unlock(); } catch (e) {}
-              }
-              else if (elem.webkitRequestFullscreen) {
-                  elem.webkitRequestFullscreen(); 
-                  try { window.screen.orientation.unlock(); } catch (e) {}
-              }
-              else {
-                  setIsCssFullscreen(true);
-              }
-          } else {
-              if (isStandardFs) {
-                  if (document.exitFullscreen) await document.exitFullscreen();
-                  else if (document.webkitExitFullscreen) document.webkitExitFullscreen();
-              }
-              setIsCssFullscreen(false);
-              try { window.screen.orientation.unlock(); } catch (e) {}
-          }
-      } catch (err) {
-          console.error("Fullscreen API error:", err);
-          setIsCssFullscreen(!isCssFullscreen);
-      }
-  };
-
-  const onTouchStart = (e) => {
-      const scrollTop = modalRef.current?.querySelector('.scroll-content')?.scrollTop || 0;
-      if (scrollTop <= 0) dragStartY.current = e.touches[0].clientY;
-  };
-  const onTouchMove = (e) => {
-      if (dragStartY.current === null || isCssFullscreen) return;
-      const deltaY = e.touches[0].clientY - dragStartY.current;
-      if (deltaY > 0) { setDragOffset(deltaY); if (e.cancelable && deltaY > 10) e.preventDefault(); }
-  };
-  const onTouchEnd = () => { 
-      if (isCssFullscreen) return;
-      if (dragOffset > 150) handleClose(); else setDragOffset(0); 
-      dragStartY.current = null; 
-  };
-  
-  const opacity = 1 - (dragOffset / 500); 
-
-  if (!lesson) return null;
-
-  const currentStepData = lesson.steps && lesson.steps.length > 0 
-      ? lesson.steps[activeStep] 
-      : { id: 1, videoUrl: lesson.videoUrl }; 
-
-  const handlePlayClick = () => {
-      setHasStarted(true);
-      if (!isPurchased) {
-          setTimeout(() => {
-              setPreviewEnded(true);
-              triggerHaptic('error'); 
-          }, 21500);
-      }
-  };
-
-  const getVideoUrl = (url) => {
-      if (!url) return '';
-      const videoIdMatch = url.match(/(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))([^"&?\/\s]{11})/);
-      const videoId = videoIdMatch ? videoIdMatch[1] : '';
-      const separator = url.includes('?') ? '&' : '?';
-      const antiSuggestedGrid = videoId ? `&loop=1&playlist=${videoId}` : '';
-
-      return isPurchased 
-          ? `${url}${separator}autoplay=1&playsinline=1&fs=0&modestbranding=1&rel=0&controls=1&enablejsapi=1${antiSuggestedGrid}` 
-          : `${url}${separator}end=20&controls=0&disablekb=1&rel=0&autoplay=1&playsinline=1&fs=0&modestbranding=1&enablejsapi=1`;
-  };
-
-  const displayTitle = lang === 'en' && lesson.title_en ? lesson.title_en : lesson.title;
-
-  return (
-    <div className={`fixed inset-0 z-[250] flex items-end sm:items-center justify-center p-0 sm:p-6 transition-opacity duration-300 ${isVisible ? 'opacity-100' : 'opacity-0'}`}>
-      
-      <div className="absolute inset-0 bg-black/60 backdrop-blur-md" style={{ opacity: Math.max(0, opacity) }} onClick={handleClose} />
-
-      <style>{`
-          .video-container:fullscreen { width: 100vw !important; height: 100dvh !important; max-width: none !important; max-height: none !important; border-radius: 0 !important; border: none !important; background: black; display: flex !important; align-items: center !important; justify-content: center !important; }
-          .video-container:-webkit-full-screen { width: 100vw !important; height: 100dvh !important; max-width: none !important; max-height: none !important; border-radius: 0 !important; border: none !important; background: black; display: flex !important; align-items: center !important; justify-content: center !important; }
-          .video-container:fullscreen iframe { width: 100% !important; height: 100% !important; object-fit: cover; }
-          .video-container:-webkit-full-screen iframe { width: 100% !important; height: 100% !important; object-fit: cover; }
-          .no-callout { -webkit-touch-callout: none !important; -webkit-user-select: none !important; user-select: none !important; outline: none !important; }
-      `}</style>
-
-      <div 
-          ref={modalRef} 
-          className={`relative w-full h-full flex flex-col ease-spring ring-1 
-              ${isDarkMode ? 'bg-[#1C1C1E]/95 ring-white/10' : 'bg-[#FFFFFF]/95 ring-black/5'}
-              ${isCssFullscreen 
-                  ? '!transform-none !backdrop-filter-none sm:max-w-none sm:max-h-none !w-full !h-[100dvh] !rounded-none !m-0 !p-0 z-[99999]' 
-                  : `sm:h-auto sm:max-h-[90vh] sm:max-w-3xl sm:rounded-[32px] shadow-2xl backdrop-blur-2xl transition-transform duration-500 ${closing ? 'translate-y-full' : 'translate-y-0'}`
-              }
-          `}
-          style={isCssFullscreen ? { transform: 'none' } : { 
-              transform: `translateY(${closing ? '100%' : `${dragOffset}px`})`, 
-              transition: dragOffset > 0 ? 'none' : 'transform 0.5s cubic-bezier(0.19, 1, 0.22, 1)' 
-          }} 
-          onTouchStart={onTouchStart} onTouchMove={onTouchMove} onTouchEnd={onTouchEnd}
-      >
-        
-        {!isCssFullscreen && (
-            <div className={`flex flex-col border-b sticky top-0 z-20 shrink-0 sm:rounded-t-[32px] ${isDarkMode ? 'border-[#2C2C2C] bg-[#1C1C1E]/80 backdrop-blur-xl' : 'border-[#E5E7EB] bg-[#FFFFFF]/80 backdrop-blur-xl'}`} style={{ paddingTop: 'env(safe-area-inset-top)' }}>
-                <div className="w-full flex justify-center pt-3 pb-1 shrink-0 cursor-grab active:cursor-grabbing sm:hidden" onClick={handleClose}>
-                    <div className={`w-12 h-1.5 rounded-full opacity-50 ${isDarkMode ? 'bg-[#9AA0A6]' : 'bg-[#5F6368]'}`}></div>
-                </div>
-                <div className="flex items-center justify-between p-4 sm:p-5">
-                    <div className="flex items-center gap-3.5 pr-4">
-                        <div className="w-10 h-10 flex items-center justify-center bg-[#C65102]/10 rounded-[14px] text-[#C65102] border border-[#C65102]/20 shadow-[0_0_15px_rgba(198,81,2,0.15)] shrink-0 [&>svg]:w-5 [&>svg]:h-5">{lesson.icon}</div>
-                        <h2 className={`text-[19px] font-black font-khmer tracking-tight line-clamp-1 ${isDarkMode ? 'text-[#E3E3E3]' : 'text-[#1A1C1E]'}`}>{displayTitle}</h2>
-                    </div>
-                    <button onClick={handleClose} className={`p-2.5 shrink-0 rounded-full transition-colors active:scale-90 ${isDarkMode ? 'bg-[#2C2C2C] text-[#A0A0A0] hover:text-[#F1F1F1]' : 'bg-[#F8F9FA] text-[#6B7280] hover:text-[#1A1A1A]'}`}>
-                      <X size={20} />
-                    </button>
-                </div>
-            </div>
-        )}
-
-        <div className={`flex-1 overflow-y-auto no-scrollbar flex flex-col ${isCssFullscreen ? 'p-0' : 'p-4 sm:p-6 scroll-content'}`} style={isCssFullscreen ? {} : { paddingBottom: 'max(env(safe-area-inset-bottom), 24px)' }}>
-            
-            {!isCssFullscreen && (
-                <p className={`text-[15px] font-khmer leading-relaxed mb-6 px-1 ${isDarkMode ? 'text-[#A0A0A0]' : 'text-[#6B7280]'}`}>
-                    {lang === 'en' ? lesson.desc_en : lesson.desc}
-                </p>
-            )}
-
-            {currentStepData && (
-                <div className={isCssFullscreen ? 'w-full h-full' : 'mb-6'}>
-                    
-                    <div ref={containerRef} className={`video-container w-full shadow-lg shrink-0 bg-black transition-all duration-300
-                        ${isCssFullscreen 
-                            ? '!fixed !top-0 !left-0 !right-0 !bottom-0 !z-[999999] !w-full !h-[100dvh] !rounded-none !border-none !m-0 !p-0' 
-                            : `relative aspect-video rounded-2xl border overflow-hidden ${isDarkMode ? 'border-[#2C2C2C]' : 'border-black'}`
-                        }`}
-                    >
-                        
-                        <div className="absolute inset-0 w-full h-full flex flex-col"
-                             style={isCssFullscreen ? {
-                                 paddingTop: 'env(safe-area-inset-top)',
-                                 paddingBottom: 'env(safe-area-inset-bottom)',
-                                 paddingLeft: 'env(safe-area-inset-left)',
-                                 paddingRight: 'env(safe-area-inset-right)'
-                             } : {}}
-                        >
-                            <div className={`relative w-full h-full flex-1 flex flex-col items-center justify-center overflow-hidden group ${isCssFullscreen ? '' : 'rounded-[inherit]'}`}>
-                                
-                                {isCssFullscreen && (
-                                    <button 
-                                        onClick={toggleFullScreen}
-                                        className="absolute z-[60] p-3 sm:p-4 bg-black/60 text-white rounded-full backdrop-blur-md shadow-2xl active:scale-90 transition-transform"
-                                        style={{ top: '16px', left: '16px' }}
-                                    >
-                                        <Minimize size={24} />
-                                    </button>
-                                )}
-
-                                {!isPurchased && !previewEnded && (
-                                    <div className="absolute top-4 right-4 z-40 bg-[#C5B002] text-white px-3 py-1.5 rounded-full font-bold text-[10px] tracking-widest uppercase shadow-lg flex items-center gap-1.5 animate-pulse pointer-events-none">
-                                        <Clock size={12} /> 20s PREVIEW
-                                    </div>
-                                )}
-
-                                {currentStepData.videoUrl ? (
-                                    <>
-                                        {!hasStarted ? (
-                                            <div onClick={handlePlayClick} className="absolute inset-0 flex flex-col items-center justify-center bg-black/60 cursor-pointer z-50 hover:bg-black/50 transition-colors">
-                                                <PlayCircle size={64} className="text-[#C5B002] mb-3 drop-shadow-lg" />
-                                                <span className="font-bold font-khmer text-white tracking-wide drop-shadow-md">
-                                                    {isPurchased ? (lang === 'en' ? 'Play Video' : 'ចាក់វីដេអូ') : (lang === 'en' ? 'Play 20s Free Preview' : 'ចាក់មើលសាកល្បង ២០ វិនាទី')}
-                                                </span>
-                                            </div>
-                                        ) : previewEnded && !isPurchased ? (
-                                            <div className="absolute inset-0 flex flex-col items-center justify-center bg-[#0A0A0A] z-50 p-6 text-center border-2 border-[#C5B002]/30 rounded-2xl animate-fade-in-up">
-                                                <Lock size={40} className="text-[#C5B002] mb-4 animate-bounce" />
-                                                <h4 className="text-white font-black font-khmer text-lg sm:text-xl mb-2">
-                                                    {lang === 'en' ? 'Preview Finished!' : 'ការមើលសាកល្បងត្រូវបានបញ្ចប់!'}
-                                                </h4>
-                                                <p className="text-[#A0A0A0] text-[13px] sm:text-sm font-khmer mb-6 max-w-sm mx-auto">
-                                                    {lang === 'en' ? 'Unlock the full course to watch the rest of this lesson and access all features.' : 'ដោះសោវគ្គសិក្សាដើម្បីបន្តមើលមេរៀននេះ និងទទួលបានឯកសារអនុវត្ត។'}
-                                                </p>
-                                                <button onClick={() => { handleClose(); setTimeout(onUnlockDemo, 300); }} className="px-8 py-3 bg-[#C5B002] text-white font-black font-khmer rounded-xl text-[13px] active:scale-95 shadow-lg shadow-[#C5B002]/20">
-                                                    {lang === 'en' ? 'Unlock Full Access' : 'ដោះសោសិទ្ធិពេញលេញ'}
-                                                </button>
-                                            </div>
-                                        ) : (
-                                            <>
-                                                {isVideoLoading && (
-                                                    <div className="absolute inset-0 flex flex-col items-center justify-center z-10">
-                                                        <Loader2 size={36} className={`animate-spin mb-3 ${isDarkMode ? 'text-[#41B6E6]' : 'text-[#0277C5]'}`} />
-                                                        <span className={`text-[11px] font-bold uppercase tracking-widest ${isDarkMode ? 'text-[#A0A0A0]' : 'text-[#6B7280]'}`}>Loading</span>
-                                                    </div>
-                                                )}
-
-                                                <iframe 
-                                                    ref={videoRef}
-                                                    tabIndex="-1"
-                                                    src={getVideoUrl(currentStepData.videoUrl)}
-                                                    className={`w-full h-full absolute inset-0 transition-opacity duration-700 ease-in-out no-callout ${isVideoLoading ? 'opacity-0' : 'opacity-100 z-10'}`}
-                                                    sandbox="allow-scripts allow-same-origin allow-presentation"
-                                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; fullscreen" 
-                                                    referrerPolicy="strict-origin-when-cross-origin"
-                                                    allowFullScreen
-                                                    title={`Step ${currentStepData.id} Video`}
-                                                    onLoad={() => setIsVideoLoading(false)}
-                                                />
-                                                
-                                                <div 
-                                                    className="absolute top-0 left-0 w-full h-[75px] landscape:h-[110px] sm:h-[110px] z-20 bg-[rgba(255,255,255,0.01)] no-callout cursor-default" 
-                                                    onContextMenu={e => e.preventDefault()} 
-                                                />
-                                                <div 
-                                                    className="absolute bottom-0 left-0 w-[120px] landscape:w-[160px] h-[65px] landscape:h-[80px] z-20 bg-[rgba(255,255,255,0.01)] no-callout cursor-default" 
-                                                    onContextMenu={e => e.preventDefault()} 
-                                                />
-                                                <div 
-                                                    className="absolute bottom-0 right-0 w-[120px] landscape:w-[160px] h-[65px] landscape:h-[80px] z-20 bg-[rgba(255,255,255,0.01)] no-callout cursor-default" 
-                                                    onContextMenu={e => e.preventDefault()} 
-                                                />
-                                                <div 
-                                                    className="absolute top-[75px] landscape:top-[110px] sm:top-[110px] bottom-[65px] landscape:bottom-[80px] left-0 right-0 z-30 cursor-pointer flex items-center justify-center no-callout" 
-                                                    onContextMenu={e => e.preventDefault()} 
-                                                    onClick={togglePlayPause}
-                                                    onDoubleClick={e => { e.preventDefault(); e.stopPropagation(); }}
-                                                >
-                                                    <div className={`transition-all duration-300 transform bg-black/50 backdrop-blur-md rounded-full p-4 sm:p-5 shadow-2xl pointer-events-none ${!isPlaying ? 'scale-100 opacity-100' : 'scale-150 opacity-0'}`}>
-                                                        <PlayCircle size={60} className="text-white drop-shadow-lg" />
-                                                    </div>
-                                                </div>
-                                            </>
-                                        )}
-                                    </>
-                                ) : (
-                                    <div className="text-center text-white/50 p-4">
-                                        <PlayCircle size={48} className="mx-auto mb-3 opacity-50 group-hover:opacity-100 transition-opacity text-[#41B6E6]" />
-                                        <p className="font-khmer font-bold tracking-wide">
-                                            {lang === 'en' ? `STEP ${currentStepData.id} COMING SOON` : `វីដេអូទី ${currentStepData.id} កំពុងរៀបចំ`}
-                                        </p>
-                                    </div>
-                                )}
-                            </div>
-                        </div>
-                    </div>
-                    
-                    {!isCssFullscreen && currentStepData.videoUrl && (
-                        <div className="flex flex-col sm:flex-row gap-3 mt-3 w-full">
-                            <button 
-                                onClick={toggleFullScreen}
-                                className={`flex-1 py-3.5 rounded-xl flex items-center justify-center gap-2 font-bold font-khmer text-[13px] sm:text-[14px] transition-all active:scale-[0.98] shadow-sm border ${isDarkMode ? 'bg-[#2C2C2C] border-[#3C3C3C] text-[#F1F1F1] hover:bg-[#3C3C3C]' : 'bg-white border-[#E5E7EB] text-[#1A1A1A] hover:bg-[#F8F9FA]'}`}
-                            >
-                                {isCssFullscreen ? (
-                                    <>
-                                        <Minimize size={18} className={isDarkMode ? 'text-[#41B6E6]' : 'text-[#0277C5]'} />
-                                        {lang === 'en' ? 'Exit Fullscreen' : 'ចាកចេញពីអេក្រង់ពេញ'}
-                                    </>
-                                ) : (
-                                    <>
-                                        <Maximize size={18} className={isDarkMode ? 'text-[#41B6E6]' : 'text-[#0277C5]'} />
-                                        {lang === 'en' ? 'Watch Fullscreen' : 'មើលពេញអេក្រង់'}
-                                    </>
-                                )}
-                            </button>
-
-                            {!isPurchased && (
-                                <button 
-                                    onClick={() => { handleClose(); setTimeout(onUnlockDemo, 300); }}
-                                    className="flex-1 py-3.5 rounded-xl flex items-center justify-center gap-2 font-bold font-khmer text-[13px] sm:text-[14px] transition-all active:scale-[0.98] shadow-sm border border-[#C5B002]/40 bg-[#C5B002]/10 text-[#C5B002] hover:bg-[#C5B002]/20"
-                                >
-                                    <Lock size={18} />
-                                    {lang === 'en' ? 'Unlock Full Course' : 'ដោះសោវគ្គសិក្សា'}
-                                </button>
-                            )}
-                        </div>
-                    )}
-                </div>
-            )}
-
-            {!isCssFullscreen && (lesson.instruction || lesson.downloadUrl) && (
-                <div className={`mb-8 p-5 rounded-[20px] border flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between ${isDarkMode ? 'bg-[#1E1E1E]/50 border-[#2C2C2C]' : 'bg-[#F8F9FA] border-[#E5E7EB]'}`}>
-                    <div className="flex-1">
-                        <h4 className={`text-xs font-bold uppercase tracking-widest mb-2 flex items-center gap-2 ${isDarkMode ? 'text-[#41B6E6]' : 'text-[#0277C5]'}`}>
-                            <DownloadCloud size={16} />
-                            {lang === 'en' ? 'Practice Resources' : 'ឯកសារអនុវត្ត'}
-                        </h4>
-                        <p className={`text-[13px] font-khmer leading-relaxed ${isDarkMode ? 'text-[#A0A0A0]' : 'text-[#6B7280]'}`}>
-                            {lang === 'en' ? lesson.instruction_en : lesson.instruction}
-                        </p>
-                    </div>
-                    {lesson.downloadUrl && (
-                        isPurchased ? (
-                            <a 
-                                href={lesson.downloadUrl}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className={`shrink-0 w-full sm:w-auto text-center px-5 py-3 rounded-xl font-khmer font-bold text-[13px] transition-transform active:scale-95 shadow-sm
-                                    ${isDarkMode ? 'bg-[#41B6E6] text-[#0A0A0A] hover:bg-[#2CA0D0]' : 'bg-[#0277C5] text-white hover:bg-[#01579B]'}
-                                `}
-                            >
-                                {lang === 'en' ? 'Download Assets (.zip)' : 'ទាញយកឯកសារ (.zip)'}
-                            </a>
-                        ) : (
-                            <button onClick={() => triggerHaptic('error')} className={`shrink-0 w-full sm:w-auto text-center px-5 py-3 rounded-xl font-khmer font-bold text-[13px] transition-all cursor-not-allowed flex justify-center items-center gap-2
-                                ${isDarkMode ? 'bg-[#2C2C2C] text-[#A0A0A0]' : 'bg-[#E5E7EB] text-[#6B7280]'}
-                            `}>
-                                <Lock size={14} /> {lang === 'en' ? 'Locked' : 'បានចាក់សោ'}
-                            </button>
-                        )
-                    )}
-                </div>
-            )}
-
-            {!isCssFullscreen && lesson.steps && lesson.steps.length > 0 && (
-                <div className="flex flex-col gap-3 pb-6">
-                    <h4 className={`text-sm font-bold uppercase tracking-widest px-2 opacity-50 ${isDarkMode ? 'text-[#A0A0A0]' : 'text-[#6B7280]'}`}>
-                        {lang === 'en' ? 'Course Content' : 'មាតិកាមេរៀន'}
-                    </h4>
-                    
-                    {lesson.steps.map((step, idx) => {
-                        const isActive = activeStep === idx;
-                        const stepKey = `${lesson.id}_${step.id}`;
-                        const isCompleted = completedSteps.includes(stepKey);
-
-                        return (
-                            <div 
-                                key={step.id}
-                                className={`flex items-center gap-3 p-3 sm:p-4 rounded-[20px] border transition-all duration-300 ease-out
-                                    ${isActive 
-                                        ? (isDarkMode ? 'bg-[#41B6E6]/10 border-[#41B6E6]/50 shadow-md' : 'bg-[#0277C5]/10 border-[#0277C5]/50 shadow-md') 
-                                        : (isDarkMode ? 'bg-[#1E1E1E] border-[#2C2C2C]' : 'bg-[#FFFFFF] border-[#E5E7EB]')
-                                    }
-                                `}
-                            >
-                                <button 
-                                    onClick={() => { setActiveStep(idx); triggerHaptic(); }}
-                                    className="flex-1 flex items-center gap-4 text-left active:scale-[0.98] transition-transform min-w-0"
-                                >
-                                    <div className={`w-10 h-10 shrink-0 rounded-full flex items-center justify-center font-bold text-[14px] shadow-inner
-                                        ${isActive 
-                                            ? (isDarkMode ? 'bg-[#41B6E6] text-[#0A0A0A]' : 'bg-[#0277C5] text-white') 
-                                            : (isDarkMode ? 'bg-[#2C2C2C] text-[#A0A0A0]' : 'bg-[#F3F4F6] text-[#6B7280]')
-                                        }
-                                    `}>
-                                        {isActive ? <PlayCircle size={18} className="ml-0.5" /> : step.id}
-                                    </div>
-
-                                    <div className="flex-1 min-w-0 pr-2">
-                                        <p className={`text-[14px] sm:text-[15px] font-khmer leading-relaxed truncate
-                                            ${isActive 
-                                                ? (isDarkMode ? 'text-[#F1F1F1] font-bold' : 'text-[#1A1A1A] font-bold') 
-                                                : (isDarkMode ? 'text-[#A0A0A0] font-medium' : 'text-[#4B5563] font-medium')
-                                            }
-                                        `}>
-                                            {lang === 'en' ? step.english : step.khmer}
-                                        </p>
-                                    </div>
-                                </button>
-
-                                <button 
-                                    onClick={(e) => handleToggleComplete(e, stepKey)}
-                                    className={`shrink-0 w-10 h-10 flex items-center justify-center rounded-full transition-transform active:scale-75
-                                        ${isCompleted ? 'text-green-500 bg-green-500/10' : (isDarkMode ? 'text-[#3C3C3C] hover:text-[#A0A0A0]' : 'text-[#D1D5DB] hover:text-[#6B7280]')}
-                                        ${!isPurchased ? 'opacity-30 cursor-not-allowed' : ''}
-                                    `}
-                                >
-                                    {isCompleted ? <CheckCircle2 size={24} className="text-green-500" /> : <Circle size={24} />}
-                                </button>
-                            </div>
-                        );
-                    })}
-                </div>
-            )}
-
-        </div>
-      </div>
-    </div>
-  );
-};
-
-const TipsSection = ({ isExpanded, onToggle, isDarkMode }) => {
-    const { t, lang } = useLanguage();
-    const [tipIndex, setTipIndex] = useState(0);
-    const currentTipsList = lang === 'en' ? TIPS_LIST_EN : TIPS_LIST;
-    
-    const safeTipIndex = tipIndex < currentTipsList.length ? tipIndex : 0;
-    
-    useEffect(() => { setTipIndex(Math.floor(Math.random() * currentTipsList.length)); }, [lang, currentTipsList.length]);
-    
-    useEffect(() => {
-      if (!isExpanded) return;
-      const interval = setInterval(() => { setTipIndex((prev) => (prev + 1) % currentTipsList.length); }, 15000);
-      return () => clearInterval(interval);
-    }, [isExpanded, currentTipsList.length]);
-    
-    const nextTip = (e) => { e.stopPropagation(); setTipIndex((prev) => (prev + 1) % currentTipsList.length); };
-    
-    return (
-      <div className="mt-12">
-        <button onClick={onToggle} className={`w-full flex items-center justify-between p-6 rounded-[24px] border transition-all group active:scale-[0.98] shadow-sm ${isDarkMode ? 'bg-[#1C1C1E] border-[#2C2C2C] hover:bg-[#2C2C2C]' : 'bg-[#FFFFFF] border-[#E5E7EB] hover:shadow-md'}`}>
-          <div className="flex items-center space-x-5">
-              <div className={`w-12 h-12 flex items-center justify-center rounded-2xl transition-colors ring-1 ${isDarkMode ? 'bg-[#41B6E6]/10 ring-[#41B6E6]/20 group-hover:bg-[#41B6E6]/20' : 'bg-[#0277C5]/10 ring-[#0277C5]/20 group-hover:bg-[#0277C5]/20'}`}>
-                  <PlayCircle className={`w-6 h-6 ${isDarkMode ? 'text-[#41B6E6]' : 'text-[#0277C5]'}`} />
-              </div>
-              <h3 className={`font-bold text-[19px] font-khmer tracking-tight ${isDarkMode ? 'text-[#F1F1F1]' : 'text-[#1A1A1A]'}`}>{t('tips_title')}</h3>
-          </div>
-          <ChevronRight className={`w-6 h-6 transition-transform ${isExpanded ? 'rotate-90' : ''} ${isDarkMode ? 'text-[#A0A0A0]' : 'text-[#6B7280]'}`} />
-        </button>
-        {isExpanded && (
-          <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 animate-fade-in-up">
-            <div className={`bg-gradient-to-br border rounded-[24px] p-6 sm:p-8 md:col-span-2 relative overflow-hidden shadow-xl flex flex-col justify-center min-h-[180px] ${isDarkMode ? 'from-[#1C1C1E] to-[#121212] border-[#2C2C2C]' : 'from-[#FFFFFF] to-[#F8F9FA] border-[#E5E7EB]'}`}>
-               <div className={`absolute top-0 right-0 w-64 h-64 rounded-full blur-[80px] -translate-y-1/2 translate-x-1/2 pointer-events-none ${isDarkMode ? 'bg-[#41B6E6]/10' : 'bg-[#0277C5]/10'}`}></div>
-               <div className="flex justify-between items-center mb-6 relative z-10">
-                   <h4 className={`font-bold font-khmer flex items-center gap-3 text-[17px] sm:text-lg whitespace-nowrap ${isDarkMode ? 'text-[#F1F1F1]' : 'text-[#1A1A1A]'}`}>
-                      <Sparkles className="w-5 h-5 text-[#C5B002]" /> {t('tips_pro')}
-                   </h4>
-                   <button onClick={nextTip} className={`text-[11px] px-4 py-2 rounded-full font-khmer transition-all font-bold tracking-wide border active:scale-95 whitespace-nowrap ${isDarkMode ? 'bg-[#F1F1F1]/10 hover:bg-[#F1F1F1]/20 text-[#F1F1F1] border-[#F1F1F1]/5' : 'bg-[#1A1A1A]/5 hover:bg-[#1A1A1A]/10 text-[#1A1A1A] border-[#1A1A1A]/5'}`}>{t('tips_new')}</button>
-               </div>
-               <div className="relative z-10 flex-1 flex items-center">
-                   <p key={safeTipIndex} className={`text-[15px] sm:text-base leading-relaxed border-l-[3px] pl-5 sm:pl-6 py-2 animate-fade-in-up ${lang === 'km' ? 'font-khmer' : 'font-sans'} ${isDarkMode ? 'text-[#F1F1F1] border-[#41B6E6]' : 'text-[#1A1A1A] border-[#0277C5]'}`}>
-                       {currentTipsList[safeTipIndex]}
-                   </p>
-               </div>
-            </div>
-            <div className={`border rounded-[24px] p-6 sm:p-8 md:col-span-2 shadow-lg ${isDarkMode ? 'bg-[#1C1C1E] border-[#2C2C2C]' : 'bg-[#FFFFFF] border-[#E5E7EB]'}`}>
-              <h4 className={`font-bold font-khmer mb-6 flex items-center text-[17px] sm:text-lg ${isDarkMode ? 'text-[#F1F1F1]' : 'text-[#1A1A1A]'}`}><Zap className="w-5 h-5 mr-3 text-[#C5B002]" /> {t('tips_shortcut')}</h4>
-              <ul className={`space-y-3 sm:space-y-4 text-[14px] sm:text-sm font-khmer ${isDarkMode ? 'text-[#A0A0A0]' : 'text-[#6B7280]'}`}>
-                {[1, 2, 3, 4].map((num) => (
-                    <li key={num} className={`flex items-start gap-4 p-4 rounded-[20px] border transition-colors ${isDarkMode ? 'bg-[#121212]/50 border-[#2C2C2C] hover:bg-[#2C2C2C]' : 'bg-[#F8F9FA] border-[#E5E7EB] hover:bg-[#E5E7EB]/50'}`}>
-                        <span className={`font-bold w-10 h-10 flex items-center justify-center rounded-full text-sm shrink-0 shadow-inner ${isDarkMode ? 'bg-[#41B6E6]/10 text-[#41B6E6]' : 'bg-[#0277C5]/10 text-[#0277C5]'}`}>{num}</span>
-                        <span className="mt-0.5"><span className={`font-bold block mb-1 ${lang === 'km' ? 'font-khmer' : 'font-sans'} ${isDarkMode ? 'text-[#F1F1F1]' : 'text-[#1A1A1A]'}`}>{t(`tip_${num}_title`)}</span> <span className={`${lang === 'km' ? 'font-khmer' : 'font-sans'} leading-relaxed`} dangerouslySetInnerHTML={{ __html: t(`tip_${num}_desc`) }} /></span>
-                    </li>
-                ))}
-              </ul>
-            </div>
-          </div>
-        )}
-      </div>
-    );
-};
-
-const ContactSection = ({ isDarkMode }) => {
-    const { t } = useLanguage();
-    return (
-        <div className={`mt-16 border-t pt-10 text-center ${isDarkMode ? 'border-[#2C2C2C]' : 'border-[#E5E7EB]'}`}>
-            <div className="flex justify-center gap-8 sm:gap-10">
-                <a href="https://web.facebook.com/myaffinity" target="_blank" rel="noopener noreferrer" className="group flex flex-col items-center gap-3 hover:opacity-80 transition-opacity">
-                    <div className={`w-14 h-14 flex items-center justify-center rounded-[20px] border shadow-sm ${isDarkMode ? 'bg-[#1C1C1E] border-[#2C2C2C]' : 'bg-[#FFFFFF] border-[#E5E7EB]'}`}><Facebook className={isDarkMode ? 'text-[#41B6E6]' : 'text-[#0277C5]'} size={24} /></div>
-                    <span className={`text-[11px] font-khmer tracking-wide ${isDarkMode ? 'text-[#A0A0A0]' : 'text-[#6B7280]'}`}>Facebook</span>
-                </a>
-                <a href="https://t.me/koymy" target="_blank" rel="noopener noreferrer" className="group flex flex-col items-center gap-3 hover:opacity-80 transition-opacity">
-                    <div className={`w-14 h-14 flex items-center justify-center rounded-[20px] border shadow-sm ${isDarkMode ? 'bg-[#1C1C1E] border-[#2C2C2C]' : 'bg-[#FFFFFF] border-[#E5E7EB]'}`}><Send className={isDarkMode ? 'text-[#41B6E6]' : 'text-[#0277C5]'} size={24} /></div>
-                    <span className={`text-[11px] font-khmer tracking-wide ${isDarkMode ? 'text-[#A0A0A0]' : 'text-[#6B7280]'}`}>Telegram</span>
-                </a>
-                <a href="https://myaffinity.gumroad.com" target="_blank" rel="noopener noreferrer" className="group flex flex-col items-center gap-3 hover:opacity-80 transition-opacity">
-                      <div className={`w-14 h-14 flex items-center justify-center rounded-[20px] border shadow-sm ${isDarkMode ? 'bg-[#1C1C1E] border-[#2C2C2C]' : 'bg-[#FFFFFF] border-[#E5E7EB]'}`}><Globe className={isDarkMode ? 'text-[#41B6E6]' : 'text-[#0277C5]'} size={24} /></div>
-                    <span className={`text-[11px] font-khmer tracking-wide ${isDarkMode ? 'text-[#A0A0A0]' : 'text-[#6B7280]'}`}>Website</span>
-                </a>
-            </div>
-            <p className={`text-center text-[10px] mt-10 font-khmer uppercase opacity-50 tracking-widest ${isDarkMode ? 'text-[#A0A0A0]' : 'text-[#6B7280]'}`}>{t('footer_copy')}</p>
-        </div>
-    );
-};
 
 // ==========================================
 // 3. MAIN APP CONTENT
@@ -978,21 +412,23 @@ function AppContent() {
                 className="p-4 md:p-8 max-w-7xl mx-auto w-full flex-1 relative z-10"
                 style={{ paddingBottom: 'max(env(safe-area-inset-bottom), 40px)' }}
             >
-                <PremiumModal
-                    activeAppTab={activeAppTab}
-                    isCoursePurchased={isCoursePurchased}
-                    theme={theme}
-                    appDisplayName={appDisplayName}
-                    isDarkMode={isDarkMode}
-                    showAdminPanel={showAdminPanel}
-                    purchasedCourses={purchasedCourses}
-                    setPurchasedCourses={setPurchasedCourses}
-                    user={user}
-                    setUser={setUser}
-                    setIsSuperAdmin={setShowAdminPanel}
-                    handleSignOutDevice={handleSignOutDevice}
-                    triggerHaptic={triggerHaptic}
-                />
+                <Suspense fallback={<div className="flex justify-center p-8"><Loader2 className="animate-spin text-[#0277C5] w-8 h-8" /></div>}>
+                    <PremiumModal
+                        activeAppTab={activeAppTab}
+                        isCoursePurchased={isCoursePurchased}
+                        theme={theme}
+                        appDisplayName={appDisplayName}
+                        isDarkMode={isDarkMode}
+                        showAdminPanel={showAdminPanel}
+                        purchasedCourses={purchasedCourses}
+                        setPurchasedCourses={setPurchasedCourses}
+                        user={user}
+                        setUser={setUser}
+                        setIsSuperAdmin={setShowAdminPanel}
+                        handleSignOutDevice={handleSignOutDevice}
+                        triggerHaptic={triggerHaptic}
+                    />
+                </Suspense>
 
                 {isCoursePurchased && (
                     <div className={`mb-8 p-5 md:p-6 rounded-[32px] border shadow-sm animate-fade-in-up relative overflow-hidden ${isDarkMode ? 'bg-[#1C1C1E]/50 border-[#2C2C2C]' : 'bg-[#FFFFFF] border-[#E5E7EB]'}`}>
@@ -1109,13 +545,13 @@ function AppContent() {
                 </div>
             </div>
             )}
-        {activeTab === 'tools' && <div className="relative z-10"><ToolsView isDarkMode={isDarkMode} /></div>}
+        {activeTab === 'tools' && <div className="relative z-10"><Suspense fallback={<div className="flex items-center justify-center h-64"><Loader2 className="animate-spin w-8 h-8 opacity-50" /></div>}><ToolsView isDarkMode={isDarkMode} /></Suspense></div>}
             
-            {activeTab === 'quiz' && <div className="relative z-10"><Test isDarkMode={isDarkMode} isAdmin={false} /></div>}
+            {activeTab === 'quiz' && <div className="relative z-10"><Suspense fallback={<div className="flex items-center justify-center h-64"><Loader2 className="animate-spin w-8 h-8 opacity-50" /></div>}><Test isDarkMode={isDarkMode} isAdmin={false} /></Suspense></div>}
         </main>
       ) : (
         <div className={`flex-1 relative w-full h-full md:pb-0 z-10 ${activeAppTab ? 'hidden' : 'block'}`}>
-             <ChatBot messages={chatMessages} setMessages={setChatMessages} isDarkMode={isDarkMode} liveAiData={liveAiData} setLiveAiData={setLiveAiData} isAdmin={false} />
+             <Suspense fallback={<div className="flex items-center justify-center h-full"><Loader2 className="animate-spin w-8 h-8 opacity-50" /></div>}><ChatBot messages={chatMessages} setMessages={setChatMessages} isDarkMode={isDarkMode} liveAiData={liveAiData} setLiveAiData={setLiveAiData} isAdmin={false} /></Suspense>
         </div>
       )}
 
