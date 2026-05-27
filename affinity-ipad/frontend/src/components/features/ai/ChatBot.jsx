@@ -78,12 +78,17 @@ const MARKETING_SYSTEM_KH = `[ប្រព័ន្ធ: អ្នកគឺ "Affi
 4. ភាសា: ខ្លី, ច្បាស់, ចប់ដោយ CTA ។ ៣ កថាខណ្ឌ ត្រឹម។
 Features App: Skill Quiz (Beginner/Intermediate/Advanced), Final Exam (90%), Certificate PDF, Color Generator, Layout Tools.]\n`;
 
-const callRealAI = async (userPrompt, language, history = []) => {
+const callRealAI = async (userPrompt, language, history = [], level = null) => {
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), AI_REQUEST_TIMEOUT_MS);
     try {
         const systemContext = language === 'en' ? MARKETING_SYSTEM_EN : MARKETING_SYSTEM_KH;
-        const recentHistoryText = systemContext + history.slice(-10).map(msg =>
+        const levelHint = level
+            ? (language === 'en'
+                ? `\n[User skill level: ${level}. Tailor your explanations to this level — use simpler language for beginner, assume more knowledge for advanced.]\n`
+                : `\n[កម្រិតអ្នករៀន: ${level}. សូមលៃតម្រូវការពន្យល់ទៅតាមកម្រិតនេះ។]\n`)
+            : '';
+        const recentHistoryText = systemContext + levelHint + history.slice(-10).map(msg =>
             `${msg.role === 'user' ? 'User' : 'AI Assistant'}: ${msg.text}`
         ).join('\n');
         const response = await fetch('https://my-affinity-backend.onrender.com/chat', {
@@ -332,6 +337,12 @@ const FOLLOW_UP_MAP = {
     'ពន្យល់ពី Blend Modes ទាំងអស់ 🌈': 'Blend Ranges (លាក់ពណ៌លឿនបំផុត)', 'explain all blend modes': 'affinity blend ranges remove white background',
     'របៀបបង្កើត Text Effects ស្អាតៗ ✨': 'Clipping និង Masking ក្នុង Affinity', 'how to create premium text effects': 'clipping vs masking affinity layers',
     'រូបភាពខ្ញុំព្រិល': 'Image Layer vs Pixel Layer', 'my image is blurry pixelated resolving': 'image layer vs pixel layer terminology',
+
+    // ── Beginner tools chain ───────────────────────────────────────────────────
+    'Gradient Tool': 'Clipping និង Masking ក្នុង Affinity', 'gradient tool affinity': 'clipping vs masking affinity layers',
+    'Group & Ungroup Objects': 'មុខងារ Artboards', 'group ungroup objects affinity': 'affinity artboards',
+    'Align & Distribute': 'តិចនិក Power Duplicate', 'align distribute affinity': 'power duplicate shortcut cmd j',
+    'Export File (PNG/JPG)': 'ការកាត់រូប Export (Slices)', 'basic export affinity': 'export persona slices',
 };
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -349,28 +360,29 @@ const ChatBot = ({ messages = [], setMessages, isDarkMode, liveAiData = [], setL
     const [copiedIndex, setCopiedIndex] = useState(null);
     const [editingIndex, setEditingIndex] = useState(null);
     const [editText, setEditText] = useState('');
-    const [animState, setAnimState] = useState('idle');
     const [headerStatusText, setHeaderStatusText] = useState('Affinity iPad AI');
     const touchStartX = useRef(0);
 
     const messagesEndRef = useRef(null);
     const inputRef = useRef(null);
     const scrollContainerRef = useRef(null);
-    const suggestionsScrollRef = useRef(null);
     const isInitialMount = useRef(true);
     const isAutoScrolling = useRef(false);
-    const idleTimerRef = useRef(null);
 
     // Anti-repetition: track recent chips and KB hits to avoid showing same content
     const recentChipsRef = useRef([]);
     const recentKbHitsRef = useRef([]);
 
-    const [currentSuggestions, setCurrentSuggestions] = useState([]);
     const [showConfirmModal, setShowConfirmModal] = useState(false);
     const [currentTopic, setCurrentTopic] = useState(() => {
         if (typeof window !== 'undefined') return localStorage.getItem('myDesign_current_topic') || null;
         return null;
     });
+    const [userLevel, setUserLevel] = useState(() => {
+        if (typeof window !== 'undefined') return localStorage.getItem('myDesign_user_level') || null;
+        return null;
+    });
+    const saveUserLevel = (level) => { setUserLevel(level); localStorage.setItem('myDesign_user_level', level); };
 
     const { lang, t } = useLanguage();
 
@@ -532,12 +544,25 @@ const ChatBot = ({ messages = [], setMessages, isDarkMode, liveAiData = [], setL
     // ─── Greeting ─────────────────────────────────────────────────────────────
     const generateSmartGreeting = () => {
         const interests = JSON.parse(localStorage.getItem('myDesign_user_interests') || '[]');
+        const savedLevel = localStorage.getItem('myDesign_user_level');
         const hour = new Date().getHours();
 
         const timeKh = hour >= 5 && hour < 12 ? "អរុណសួស្តី! 🌅" : hour >= 12 && hour < 17 ? "ទិវាសួស្តី! ☀️" : hour >= 17 && hour < 22 ? "សាយន្តសួស្តី! 🌇" : "រាត្រីសួស្តី! 🌙";
         const timeEn = hour >= 5 && hour < 12 ? "Good morning! 🌅" : hour >= 12 && hour < 17 ? "Good afternoon! ☀️" : hour >= 17 && hour < 22 ? "Good evening! 🌇" : "Working late? 🌙";
 
         let greetingMsg, defaultChips;
+
+        // First-time visitor with no history — ask skill level to personalise
+        if (interests.length === 0 && !savedLevel) {
+            greetingMsg = lang === 'en'
+                ? `${timeEn} I'm **Affinity iPad AI** — your personal design coach. 🎨\n\nBefore we start, **what's your current skill level?** I'll tailor everything just for you!`
+                : `${timeKh} ខ្ញុំគឺ **Affinity iPad AI** — គ្រូ Design ផ្ទាល់ខ្លួនរបស់អ្នក! 🎨\n\nមុននឹងចាប់ផ្តើម **តើបងមានកម្រិតប៉ុន្មាន?** ខ្ញុំនឹងលៃតម្រូវការបង្រៀនសម្រាប់បងផ្ទាល់!`;
+            defaultChips = lang === 'en'
+                ? ["🟢 Beginner", "🟡 Intermediate", "🔵 Advanced"]
+                : ["🟢 ចាប់ផ្តើម", "🟡 មធ្យម", "🔵 ស្ទាត់ជំនាញ"];
+            setMessages([{ role: 'model', text: greetingMsg, chips: defaultChips, isTrainable: false }]);
+            return;
+        }
 
         if (interests.length > 0) {
             const smartList = lang === 'en' ? (SMART_GREETINGS_EN || []) : (SMART_GREETINGS || []);
@@ -562,34 +587,6 @@ const ChatBot = ({ messages = [], setMessages, isDarkMode, liveAiData = [], setL
         setMessages([{ role: 'model', text: greetingMsg, chips: defaultChips.slice(0, 3), isTrainable: false }]);
     };
 
-    // ─── Idle marketing nudge ─────────────────────────────────────────────────
-    const triggerIdleQuiz = () => {
-        setMessages(prev => {
-            if (prev.length === 0) return prev;
-            const lastMsg = prev[prev.length - 1];
-            const allInvitations = [...LOCAL_QUIZ_INVITATIONS, ...LOCAL_QUIZ_INVITATIONS_EN];
-            if (lastMsg.role === 'model' && allInvitations.includes(lastMsg.text)) return prev;
-
-            const nudges = lang === 'en' ? [
-                { text: getRandomQuizInvitation('en'), chips: ["Take a Quiz 🎯", "Design Certificate 🏆", "What is this app?"] },
-                { text: "Still here? 👋 Did you know you can earn an official **Affinity Design Certificate** by passing the Final Exam? It's a great addition to your portfolio!", chips: ["Design Certificate 🏆", "How to get started", "Is the app free?"] },
-                { text: "💡 **Quick tip:** The fastest way to master Affinity is to take a Skill Quiz first — it shows exactly which areas to focus on. Ready to try?", chips: ["Take a Quiz 🎯", "Affinity vs Photoshop", "Why use Affinity on iPad?"] },
-            ] : [
-                { text: getRandomQuizInvitation('kh'), chips: ["ចង់ធ្វើតេស្ត 🎯", "វិញ្ញាបនបត្ររចនា 🏆", "App នេះជាអ្វី"] },
-                { text: "នៅទីនេះ? 👋 តើអ្នកដឹងទេថា អ្នកអាចទទួល **វិញ្ញាបនបត្ររចនា Affinity** ផ្លូវការ ដោយការប្រឡង Final Exam? ល្អណាស់សម្រាប់ Portfolio!", chips: ["វិញ្ញាបនបត្ររចនា 🏆", "ចាប់ផ្តើមដោយរបៀបណា", "App ប្រើបានដោយឥតគិតថ្លៃទេ?"] },
-                { text: "💡 **គន្លឹះ:** វិធីលឿនបំផុតដើម្បីស្ទាត់ Affinity គឺចាប់ផ្តើមដោយ Skill Quiz — វាបង្ហាញច្បាស់ថាត្រូវ Focus ផ្នែកណា។ ត្រៀមហើយ?", chips: ["ចង់ធ្វើតេស្ត 🎯", "Affinity ធៀបនឹង Photoshop", "ហេតុអ្វីប្រើ Affinity iPad"] },
-            ];
-
-            const picked = nudges[Math.floor(Math.random() * nudges.length)];
-            return [...prev, { role: 'model', text: picked.text, chips: picked.chips, isTrainable: false }];
-        });
-    };
-
-    const resetIdleTimer = () => {
-        if (idleTimerRef.current) clearTimeout(idleTimerRef.current);
-        idleTimerRef.current = setTimeout(triggerIdleQuiz, 120000);
-    };
-
     // ─── Effects ──────────────────────────────────────────────────────────────
     useEffect(() => {
         try {
@@ -600,13 +597,7 @@ const ChatBot = ({ messages = [], setMessages, isDarkMode, liveAiData = [], setL
                 generateSmartGreeting();
             }
         } catch { generateSmartGreeting(); }
-        setCurrentSuggestions(pickFreshChips(3));
     }, [lang]);
-
-    useEffect(() => {
-        resetIdleTimer();
-        return () => { if (idleTimerRef.current) clearTimeout(idleTimerRef.current); };
-    }, [messages, input, lang]);
 
     useEffect(() => {
         if (messages && messages.length > 0) {
@@ -618,63 +609,6 @@ const ChatBot = ({ messages = [], setMessages, isDarkMode, liveAiData = [], setL
     }, [messages, currentTopic]);
 
     const handleInputInput = (e) => setInput(e.currentTarget.textContent || e.currentTarget.innerText);
-
-    // Animated refresh for suggestion chips
-    const handleRefresh = (e, isAuto = false, dir = 'right') => {
-        if (e) { e.preventDefault(); e.stopPropagation(); }
-        if (!isAuto) setAnimState(dir === 'right' ? 'out-left' : 'out-right');
-        setTimeout(() => {
-            setCurrentSuggestions(prev => {
-                const allList = getSuggestList();
-                const available = allList.filter(item => !prev.includes(item));
-                const pool = available.length >= 3 ? available : allList;
-                return getRandomItems(pool, 3);
-            });
-            if (!isAuto) {
-                setAnimState(dir === 'right' ? 'in-right' : 'in-left');
-                setTimeout(() => setAnimState('idle'), 50);
-            }
-            if (suggestionsScrollRef.current) suggestionsScrollRef.current.scrollTo({ left: 0, behavior: 'auto' });
-        }, isAuto ? 0 : 300);
-    };
-
-    const getAnimClasses = () => {
-        switch (animState) {
-            case 'out-left': return 'opacity-0 -translate-x-12 scale-95 transition-all duration-300';
-            case 'out-right': return 'opacity-0 translate-x-12 scale-95 transition-all duration-300';
-            case 'in-right': return 'opacity-0 translate-x-12 scale-95 transition-none';
-            case 'in-left': return 'opacity-0 -translate-x-12 scale-95 transition-none';
-            default: return 'opacity-100 translate-x-0 scale-100 transition-all duration-300';
-        }
-    };
-
-    useEffect(() => {
-        if (reducedMotion) return;
-        const intervalId = setInterval(() => { handleRefresh(null, true); }, 15000);
-        return () => clearInterval(intervalId);
-    }, [lang, reducedMotion]);
-
-    // Pull-to-refresh suggestions
-    useEffect(() => {
-        const container = suggestionsScrollRef.current;
-        if (!container) return;
-        const handleTouchStart = (e) => { touchStartX.current = e.touches[0].clientX; };
-        const handleTouchEnd = (e) => {
-            const touchEndX = e.changedTouches[0].clientX;
-            const distance = touchStartX.current - touchEndX;
-            if (distance > 60 && container.scrollLeft + container.clientWidth >= container.scrollWidth - 10) {
-                triggerHaptic(); handleRefresh(null, false, 'right');
-            } else if (distance < -60 && container.scrollLeft <= 10) {
-                triggerHaptic(); handleRefresh(null, false, 'left');
-            }
-        };
-        container.addEventListener('touchstart', handleTouchStart, { passive: true });
-        container.addEventListener('touchend', handleTouchEnd, { passive: true });
-        return () => {
-            container.removeEventListener('touchstart', handleTouchStart);
-            container.removeEventListener('touchend', handleTouchEnd);
-        };
-    }, [lang]);
 
     // Rotating header status text
     useEffect(() => {
@@ -753,6 +687,45 @@ const ChatBot = ({ messages = [], setMessages, isDarkMode, liveAiData = [], setL
         if (RETRY_CHIP_LABELS.includes(rawInput)) {
             const lastQuery = [...history].reverse().find(m => m.role === 'user' && !RETRY_CHIP_LABELS.includes(m.text?.trim()));
             return { needsBackend: true, backendPrompt: lastQuery?.text || rawInput };
+        }
+
+        // ── SKILL LEVEL selection — checked first so chip source doesn't short-circuit ──
+        {
+            const levelMap = {
+                '🟢 beginner': 'beginner', '🟢 ចាប់ផ្តើម': 'beginner',
+                '🟡 intermediate': 'intermediate', '🟡 មធ្យម': 'intermediate',
+                '🔵 advanced': 'advanced', '🔵 ស្ទាត់ជំនាញ': 'advanced',
+            };
+            const detectedLevel = levelMap[rawLower.trim()] || levelMap[rawInput.trim()];
+            if (detectedLevel) {
+                saveUserLevel(detectedLevel);
+                const levelResponses = {
+                    beginner: {
+                        en: "🟢 **Beginner mode activated!** I'll explain everything step-by-step, no jargon. Let's start from the very beginning — what would you like to learn first?",
+                        kh: "🟢 **ចាប់ផ្តើម!** ខ្ញុំនឹងពន្យល់ជំហានម្តងៗ ច្បាស់ ងាយស្រួល។ តោះចាប់ផ្តើម — ចង់រៀនអ្វីជាមុន?",
+                        chips_en: ["What is Affinity Designer?", "Gradient Tool", "Group & Ungroup Objects"],
+                        chips_kh: ["Affinity Designer ជាអ្វី?", "Gradient Tool", "Group & Ungroup Objects"],
+                    },
+                    intermediate: {
+                        en: "🟡 **Intermediate mode!** I'll skip the basics and go deeper into workflow, techniques, and smart shortcuts. What do you want to explore?",
+                        kh: "🟡 **កម្រិតមធ្យម!** ខ្ញុំនឹងរំលងផ្នែកដំបូង ហើយពន្យល់ Workflow ស៊ីជម្រៅ។ ចង់ស្វែងយល់ផ្នែកណា?",
+                        chips_en: ["Clipping vs Masking", "Blend Modes", "Power Duplicate ⚡"],
+                        chips_kh: ["Clipping និង Masking ក្នុង Affinity", "ពន្យល់ពី Blend Modes ទាំងអស់ 🌈", "តិចនិក Power Duplicate"],
+                    },
+                    advanced: {
+                        en: "🔵 **Advanced mode!** We'll go pro-level — complex techniques, non-destructive workflows, performance optimisation. What's your challenge?",
+                        kh: "🔵 **កម្រិតខ្ពស់!** ចូលស្វែងយល់ Technique ស្ទើរ Pro — Non-Destructive Workflow, Optimisation។ ចង់ challenge អ្វី?",
+                        chips_en: ["Affinity V3 & the Future", "Blend Ranges", "Affinity Personas Explained"],
+                        chips_kh: ["Affinity V3 និងអនាគត (Canva)", "Blend Ranges (លាក់ពណ៌លឿនបំផុត)", "តិចនិកប្រើ Affinity Personas"],
+                    },
+                };
+                const r = levelResponses[detectedLevel];
+                return {
+                    answer: lang === 'en' ? r.en : r.kh,
+                    chips: lang === 'en' ? r.chips_en : r.chips_kh,
+                    needsBackend: false
+                };
+            }
         }
 
         // Shared response formatter with anti-repetition
@@ -949,12 +922,19 @@ const ChatBot = ({ messages = [], setMessages, isDarkMode, liveAiData = [], setL
             }
         }
 
-        // Deep-include search
-        const coreSubject = cleanInput;
+        // Deep-include search — most specific (longest) trigger wins to prevent generic entries firing first
+        const deepMatches = [];
         for (const item of COMBINED_DB) {
             const exactTriggers = [...(item.primaryKeys || []), ...(item.keys || [])].map(strictClean);
-            const isDeepInclude = exactTriggers.some(trigger => trigger.length > 3 && (cleanInput.includes(trigger) || coreSubject.includes(trigger)));
-            if (isDeepInclude) return formatSuccessResponse(item);
+            let bestLen = 0;
+            for (const trigger of exactTriggers) {
+                if (trigger.length > 3 && cleanInput.includes(trigger) && trigger.length > bestLen) bestLen = trigger.length;
+            }
+            if (bestLen > 0) deepMatches.push({ item, len: bestLen });
+        }
+        if (deepMatches.length > 0) {
+            deepMatches.sort((a, b) => b.len - a.len);
+            return formatSuccessResponse(deepMatches[0].item);
         }
 
         // ── Long sentence → backend ───────────────────────────────────────────
@@ -1093,7 +1073,7 @@ const ChatBot = ({ messages = [], setMessages, isDarkMode, liveAiData = [], setL
                 } else {
                     const historyDiet = currentHistory.slice(-10);
                     const basePrompt = responseData.backendPrompt || msg;
-                    const rawAiAnswer = await callRealAI(basePrompt, lang, historyDiet);
+                    const rawAiAnswer = await callRealAI(basePrompt, lang, historyDiet, userLevel);
                     let aiBackendAnswer = rawAiAnswer;
                     let resolvedSource = 'backend';
 
@@ -1433,30 +1413,6 @@ const ChatBot = ({ messages = [], setMessages, isDarkMode, liveAiData = [], setL
                 <div className={`absolute inset-0 ${theme.bg}`} style={{ maskImage: 'linear-gradient(to top, black 40%, transparent 100%)', WebkitMaskImage: 'linear-gradient(to top, black 40%, transparent 100%)' }}></div>
 
                 <div className={`relative w-full pointer-events-auto transition-all duration-300 pt-2 ${isKeyboardOpen ? 'pb-3' : (!showHeader ? 'pb-[calc(20px+env(safe-area-inset-bottom))] md:pb-6' : 'pb-[calc(70px+env(safe-area-inset-bottom))] md:pb-6')}`}>
-
-                    {/* FLOATING SUGGESTIONS */}
-                    <div
-                        className={`relative w-full overflow-hidden transition-all duration-300 ${input.trim().length > 0 || loading ? 'opacity-0 h-0 mb-0 pointer-events-none' : 'opacity-100 h-[38px] mb-2.5'}`}
-                        style={{ WebkitMaskImage: 'linear-gradient(to right, transparent 0%, black 12%, black 88%, transparent 100%)', maskImage: 'linear-gradient(to right, transparent 0%, black 12%, black 88%, transparent 100%)' }}
-                    >
-                        <div ref={suggestionsScrollRef} className="flex-1 overflow-x-auto no-scrollbar scroll-smooth w-full px-4" style={{ touchAction: 'pan-x' }}>
-                            <div className={`flex items-center gap-2 py-1 w-max mx-auto max-w-4xl ${getAnimClasses()}`}>
-                                {currentSuggestions.map((q, i) => (
-                                    <button
-                                        key={i}
-                                        onClick={(e) => {
-                                            e.stopPropagation();
-                                            dismissKeyboard();
-                                            if (!loading) { triggerHaptic(); handleSend(q, null, 'suggestion'); }
-                                        }}
-                                        className={`shrink-0 px-3.5 py-1.5 text-[12px] font-medium font-khmer rounded-full whitespace-nowrap active:scale-95 transition-all shadow-sm backdrop-blur-md border ${isDarkMode ? 'bg-[#242526]/80 border-[#41B6E6]/40 text-[#41B6E6] hover:bg-[#3A3B3C]' : 'bg-[#FFFFFF]/90 border-[#0277C5]/40 text-[#0277C5] hover:bg-[#F0F2F5]'}`}
-                                    >
-                                        {q}
-                                    </button>
-                                ))}
-                            </div>
-                        </div>
-                    </div>
 
                     {/* INPUT FIELD */}
                     <div className="w-[92%] max-w-[380px] md:w-full md:max-w-4xl mx-auto md:px-4 flex items-end pb-1 relative">
