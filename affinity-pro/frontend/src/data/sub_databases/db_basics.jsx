@@ -1,7 +1,7 @@
 export const basicsData = [
     // 1. FUN, EMOTIONAL & CASUAL CHAT
     {
-        primaryKeys: ['កំប្លែង', 'joke'],
+        primaryKeys: ['កំប្លែង', 'joke', 'ចង់ស្តាប់រឿងកំប្លែង 😆', 'Tell me a joke 😆'],
         keys: ['funny', 'សើច', 'tell me a joke', 'make me laugh'],
         regex: ['joke', 'funny', 'កំប្លែង', 'សើច'],
         answer: "បាទ ហាហា! ចង់ស្តាប់រឿងកំប្លែងមែនទេ? \n\nតើអ្នកដឹងទេថាហេតុអ្វីបានជា Graphic Designer មិនសូវចេះលេងលាក់កន្សែង? \nព្រោះពួកគេពូកែលាក់តែ Layer (Hide Layers) តើ! 😆 រួចចុះអ្នកវិញ តើចង់លាក់អីគេក្នុងកម្មវិធីថ្ងៃនេះ?",
@@ -84,7 +84,7 @@ export const basicsData = [
         chips_en: ["Who created you? 👨‍💻", "Core Design Principles?"]
     },
     {
-        primaryKeys: ['អ្នកណាគេបង្កើតអ្នក', 'who created you'],
+        primaryKeys: ['អ្នកណាគេបង្កើតអ្នក', 'who created you', 'អ្នកណាគេបង្កើតអ្នក? 👨‍💻', 'Who created you? 👨‍💻'],
         keys: ['អ្នកបង្កើត', 'creator', 'made by', 'who made you', 'អ្នកណាបង្កើត'],
         regex: ['(who created you|who made you|អ្នកណាគេបង្កើតអ្នក|អ្នកណាបង្កើត|អ្នកបង្កើត)'],
         answer: "បាទ ខ្ញុំត្រូវបានបង្កើតឡើងដោយអ្នកអភិវឌ្ឍន៍ (Developers) ដែលមានជំនាញ ដើម្បីក្លាយជាជំនួយការដ៏ឆ្លាតវៃសម្រាប់ជួយដល់ការងារ និងការរៀនសូត្ររបស់អ្នក។ 🚀",

@@ -1,7 +1,7 @@
 export const designData = [
     // 1. CORE DESIGN PRINCIPLES
     {
-        primaryKeys: ['គោលការណ៍រចនា', 'design principles'],
+        primaryKeys: ['គោលការណ៍រចនា', 'design principles', 'តើ គោលការណ៍រចនា មានអ្វីខ្លះ?', 'Core Design Principles?'],
         keys: ['design principles', 'ក្បួនរចនា', 'មូលដ្ឋានគ្រឹះ', 'fundamentals'],
         regex: ['design principle', 'ក្បួនរចនា', 'មូលដ្ឋានគ្រឹះ', '\\bfundamentals\\b'],
         answer: "បាទ **គោលការណ៍រចនា (Design Principles)** គឺជាក្បួនដែលធ្វើឱ្យការរចនាមើលទៅមានវិជ្ជាជីវៈ (គេនិយមហៅថា CRAP)៖\n\n១. **C - Contrast (ភាពផ្ទុយ):** ធ្វើឱ្យអ្វីមួយលេចធ្លោ។\n២. **R - Repetition (ភាពដដែលៗ):** បង្កើតភាពស៊ីសង្វាក់គ្នា។\n៣. **A - Alignment (ការតម្រឹម):** រៀបចំឱ្យមានរបៀប។\n៤. **P - Proximity (ភាពកៀកគ្នា):** ចងវត្ថុដែលទាក់ទងគ្នាជាក្រុម។\n\nតើអ្នកចង់ឱ្យខ្ញុំពន្យល់លម្អិតពីចំណុចមួយណា?",
@@ -180,7 +180,7 @@ export const designData = [
 
     // 4. LAYOUT & UI/UX
     {
-        primaryKeys: ['របៀបរចនា Poster', 'poster design'],
+        primaryKeys: ['របៀបរចនា Poster', 'poster design', 'របៀបរចនា Poster ឱ្យទាក់ទាញ? 🖼️', 'How to design an effective Poster? 🖼️'],
         keys: ['poster', 'ផ្ទាំងផ្សព្វផ្សាយ', 'រចនា poster'],
         regex: ['poster design', 'រចនា poster', 'ផ្ទាំងផ្សព្វផ្សាយ', 'របៀបធ្វើ poster'],
         answer: "បាទ សម្រាប់ការរចនា Poster ឱ្យទាក់ទាញ និងមានប្រសិទ្ធភាព ត្រូវមាន ៤ ចំណុចធំៗ (Anatomy of a Poster)៖\n\n១. **ចំណងជើង (Headline):** ត្រូវធំ ដាច់ ងាយអានពីចម្ងាយ (ទាក់ទាញចំណាប់អារម្មណ៍)។\n២. **រូបភាព (Visual/Hero Image):** យករូបដែលពាក់ព័ន្ធ និងទាក់ទាញអារម្មណ៍បំផុតមកដាក់ជា Focal Point។\n៣. **ព័ត៌មាន (Details):** ដាក់តែអ្វីដែលសំខាន់ (ថ្ងៃខែ ម៉ោង ទីកន្លែង) កុំសរសេរវែងពេក មើលទៅរញ៉េរញ៉ៃ។\n៤. **Call to Action (CTA):** ប្រាប់គេឱ្យច្បាស់ថាត្រូវធ្វើអ្វីបន្ត (ឧ. ទិញឥឡូវនេះ, តេមកលេខ..., Scan QR Code)។\n\n💡 **គន្លឹះអាជីព៖** ប្រើ White Space ឱ្យបានច្រើនជុំវិញអត្ថបទ ដើម្បីកុំឱ្យមើលទៅចង្អៀត!",
@@ -291,7 +291,7 @@ export const designData = [
         chips_en: ["Best Resolution for printing?", "Color Harmonies"]
     },
     { 
-        primaryKeys: ['តើ Bleed គឺជាអ្វី?', 'what is a bleed'],
+        primaryKeys: ['តើ Bleed គឺជាអ្វី?', 'what is a bleed', 'សម្រាប់បោះពុម្ព 🖨️', 'For Printing 🖨️'],
         keys: ['bleed', 'margin', 'die line', 'die-line', 'គែមសុវត្ថិភាព', 'slug'],
         regex: ['\\bbleed\\b', 'die line', 'die-line', '\\bslug\\b'], // removed 'margin'
         answer: "បាទ **ពាក្យបច្ចេកទេសសម្រាប់ការបោះពុម្ព (Print Production) ដែលអ្នកត្រូវដឹង៖**\n\n✂️ **Bleed (គែមបម្រុង):** ការពង្រីកផ្ទៃ Background ឱ្យហៀរចេញក្រៅទំហំកាត់ (ជាទូទៅ 3mm)។ 💡 *ហេតុអ្វី?* ព្រោះកាំបិតរោងពុម្ពកាត់មិនត្រឹមត្រូវ ១០០% ទេ បើអត់ដាក់ Bleed អាចនឹងសល់គែមពណ៌ស។\n📏 **Margin (គែមសុវត្ថិភាព):** ចន្លោះខាងក្នុងដែលហាមដាក់អក្សរ ការពារកុំឱ្យកាត់ដាច់ចូលសាច់អត្ថបទសំខាន់ៗ។\n📝 **Slug:** ជាទំហំក្រៅ Bleed បន្តិចទៀត ទុកសម្រាប់សរសេរកំណត់ចំណាំប្រាប់ជាងពុម្ព (មិនព្រីនចេញមកទេ)។", 

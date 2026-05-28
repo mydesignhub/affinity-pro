@@ -16,7 +16,7 @@ export const affinityAndEditingData = [
         chips_en: ["Essential Keyboard Shortcuts ⌨️", "Managing PC Studio Layouts"]
     },
     {
-        primaryKeys: ['ប៊ូតុងបញ្ជា Modifier Keys ⌨️', 'affinity modifier keys pc'],
+        primaryKeys: ['ប៊ូតុងបញ្ជា Modifier Keys ⌨️', 'affinity modifier keys pc', 'Affinity Modifier Keys ⌨️'],
         keys: ['modifier keys', 'keyboard modifiers', 'shift ctrl alt', 'ctrl on pc', 'shift on pc'],
         regex: ['modifier keys', '\\bmodifiers\\b', 'shift.*ctrl.*alt'],
         answer: "បាទ **ប៊ូតុងបញ្ជា Modifier (Shift, Ctrl, Alt) គឺជាសោរវេទមន្តសម្រាប់ពន្លឿនល្បឿនការងារលើ PC!**\n\nការប្រើប្រាស់ប៊ូតុងទាំងនេះ រួមផ្សំនឹង Mouse ជួយឱ្យអ្នកបញ្ជាកម្មវិធីបានលឿនបំផុត៖\n\n- **⇧ Shift:** រក្សាទ្រង់ទ្រាយវត្ថុ (Proportions) ឬចងមុំ (Snap Angles) ឱ្យចំ ១៥ដឺក្រេ ពេលបង្វិល។\n- **Ctrl (ឬ ⌘ Cmd លើ Mac):** Select វត្ថុដែលស្ថិតនៅក្នុង Group ជ្រៅៗ ឬបូមពណ៌ផ្ទៃការងារ។\n- **Alt (ឬ ⌥ Option លើ Mac):** សម្រាប់ការទាញអូស Copy វត្ថុភ្លាមៗ ឬប្តូរទម្រង់ Selection ទៅជាការដកចេញ (Subtract Selection)។\n\n💡 **គន្លឹះអាជីព៖** ពេលប្រើ Pen Tool សង្កត់ **Alt** ឱ្យជាប់ដើម្បីបំប្លែង Node (ចំណុចពត់កោង) ទៅជា Sharp Corner ភ្លាមៗដោយមិនបាច់ប្តូរឧបករណ៍ឡើយ!",
@@ -70,7 +70,7 @@ export const affinityAndEditingData = [
         chips_en: ["Zoom & Pan canvas on PC 🔍", "Affinity Modifier Keys pc"]
     },
     {
-        primaryKeys: ['របៀប Zoom និងរំកិលប្លង់លើ PC 🔍', 'pc zoom and pan canvas'],
+        primaryKeys: ['របៀប Zoom និងរំកិលប្លង់លើ PC 🔍', 'pc zoom and pan canvas', 'Zoom & Pan canvas on PC 🔍'],
         keys: ['zoom', 'pan', 'ទាញរូប', 'ពង្រីករូប', 'ពង្រីកប្លង់'],
         regex: ['\\bzoom\\b', '\\bpan\\b', 'ពង្រីករូប', 'ទាញរូប'],
         answer: "បាទ ការទាញ និងពង្រីកផ្ទាំងការងារ (Zoom & Pan) លើ PC គឺរលូន និងលឿនបំផុត៖\n\n🔍 **Zoom (ពង្រីក/បង្រួម)៖** សង្កត់ប៊ូតុង **Ctrl** (ឬ **Cmd** លើ Mac) រួចរំកិលកង់កណ្តុរ (Mouse Scroll Wheel) ឡើងលើ/ចុះក្រោម។ ឬចុច `Ctrl +` និង `Ctrl -`។\n✋ **Pan (រំកិលប្លង់)៖** សង្កត់ប៊ូតុង **Spacebar** ឱ្យជាប់ (Mouse នឹងប្តូរទៅជារូបដៃ 🖐️) រួចចុច Mouse ឆ្វេងអូសផ្ទៃការងារទៅណាក៏បាន។\n\n💡 **គន្លឹះមាស៖** ចុច `Ctrl + 0` (ឬ `Cmd + 0` លើ Mac) ដើម្បីពង្រីករូបឱ្យពេញអេក្រង់ (Zoom to Fit) ភ្លាមៗតែម្តង!",
@@ -110,7 +110,7 @@ export const affinityAndEditingData = [
     // 2. MACROS, ASSETS & EXPORTING
     // ==========================================
     {
-        primaryKeys: ['ការកាត់រូប Export (Slices)', 'export persona slices'],
+        primaryKeys: ['ការកាត់រូប Export (Slices)', 'export persona slices', 'How to use Export Slices ✂️'],
         keys: ['export persona', 'slices', 'កាត់រូប export', 'save រូបច្រើន', 'export assets', 'export logo'],
         regex: ['export persona', '\\bslice\\b', 'កាត់រូប export', 'save រូបច្រើន'],
         answer: "បាទ **Export Persona គឺជាអាវុធមាសសម្រាប់ UI/UX Designers និងអ្នកធ្វើ Logo!**\n\nជំនួសឱ្យការ Save រូបទាំងមូល (Export ធម្មតា) អ្នកអាចចូលទៅកាន់ **Export Persona** ដើម្បីកាត់ (Slice) តែឡូហ្គោ ប៊ូតុង ឬ Icon ដែលអ្នកចង់បាន។\n\n💡 **មុខងារពិសេស (Continuous Export)៖**\nអ្នកអាចកំណត់ឱ្យ Slice មួយ Save ចេញជា ៤ ទម្រង់ក្នុងពេលតែមួយ (ឧ. PNG 1x, PNG 2x សម្រាប់អេក្រង់ Retina, SVG, និង WebP)។ ពេលចុចប៊ូតុង `Export Slices` វានឹងបញ្ចេញរូបរាប់សិបសន្លឹកចូលទៅក្នុង Folder របស់អ្នកភ្លាមៗ ដោយរក្សាផ្ទៃថ្លា (Transparent) បានយ៉ាងល្អឥតខ្ចោះ។",
@@ -128,7 +128,7 @@ export const affinityAndEditingData = [
         chips_en: ["How to use the Assets Panel", "Export Persona Slices"]
     },
     {
-        primaryKeys: ['របៀបរក្សាទុកក្នុង Assets Panel', 'affinity assets panel'],
+        primaryKeys: ['របៀបរក្សាទុកក្នុង Assets Panel', 'affinity assets panel', 'How to use the Assets Panel'],
         keys: ['assets panel', 'រក្សាទុករូប', 'save element', 'asset', 'រក្សាទុក', 'assets', 'ui kit'],
         regex: ['asset panel', 'រក្សាទុករូប', 'save element'],
         answer: "បាទ **Assets Panel គឺជាឃ្លាំងស្តុកទុកអាវុធផ្ទាល់ខ្លួនរបស់អ្នក!**\n\nប្រសិនបើអ្នកបានចំណាយពេលកន្លះម៉ោងដើម្បីបង្កើតប៊ូតុងកញ្ចក់ (Glassmorphism Button) ឬ Text Effect 3D ដ៏ស្រស់ស្អាតមួយ កុំអត់ធ្មត់អង្គុយធ្វើវាម្តងទៀតនៅ Project ក្រោយ!\n\n១. គ្រាន់តែ Select លើ Group នៃវត្ថុនោះ។\n២. ចូលទៅកាន់ **Assets Panel** រួចចុច **Add from Selection**។\n៣. វត្ថុនោះនឹងត្រូវរក្សាទុកនៅទីនោះជារៀងរហូត។\n\n💡 ពេលអ្នកបើក File ថ្មីនៅខែក្រោយ អ្នកគ្រាន់តែទាញ (Drag & Drop) វាចេញពី Assets Panel មកដាក់លើផ្ទាំងការងារ នោះវានឹងលោតចេញមកជាមួយនឹង Layers, Effects, និង Mask ដើមទាំងអស់ ១០០% អាចកែអក្សរបានធម្មតា! វាល្អបំផុតសម្រាប់អ្នកធ្វើគម្រោង UI/UX ដែលត្រូវប្រើ Icon ដដែលៗ។",
@@ -159,7 +159,7 @@ export const affinityAndEditingData = [
         chips_en: ["What are Affinity Symbols?", "Exporting with Slices"]
     },
     {
-        primaryKeys: ['Snapping ក្នុង Affinity', 'snapping tool affinity'],
+        primaryKeys: ['Snapping ក្នុង Affinity', 'snapping tool affinity', 'Snapping ក្នុង Affinity 🧲', 'Snapping Tool Affinity 🧲'],
         keys: ['snapping', 'មេដែក', 'magnet tool', 'តម្រឹមស្វ័យប្រវត្តិ', 'align', 'snapping options'],
         regex: ['\\bsnapping\\b', 'មេដែក', '\\bmagnet\\b'],
         answer: "បាទ **Snapping (រូបមេដែក 🧲) គឺជាភ្នែកវេទមន្តដែលជួយឱ្យរាល់ការឌីហ្សាញរបស់អ្នកត្រង់ជួរ និងមានមាត្រដ្ឋានច្បាស់លាស់!**\n\nនៅពេលអ្នកបើកវា ហើយទាញវត្ថុមួយ វាលោតខ្សែបន្ទាត់ពណ៌ក្រហម (កណ្តាលផ្តេក) និងពណ៌បៃតង (កណ្តាលបញ្ឈរ) រួចស្រូបទាញវត្ថុនោះឱ្យស្មើគ្នាជាមួយវត្ថុដទៃទៀតដោយស្វ័យប្រវត្តិ។\n\n💡 **ការកំណត់កម្រិតអាជីព (Snapping Options)៖**\nអ្នកអាចចុចសង្កត់លើរូបមេដែក ដើម្បីកំណត់ឱ្យវាស្រូបចូលតែ 'គែម' (Edges), 'ចំណុចកណ្តាល' (Midpoints), ឬស្រូបចូលតារាងភីកសែល (Force Pixel Alignment) ដែលជាក្បួនចាំបាច់បំផុតសម្រាប់អ្នកឌីហ្សាញ UI ដើម្បីកុំឱ្យ Icon ព្រិលៗតាមគែម។\n\nបើអ្នកចង់ទាញវត្ថុដោយសេរីមួយភ្លែត គ្រាន់តែចុចបិទមេដែកនោះជាបណ្ដោះអាសន្ន។",
@@ -190,7 +190,7 @@ export const affinityAndEditingData = [
         chips_en: ["What is a Smart Object?", "Copying Layer Styles (Paste FX)"]
     },
     {
-        primaryKeys: ['Clipping និង Masking ក្នុង Affinity', 'clipping vs masking affinity layers'],
+        primaryKeys: ['Clipping និង Masking ក្នុង Affinity', 'clipping vs masking affinity layers', 'តើ Masking ជាអ្វី?', 'What is Masking?'],
         keys: ['clipping', 'masking', 'layer panel', 'affinity mask', 'កាត់ចូលអក្សរ', 'លាក់រូប'],
         regex: ['\\bclipping\\b', 'affinity mask', 'កាត់ចូលអក្សរ'], 
         answer: "បាទ **នៅក្នុង Affinity ការធ្វើ Clipping (ដាក់រូបក្នុងរាង) និង Masking (លាក់បាំង) គឺអាស្រ័យលើ 'ទីតាំងជាក់លាក់' ដែលអ្នកអូសទម្លាក់ក្នុង Layer Panel៖**\n\n✂️ **Clipping (កាត់តម្រឹមចូលរូបវត្ថុ):** \n- អូស Layer រូបថត ទៅទម្លាក់ **\"ចំកណ្តាលអក្សរឈ្មោះ\"** នៃ Layer រាងរង្វង់ ឬអក្សរ។ \n- លទ្ធផល៖ រូបថតនឹងបង្ហាញតែនៅខាងក្នុងរង្វង់ ឬអក្សរនោះប៉ុណ្ណោះ (ល្អសម្រាប់ធ្វើរូប Profile ឬដាក់ Textures ចូលអក្សរ)។\n\n🎭 **Masking (លាក់ ឬបង្ហាញ):** \n- អូស Layer សខ្មៅ (ឬរាងវត្ថុ) ទៅទម្លាក់ **\"ចំលើរូបតូច (Thumbnail)\"** នៃ Layer មួយទៀត។ \n- លទ្ធផល៖ វាដើរតួជា Mask ដោយផ្នែកពណ៌ខ្មៅនឹងលុបរូបភាពចោល ហើយពណ៌សនឹងបង្ហាញរូបភាព។",
@@ -199,7 +199,7 @@ export const affinityAndEditingData = [
         chips_en: ["Image Layer vs Pixel Layer", "Blend Ranges (Remove White)"]
     },
     {
-        primaryKeys: ['Affinity Symbols គឺអ្វី?', 'affinity symbols ui design'],
+        primaryKeys: ['Affinity Symbols គឺអ្វី?', 'affinity symbols ui design', 'What are Affinity Symbols?'],
         keys: ['symbol', 'និមិត្តសញ្ញា', 'affinity designer symbol', 'sync symbol', 'button component'],
         regex: ['\\bsymbol\\b'],
         answer: "បាទ **Symbols នៅក្នុង Affinity Designer គឺជា 'ច្បាប់ចម្លងមេ' ដែលភ្ជាប់ទំនាក់ទំនងគ្នាទៅវិញទៅមក (ល្អបំផុតសម្រាប់ UI Design)!**\n\nឧទាហរណ៍៖ អ្នកគូរប៊ូតុង 'Buy Now' មួយរួចបង្កើតវាជា **Symbol** នៅក្នុង Symbols Panel។ បន្ទាប់មកអ្នកអូសទាញប៊ូតុងនេះទៅដាក់ ៥០ កន្លែងផ្សេងៗគ្នានៅលើ Artboards ទាំងឡាយ។\n\n💡 **មន្តអាគម៖** ក្រោយមក ភ្ញៀវប្រាប់ថាចង់ប្តូរប៊ូតុងនេះពីពណ៌ខៀវទៅក្រហម។ អ្នកគ្រាន់តែចុចកែពណ៌នៅលើប៊ូតុងតែ ១ ប៉ុណ្ណោះ នោះប៊ូតុងទាំង ៤៩ ទៀតនឹងប្រែពណ៌ទៅជាក្រហមភ្លាមៗក្នុងពេលតែមួយវិនាទី!\n\n🔧 **មុខងារ Sync៖** នៅក្នុង Panel Symbols អ្នកអាចចុចបិទប៊ូតុង 'Sync' ជាបណ្ដោះអាសន្ន ប្រសិនបើអ្នកចង់ប្តូរអក្សរប៊ូតុងមួយទៅជា 'Learn More' ដោយមិនចង់ឱ្យប៊ូតុងផ្សេងទៀតដូរអក្សរតាម!",
@@ -208,7 +208,7 @@ export const affinityAndEditingData = [
         chips_en: ["Global Colors (Swatches)", "Affinity Artboards"]
     },
     { 
-        primaryKeys: ['តើ Affinity Photo និង Designer ខុសគ្នាម៉េច?', 'affinity trinity photo vs designer vs publisher studio link'],
+        primaryKeys: ['តើ Affinity Photo និង Designer ខុសគ្នាម៉េច?', 'affinity trinity photo vs designer vs publisher studio link', 'Affinity Photo vs Designer?'],
         keys: ['photo vs designer', 'affinity photo', 'affinity designer', 'affinity', 'publisher vs designer', 'studio link', 'studiolink'],
         regex: ['photo vs designer', 'publisher vs designer', 'ខុសគ្នារវាង', 'studio link'],
         answer: "បាទ **កម្មវិធីទាំង៣របស់ Affinity (ហៅថា The Trinity) មានតួនាទីស្នូលខុសៗគ្នាដាច់ តែធ្វើការរួមគ្នាបាន ១០០%៖**\n\n🟦 **Affinity Photo (Raster):** អ្នកឯកទេសខាងកាត់តរូបភាពពិត លុបមុន កែពណ៌ និងផ្គុំរូប (Photomanipulation)។ ធ្វើការលើភីកសែល (Pixels) បើពង្រីកធំពេកនឹងបែកគ្រាប់។\n🟧 **Affinity Designer (Vector):** អ្នកឯកទេសខាងគូរ Logo, Icon, និង UI Design។ ធ្វើការលើគណិតវិទ្យា (Vectors) ទោះពង្រីកធំប៉ុនអាគារក៏**មិនបែកគុណភាព**ដាច់ខាត។\n🟥 **Affinity Publisher (Layout):** អ្នកឯកទេសខាងរៀបចំទំព័រសៀវភៅ ទស្សនាវដ្តី និងខិត្តប័ណ្ណ (Typography & Grid Layouts)។\n\n🔥 **បច្ចេកវិទ្យា StudioLink ដ៏អស្ចារ្យ៖** ដោយសារកម្មវិធីទាំង៣ប្រើ File តែមួយ (Format ដូចគ្នា) អ្នកអាចទិញកម្មវិធីទាំង៣ រួចប្រើប្រាស់ប៊ូតុង Photo និង Designer **នៅខាងក្នុង** កម្មវិធី Publisher តែម្តង ដោយមិនបាច់បិទបើកកម្មវិធីឆ្លាស់គ្នាឡើយ!", 
@@ -221,7 +221,7 @@ export const affinityAndEditingData = [
     // 5. VECTOR, TEXT & GEOMETRY
     // ==========================================
     {
-        primaryKeys: ['តើ Shape Builder Tool ប្រើធ្វើអី? 🔲', 'affinity shape builder tool interactive'],
+        primaryKeys: ['តើ Shape Builder Tool ប្រើធ្វើអី? 🔲', 'affinity shape builder tool interactive', 'What is the Shape Builder Tool? 🔲'],
         keys: ['shape builder', 'កាត់ shape', 'រួម shape', 'បូក shape', 'shape tool', 'កាត់ logo'],
         regex: ['shape builder'], 
         answer: "បាទ **Shape Builder Tool គឺជាឧបករណ៍សាងសង់ Logo ដ៏អស្ចារ្យ និងលឿនបំផុតក្នុងកម្មវិធី Designer!**\n\nជំនួសឱ្យការប្រើមុខងារ Geometry (Add/Subtract) ដែលទាមទារការគិតស្មុគស្មាញ អ្នកគ្រាន់តែ៖\n១. គូររង្វង់ ឬខ្សែបន្ទាត់ជាច្រើនឱ្យត្រួតស៊ីគ្នា (បង្កើតជាសំណាញ់រាង)។\n២. Select វត្ថុទាំងអស់នោះ រួចជ្រើសរើស **Shape Builder Tool**។\n៣. ប្រើសញ្ញា **បូក (+ Mode)**៖ អូសកណ្ដុរ (ឬ Apple Pencil) ឆ្លងកាត់បំណែកដែលអ្នកចង់រលាយចូលគ្នា វាស្អិតចូលគ្នាភ្លាមៗ!\n៤. ប្រើសញ្ញា **ដក (- Mode)**៖ គ្រាន់តែចុចលើបំណែកដែលនៅសល់ វានឹងលុបបំណែកនោះចេញយ៉ាងស្អាត។\n\n💡 **គន្លឹះ៖** វាជួយឱ្យអ្នកបង្កើត Logo ស្មុគស្មាញ (ដូចជារូបសត្វ ឬអក្សរច្នៃ) ក្នុងរយៈពេលតិចជាង ១ នាទី!",
@@ -230,7 +230,7 @@ export const affinityAndEditingData = [
         chips_en: ["Affinity Boolean Geometry", "What is Expand Stroke?"]
     },
     {
-        primaryKeys: ['Geometry Operations (Add, Subtract, Intersect)', 'affinity boolean geometry pathfinder'],
+        primaryKeys: ['Geometry Operations (Add, Subtract, Intersect)', 'affinity boolean geometry pathfinder', 'Geometry Operations', 'Affinity Boolean Geometry'],
         keys: ['boolean', 'geometry', 'add', 'subtract', 'intersect', 'xor', 'divide', 'បញ្ចូល shape', 'pathfinder'],
         regex: ['\\bboolean\\b', '\\bgeometry\\b', 'add shape', 'subtract shape', '\\bintersect\\b', '\\bxor\\b', 'divide shape', 'បញ្ចូល shape'], 
         answer: "បាទ **ពាក្យបច្ចេកទេស Geometry / Boolean (ការកាត់និងរលាយ Shape បញ្ចូលគ្នា)៖**\n\n➕ **Add (បូកបញ្ចូល):** រលាយ Shape ច្រើន ចូលគ្នាឱ្យក្លាយជា Shape ធំតែមួយគ្មានស្នាមត។\n➖ **Subtract (ដកចេញ):** យក Shape ដែលនៅខាងលើបំផុត ទៅកាត់ក្បោះ Shape ខាងក្រោម (ដូចយកពុម្ពដែកទៅកាត់ម្សៅនំ)។\n✂️ **Intersect (ប្រសព្វ):** លុបចោលទាំងអស់ ទុកតែចំណុចកណ្តាលដែល Shape ទាំង២ ត្រួតស៊ីគ្នាប៉ុណ្ណោះ (ល្អសម្រាប់ធ្វើរាងស្លឹកឈើ)។\n❌ **Xor (ដកចំណុចប្រសព្វ):** ផ្ទុយពី Intersect! វាលុបចោលចំណុចកណ្តាលដែលត្រួតស៊ីគ្នា រួចទុកផ្នែកខាងក្រៅឱ្យនៅទទេកណ្តាល (ដូចនំដូណាត់)។\n➗ **Divide (បំបែក):** កាត់ Shape ជាបំណែកតូចៗគ្រប់កន្លែងដែលខ្សែបន្ទាត់វាកាត់ខ្វែងគ្នា។\n\n💡 **អាថ៌កំបាំង Non-destructive៖** បើអ្នកសង្កត់ប៊ូតុង `Alt / Option` ពេលចុចប៊ូតុង Add ឬ Subtract វានឹងបង្កើតជា Compound Layer។ មានន័យថាអ្នកអាចរំកិល Shape ដើមនៅពេលក្រោយបានរហូត!",
@@ -239,7 +239,7 @@ export const affinityAndEditingData = [
         chips_en: ["What is the Shape Builder Tool? 🔲", "Stroke vs Fill"]
     },
     {
-        primaryKeys: ['តើ Rasterize មានន័យថាម៉េច?', 'what does rasterize mean image layer to pixel layer'],
+        primaryKeys: ['តើ Rasterize មានន័យថាម៉េច?', 'what does rasterize mean image layer to pixel layer', 'What does rasterize mean?'],
         keys: ['rasterize', 'បំប្លែងរូប', 'rasterize and trim', 'ធ្វើឱ្យលុបបាន'],
         regex: ['\\brasterize\\b', 'បំប្លែងរូប'], 
         answer: "បាទ **Rasterize** គឺជាការបំប្លែងវត្ថុដែលឆ្លាតវៃ (ដូចជា Vector, Text, ឬ Image Layer) ឱ្យបាត់បង់ទម្រង់ដើម ហើយក្លាយទៅជា **Pixel Layer (សាច់ភីកសែលធម្មតា)** ដែលផ្សំឡើងពីគ្រាប់ពណ៌តូចៗរាប់លាន។\n\n**ហេតុអ្វីត្រូវ Rasterize?**\nពេលអ្នកទាញរូបថតពីក្រៅចូល Affinity វាការពាររូបនោះជា Image Layer (រក្សាគុណភាពដើម)។ ដូច្នេះអ្នកមិនអាចយកជ័រលុប (Eraser) ទៅលុប ឬយកជក់ទៅផាត់លើវាបានទេ វានឹងលោតសញ្ញាខ្វែង (❌)។\nអ្នកត្រូវតែចុចលើ Layer នោះ > ជ្រើសរើស **Rasterize** ទើបអាចលុបវាបាន។\n\n💡 **Rasterize & Trim៖** ប្រសិនបើអ្នកមានរូបភាពធំដែលលាតសន្ធឹងហួសផ្ទាំងការងារ (Canvas) ការជ្រើសរើស Rasterize & Trim វានឹងកាត់ចោលផ្នែកដែលហួសស៊ុមនោះចោល ដើម្បីជួយឱ្យ File ស្រាល និងដើរលឿនជាងមុន។",
@@ -248,7 +248,7 @@ export const affinityAndEditingData = [
         chips_en: ["Image Layer vs Pixel Layer", "Vector vs Raster?"]
     },
     {
-        primaryKeys: ['Image Layer vs Pixel Layer', 'image layer vs pixel layer terminology'],
+        primaryKeys: ['Image Layer vs Pixel Layer', 'image layer vs pixel layer terminology', 'តើ Smart Object ជាអ្វី?', 'What is a Smart Object?'],
         keys: ['image layer', 'pixel layer', 'លុបរូបអត់បាន'],
         regex: ['image layer', 'pixel layer'],
         answer: "បាទ **នេះជាចំណុចដែលអ្នករៀនកាត់តថ្មីថ្មោងតែងតែយល់ច្រឡំ៖**\n\n🖼️ **Image Layer (ឡេយ័ររូបភាពដើម):** \nនៅពេលអ្នក Place (ទាញបញ្ចូល) រូបថតចូលក្នុង Affinity វាមានតួនាទីជា Image Layer (ស្រដៀង Smart Object ក្នុង Photoshop)។ វារក្សាគុណភាពដើម ១០០% ទោះបង្រួមតូចហើយពង្រីកធំវិញក៏មិនព្រិល។ ប៉ុន្តែ អ្នក **មិនអាច** យកជ័រលុបទៅលុបផ្ទាល់ ឬយកពណ៌ទៅផាត់ផ្ទាល់លើវាបានទេ។\n\n👾 **Pixel Layer (ឡេយ័រសាច់ភីកសែល):** \nគឺជារូបភាពដែលបានបំប្លែងរួច (Rasterized)។ ពេលនេះសាច់រូបបើកចំហរទាំងស្រុង អ្នកអាចកាត់, លុប, ផាត់ពណ៌ និងប្រើ Clone Stamp លើវាបានដោយសេរី។ ប៉ុន្តែបើអ្នកបង្រួមវាឱ្យតូចប៉ុនមេដៃ រួចទាញពង្រីកមកវិញ វានឹងបែកគ្រាប់ព្រិលៗ (Destructive Scaling)។",
@@ -293,7 +293,7 @@ export const affinityAndEditingData = [
         chips_en: ["Pen Tool vs Pencil Tool?", "What is the Shape Builder Tool? 🔲"]
     },
     {
-        primaryKeys: ['Pen Tool និង Pencil Tool ខុសគ្នាម៉េច?', 'pen tool vs pencil tool affinity'],
+        primaryKeys: ['Pen Tool និង Pencil Tool ខុសគ្នាម៉េច?', 'pen tool vs pencil tool affinity', 'តើ Pen Tool ប្រើធ្វើអ្វី?', 'How to use the Pen Tool?', 'Pen Tool vs Pencil Tool?'],
         keys: ['pen tool', 'pencil tool', 'គូរបន្ទាត់', 'គូរដៃ', 'គូរ vector', 'curve tool'],
         regex: ['\\bpen tool\\b', '\\bpencil tool\\b', 'គូរ.*vector', '\\bcurve tool\\b'],
         answer: "បាទ **នៅក្នុង Designer Persona ឧបករណ៍គូរ Vector ទាំង ២ នេះ មានគោលដៅប្រើប្រាស់ខុសគ្នាដាច់៖**\n\n✒️ **Pen Tool (គូរដោយភាពជាក់លាក់):** អ្នកត្រូវចុចទម្លាក់ចំណុច (Node) ម្តងមួយៗ ដើម្បីបង្កើតខ្សែបន្ទាត់ត្រង់ ឬទាញពត់ដើម្បីបង្កើតខ្សែកោង។ វាផ្តល់ភាពច្បាស់លាស់ ១០០% ល្អបំផុតសម្រាប់គូរ Logo, Icon, ឬគូរតាមគែមវត្ថុ (Tracing)។\n✏️ **Pencil Tool (គូរដោយសេរី):** ដំណើរការដូចខ្មៅដៃពិតៗ! អ្នកគ្រាន់តែអូសគូសលើអេក្រង់ដោយសេរី កម្មវិធីនឹងបង្កើតចំណុច (Nodes) ឱ្យដោយស្វ័យប្រវត្តិ។\n\n💡 **មន្តអាគមរបស់ Pencil Tool៖** វាមកជាមួយមុខងារ **'Sculpt'** និង **'Rope Stabilizer'** ដែលជួយទាញខ្សែបន្ទាត់ដែលអ្នកគូរញ័រៗ ឱ្យប្រែជារលោងស្អាតឥតខ្ចោះដោយស្វ័យប្រវត្តិ!",
@@ -311,7 +311,7 @@ export const affinityAndEditingData = [
         chips_en: ["Snapping Tool Affinity 🧲", "What is the Shape Builder Tool? 🔲"]
     },
     {
-        primaryKeys: ['របៀបដាក់ Layer Effects (FX) ✨', 'layer effects fx panel pc'],
+        primaryKeys: ['របៀបដាក់ Layer Effects (FX) ✨', 'layer effects fx panel pc', 'របៀបបង្កើត Text Effects ស្អាតៗ ✨', 'How to create premium Text Effects ✨'],
         keys: ['layer effect', 'fx panel', 'ដាក់ស្រមោលអក្សរ', 'ដាក់ពន្លឺ', 'outer glow', 'drop shadow fx', 'effect'],
         regex: ['\\bfx panel\\b', '\\blayer effect\\b', 'ដាក់ស្រមោលអក្សរ', '\\beffect\\b', 'drop shadow'],
         answer: "បាទ **Layer Effects (FX Panel)** គឺជាកន្លែងសម្រាប់តុបតែង Layer ឬអក្សរឱ្យកាន់តែលេចធ្លោដោយមិនខូចសាច់រូប (Non-destructive)៖\n\nនៅលើ PC សូមចុចលើសញ្ញា **fx** នៅផ្នែកខាងក្រោមនៃ Layer Panel ឬបើក FX Panel តាមរយៈម៉ឺនុយ Window > Studio > Effects (ឬចុចសញ្ញា fx លើ Layer ផ្ទាល់)។ អ្នកអាចបន្ថែម៖\n- **Drop Shadow (ស្រមោលក្រៅ):** ធ្វើឱ្យអក្សរ ឬវត្ថុអណ្តែតផុសពី Background។\n- **Outer Glow (ពន្លឺក្រៅ):** បង្កើតពន្លឺជះចេញក្រៅ (ល្អបំផុតសម្រាប់ធ្វើអក្សរ Neon)។\n- **3D / Bevel / Emboss:** ធ្វើឱ្យរាង Vector ក្លាយទៅជាមានកម្រាស់ដូចប៉ុង ឬកាក់មាស។\n\n💡 **គន្លឹះ៖** Effect ទាំងអស់នេះមានរូបតំណាង `fx` តូចមួយនៅលើ Layer។ បើអ្នកមិនចង់បានវា អ្នកអាចចុចបិទបើកវាវិញបានគ្រប់ពេល។ កុំភ្លេចប្រើមុខងារ `Paste FX` ដើម្បីចម្លង Effect នេះទៅអក្សរផ្សេងទៀត!",
@@ -320,7 +320,7 @@ export const affinityAndEditingData = [
         chips_en: ["Paste FX Layer Styles Affinity", "Turn anything into gold effect 🏆"]
     },
     {
-        primaryKeys: ['សរសេរអក្សរតាមខ្សែកោង', 'text on a path affinity designer'],
+        primaryKeys: ['សរសេរអក្សរតាមខ្សែកោង', 'text on a path affinity designer', 'Text on a Path'],
         keys: ['text on path', 'អក្សរកោង', 'curve text', 'សរសេរកោង', 'អក្សររាងរង្វង់', 'logo text'],
         regex: ['text on path', 'អក្សរកោង', 'curve text'],
         answer: "បាទ ការធ្វើ **Text on a Path (អក្សររត់តាមខ្សែកោង ឬរាងរង្វង់)** គឺជាបច្ចេកទេសស្នូលសម្រាប់អ្នកឌីហ្សាញ Logo ត្រា និងផ្លាកសញ្ញា៖\n\n១. **គូររាងដើម៖** ប្រើ **Pen Tool** គូសខ្សែបន្ទាត់រលក ឬប្រើ Ellipse Tool គូររង្វង់មូល (កុំទាន់ដាក់ Fill Color)។\n២. **រៀបចំ Tool៖** ជ្រើសរើសយក **Artistic Text Tool (រូបអក្សរ A)**។\n៣. **ដាក់គោលដៅ៖** យកចុងកណ្ដុរទៅដាក់លើខ្សែបន្ទាត់ Vector នោះឲ្យចំ រហូតដល់ឃើញសញ្ញាអក្សរ 'A' ដូរជារាងអក្សរ 'T' ដែលមានរលកពីក្រោម។\n៤. **វាយអក្សរ៖** ចុចមួយឆ្វាច់! ពេលនេះខ្សែបន្ទាត់នោះក្លាយជាផ្លូវអក្សរហើយ។ ពេលអ្នកសរសេរ អក្សរនឹងរត់ពត់ពេនទៅតាមកោងនោះយ៉ាងស្អាត។\n\n💡 **គន្លឹះគ្រប់គ្រង៖** នៅពេលសរសេររួច អ្នកនឹងឃើញមាន **ត្រីកោណពណ៌បៃតង និងក្រហម** តូចៗនៅសងខាងអក្សរ។ អ្នកអាចទាញត្រីកោណទាំងនោះដើម្បីសារ៉េទីតាំងអក្សរអោយនៅចំកណ្តាល ឬរុញអក្សរអោយត្រឡប់ចុះក្រោម (Flip inside) ចូលទៅក្នុងរង្វង់បានយ៉ាងងាយ!",
@@ -342,7 +342,7 @@ export const affinityAndEditingData = [
         chips_en: ["Affinity Photo vs Designer?", "How to use the Assets Panel"]
     },
     {
-        primaryKeys: ['តិចនិក Power Duplicate', 'power duplicate shortcut cmd j'],
+        primaryKeys: ['តិចនិក Power Duplicate', 'power duplicate shortcut cmd j', 'តិចនិក Power Duplicate 🔄', 'The Power Duplicate trick 🔄'],
         keys: ['power duplicate', 'copy rotate', 'duplicate', 'cmd j', 'ctrl j', 'កូពីវិល', 'ធ្វើកាំរស្មី'],
         regex: ['power duplicate', 'cmd j', 'ctrl j', 'កូពី.*បង្វិល'],
         answer: "បាទ **Power Duplicate (ចុច Cmd/Ctrl + J) គឺជាមន្តអាគមដ៏អស្ចារ្យបំផុតសម្រាប់ការរចនាប្លង់ត្រួតៗគ្នា ឬគូររូបកាំរស្មីព្រះអាទិត្យ ក្នុងកម្មវិធី Affinity!**\n\nជាទូទៅ ការចុច Cmd+J គឺគ្រាន់តែ Copy Layer បន្ថែមមួយប៉ុណ្ណោះ។ ប៉ុន្តែ Power Duplicate វាឆ្លាតជាងនោះ ព្រោះវា **កត់ត្រានូវចលនារបស់អ្នក**។\n\n💡 **របៀបធ្វើការងារវេទមន្តនេះ៖**\n១. គូររាងចតុកោណកែងមួយ រួចចុច `Cmd+J` ដើម្បីកូពីវា។\n២. **(ចំណុចសំខាន់បំផុត)** កុំទាន់ចុចអ្វីផ្សេង! ត្រូវទាញរាងថ្មីនោះឱ្យរំកិលទៅឆ្វេងបន្តិច ទាញបង្រួមទំហំវាឱ្យតូចជាងមុនបន្តិច និង បង្វិល (Rotate) វា ១៥ដឺក្រេ។\n៣. ឥឡូវគ្រាន់តែចុច `Cmd+J, Cmd+J, Cmd+J` បន្តបន្ទាប់គ្នា... កម្មវិធីនឹង **កូពីវត្ថុថ្មី បូកជាមួយការរំកិល បូកការបង្រួម និងបូកការបង្វិលនោះ** ធ្វើឡើងវិញដោយស្វ័យប្រវត្តិ! \n💥 ចុចតែ ៥វិនាទី អ្នកនឹងទទួលបានរូបគំនូរខ្យង (Spiral) ឬរូប Mandala ដ៏ល្អឥតខ្ចោះដែលគណនាដោយគណិតវិទ្យាយ៉ាងត្រឹមត្រូវ!",
@@ -351,7 +351,7 @@ export const affinityAndEditingData = [
         chips_en: ["Essential Keyboard Shortcuts", "Affinity Boolean Geometry"]
     },
     {
-        primaryKeys: ['Shortcut ផ្លូវកាត់សំខាន់ៗមានអ្វីខ្លះ?', 'essential keyboard shortcuts affinity'],
+        primaryKeys: ['Shortcut ផ្លូវកាត់សំខាន់ៗមានអ្វីខ្លះ?', 'essential keyboard shortcuts affinity', 'គន្លឹះក្តារចុចសំខាន់ៗ ⌨️', 'Essential Keyboard Shortcuts ⌨️', 'Essential Keyboard Shortcuts'],
         keys: ['shortcut', 'ផ្លូវកាត់', 'key', 'keyboard shortcut', 'hotkey'],
         regex: ['\\bshortcut\\b', 'ផ្លូវកាត់'],
         answer: "បាទ ពេលវេលាគឺជាលុយ! នេះគឺជា **Shortcut ផ្លូវកាត់ (Hotkeys) ដែលអ្នករចនាអាជីពតែងតែប្រើប្រាស់ជាប់ជាប្រចាំថ្ងៃ៖**\n\n**🔹 ឧបករណ៍កាត់តទូទៅ (Tools):**\n- **V:** Move Tool (ជ្រើសរើស និងរំកិលវត្ថុ)\n- **P:** Pen Tool (គូរ Vector)\n- **T:** Text Tool (សរសេរអក្សរ)\n- **B:** Brush Tool (ជក់ផាត់ពណ៌)\n- **E:** Eraser (ជ័រលុប)\n\n**🔹 សកម្មភាពស្នូល (Core Actions):**\n- **Ctrl / Cmd + Z:** Undo (ថយក្រោយ)\n- **Ctrl / Cmd + Shift + Z:** Redo (ទៅមុខវិញ)\n- **Ctrl / Cmd + J:** Power Duplicate (ចម្លង Layer បន្ថែមបញ្ញា)\n- **Ctrl / Cmd + G:** Group (ប្រមូលវត្ថុបញ្ចូលគ្នាជាក្រុម)\n- **Ctrl / Cmd + Shift + G:** Ungroup (បំបែកក្រុម)\n\n**🔹 ការគ្រប់គ្រងផ្ទៃមើល (Navigation):**\n- **Ctrl / Cmd + 0:** ពង្រីករូបឱ្យសមល្មមពេញអេក្រង់ (Fit to Screen)\n- **Z:** Zoom Tool (អូសកណ្តុរឆ្វេងស្តាំ ដើម្បី Zoom ចូល/ចេញយ៉ាងរលូន)\n- **Spacebar (សង្កត់):** ប្តូរទៅជាដៃ (Pan Tool) ដើម្បីទាញរំកិលផ្ទាំងការងារ។",
@@ -369,7 +369,7 @@ export const affinityAndEditingData = [
         chips_en: ["How do Blend Modes work?", "Precise background removal"]
     },
     {
-        primaryKeys: ['Global Colors (ប្តូរពណ៌ម្តងទាំងអស់)', 'affinity global colors swatches'],
+        primaryKeys: ['Global Colors (ប្តូរពណ៌ម្តងទាំងអស់)', 'affinity global colors swatches', 'Global Colors (Swatches)'],
         keys: ['global color', 'swatches', 'ដូរពណ៌ម្តងទាំងអស់', 'color palette', 'ពណ៌ global'],
         regex: ['global color', '\\bswatches\\b', 'ដូរពណ៌ម្តងទាំងអស់'],
         answer: "បាទ ការប្រើប្រាស់ **Global Colors** គឺជាវិធីសន្សំពេលដ៏ឆ្លាតវៃបំផុត និងជាក្បួនវិន័យចាំបាច់ពេលធ្វើ Brand Identity ឬ UI Design!\n\nជាទូទៅ ពេលបងចាក់ពណ៌ បងគ្រាន់តែរើសពណ៌ពីកងពណ៌ (Color Wheel)។ ប៉ុន្តែបើធ្វើការងារធំៗ បងត្រូវ Add ពណ៌នោះចូលទៅក្នុង Swatches Panel ជាមុនសិន រួចចុចគ្រីសយកពាក្យ **'Global'** (វានឹងចេញរូបត្រីកោណតូចមួយកាត់ជ្រុងពណ័នោះ)។\n\n💡 **មន្តអាគមនៃការប្រើ Global Color៖** \nឧបមាថាបងប្រើប្រាស់ពណ៌ Global ពណ៌ខៀវនេះ ទៅចាក់លើស៊ុម លើប៊ូតុងចំនួន ៥០ និងចំណងជើងអត្ថបទរាប់រយកន្លែងនៅក្នុង File របស់បង។ \nស្រាប់តែចុងម៉ោង ភ្ញៀវប្រាប់ថាចង់ប្តូរម៉ាកយីហោពីពណ៌ខៀវ ទៅពណ៌បៃតងវិញ! បងមិនបាច់អង្គុយ Select ដូរពណ៌ប៊ូតុងម្តងមួយៗនោះទេ។ បងគ្រាន់តែ Double-click លើពណ៌ Global ខៀវនោះ រួចរុញកងពណ៌ប្តូរទៅជាបៃតង។ 💥 ប៊ូតុង និងអក្សរទាំង ៥០ កន្លែងនោះ នឹងប្រែពណ៌ទៅជាបៃតងព្រមគ្នាក្នុងពេលតែ ១ វិនាទី!",
@@ -378,7 +378,7 @@ export const affinityAndEditingData = [
         chips_en: ["What are Affinity Symbols?", "Color Theory"]
     },
     {
-        primaryKeys: ['Copy Effect ពី Layer មួយទៅមួយទៀត', 'paste fx layer styles affinity'],
+        primaryKeys: ['Copy Effect ពី Layer មួយទៅមួយទៀត', 'paste fx layer styles affinity', 'Copying Layer Styles (Paste FX)'],
         keys: ['paste fx', 'copy style', 'កូពី effect', 'copy layer style', 'កូពីស្រមោល'],
         regex: ['paste fx', 'copy style', 'កូពី effect'],
         answer: "បាទ **នេះជាគន្លឹះធ្វើការលឿនរហ័ស៖ ការប្រើប្រាស់ Paste FX (ចម្លង Layer Styles យ៉ាងរហ័ស)**\n\nពេលបងដាក់ Effect លើអក្សរមួយយ៉ាងស្អាត (មានទាំង Drop Shadow ដិត, កម្រិតពន្លឺ Outer Glow សមល្មម, និងមានស៊ុម 3D Bevel) ហើយបងចង់យក Effect ដដែលនេះទៅដាក់លើអក្សរចំណងជើង ៤ ផ្សេងទៀត។ បងមិនបាច់ចំណាយពេលអង្គុយសារ៉េលេខ និងមុំស្រមោលឱ្យដូចគ្នាម្តងមួយៗនោះទេ!\n\n**របៀបកូពីមន្តអាគម៖**\n១. ជ្រើសរើស Layer ដើមដែលមាន Effect ស្អាតស្រាប់ រួចចុច Copy (`Cmd/Ctrl + C`)។\n២. ជ្រើសរើស Layer អក្សរថ្មីទាំង ៤ ដែលបងចង់ដាក់ Effect បញ្ចូល។\n៣. ចូលទៅកាន់ `Edit > Paste FX` (ផ្លូវកាត់ `Cmd/Ctrl + Shift + V` ឬប្រើម៉ឺនុយចុចស្តាំ (Right-Click Context Menu))។\n\n💥 កម្មវិធីនឹងកូពីតែ 'Effects' យកមកបិទបញ្ជូល ដោយមិនកូពីសាច់រូបពណ៌ ឬអក្សរមកជាន់លើនោះទេ! វាសន្សំពេលបានច្រើនណាស់។",
@@ -400,7 +400,7 @@ export const affinityAndEditingData = [
         chips_en: ["How to seamlessly blend subjects 🌪️", "Mastering realistic shadows 👥"]
     },
     {
-        primaryKeys: ['រលាយវត្ថុនិង Background បញ្ចូលគ្នា 🌪️', 'how to seamlessly blend subjects compositing 🌪️'],
+        primaryKeys: ['រលាយវត្ថុនិង Background បញ្ចូលគ្នា 🌪️', 'how to seamlessly blend subjects compositing 🌪️', 'How to seamlessly blend subjects 🌪️'],
         keys: ['រលាយ', 'blend', 'ស៊ីគ្នា', 'ស៊ីសាច់', 'blend subject', 'match subject', 'composite'],
         regex: ['រលាយ', 'blend subject', 'match subject', 'ស៊ីសាច់'],
         answer: "បាទ **វិធីធ្វើឱ្យរូបកាត់ត (Subject) រលាយចូល Background ១០០% បែប Hollywood Compositing៖**\n\n១. **Match Luminosity (តម្រឹមកម្រិតពន្លឺខ្មៅ/ស):** នេះជាចំណុចដែលគេខុសច្រើនបំផុត! ប្រើ Levels ទាញកំណត់ចំណុចខ្មៅបំផុតនៃតួអង្គ ឱ្យមានពណ៌ខ្មៅស្មើនឹងចំណុចខ្មៅបំផុតនៃ Background។ (បើតួអង្គមានពណ៌ខ្មៅដិតពេក តែ Background ស្រអាប់ដោយសារអ័ព្ទ តួអង្គនោះនឹងមើលទៅដូចជារូប Sticker បិទពីលើអញ្ចឹង)។\n២. **Match Color (តម្រឹមកម្រិតពណ៌):** ប្រើឧបករណ៍ Color Balance រុញពណ៌តួអង្គឱ្យស្របទៅតាមពណ៌បរិយាកាសទូទៅ (Ambient Light)។ (ឧ. បើកាត់តចូលព្រៃ ត្រូវថែមពណ៌បៃតង/លឿងលើសាច់តួអង្គបន្តិច ដើម្បីឱ្យស៊ីនឹងចំណាំងផ្លាតស្លឹកឈើ)។\n៣. **Atmospheric Light Wrap (រុំបរិយាកាសជុំវិញគែម):** បង្កើត Layer ថ្មីមួយពីលើតួអង្គ។ បូមពណ៌ដែលភ្លឺពីផ្ទៃខាងក្រោយ (ដូចជាពន្លឺមេឃ) មកផាត់ស្តើងៗ (Opacity 10% - 20%) ជុំវិញគែមរបស់តួអង្គ រួចដាក់ Blend Mode ជា Screen។ នេះបង្កើតជាពន្លឺចាំងផ្លាតរុំសាច់តួអង្គ ធ្វើឱ្យរូបមើលទៅរលាយចូលគ្នាតែមួយតែម្តង!",
@@ -418,7 +418,7 @@ export const affinityAndEditingData = [
         chips_en: ["What is Masking?", "Mastering realistic shadows 👥"]
     },
     {
-        primaryKeys: ['របៀបប្តូរថ្ងៃទៅយប់ (Day to Night) 🌙', 'how to turn day into night photomanipulation? 🌙'],
+        primaryKeys: ['របៀបប្តូរថ្ងៃទៅយប់ (Day to Night) 🌙', 'how to turn day into night photomanipulation? 🌙', 'How to turn Day into Night? 🌙'],
         keys: ['ថ្ងៃទៅយប់', 'យប់', 'day to night', 'turn to night', 'ធ្វើឱ្យយប់'],
         regex: ['ថ្ងៃទៅយប់', 'day to night', 'turn to night'],
         answer: "បាទ **ការកាត់តរូបភាពពីទិដ្ឋភាពថ្ងៃ ទៅយប់ (Day to Night) ទាមទារក្បួន៣ជំហានធំៗបែបនេះ៖**\n\n១. **បន្ថយពន្លឺ និងផ្លាស់ប្តូរពណ៌ (Darkening & Cooling):** ជាដំបូង ប្រើ `Color Lookup (LUTs)` ជ្រើសរើសយក Preset 'NightFromDay' ជាមូលដ្ឋានគ្រឹះ។ បន្ទាប់មកប្រើ `Curves` ទាញបន្ថយ Midtones ឱ្យងងឹតខ្លាំង។ **ច្បាប់ពេលយប់៖** ពន្លឺព្រះច័ន្ទតែងតែផ្តល់ពណ៌ខៀវត្រជាក់ (Cyan/Blue) ទៅលើបរិយាកាសទាំងមូល ដូច្នេះត្រូវប្រើ `Color Balance` ទាញ Shadows ទៅរកពណ៌ខៀវ។\n២. **លុបស្រមោលថ្ងៃត្រង់ (Kill Harsh Shadows):** បើរូបដើមមានពន្លឺថ្ងៃជះខ្លាំង អ្នកនឹងឃើញស្រមោលខ្មៅស្រួចៗធ្លាក់លើដី។ អ្នកត្រូវប្រើ `Clone Stamp` ដើម្បីលុបស្រមោលស្រួចៗទាំងនោះចោល។ ពេលយប់ ស្រមោលជាទូទៅព្រិលខ្លាំងណាស់ គ្មានរាងច្បាស់ទេ។\n៣. **បន្ថែមភ្លើងសិប្បនិម្មិត (Artificial Lights):** នេះជាចំណុចធ្វើឱ្យរូបមានជីវិត! ប្រើ Brush ពណ៌លឿង ឬទឹកក្រូច ផាត់លើបង្អួចផ្ទះ ចង្កៀងផ្លូវ ឬចង្កៀងឡាន។ បន្ទាប់មកប្តូរ Blend Mode ទៅជា **Screen** ឬ **Add** រួចប្រើ Layer Style 'Outer Glow' បន្ថែម ដើម្បីឱ្យភ្លើងជះពន្លឺពិតៗចូលទៅក្នុងបរិយាកាសងងឹត។",
@@ -427,7 +427,7 @@ export const affinityAndEditingData = [
         chips_en: ["Explain all Blend Modes 🌈", "How to edit light in Affinity"]
     },
     {
-        primaryKeys: ['របៀបបង្កើតស្រមោលឱ្យពិតៗ 👥', 'mastering realistic shadows drop shadow 👥'],
+        primaryKeys: ['របៀបបង្កើតស្រមោលឱ្យពិតៗ 👥', 'mastering realistic shadows drop shadow 👥', 'Mastering realistic shadows 👥'],
         keys: ['ស្រមោល', 'shadow', 'cast shadow', 'drop shadow', 'contact shadow', 'បង្កើតស្រមោល'],
         regex: ['cast shadow', 'drop shadow', 'contact shadow', 'បង្កើតស្រមោល'], 
         answer: "បាទ **អាថ៌កំបាំងនៃការបង្កើតស្រមោលឱ្យមើលទៅពិតៗ (Mastering Shadows) គឺហាមដាច់ខាតកុំប្រើតែ 'Drop Shadow' មួយជាន់!**\n\nនៅក្នុងលោកពិត ស្រមោលតែងតែផ្សំឡើងពី ២ ផ្នែកធំៗ៖\n១. **Contact Shadow (ស្រមោលប៉ះ):** គឺជាខ្សែស្រមោលស្តើងៗ ពណ៌ងងឹតខ្លាំង និងមុតស្រួចបំផុត ដែលស្ថិតនៅចំពីក្រោមបាតជើង ឬកង់ឡានដែលប៉ះផ្ទាល់នឹងដី។ បើខ្វះចំណុចនេះ វត្ថុនឹងមើលទៅអណ្តែតលើអាកាស។\n២. **Cast Shadow (ស្រមោលលាត):** គឺជាស្រមោលដែលលាតសន្ធឹងវែងតាមទិសដៅនៃពន្លឺជះ។ **ច្បាប់រូបវិទ្យា៖** ស្រមោលកាន់តែនៅឆ្ងាយពីតួអង្គ វាត្រូវតែកាន់តែព្រិល (ប្រើ Gaussian Blur) និងកាន់តែថ្លា (បន្ថយ Opacity ដោយប្រើ Gradient Mask)។\n\n💡 **គន្លឹះមាស៖** កុំប្រើពណ៌ខ្មៅ (Pure Black) សុទ្ធដើម្បីធ្វើស្រមោល! អ្នកត្រូវបឺតយកពណ៌ងងឹតបំផុតពី Background ផ្ទាល់ (ឧ. បើស្រមោលធ្លាក់លើស្មៅ ត្រូវយកពណ៌បៃតងចាស់បំផុត) រួចប្តូរ Blend Mode នៃ Layer ស្រមោលនោះទៅជា **Multiply** ទើបវាស៊ីសាច់ជ័រដីពិតៗ!",
@@ -463,7 +463,7 @@ export const affinityAndEditingData = [
         chips_en: ["Cinematic Color", "What is Dodge and Burn?"]
     },
     { 
-        primaryKeys: ['ពណ៌ Cinematic', 'cinematic color grading teal orange'],
+        primaryKeys: ['ពណ៌ Cinematic', 'cinematic color grading teal orange', 'Cinematic Color'],
         keys: ['cinematic', 'teal and orange', 'ពណ៌កុន', 'color grading', 'movie color'],
         regex: ['\\bcinematic\\b', 'teal and orange', 'ពណ៌កុន'],
         answer: "បាទ **ពណ៌បែប Cinematic (ពណ៌រោងកុនហូលីវូដ) ភាគច្រើនគឺពឹងផ្អែកលើក្បួនទ្រឹស្តីពណ៌ Teal & Orange!**\n\n**ហេតុអ្វីបានជាគេលេងពណ៌ ២ នេះច្រើនម្ល៉េះ?** \nព្រោះតាមទ្រឹស្តី (Color Wheel) ស្បែករបស់មនុស្សយើងគ្រប់ជាតិសាសន៍ គឺស្ថិតនៅក្នុងតំបន់ពណ៌លឿងទឹកក្រូច (Orange) ទាំងអស់។ ចំណែកឯពណ៌ផ្ទុយគ្នាបេះបិទរបស់ទឹកក្រូច គឺពណ៌ខៀវបៃតង (Teal)។ ពេលអ្នកចាក់ពណ៌ Teal ទៅក្នុងផ្ទៃខាងក្រោយ (Shadows) វាបង្កើតបានជាមហាកម្លាំង Contrast ទាញតួអង្គឱ្យលោតផុសចេញពីអេក្រង់តែម្តង!\n\n💡 **របៀបបង្កើតដោយផ្ទាល់៖**\nបើក Adjustment `Color Balance`។ \n- ជ្រើសរើសយក **Shadows** រួចទាញរបារឆ្ពោះទៅរកពណ៌ខៀវ (Blue និង Cyan) ដើម្បីធ្វើឱ្យបរិយាកាសត្រជាក់ងងឹត។\n- ជ្រើសរើសយក **Highlights** រួចទាញរបារឆ្ពោះទៅរកពណ៌ទឹកក្រូច (Red និង Yellow) ដើម្បីរក្សាស្បែកតួអង្គឱ្យនៅភ្លឺក្តៅ។", 
@@ -472,7 +472,7 @@ export const affinityAndEditingData = [
         chips_en: ["Split Toning Color Grading", "What is Dodge and Burn?"]
     },
     {
-        primaryKeys: ['Color Grading (Split Toning)', 'split toning color grading affinity'],
+        primaryKeys: ['Color Grading (Split Toning)', 'split toning color grading affinity', 'Split Toning Color Grading'],
         keys: ['color grading', 'split toning', 'លាយពណ៌រូប', 'កែពណ៌', 'grading'],
         regex: ['color grading', 'split toning', 'កែពណ៌'],
         answer: "បាទ **Color Grading (ការដាក់ពណ៌រូបភាព)** គឺជាការបន្ថែមសាច់ពណ៌អារម្មណ៍ (Emotional Mood) ទៅឱ្យរូបភាពទាំងមូល បន្ទាប់ពីយើងសារ៉េពន្លឺត្រូវអស់ហើយ!\n\nនៅក្នុងឧបករណ៍ `Color Balance` ឬ `Split Toning` របស់កម្មវិធីកាត់ត អ្នកអាចធ្វើជាចៅហ្វាយបញ្ជាពណ៌បាន ៣ កម្រិតដាច់ពីគ្នា៖\n១. **Shadows (តំបន់ស្រមោលងងឹត):** ជាទូទៅ គេចូលចិត្តចាក់ពណ៌ត្រជាក់ៗចូលទីនេះ (ដូចជាពណ៌ខៀវ Teal) ឱ្យមើលទៅកាច អាថ៌កំបាំង និងមានជម្រៅ។\n២. **Midtones (តំបន់កណ្តាល):** ជាតំបន់ដែលគ្រប់គ្រងពណ៌ស្បែកមនុស្សទូទៅ។ ត្រូវប្រយ័ត្នប្រយែងកន្លែងនេះ កុំឱ្យស្បែកមនុស្សក្លាយជាពណ៌ខៀវដូចសាកសពអោយសោះ។\n៣. **Highlights (តំបន់ភ្លឺ):** គេនិយមចាក់ពណ៌ក្តៅ (ដូចជាពណ៌លឿង ឬទឹកក្រូច) ដើម្បីឱ្យមើលទៅដូចជាមានពន្លឺថ្ងៃជះ ឬភ្លើងអំពូលកក់ក្តៅជះមកចំ។\n\nការលាយពណ៌ទាំង ៣ នេះបញ្ចូលគ្នា នឹងបង្កើតបានជាសាច់ពណ៌កុនដ៏ទាក់ទាញ (Cinematic Look)។",
@@ -481,7 +481,7 @@ export const affinityAndEditingData = [
         chips_en: ["Cinematic Color", "Mastering realistic shadows 👥"]
     },
     {
-        primaryKeys: ['តើ Dodge និង Burn គឺជាអ្វី?', 'dodge and burn techniques retouching'],
+        primaryKeys: ['តើ Dodge និង Burn គឺជាអ្វី?', 'dodge and burn techniques retouching', 'What is Dodge and Burn?'],
         keys: ['dodge & burn', 'បង្កើតពន្លឺ', 'ធ្វើឱ្យរូបលេច', 'dodge', 'burn', 'retouching'],
         regex: ['\\bdodge\\b', '\\bburn\\b', 'ធ្វើឱ្យរូបលេច'],
         answer: "បាទ **Dodge & Burn** គឺជាបច្ចេកទេសកាត់តកម្រិតព្រះ (High-end Retouching) ដ៏មានឥទ្ធិពលបំផុត ដែលជាងថតអាជីពតែងប្រើដើម្បីបំប្លែងរូបភាពរាបស្មើ (Flat 2D) ឱ្យមានជម្រៅលៀនចេញមកក្រៅ (3D Depth) និងលេចធ្លោដាច់គេ។\n\n☀️ **Dodge (ធ្វើឱ្យភ្លឺ):** ប្រើសម្រាប់យកជក់ទៅគូរលើទីតាំងដែលត្រូវពន្លឺ (Highlights) ដូចជា ខ្ទង់ច្រមុះ ថ្ងាស ឬគែមសម្លៀកបំពាក់ ឱ្យវាកាន់តែភ្លឺផ្លេក។\n🌑 **Burn (ធ្វើឱ្យងងឹត):** ប្រើសម្រាប់គូរលើទីតាំងស្រមោល (Shadows) ដូចជា ថ្ពាល់ចំហៀង ក្រោមចង្កា ឬផ្នត់អាវ ឱ្យវាកាន់តែងងឹតដិតចូលក្នុង។\n\n💡 **គន្លឹះអមតៈ Professional៖** ហាមដាច់ខាត កុំប្រើ Tool ទាំងនេះផ្ទាល់ទៅលើ Layer រូបដើម! បងត្រូវតែបង្កើត Layer ទទេមួយថ្មី > ចាក់ពណ៌ប្រផេះ 50% (Edit > Fill > 50% Gray) > រួចប្តូរ Blend Mode ទៅជា `Soft Light` ឬ `Overlay`។ \nឥឡូវយកជក់ពណ៌ស (Dodge) និងខ្មៅ (Burn) ទៅផាត់លើ Layer ពណ៌ប្រផេះនោះចុះ។ បើផាត់ខុស អាចលុបវាចេញបានយ៉ាងងាយ ដោយមិនខូចសាច់រូបដើមឡើយ (100% Non-destructive)។",
@@ -542,5 +542,24 @@ export const affinityAndEditingData = [
         answer_en: "**Exporting your file (PNG / JPG)** is the final step every designer must master before sharing their work!\n\n📤 **Best Method — Export Persona:**\n1. Click the **Export Persona** button (arrow icon top-left, or ⬛▶)\n2. Open the **Export** panel on the right\n3. Choose your format: **PNG** (lossless quality) or **JPG** (smaller file size)\n4. Set your resolution (1x for screen, 2x for Retina/HD, 300 DPI for print)\n5. Click **Export** ✅\n\n🆚 **PNG vs JPG — Which to Choose?**\n- **PNG** — Best for logos, icons, and anything requiring a transparent background\n- **JPG** — Best for photos and full-background images (much smaller file size)\n\n⚡ **Quick Export (Fastest Method):**\nRight-click any object → **Export** → choose format → done! No need to enter the Export Persona at all for simple single-object exports.\n\n💡 **Pro Tip:** Need to export multiple formats at once (PNG + JPG + SVG in one click)? Use **Export Persona Slices** — the professional workflow for delivering design assets!",
         chips: ["Export Persona Slices ✂️", "Best Resolution for printing? 🖨️"],
         chips_en: ["Export Persona Slices ✂️", "Best Resolution for printing? 🖨️"]
+    }
+,
+    {
+        primaryKeys: ['Vector vs Raster', 'វ៉ិចទ័រទល់នឹងរ៉ាស្ទ័រ', 'អ្វីទៅជា Vector និង Raster?'],
+        keys: ['vector', 'raster', 'វ៉ិចទ័រ', 'រ៉ាស្ទ័រ', 'ភីកសែល'],
+        regex: ['\\bvector\\b', '\\braster\\b', 'វ៉ិចទ័រ', 'រ៉ាស្ទ័រ'],
+        answer: "បាទ **Vector (Designer) និង Pixel (Photo) គឺខុសគ្នាទាំងស្រុង!**\n\n✏️ **វ៉ិចទ័រ (Vector):** បង្កើតដោយរូបមន្តគណិតវិទ្យា (Math Curves)។ អ្នកអាចពង្រីកប៉ុណ្ណាក៏មិនបែកគ្រាប់ដែរ (100% Crisp)។ ប្រើសម្រាប់ ឡូហ្គោ (Logos) និង ប្លង់ (Layouts)។\n\n📸 **រ៉ាស្ទ័រ (Raster/Pixel):** បង្កើតដោយការផ្គុំភីកសែល (Pixels) តូចៗរាប់លាន។ បើពង្រីកហួសទំហំដើម វានឹងបែកគ្រាប់។ ប្រើសម្រាប់ រូបថត (Photography)។\n\n💡 **គន្លឹះ:** ក្នុង Affinity អ្នកអាចប្តូរ Persona (ខាងលើឆ្វេង) ដើម្បីប្រើប្រាស់មុខងារទាំងពីរបានដោយមិនបាច់ដោះដូរកម្មវិធីឡើយ!",
+        answer_en: "**Vector and Raster are fundamentally different!**\n\n✏️ **Vector (Designer):** Built using mathematical curves. You can scale them to the size of a building and they will never pixelate (100% Crisp). Used for Logos and Layouts.\n\n📸 **Raster/Pixel (Photo):** Built from millions of tiny square pixels. If you scale them past their original size, they pixelate. Used for Photography.\n\n💡 **Pro Tip:** In Affinity, use StudioLink Personas to instantly switch between Vector and Raster workflows without changing apps!",
+        chips: ["តើ Affinity Photo និង Designer ខុសគ្នាម៉េច?", "Image Layer vs Pixel Layer"],
+        chips_en: ["Affinity Photo vs Designer?", "Image Layer vs Pixel Layer"]
+    },
+    {
+        primaryKeys: ['Blend Modes', 'របៀបលាយពណ៌', 'តើ Blend Modes ដំណើរការយ៉ាងម៉េច?', 'ពន្យល់ពី Blend Modes ទាំងអស់ 🌈', 'How do Blend Modes work?', 'Explain all Blend Modes 🌈'],
+        keys: ['blend mode', 'blend', 'របៀបលាយ', 'multiply', 'screen', 'overlay'],
+        regex: ['\\bblend mode\\b', 'របៀបលាយ'],
+        answer: "បាទ **Blend Modes** គឺជាក្បួនគណិតវិទ្យាដែលប្រាប់ Layer មួយឱ្យលាយ (Blend) ពណ៌និងពន្លឺជាមួយ Layer ខាងក្រោមវា។ នេះជាក្រុមធំៗទាំង ៤ ដែលអ្នកត្រូវដឹង៖\n\n១. **Darken (ឧ. Multiply):** លាក់ពណ៌ស លេចពណ៌ខ្មៅ។ (ល្អសម្រាប់បង្កើតស្រមោល)\n២. **Lighten (ឧ. Screen):** លាក់ពណ៌ខ្មៅ លេចពណ៌ស។ (ល្អសម្រាប់បន្ថែមពន្លឺថ្ងៃ)\n៣. **Contrast (ឧ. Overlay, Soft Light):** បង្កើន Contrast ។ វាលាក់ពណ៌ប្រផេះ 50%។ (ល្អសម្រាប់ Dodge & Burn)\n៤. **Component (ឧ. Color, Hue):** លាយតែពណ៌ ដោយរក្សាទុកពន្លឺដើម។ (ល្អសម្រាប់ប្តូរពណ៌អាវ)\n\n💡 **គន្លឹះ:** ប្រើ Multiply សម្រាប់ស្រមោល និង Screen សម្រាប់ពន្លឺ!",
+        answer_en: "**Blend Modes** are mathematical algorithms that tell a layer how to blend its colors and luminosity with the layers beneath it.\n\n1. **Darken (e.g. Multiply):** Hides white, reveals black. Perfect for drop shadows.\n2. **Lighten (e.g. Screen):** Hides black, reveals white. Perfect for adding lens flares.\n3. **Contrast (e.g. Overlay, Soft Light):** Boosts contrast and hides 50% Gray. Used for non-destructive Dodge & Burn.\n4. **Component (e.g. Color):** Applies only color while preserving original shadows and highlights.\n\n💡 **Pro Tip:** Memorize Multiply (Shadows) and Screen (Highlights) first!",
+        chips: ["កាត់តរូបភាព (Photomanipulation)", "ពណ៌ Cinematic"],
+        chips_en: ["Photomanipulation techniques", "Cinematic Color"]
     }
 ];
