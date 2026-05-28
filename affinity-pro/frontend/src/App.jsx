@@ -406,7 +406,7 @@ function AppContent() {
       )}
 
       {activeAppTab && !expandedLesson && (
-        <div className={`fixed inset-0 z-[60] overflow-y-auto no-scrollbar flex flex-col ${isDarkMode ? 'bg-[#0A0A0A]' : 'bg-[#F4F5F7]'}`}>
+        <div className={`fixed inset-0 z-[60] overflow-y-auto overflow-x-hidden no-scrollbar flex flex-col ${isDarkMode ? 'bg-[#0A0A0A]' : 'bg-[#F4F5F7]'}`}>
             
             <div 
                 className={`sticky top-0 z-50 px-4 pb-3 border-b flex items-center justify-between backdrop-blur-xl ${isDarkMode ? 'border-[#2C2C2C] bg-[#0A0A0A]/90' : 'border-[#E5E7EB] bg-[#FFFFFF]/90'}`}
