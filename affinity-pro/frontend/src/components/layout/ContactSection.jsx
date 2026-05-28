@@ -6,7 +6,7 @@ import { useLanguage } from '../../contexts/LanguageContext';
 const SOCIAL_LINKS = {
     facebook: 'https://web.facebook.com/YOUR_PAGE',   // TODO: replace
     telegram: 'https://t.me/koymy',
-    website:  'https://YOUR_WEBSITE.com',             // TODO: replace
+    website:  'https://mydesignkh.vercel.app/',
 };
 // ─────────────────────────────────────────────────────────────────────────────
 
