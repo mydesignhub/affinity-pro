@@ -344,7 +344,7 @@ function AppContent() {
 
   const isCoursePurchased = activeAppTab ? purchasedCourses[activeAppTab]?.unlocked === true : false;
   const theme = activeAppTab ? APP_THEMES[activeAppTab] : APP_THEMES.photo;
-  const getAppDisplayName = (id) => id === 'photo' ? 'Pixel' : id === 'designer' ? 'Vector' : 'Layout';
+  const getAppDisplayName = (id) => id === 'photo' ? 'Pixel (Photo) / ភីកសែល (រូបថត)' : id === 'designer' ? 'Vector (Designer) / វ៉ិចទ័រ (ឌីហ្សាញ)' : 'Layout (Publisher) / ប្លង់ (ផាប់លីស៊ឺ)';
   const appDisplayName = activeAppTab ? getAppDisplayName(activeAppTab) : '';
 
   return (
@@ -499,7 +499,7 @@ function AppContent() {
                                 <img src="/photo2 icon.svg" alt="Photo" className="w-8 h-8 sm:w-10 sm:h-10 object-contain drop-shadow-sm" />
                             </div>
                             <div className="text-left flex-1 min-w-0">
-                                <h3 className={`font-black text-[17px] sm:text-[20px] tracking-tight truncate ${isDarkMode ? 'text-white' : 'text-black'}`}>Pixel</h3>
+                                <h3 className={`font-black text-[15px] sm:text-[18px] tracking-tight truncate ${isDarkMode ? 'text-white' : 'text-black'}`}>Pixel (Photo) / ភីកសែល (រូបថត)</h3>
                                 <p className={`text-[13px] sm:text-[14px] mt-0.5 sm:mt-1 font-medium truncate ${isDarkMode ? 'text-[#9AA0A6]' : 'text-[#6B7280]'}`}>{lang === 'en' ? 'Professional photo editing & manipulation' : 'ការកែច្នៃរូបភាពបែបអាជីព'}</p>
                             </div>
                             <div className="flex items-center gap-2 sm:gap-3 shrink-0 pl-2">
@@ -518,7 +518,7 @@ function AppContent() {
                                 <img src="/designer2 icon.svg" alt="Designer" className="w-8 h-8 sm:w-10 sm:h-10 object-contain drop-shadow-sm" />
                             </div>
                             <div className="text-left flex-1 min-w-0">
-                                <h3 className={`font-black text-[17px] sm:text-[20px] tracking-tight truncate ${isDarkMode ? 'text-white' : 'text-black'}`}>Vector</h3>
+                                <h3 className={`font-black text-[15px] sm:text-[18px] tracking-tight truncate ${isDarkMode ? 'text-white' : 'text-black'}`}>Vector (Designer) / វ៉ិចទ័រ (ឌីហ្សាញ)</h3>
                                 <p className={`text-[13px] sm:text-[14px] mt-0.5 sm:mt-1 font-medium truncate ${isDarkMode ? 'text-[#9AA0A6]' : 'text-[#6B7280]'}`}>{lang === 'en' ? 'Vector graphics & illustration' : 'ការឌីហ្សាញក្រាហ្វិក និងគំនូរ'}</p>
                             </div>
                             <div className="flex items-center gap-2 sm:gap-3 shrink-0 pl-2">
@@ -537,7 +537,7 @@ function AppContent() {
                                 <img src="/publisher2 icon.svg" alt="Publisher" className="w-8 h-8 sm:w-10 sm:h-10 object-contain drop-shadow-sm" />
                             </div>
                             <div className="text-left flex-1 min-w-0">
-                                <h3 className={`font-black text-[17px] sm:text-[20px] tracking-tight truncate ${isDarkMode ? 'text-white' : 'text-black'}`}>Layout</h3>
+                                <h3 className={`font-black text-[15px] sm:text-[18px] tracking-tight truncate ${isDarkMode ? 'text-white' : 'text-black'}`}>Layout (Publisher) / ប្លង់ (ផាប់លីស៊ឺ)</h3>
                                 <p className={`text-[13px] sm:text-[14px] mt-0.5 sm:mt-1 font-medium truncate ${isDarkMode ? 'text-[#9AA0A6]' : 'text-[#6B7280]'}`}>{lang === 'en' ? 'Page layout & typography design' : 'ការរៀបចំទំព័រ និងសៀវភៅ'}</p>
                             </div>
                             <div className="flex items-center gap-2 sm:gap-3 shrink-0 pl-2">
