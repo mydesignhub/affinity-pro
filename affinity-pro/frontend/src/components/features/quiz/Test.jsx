@@ -399,7 +399,7 @@ const Test = ({ isDarkMode, isAdmin }) => {
                                                 : dk ? 'text-[#6B7280] hover:text-[#A0A0A0]'  : 'text-[#9CA3AF] hover:text-[#4B5563]'}`}>
                                         <div className="flex items-center gap-1.5">
                                             <Icon size={13} />
-                                            <span>{lang === 'en' ? labelEn : labelKh}</span>
+                                            <span>{labelEn} / {labelKh}</span>
                                         </div>
                                         {hasCert && (
                                             <span className="absolute -top-1.5 -right-1.5 w-4 h-4 bg-[#C5B002] rounded-full flex items-center justify-center shadow">
