@@ -1,0 +1,28 @@
+# Dependencies
+
+node_modules
+frontend/node_modules
+
+# Build output
+dist
+dist-ssr
+frontend/dist
+
+# Env files — never commit secrets
+.env
+.env.local
+.env.*.local
+frontend/.env.local
+backend/.env
+
+# Logs
+*.log
+npm-debug.log*
+
+# Editor
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+*.suo
+*.sw?

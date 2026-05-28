@@ -1,0 +1,17 @@
+services:
+  - type: web
+    name: affinity-pro-backend
+    env: node
+    region: singapore          # closest to Cambodia — change if needed
+    buildCommand: npm install
+    startCommand: node server.js
+    healthCheckPath: /health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 10000            # Render auto-assigns, but we declare it
+      - key: GEMINI_API_KEYS
+        sync: false             # set manually in Render dashboard
+      - key: ALLOWED_ORIGINS
+        sync: false             # set manually in Render dashboard
