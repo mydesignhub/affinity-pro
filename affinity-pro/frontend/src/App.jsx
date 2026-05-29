@@ -406,7 +406,7 @@ function AppContent() {
       )}
 
       {activeAppTab && !expandedLesson && (
-        <div className={`fixed inset-0 z-[60] overflow-y-auto no-scrollbar flex flex-col ${isDarkMode ? 'bg-[#0A0A0A]' : 'bg-[#F4F5F7]'}`} style={{ overflowX: 'hidden' }}>
+        <div className={`fixed inset-0 z-[60] overflow-y-auto overflow-x-hidden no-scrollbar flex flex-col ${isDarkMode ? 'bg-[#0A0A0A]' : 'bg-[#F4F5F7]'}`} style={{ overflowX: 'hidden' }}>
             
             <div 
                 className={`sticky top-0 z-50 px-4 pb-3 border-b flex items-center justify-between backdrop-blur-xl ${isDarkMode ? 'border-[#2C2C2C] bg-[#0A0A0A]/90' : 'border-[#E5E7EB] bg-[#FFFFFF]/90'}`}
@@ -479,7 +479,7 @@ function AppContent() {
       )}
       
       {activeTab !== 'ai' && !activeAppTab ? (
-        <main ref={mainScrollRef} className="flex-1 min-h-0 max-w-7xl mx-auto w-full overflow-y-auto no-scrollbar p-4 md:p-8 relative z-10" style={{ paddingBottom: 'calc(env(safe-area-inset-bottom) + 90px)', overscrollBehaviorY: 'contain' }}>
+        <main ref={mainScrollRef} className="flex-1 min-h-0 max-w-7xl mx-auto w-full overflow-y-auto overflow-x-hidden no-scrollbar p-4 md:p-8 relative z-10" style={{ paddingBottom: 'calc(env(safe-area-inset-bottom) + 90px)', overscrollBehaviorY: 'contain', overflowX: 'hidden' }}>
             <div className="w-full flex-none shrink-0" style={{ height: 'calc(env(safe-area-inset-top) + 60px)' }}></div>
             
             {activeTab === 'learn' && (
@@ -556,7 +556,7 @@ function AppContent() {
                 </div>
             </div>
             )}
-        {activeTab === 'tools' && <div className="relative z-10"><Suspense fallback={<div className="flex items-center justify-center h-64"><Loader2 className="animate-spin w-8 h-8 opacity-50" /></div>}><ToolsView isDarkMode={isDarkMode} /></Suspense></div>}
+        {activeTab === 'tools' && <div className="relative z-10 overflow-x-hidden w-full"><Suspense fallback={<div className="flex items-center justify-center h-64"><Loader2 className="animate-spin w-8 h-8 opacity-50" /></div>}><ToolsView isDarkMode={isDarkMode} /></Suspense></div>}
             
             {activeTab === 'quiz' && <div className="relative z-10"><Suspense fallback={<div className="flex items-center justify-center h-64"><Loader2 className="animate-spin w-8 h-8 opacity-50" /></div>}><Test isDarkMode={isDarkMode} isAdmin={false} /></Suspense></div>}
         </main>

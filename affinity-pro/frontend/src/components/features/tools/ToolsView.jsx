@@ -112,7 +112,7 @@ const CustomHarmonySelect = ({ value, onChange, isDarkMode }) => {
 
             {/* The Floating Popover (iPhone Style) */}
             {isOpen && (
-                <div className={`absolute bottom-full mb-2 left-0 w-[200px] sm:w-[220px] max-h-[250px] overflow-y-auto rounded-[20px] shadow-2xl border py-1.5 animate-fade-in-up z-[100] custom-scrollbar ${isDarkMode ? 'bg-[#252525]/80 backdrop-blur-2xl border-[#3A3A3C]' : 'bg-white/80 backdrop-blur-2xl border-[#E0E0E0]'}`}>
+                <div className={`absolute bottom-full mb-2 left-0 w-[200px] sm:w-[220px] max-h-[250px] overflow-y-auto rounded-[20px] shadow-2xl border py-1.5 animate-fade-in-up z-[100] no-scrollbar ${isDarkMode ? 'bg-[#252525]/80 backdrop-blur-2xl border-[#3A3A3C]' : 'bg-white/80 backdrop-blur-2xl border-[#E0E0E0]'}`}>
                     {options.map(opt => (
                         <button
                             key={opt.value}
@@ -1399,7 +1399,7 @@ export default function ToolsView({ isDarkMode }) {
             </div>
         </div>
 
-        <div className="flex flex-col h-full animate-fade-in-up pb-10 w-full">
+        <div className="flex flex-col animate-fade-in-up pb-10 w-full overflow-x-hidden">
 
             {/* 🌟 OPTIMIZED FULL-SCREEN COLOR PANEL 🌟 */}
             {toolTab === 'color' && (
@@ -1598,7 +1598,7 @@ export default function ToolsView({ isDarkMode }) {
                         <button onClick={() => { setSelectedExports([]); triggerHaptic(); }} className={`flex-1 text-[10px] sm:text-xs font-bold uppercase tracking-wider px-3 py-2 rounded-xl border transition-colors font-khmer ${isDarkMode ? 'border-[#3A3A3C] text-[#E3E3E3] hover:bg-[#2C2C2C]' : 'border-[#D1D5DB] text-[#1A1C1E] hover:bg-[#FAFAFA]'}`}>{t('tools_deselect_all')}</button>
                     </div>
 
-                    <div className={`max-h-[40vh] overflow-y-auto mb-6 p-2 rounded-2xl border grid grid-cols-2 gap-2 custom-scrollbar ${isDarkMode ? 'bg-[#121212] border-[#2C2C2C]' : 'bg-[#FAFAFA] border-[#E0E0E0]'}`}>
+                    <div className={`max-h-[40vh] overflow-y-auto mb-6 p-2 rounded-2xl border grid grid-cols-2 gap-2 no-scrollbar ${isDarkMode ? 'bg-[#121212] border-[#2C2C2C]' : 'bg-[#FAFAFA] border-[#E0E0E0]'}`}>
                         {allHarmonies.map(h => (
                             <label key={h} className={`flex items-center gap-3 cursor-pointer p-3 rounded-xl transition-colors ${selectedExports.includes(h) ? (isDarkMode ? 'bg-[#41B6E6]/20 border border-[#41B6E6]/50' : 'bg-[#0277C5]/10 border border-[#0277C5]/30') : (isDarkMode ? 'hover:bg-[#2C2C2C] border border-transparent' : 'hover:bg-[#E0E0E0]/50 border border-transparent')}`}>
                                 <input 
@@ -1671,7 +1671,7 @@ export default function ToolsView({ isDarkMode }) {
                         </button>
                     </div>
 
-                    <div className="flex-1 overflow-y-auto px-5 pb-8 space-y-6 custom-scrollbar">
+                    <div className="flex-1 overflow-y-auto px-5 pb-8 space-y-6 no-scrollbar">
                         <div className={`w-full aspect-video rounded-3xl border-4 flex items-center justify-center relative overflow-hidden shadow-inner pointer-events-none ${isDarkMode ? 'border-[#1E1E1E] bg-[#1A1A1A]' : 'border-white bg-[#FFFFFF]'}`}>
                             {renderLayoutGraphic(selectedLayoutDetails.id, isDarkMode, 'landscape')}
                         </div>
