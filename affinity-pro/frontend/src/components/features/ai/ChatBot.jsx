@@ -8,20 +8,10 @@ import {
     SUGGESTED_QUESTIONS, SUGGESTED_QUESTIONS_EN,
     SMART_GREETINGS, SMART_GREETINGS_EN,
     REPEAT_RESPONSES, REPEAT_RESPONSES_EN, API_FALLBACK_RESPONSES, API_FALLBACK_RESPONSES_EN,
-    KNOWLEDGE_BASE
+    KNOWLEDGE_BASE, QUIZ_INVITATIONS, QUIZ_INVITATIONS_EN
 } from '../../../data/ai_database';
 
-// ─── Local quiz invitations (Design/Affinity scope) ──────────────────────────
-const LOCAL_QUIZ_INVITATIONS = [
-    "បាទ ងាយស្រួលមែនទែន! 🤗 តោះសាកល្បងលេងសួរឆ្លើយ (Quiz) ពីរឿង Graphic Design។ សួរខ្ញុំមក!",
-    "បាទ តោះមកធ្វើតេស្តខួរក្បាលបន្តិច! 🧠 សាកល្បងសួរខ្ញុំពីរឿងក្បួនរចនាមើល!",
-    "បាទ បើចង់ពង្រឹងសមត្ថភាព Design តោះយើងលេងឆ្លើយសំណួរគ្នា! 🎯"
-];
-const LOCAL_QUIZ_INVITATIONS_EN = [
-    "That's super easy! 🤗 Let's have a quick Graphic Design Quiz. Ask away!",
-    "Let's test your creative brain! 🧠 Try asking me a tricky design question!",
-    "If you want to level up your design skills, let's do a quick Q&A session! 🎯"
-];
+// ─── Quiz Invitations now imported from ai_database.jsx ──────────────────────
 
 // ─── Marketing CTA chips (reused across all intent handlers) ─────────────────
 const MKTG_CHIPS_EN = ["Take a Quiz 🎯", "Design Certificate 🏆", "How to get started"];
@@ -142,7 +132,7 @@ const getRandomItems = (arr, count) => {
 };
 
 const getRandomQuizInvitation = (language = 'kh') => {
-    const invitations = language === 'en' ? LOCAL_QUIZ_INVITATIONS_EN : LOCAL_QUIZ_INVITATIONS;
+    const invitations = language === 'en' ? QUIZ_INVITATIONS_EN : QUIZ_INVITATIONS;
     return invitations[Math.floor(Math.random() * invitations.length)];
 };
 
@@ -957,7 +947,7 @@ const ChatBot = ({ messages = [], setMessages, isDarkMode, liveAiData = [], setL
         if (!msg.trim()) return;
 
         const keepFocus = isKeyboardOpen && source === 'user';
-        const rudeWords = ['ឆ្កួត', 'ចង្រៃ', 'មីចោរ', 'អាឆ្កែ', 'ចុយ', 'ថោកទាប', 'ឡប់', 'ភ្លើ', 'ល្ងង់', 'អាថោក', 'fuck', 'shit', 'bitch', 'stupid', 'asshole'].map(strictClean);
+        const rudeWords = ['ឆ្កួត', 'ចង្រៃ', 'មីចោរ', 'អាឆ្កែ', 'ចុយ', 'ថោកទាប', 'ឡប់', 'ភ្លើ', 'ល្ងង់', 'អាថោក', 'មីថោក', 'fuck', 'shit', 'bitch', 'stupid', 'asshole'].map(strictClean);
         const cleanMsg = strictClean(msg);
         if (rudeWords.some(word => cleanMsg.includes(word))) {
             setInput(''); if (inputRef.current) inputRef.current.textContent = '';
