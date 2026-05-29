@@ -2,33 +2,37 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
 
+    // NOTE: collections are namespaced with the `ap_` prefix in code (see
+    // firebase.js → APP_NS / C()). These matches MUST keep that prefix or every
+    // read/write falls through to the catch-all below and is denied.
+
     // Each user can only read and write their own document
-    match /users/{userId} {
+    match /ap_users/{userId} {
       allow read, write: if request.auth != null && request.auth.uid == userId;
     }
 
     // Activation codes: anyone can read a specific code by ID (requires knowing the exact key)
     // and delete it after single-use consumption. Creating/updating codes is admin-only via SDK.
-    match /activationCodes/{code} {
+    match /ap_activationCodes/{code} {
       allow read, delete: if true;
       allow create, update: if false;
     }
 
     // AI knowledge base: readable by anyone, not writable from the client
-    match /ai_knowledge/{doc} {
+    match /ap_ai_knowledge/{doc} {
       allow read: if true;
       allow write: if false;
     }
 
     // Purchase requests: clients create and read their own; only Admin SDK can approve/reject
-    match /purchaseRequests/{requestId} {
+    match /ap_purchaseRequests/{requestId} {
       allow create: if true;
       allow read: if true;
       allow update, delete: if false;
     }
 
     // Key activations: clients read/create/update (device tracking); never delete from client
-    match /keyActivations/{code} {
+    match /ap_keyActivations/{code} {
       allow read, create, update: if true;
       allow delete: if false;
     }

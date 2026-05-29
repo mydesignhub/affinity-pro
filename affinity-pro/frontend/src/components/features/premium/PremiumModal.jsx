@@ -80,55 +80,36 @@ export default function PremiumModal({
         }
     }, [showRegistration]);
 
-    // When QR view opens, check if there's already a pending request for this device+app
+    // When QR view opens, point the status listener at this device's request doc.
     useEffect(() => {
         if (checkoutMode !== 'qr') {
             setRequestStatus('idle');
             setPaymentNote('');
+            setCurrentRequestId(null);
             return;
         }
-        const reqId = `${activeAppTab}_${getDeviceId()}`;
-        getDoc(doc(db, C("purchaseRequests"), reqId)).then(snap => {
-            if (snap.exists()) {
-                const s = snap.data().status;
-                if (s === 'pending' || s === 'approved' || s === 'rejected') {
-                    setCurrentRequestId(reqId);
-                    setRequestStatus(s);
-                }
-            }
-        }).catch(() => {});
+        setCurrentRequestId(`${activeAppTab}_${getDeviceId()}`);
     }, [checkoutMode, activeAppTab]);
 
-    // Real-time listener: auto-unlock when admin approves in Firebase Console
+    // Real-time status for the checkout UI. The actual course unlock is handled
+    // globally in App.jsx so approval reaches the user on ANY screen — here we
+    // only mirror the request status for live feedback while this view is open.
+    // Attaches whenever a request id is known (not gated on 'pending'), so a user
+    // returning after approval correctly sees the approved state instead of a
+    // stale form.
     useEffect(() => {
-        if (!currentRequestId || requestStatus !== 'pending') return;
+        if (!currentRequestId) return;
 
         const unsubscribe = onSnapshot(doc(db, C("purchaseRequests"), currentRequestId), (snap) => {
             if (!snap.exists()) return;
-            const data = snap.data();
-
-            if (data.status === 'approved') {
-                const duration = data.plan === 'month'
-                    ? 30 * 24 * 60 * 60 * 1000
-                    : 365 * 24 * 60 * 60 * 1000;
-                const updatedPurchases = {
-                    ...purchasedCourses,
-                    [activeAppTab]: { unlocked: true, expiry: Date.now() + duration, keyUsed: 'firebase_purchase' }
-                };
-                setPurchasedCourses(updatedPurchases);
-                if (user) {
-                    setDoc(doc(db, C("users"), user.uid), { purchasedCourses: updatedPurchases }, { merge: true });
-                }
-                setRequestStatus('approved');
-                triggerHaptic('success');
-            } else if (data.status === 'rejected') {
-                setRequestStatus('rejected');
-                triggerHaptic('error');
-            }
+            const s = snap.data().status;
+            if (s === 'approved') { setRequestStatus('approved'); triggerHaptic('success'); }
+            else if (s === 'rejected') { setRequestStatus('rejected'); triggerHaptic('error'); }
+            else if (s === 'pending') { setRequestStatus('pending'); }
         });
 
         return () => unsubscribe();
-    }, [currentRequestId, requestStatus]);
+    }, [currentRequestId]);
 
     // 🌟 ការឡូកអ៊ីនជាមួយ Google
     const handleGoogleLogin = async () => { 

@@ -14,7 +14,7 @@ import {
 
 import { auth, db, C } from './firebase';
 import { signOut } from 'firebase/auth';
-import { getDocs, collection, query, onSnapshot, doc } from 'firebase/firestore';
+import { getDocs, collection, query, onSnapshot, doc, setDoc } from 'firebase/firestore';
 
 import Header from './components/layout/Header';
 import LessonCard from './components/features/learn/LessonCard';
@@ -42,6 +42,18 @@ const APP_THEMES = {
 };
 
 const ONE_YEAR_MS = 365 * 24 * 60 * 60 * 1000;
+
+// Stable per-device id (shared with PremiumModal via the same localStorage key).
+// Ensuring it exists at app load lets the global purchase listener watch the
+// correct request docs even for requests created later in this session.
+const getDeviceId = () => {
+    let id = localStorage.getItem('affinityPro_deviceId');
+    if (!id) {
+        id = Math.random().toString(36).substring(2, 15) + Date.now().toString(36);
+        localStorage.setItem('affinityPro_deviceId', id);
+    }
+    return id;
+};
 
 // ==========================================
 // 3. MAIN APP CONTENT
@@ -179,6 +191,43 @@ function AppContent() {
 
       return () => unsubscribers.forEach(u => u());
   }, [purchasedCourses, isDataLoaded]);
+
+  // ─── Real-time purchase approval (global) ──────────────────────────────────
+  // Watches THIS device's purchase requests for every course, so an admin
+  // approval unlocks instantly on ANY screen — even if the user already left the
+  // checkout screen or reopened the app later. This is the source of truth for
+  // unlocking; the PremiumModal listener only drives the checkout UI.
+  useEffect(() => {
+      if (!isDataLoaded) return;
+      const deviceId = getDeviceId();
+      const apps = ['photo', 'designer', 'publisher'];
+      const PLAN_MS = { trial: 7 * 24 * 60 * 60 * 1000, month: 30 * 24 * 60 * 60 * 1000, year: ONE_YEAR_MS };
+
+      const unsubscribers = apps.map(app =>
+          onSnapshot(doc(db, C('purchaseRequests'), `${app}_${deviceId}`), (snap) => {
+              if (!snap.exists() || snap.data().status !== 'approved') return;
+              const data = snap.data();
+              const duration = PLAN_MS[data.plan] || PLAN_MS.year;
+              // Deterministic expiry from a stable timestamp keeps re-processing
+              // the same approval idempotent (no expiry creep on every reload).
+              const expiry = (data.approvedAt || data.createdAt || Date.now()) + duration;
+
+              setPurchasedCourses(prev => {
+                  const cur = prev[app];
+                  if (cur?.unlocked && cur.expiry >= expiry) return prev; // already unlocked — don't downgrade or creep
+                  const updated = { ...prev, [app]: { unlocked: true, expiry, keyUsed: 'firebase_purchase' } };
+                  localStorage.setItem('affinityPro_purchases', JSON.stringify(updated));
+                  if (auth.currentUser) {
+                      setDoc(doc(db, C('users'), auth.currentUser.uid), { purchasedCourses: updated }, { merge: true }).catch(() => {});
+                  }
+                  triggerHaptic('success');
+                  return updated;
+              });
+          }, () => {})
+      );
+
+      return () => unsubscribers.forEach(u => u());
+  }, [isDataLoaded]);
 
   useEffect(() => {
       const newBgColor = isDarkMode ? '#0A0A0A' : '#F4F5F7';
