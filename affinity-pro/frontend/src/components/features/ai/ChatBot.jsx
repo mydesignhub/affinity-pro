@@ -471,14 +471,14 @@ const ChatBot = ({ messages = [], setMessages, isDarkMode, liveAiData = [], setL
 
         let greetingMsg, defaultChips;
 
-        // First-time visitor with no history — ask skill level to personalise
+        // First-time visitor with no history
         if (interests.length === 0 && !savedLevel) {
             greetingMsg = lang === 'en'
-                ? `${timeEn} I'm **MY DESIGN AI** — your personal design coach. 🎨\n\nBefore we start, **what's your current skill level?** I'll tailor everything just for you!`
-                : `${timeKh} ខ្ញុំគឺ **MY DESIGN AI** — គ្រូ Design ផ្ទាល់ខ្លួនរបស់អ្នក! 🎨\n\nមុននឹងចាប់ផ្តើម **តើបងមានកម្រិតប៉ុន្មាន?** ខ្ញុំនឹងលៃតម្រូវការបង្រៀនសម្រាប់បងផ្ទាល់!`;
+                ? `${timeEn} I'm **MY DESIGN AI** — your personal design coach! 🎨\n\nHow can I help you jumpstart your creative journey today? Choose a topic below or type your own question:`
+                : `${timeKh} ខ្ញុំគឺ **MY DESIGN AI** — គ្រូ Design ផ្ទាល់ខ្លួនរបស់អ្នក! 🎨\n\nតើថ្ងៃនេះបងចង់ឱ្យខ្ញុំជួយពន្យល់ពីផ្នែកមួយណា? សូមជ្រើសរើសប្រធានបទខាងក្រោម ឬសួរខ្ញុំផ្ទាល់មក៖`;
             defaultChips = lang === 'en'
-                ? ["🟢 Beginner", "🟡 Intermediate", "🔵 Advanced"]
-                : ["🟢 ចាប់ផ្តើម", "🟡 មធ្យម", "🔵 ស្ទាត់ជំនាញ"];
+                ? ["How to get started", "What is this app?", "How to use the Pen Tool?", "How to remove objects?", "Design Certificate 🏆", "Take a Quiz 🎯"]
+                : ["ចាប់ផ្តើមដោយរបៀបណា", "App នេះជាអ្វី", "Pen Tool", "Inpainting Brush Tool", "វិញ្ញាបនបត្ររចនា 🏆", "ចង់ធ្វើតេស្ត 🎯"];
             setMessages([{ role: 'model', text: greetingMsg, chips: defaultChips, isTrainable: false }]);
             return;
         }
