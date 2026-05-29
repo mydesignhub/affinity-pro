@@ -216,18 +216,10 @@ const parseMultiChoiceQuestion = (botText) => {
 // ─── FOLLOW_UP_MAP (Design/Affinity topic chain) ──────────────────────────────
 const FOLLOW_UP_MAP = {
     // Marketing funnel chain
-    'App នេះជាអ្វី': 'App ប្រើបានដោយឥតគិតថ្លៃទេ?',
-    'what is this app': 'is the app free to use',
-    'App ប្រើបានដោយឥតគិតថ្លៃទេ?': 'ចាប់ផ្តើមដោយរបៀបណា',
-    'is the app free to use': 'how to get started',
-    'ចាប់ផ្តើមដោយរបៀបណា': 'ចង់ធ្វើតេស្ត',
-    'how to get started': 'take a quiz',
-    'វិញ្ញាបនបត្ររចនា 🏆': 'ចាប់ផ្តើមដោយរបៀបណា',
-    'design certificate': 'how to get started',
-    'ហេតុអ្វីប្រើ Affinity លើ PC': 'App ប្រើបានដោយឥតគិតថ្លៃទេ?',
-    'why use affinity on pc': 'is the app free to use',
-    'Affinity ធៀបនឹង Photoshop': 'ហេតុអ្វីប្រើ Affinity លើ PC',
-    'affinity vs photoshop': 'why use affinity on pc',
+    'App នេះជាអ្វី': 'App ប្រើបានដោយឥតគិតថ្លៃទេ?', 'what is this app': 'is the app free to use',
+    'App ប្រើបានដោយឥតគិតថ្លៃទេ?': 'ចាប់ផ្តើមដោយរបៀបណា', 'is the app free to use': 'how to get started',
+    'ចាប់ផ្តើមដោយរបៀបណា': 'ចង់ធ្វើតេស្ត', 'how to get started': 'take a quiz',
+    'វិញ្ញាបនបត្ររចនា 🏆': 'ចាប់ផ្តើមដោយរបៀបណា', 'design certificate': 'how to get started',
 
     // ── Design principles chain ────────────────────────────────────────────────
     'គោលការណ៍រចនា': 'អ្វីទៅជា Hierarchy?', 'design principles': 'visual hierarchy',
@@ -239,111 +231,47 @@ const FOLLOW_UP_MAP = {
     'Margin និង Padding ខុសគ្នាម៉េច?': 'តើ Rule of Thirds គឺជាអ្វី?', 'margin vs padding': 'what is the rule of thirds',
     'តើ Rule of Thirds គឺជាអ្វី?': 'Symmetry និង Asymmetry', 'what is the rule of thirds': 'symmetry vs asymmetry',
     'Symmetry និង Asymmetry': 'តើ Leading Lines ជាអ្វី?', 'symmetry vs asymmetry': 'leading lines',
-    'តើ Leading Lines ជាអ្វី?': 'តើ Framing ជាអ្វី?', 'leading lines': 'framing composition',
-    'តើ Framing ជាអ្វី?': 'តើ បច្ចេកទេស Squint Test ជាអ្វី?', 'framing composition': 'what is the squint test hierarchy',
-    'តើ បច្ចេកទេស Squint Test ជាអ្វី?': 'ទ្រឹស្តី Gestalt', 'what is the squint test hierarchy': 'gestalt principles',
     'ទ្រឹស្តី Gestalt': 'តើ Repetition ជាអ្វី?', 'gestalt principles': 'what is repetition',
     'តើ Repetition ជាអ្វី?': 'ក្បួនរចនាឡូហ្គោ (Logo Design)', 'what is repetition': 'rules of logo design',
-    'ក្បួនរចនាឡូហ្គោ (Logo Design)': 'តើ UI និង UX ជាអ្វី?', 'rules of logo design': 'what are ui and ux?',
-    'តើ UI និង UX ជាអ្វី?': 'Margin និង Padding ខុសគ្នាម៉េច?', 'what are ui and ux?': 'margin vs padding',
 
-    // ── Typography chain ───────────────────────────────────────────────────────
-    'អ្វីទៅជា Typography?': 'របៀបតម្រៀប Font ឱ្យស្អាត?', 'what is typography': 'how to pair fonts',
-    'របៀបតម្រៀប Font ឱ្យស្អាត?': 'Kerning និង Tracking ខុសគ្នាម៉េច?', 'how to pair fonts': 'kerning vs tracking',
-    'Kerning និង Tracking ខុសគ្នាម៉េច?': 'តើ Optical Kerning ជាអ្វី?', 'kerning vs tracking': 'optical vs metric kerning',
-    'តើ Optical Kerning ជាអ្វី?': 'Web Safe Fonts ជាអ្វី?', 'optical vs metric kerning': 'what are web safe fonts',
-    'Web Safe Fonts ជាអ្វី?': 'Artistic Text vs Frame Text', 'what are web safe fonts': 'artistic text vs frame text affinity',
+    // ── Vector (Designer) chain ────────────────────────────────────────────────
+    'Pen Tool': 'របៀបប្រើ Node Tool លើ PC', 'How to use the Pen Tool?': 'node tool vector editing',
+    'របៀបប្រើ Node Tool លើ PC': 'Corner Tool (បំពត់ជ្រុង)', 'node tool vector editing': 'How to use the Corner Tool?',
+    'Corner Tool (បំពត់ជ្រុង)': 'Pencil Tool និង Rope Stabilizer', 'How to use the Corner Tool?': 'Pencil Tool Workflow',
+    'Pencil Tool និង Rope Stabilizer': 'Pen Tool', 'Pencil Tool Workflow': 'How to use the Pen Tool?',
+    
+    'Shape Builder Tool 🔲': 'Geometry Operations (Boolean)', 'What is the Shape Builder Tool?': 'Affinity Boolean Geometry',
+    'Geometry Operations (Boolean)': 'Shape Builder Tool 🔲', 'Affinity Boolean Geometry': 'What is the Shape Builder Tool?',
+    
+    'Vector Warp Groups': 'Contour Tool (ពង្រីករាង)', 'Non-destructive Vector Warping': 'Affinity Contour Tool',
+    'Contour Tool (ពង្រីករាង)': 'Appearance Panel (ការតុបតែង)', 'Affinity Contour Tool': 'Affinity Appearance Panel',
+    
+    'Power Duplicate (Ctrl+J)': 'Symbols Panel (សមកាលកម្ម)', 'Duplicate and Repeat': 'Symbols Panel (Synced Components)',
+    'Symbols Panel (សមកាលកម្ម)': 'Power Duplicate (Ctrl+J)', 'Symbols Panel (Synced Components)': 'Duplicate and Repeat',
 
-    // ── Color chain ────────────────────────────────────────────────────────────
-    'អត្ថន័យនៃពណ៌ (Color Psychology)': 'ក្បួនផ្គូផ្គងពណ៌ (Color Harmonies)', 'color psychology': 'color harmonies',
-    'ក្បួនផ្គូផ្គងពណ៌ (Color Harmonies)': 'ពណ៌ក្តៅ និងពណ៌ត្រជាក់ (Warm vs Cool Colors)', 'color harmonies': 'warm vs cool colors',
-    'ពណ៌ក្តៅ និងពណ៌ត្រជាក់ (Warm vs Cool Colors)': 'Shades, Tints, និង Tones ខុសគ្នាម៉េច?', 'warm vs cool colors': 'shades tints tones',
-    'Shades, Tints, និង Tones ខុសគ្នាម៉េច?': 'តើ HSL គឺជាអ្វី?', 'shades tints tones': 'what is hsl',
-    'តើ Color Wheel មានប៉ុន្មានប្រភេទ?': 'ពណ៌បឋម និងពណ៌រង (Primary & Secondary)', 'rgb vs ryb color wheel': 'primary and secondary colors',
-    'ពណ៌បឋម និងពណ៌រង (Primary & Secondary)': 'ក្បួនផ្គូផ្គងពណ៌ (Color Harmonies)', 'primary and secondary colors': 'color harmonies',
-    'តើ HSL គឺជាអ្វី?': 'តើ RGB និង CMYK ខុសគ្នាម៉េច?', 'what is hsl': 'rgb vs cmyk',
-    'តើ RGB និង CMYK ខុសគ្នាម៉េច?': 'ប្រភេទ File', 'rgb vs cmyk': 'file formats',
+    // ── Pixel (Photo) chain ────────────────────────────────────────────────────
+    'Inpainting Brush Tool': 'Clone vs Healing Brush Tool', 'How to remove objects?': 'Clone vs Healing Brush',
+    'Clone vs Healing Brush Tool': 'Frequency Separation', 'Clone vs Healing Brush': 'Frequency Separation Skin Retouch',
+    'Frequency Separation': 'Inpainting Brush Tool', 'Frequency Separation Skin Retouch': 'How to remove objects?',
+    
+    'Selection Tools (ជ្រើសរើសវត្ថុ)': 'Quick Mask Mode (Q)', 'Selection Tools Mastery': 'Quick Mask Mode',
+    'Quick Mask Mode (Q)': 'Channels Panel', 'Quick Mask Mode': 'Channels Panel & RGB isolation',
+    
+    'Develop Persona (កែរូប RAW)': 'Tone Mapping Persona', 'Develop Persona (RAW Processing)': 'HDR Tone Mapping Persona',
+    'Focus Merge (រូបច្បាស់កម្រិតជ្រៅ)': 'Panorama Merge (តរូបភាពធំ)', 'Focus Merge (Macro Stacking)': 'Panorama Merge Workflow',
+    
+    'Adjustment Layers Mastery': 'Applying LUTs',
 
-    // ── Print production chain ─────────────────────────────────────────────────
-    'ប្រភេទ File': 'តើ Resolution (PPI) ប៉ុន្មាន?', 'file formats': 'best resolution for printing?',
-    'តើ Resolution (PPI) ប៉ុន្មាន?': 'តើ Bleed គឺជាអ្វី?', 'best resolution for printing?': 'what is a bleed',
-    'តើ Bleed គឺជាអ្វី?': 'ប្រភេទ File', 'what is a bleed': 'file formats',
-
-    // ── Poster design chain ────────────────────────────────────────────────────
-    'របៀបរចនា Poster': 'តើទំហំ Poster ស្តង់ដារមានអ្វីខ្លះ?', 'poster design': 'poster sizes and layouts',
-    'តើទំហំ Poster ស្តង់ដារមានអ្វីខ្លះ?': 'តើ Bleed គឺជាអ្វី?', 'poster sizes and layouts': 'what is a bleed',
-
-    // ── Freelance chain ────────────────────────────────────────────────────────
-    'របៀបគិតលុយអតិថិជន? 💰': 'របៀបដោះស្រាយភ្ញៀវរអ៊ូ?', 'how to price my work? 💰': 'dealing with difficult clients?',
-    'របៀបដោះស្រាយភ្ញៀវរអ៊ូ?': 'របៀបរៀបចំ Portfolio?', 'dealing with difficult clients?': 'freelance tips',
-    'របៀបរៀបចំ Portfolio?': 'តើ Plagiarism គឺជាអ្វី?', 'freelance tips': 'what is plagiarism',
-    'តើ Plagiarism គឺជាអ្វី?': 'ក្បួនរចនាឡូហ្គោ (Logo Design)', 'what is plagiarism': 'rules of logo design',
-
-    // ── Affinity tools chain ───────────────────────────────────────────────────
-    'ប៊ូតុងបញ្ជា Modifier Keys ⌨️': 'ម៉ឺនុយរហ័ស Context Menu 🖱️', 'affinity modifier keys pc': 'pc context menu shortcuts',
-    'ម៉ឺនុយរហ័ស Context Menu 🖱️': 'គន្លឹះក្តារចុចសំខាន់ៗ ⌨️', 'pc context menu shortcuts': 'essential keyboard shortcuts affinity',
-    'គន្លឹះក្តារចុច និងកណ្តុរ ⌨️': 'Shortcut ផ្លូវកាត់សំខាន់ៗមានអ្វីខ្លះ?', 'pc keyboard and mouse tips': 'essential keyboard shortcuts affinity',
-    'Shortcut ផ្លូវកាត់សំខាន់ៗមានអ្វីខ្លះ?': 'តិចនិក Power Duplicate', 'essential keyboard shortcuts affinity': 'power duplicate shortcut cmd j',
-    'តិចនិក Power Duplicate': 'Snapping ក្នុង Affinity', 'power duplicate shortcut cmd j': 'snapping tool affinity',
-    'Snapping ក្នុង Affinity': 'មុខងារ Artboards', 'snapping tool affinity': 'affinity artboards',
-    'ការប្រើប្រាស់ Drawing Tablet & Stylus ✏️': 'ប៊ូតុងបញ្ជា Modifier Keys ⌨️', 'drawing tablet stylus control pc': 'affinity modifier keys pc',
-    'របៀបរៀបចំ Studio Panels លើ PC': 'ប៊ូតុងបញ្ជា Modifier Keys ⌨️', 'managing pc studio panels': 'affinity modifier keys pc',
-    'របៀបរើសវត្ថុច្រើនលើ PC 🖱️': 'Snapping ក្នុង Affinity', 'multi select objects on pc': 'snapping tool affinity',
-    'របៀប Zoom និងរំកិលប្លង់លើ PC 🔍': 'ប៊ូតុងបញ្ជា Modifier Keys ⌨️', 'pc zoom and pan canvas': 'affinity modifier keys pc',
-    'របៀបបូមពណ៌លើ PC 💧': 'Global Colors (ប្តូរពណ៌ម្តងទាំងអស់)', 'how to use color picker eyedropper pc': 'affinity global colors swatches',
-    'របៀប Save និងរក្សាទុកឯកសារលើ PC 💾': 'ការកាត់រូប Export (Slices)', 'saving and file backup affinity pc': 'export persona slices',
-    'ការកាត់រូប Export (Slices)': 'មុខងារ Artboards', 'export persona slices': 'affinity artboards',
-    'មុខងារ Artboards': 'Affinity Symbols គឺអ្វី?', 'affinity artboards': 'affinity symbols ui design',
-    'Affinity Symbols គឺអ្វី?': 'Global Colors (ប្តូរពណ៌ម្តងទាំងអស់)', 'affinity symbols ui design': 'affinity global colors swatches',
-    'Global Colors (ប្តូរពណ៌ម្តងទាំងអស់)': 'Copy Effect ពី Layer មួយទៅមួយទៀត', 'affinity global colors swatches': 'paste fx layer styles affinity',
-    'Copy Effect ពី Layer មួយទៅមួយទៀត': 'របៀបរក្សាទុកក្នុង Assets Panel', 'paste fx layer styles affinity': 'affinity assets panel',
-    'របៀបរក្សាទុកក្នុង Assets Panel': 'Affinity Symbols គឺអ្វី?', 'affinity assets panel': 'affinity symbols ui design',
-    'History Panel (Time Travel)': 'តើ Live Filters ក្នុង Affinity ជាអ្វី?', 'affinity history panel snapshot': 'affinity live filters non-destructive',
-    'តើ Live Filters ក្នុង Affinity ជាអ្វី?': 'Clipping និង Masking ក្នុង Affinity', 'affinity live filters non-destructive': 'clipping vs masking affinity layers',
-    'Clipping និង Masking ក្នុង Affinity': 'Blend Ranges (លាក់ពណ៌លឿនបំផុត)', 'clipping vs masking affinity layers': 'affinity blend ranges remove white background',
-    'Blend Ranges (លាក់ពណ៌លឿនបំផុត)': 'Copy Effect ពី Layer មួយទៅមួយទៀត', 'affinity blend ranges remove white background': 'paste fx layer styles affinity',
-    'របៀបប្រើប្រាស់ Macros និង Brushes': 'History Panel (Time Travel)', 'macros and brushes affinity photo': 'affinity history panel snapshot',
-    'តិចនិកប្រើ Affinity Personas': 'Designer Persona vs Pixel Persona', 'affinity personas explained': 'designer persona vs pixel persona workflow',
-    'Designer Persona vs Pixel Persona': 'Image Layer vs Pixel Layer', 'designer persona vs pixel persona workflow': 'image layer vs pixel layer terminology',
-    'Image Layer vs Pixel Layer': 'តើ Rasterize មានន័យថាម៉េច?', 'image layer vs pixel layer terminology': 'what does rasterize mean image layer to pixel layer',
-    'តើ Rasterize មានន័យថាម៉េច?': 'Clipping និង Masking ក្នុង Affinity', 'what does rasterize mean image layer to pixel layer': 'clipping vs masking affinity layers',
-    'Stroke vs Fill': 'Geometry Operations (Add, Subtract, Intersect)', 'stroke vs fill affinity expand stroke': 'affinity boolean geometry pathfinder',
-    'Geometry Operations (Add, Subtract, Intersect)': 'តើ Shape Builder Tool ប្រើធ្វើអី? 🔲', 'affinity boolean geometry pathfinder': 'affinity shape builder tool interactive',
-    'តើ Shape Builder Tool ប្រើធ្វើអី? 🔲': 'Stroke vs Fill', 'affinity shape builder tool interactive': 'stroke vs fill affinity expand stroke',
-    'Pen Tool និង Pencil Tool ខុសគ្នាម៉េច?': 'របៀបប្រើ Node Tool លើ PC', 'pen tool vs pencil tool affinity': 'node tool vector editing',
-    'របៀបប្រើ Node Tool លើ PC': 'Geometry Operations (Add, Subtract, Intersect)', 'node tool vector editing': 'affinity boolean geometry pathfinder',
-    'Artistic Text vs Frame Text': 'សរសេរអក្សរតាមខ្សែកោង', 'artistic text vs frame text affinity': 'text on a path affinity designer',
-    'សរសេរអក្សរតាមខ្សែកោង': 'Artistic Text vs Frame Text', 'text on a path affinity designer': 'artistic text vs frame text affinity',
-    'របៀបដាក់ Layer Effects (FX) ✨': 'Copy Effect ពី Layer មួយទៅមួយទៀត', 'layer effects fx panel pc': 'paste fx layer styles affinity',
-    'របៀបគូរទម្រង់ 3D (Isometric Grid)': 'Pen Tool និង Pencil Tool ខុសគ្នាម៉េច?', 'isometric grid affinity pc': 'pen tool vs pencil tool affinity',
-    'Affinity V3 និងអនាគត (Canva)': 'Snapping ក្នុង Affinity', 'affinity v3 updates canva integration': 'snapping tool affinity',
-    'តើ Affinity Photo និង Designer ខុសគ្នាម៉េច?': 'Affinity V3 និងអនាគត (Canva)', 'affinity trinity photo vs designer vs publisher studio link': 'affinity v3 updates canva integration',
-
-    // ── Photo editing chain ────────────────────────────────────────────────────
-    'កាត់តរូបភាព (Photomanipulation)': 'Clipping និង Masking ក្នុង Affinity', 'photomanipulation techniques': 'clipping vs masking affinity layers',
-    'រលាយវត្ថុនិង Background បញ្ចូលគ្នា 🌪️': 'Blend Ranges (លាក់ពណ៌លឿនបំផុត)', 'how to seamlessly blend subjects compositing 🌪️': 'affinity blend ranges remove white background',
-    'ការធ្វើឱ្យរូបស្លេកៗ (Fading) 🌫️': 'Clipping និង Masking ក្នុង Affinity', 'how to fade images properly masking 🌫️': 'clipping vs masking affinity layers',
-    'របៀបប្តូរថ្ងៃទៅយប់ (Day to Night) 🌙': 'Color Grading (Split Toning)', 'how to turn day into night photomanipulation? 🌙': 'split toning color grading affinity',
-    'Color Grading (Split Toning)': 'ពណ៌ Cinematic', 'split toning color grading affinity': 'cinematic color grading teal orange',
-    'ពណ៌ Cinematic': 'Color Grading (Split Toning)', 'cinematic color grading teal orange': 'split toning color grading affinity',
-    'តើ Dodge និង Burn គឺជាអ្វី?': 'ព្រិល Background', 'dodge and burn techniques retouching': 'depth of field blurring affinity',
-    'ព្រិល Background': 'Clipping និង Masking ក្នុង Affinity', 'depth of field blurring affinity': 'clipping vs masking affinity layers',
-    'របៀបបង្កើតស្រមោលឱ្យពិតៗ 👥': 'Clipping និង Masking ក្នុង Affinity', 'mastering realistic shadows drop shadow 👥': 'clipping vs masking affinity layers',
-    'របៀបកាត់សក់ឬ Background ឱ្យស្អាត': 'Clipping និង Masking ក្នុង Affinity', 'precise background removal refine edge': 'clipping vs masking affinity layers',
-    'ប្តូរវត្ថុទៅជាមាស': 'Blend Ranges (លាក់ពណ៌លឿនបំផុត)', 'turn anything into gold effect metallic': 'affinity blend ranges remove white background',
-    'របៀបកែពន្លឺ ក្នុង Affinity': 'Color Grading (Split Toning)', 'how to edit light exposure in affinity curves': 'split toning color grading affinity',
-    'Smart Object ជាអ្វី?': 'Affinity Symbols គឺអ្វី?', 'what is a smart object': 'affinity symbols ui design',
-    'តើ Blend Modes ដំណើរការយ៉ាងម៉េច?': 'Blend Ranges (លាក់ពណ៌លឿនបំផុត)', 'how do blend modes work': 'affinity blend ranges remove white background',
-    'អ្វីទៅជា Vector និង Raster?': 'Stroke vs Fill', 'vector vs raster': 'stroke vs fill affinity expand stroke',
-    'ពន្យល់ពី Blend Modes ទាំងអស់ 🌈': 'Blend Ranges (លាក់ពណ៌លឿនបំផុត)', 'explain all blend modes': 'affinity blend ranges remove white background',
-    'របៀបបង្កើត Text Effects ស្អាតៗ ✨': 'Clipping និង Masking ក្នុង Affinity', 'how to create premium text effects': 'clipping vs masking affinity layers',
-    'រូបភាពខ្ញុំព្រិល': 'Image Layer vs Pixel Layer', 'my image is blurry pixelated resolving': 'image layer vs pixel layer terminology',
-
-    // ── Beginner tools chain ───────────────────────────────────────────────────
-    'Gradient Tool': 'Clipping និង Masking ក្នុង Affinity', 'gradient tool affinity': 'clipping vs masking affinity layers',
-    'Group & Ungroup Objects': 'មុខងារ Artboards', 'group ungroup objects affinity': 'affinity artboards',
-    'Align & Distribute': 'តិចនិក Power Duplicate', 'align distribute affinity': 'power duplicate shortcut cmd j',
-    'Export File (PNG/JPG)': 'ការកាត់រូប Export (Slices)', 'basic export affinity': 'export persona slices',
+    // ── Layout (Publisher) chain ───────────────────────────────────────────────
+    'Artistic Text vs Frame Text': 'Text Styles (កំណត់ស្តង់ដារអក្សរ)', 'Text Tools': 'Mastering Text Styles',
+    'Text Styles (កំណត់ស្តង់ដារអក្សរ)': 'Typography Panel (ក្បូរក្បាច់អក្សរ)', 'Mastering Text Styles': 'Typography Panel Secrets',
+    'Typography Panel (ក្បូរក្បាច់អក្សរ)': 'Text Wrap (រុំអក្សរ)', 'Typography Panel Secrets': 'Text Wrapping Workflow',
+    
+    'Master Pages និង Artboards': 'Bleed, Margins & Slug', 'Master Pages vs Artboards': 'Bleed, Margins & Print Standards',
+    'Bleed, Margins & Slug': 'Preflight Panel (ឆែកកំហុស)', 'Bleed, Margins & Print Standards': 'Preflight Panel (Live Check)',
+    'Preflight Panel (ឆែកកំហុស)': 'PDF Export Settings', 'Preflight Panel (Live Check)': 'CMYK vs RGB Export',
+    
+    'Data Merge (ទាញទិន្នន័យស្វ័យប្រវត្តិ)': 'Packaging Files (ប្រមូល File)', 'Automating with Data Merge': 'Packaging Files Workflow'
 };
 
 // ─────────────────────────────────────────────────────────────────────────────
