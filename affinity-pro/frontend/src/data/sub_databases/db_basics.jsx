@@ -19,6 +19,42 @@ export const basicsData = [
         chips_en: ["Tell me a joke 😆", "How to find inspiration 💡"]
     },
     {
+        primaryKeys: ['កម្មវិធីគាំង / ខឹង 😤', 'Software crashed! 😤'],
+        keys: ['crash', 'angry', 'lost work', 'ខឹង', 'គាំង', 'បាត់ការងារ', 'error'],
+        regex: ['crash', 'angry', 'ខឹង', 'គាំង', 'បាត់'],
+        answer: `បាទ ខ្ញុំយល់អារម្មណ៍មួយនេះ! គ្មានអ្វីឈឺចាប់ជាងការរចនាជិតរួចរាល់ ស្រាប់តែកម្មវិធីលោតគាំង (Crash) ដោយមិនបាន Save នោះទេ។ 😤\n\nដកដង្ហើមវែងៗ ដើរចេញពីអេក្រង់មួយភ្លែតសិនទៅបង។ ពេលត្រឡប់មកវិញ កុំភ្លេចឆែកមើលមុខងារ Auto-Save / Recovery ក្រែងលោអាចស្រោចស្រង់បានខ្លះ។ ហើយមេរៀនថ្ងៃនេះគឺ៖ "Ctrl + S (Save) គឺជាមិត្តដ៏ល្អបំផុតរបស់អ្នករចនា!" 💙`,
+        answer_en: `I completely feel your pain! There is nothing more frustrating than a software crash right before you hit Save. 😤\n\nTake a deep breath and step away from the screen for a minute. When you come back, check your Auto-Save or Recovery folder. Let this be a painful but valuable reminder: "Ctrl + S (Save) is a designer's best friend!" 💙`,
+        chips: ["របៀបរក្សារូបភាពកុំឱ្យបាត់ File (Missing Links)? 🔗", "របៀបដាក់ឈ្មោះ File និងរៀបចំ Folder សម្រាប់ Designer 📁", "តើការកាត់តរូបបែប Non-Destructive ជាអ្វី? 🔄"],
+        chips_en: ["How to prevent missing links in Illustrator? 🔗", "File naming conventions for designers? 📁", "What is Non-Destructive Editing? 🔄"]
+    },
+    {
+        primaryKeys: ['មានអារម្មណ៍ថាស្មុគស្មាញ រៀនមិនចេះចប់ 🤯', 'Feeling overwhelmed by design 🤯'],
+        keys: ['overwhelmed', 'too much', 'ពិបាករៀន', 'ស្មុគស្មាញ', 'រៀនមិនចូល', 'hard to learn', 'give up'],
+        regex: ['overwhelm', 'too much', 'ពិបាករៀន', 'ស្មុគស្មាញ', 'រៀនមិនចូល', 'give up'],
+        answer: `បាទ វាជារឿងធម្មតាទេបង! វិស័យ Graphic Design មានទំហំធំធេងណាស់ (មានទាំង UI/UX, 3D, Motion, Print) គ្មាននរណាម្នាក់ចេះគ្រប់យ៉ាងក្នុងពេលតែមួយយប់នោះទេ។ 🤯\n\n💡 **ដំបូន្មានរបស់ខ្ញុំ៖** កុំព្យាយាមរៀនគ្រប់កម្មវិធីទាំងអស់។ ជ្រើសរើស "ជំនាញមួយ" ដែលអ្នកចូលចិត្តជាងគេ (ឧ. ការរចនា Logo) ហើយផ្តោតលើវាឱ្យខ្លាំងសិន។ ចាប់ផ្តើមពីមូលដ្ឋានគ្រឹះ ខ្ញុំនៅទីនេះដើម្បីណែនាំអ្នកមួយជំហានម្តងៗ! តោះចាប់ផ្តើមពី Basic វិញទេ?`,
+        answer_en: `It is completely normal to feel this way! The design world is massive (UI/UX, 3D, Motion, Print). No one masters it overnight. 🤯\n\n💡 **My Advice:** Stop trying to learn every software at once. Pick ONE niche you enjoy (like Logo Design) and master the fundamentals first. I am here to guide you step-by-step. Do you want to start with the simple basics today?`,
+        chips: ["តើក្បួនចាប់ផ្តើមរៀន Design មានប៉ុន្មានជំហាន? 🚀", "តើ Graphic Design ជាអ្វី? 🎨"],
+        chips_en: ["How to begin as a Graphic Designer? 🚀", "What is Graphic Design? 🎨"]
+    },
+    {
+        primaryKeys: ['តើ AI នឹងដណ្តើមការងារ Designer ទេ? 🤖', 'Will AI replace designers? 🤖'],
+        keys: ['ai replace', 'lose job', 'ខ្លាច ai', 'ai ដណ្តើមការងារ', 'ai takes over', 'ai art'],
+        regex: ['replace', 'lose job', 'ដណ្តើមការងារ', 'ខ្លាច ai'],
+        answer: `បាទ នេះជាក្តីបារម្ភរបស់មនុស្សជាច្រើន! ប៉ុន្តែសូមកុំភ័យអី៖ **AI មិនមកដណ្តើមការងារអ្នករចនាទេ តែអ្នករចនាដែលចេះប្រើ AI នឹងដណ្តើមការងារអ្នកដែលមិនចេះប្រើវា!** 🤖\n\nAI ដូចជា Midjourney អាចបង្កើតរូបភាពបានលឿន ប៉ុន្តែវាគ្មាន "ការយល់ចិត្ត" (Empathy) និងមិនដឹងពី "គោលដៅអាជីវកម្ម" របស់អតិថិជនដូចមនុស្សទេ។ អ្នករចនាគឺជា "អ្នកដោះស្រាយបញ្ហា" មិនមែនគ្រាន់តែជាអ្នកគូររូបនោះទេ។`,
+        answer_en: `This is a very common fear! But don't worry: **AI will not replace designers. Designers who use AI will replace designers who don't!** 🤖\n\nTools like Midjourney can generate images quickly, but they lack human 'Empathy' and don't understand complex 'Business Goals'. A true Graphic Designer is a visual problem-solving, not just a pixel-pusher. You are irreplaceable!`,
+        chips: ["ជំនាញចាំបាច់សម្រាប់ Designer 🧠", "កម្មវិធីរចនាស្តង់ដារ (Design Software) 💻"],
+        chips_en: ["Skills to be a Graphic Designer 🧠", "Standard Design Software 💻"]
+    },
+    {
+        primaryKeys: ['ខ្ញុំធ្វើគម្រោងរួចរាល់ហើយ! 🎉', 'I finished my design project! 🎉'],
+        keys: ['finished', 'done', 'completed', 'សប្បាយចិត្ត', 'ធ្វើរួចហើយ', 'ចប់ហើយ', 'ជោគជ័យ'],
+        regex: ['finish', 'done', 'complete', 'សប្បាយចិត្ត', 'ធ្វើរួច', 'ចប់ហើយ', 'ជោគជ័យ'],
+        answer: `បាទ អបអរសាទរ! 🎉 នេះជាអារម្មណ៍ដ៏អស្ចារ្យបំផុតសម្រាប់អ្នករចនា ពេលឃើញស្នាដៃខ្លួនឯងលេចចេញជារូបរាង! អ្នកពិតជាធ្វើបានល្អណាស់។\n\n💡 **ជំហានបន្ទាប់៖** កុំទុកវាចោលក្នុងកុំព្យូទ័រ! រៀបចំវាដាក់ក្នុង Portfolio របស់អ្នក ហើយបង្ហោះវានៅលើបណ្តាញសង្គម ដើម្បីឱ្យពិភពលោកបានឃើញពីសមត្ថភាពរបស់អ្នក។`,
+        answer_en: `Congratulations! 🎉 There is no better feeling for a designer than seeing a project finally come to life. You should be very proud of your hard work!\n\n💡 **Next Step:** Don't just leave it sitting on your hard drive! Format it into a beautiful Case Study for your Portfolio and share it with the world.`,
+        chips: ["របៀបរៀបចំ Portfolio? 💼", "របៀបប្រគល់ឯកសារចុងក្រោយ (File Handover) 📁"],
+        chips_en: ["Freelance Portfolio Tips 💼", "How to handover final files 📁"]
+    },
+    {
         primaryKeys: ['អរុណសួស្តី', 'good morning'],
         keys: ['morning', 'night', 'រាត្រីសួស្តី', 'ទិវាសួស្តី', 'goodnight', 'afternoon'],
         regex: ['\\bgood morning\\b', '\\bgood night\\b', '\\bgood afternoon\\b', 'អរុណសួស្តី', 'រាត្រីសួស្តី', 'ទិវាសួស្តី'],

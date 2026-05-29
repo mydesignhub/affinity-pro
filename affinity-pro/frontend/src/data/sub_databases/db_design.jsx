@@ -58,75 +58,7 @@ export const designData = [
     },
 
     // ------------------------------------------
-    // 1. ADVANCED GENERAL CHAT & EMPATHY
-    // ------------------------------------------
-    {
-        primaryKeys: ['ចង់ស្តាប់រឿងកំប្លែង 😆', 'tell me a joke'],
-        keys: ['funny', 'សើច', 'ធុញ', 'make me laugh', 'កំប្លែង', 'joke'],
-        regex: ['joke', 'funny', 'កំប្លែង', 'សើច', 'ធុញ'],
-        answer: `បាទ ហាហា! ចង់ស្តាប់រឿងកំប្លែងមែនទេ? \n\nតើអ្នកដឹងទេថាហេតុអ្វីបានជា Graphic Designer តែងតែជោគជ័យក្នុងរឿងស្នេហា? \nព្រោះពួកគេដឹងពីរបៀបស្វែងរក **Alignment (ការតម្រឹម)** និង **Balance (តុល្យភាព)** នៅក្នុងជីវិតជានិច្ច! 😆 រួចចុះអ្នកវិញ តើចង់រៀនពីអីគេថ្ងៃនេះ?`,
-        answer_en: `Haha! You want a design joke? \n\nWhy did the graphic designer break up with their partner? Because they had 'no chemistry' and way too much 'contrast'! 😆 Feeling better? What are we learning today?`,
-        chips: ["តើ គោលការណ៍រចនា (Principles) មានអ្វីខ្លះ? 📐", "តើ Typography Anatomy ជាអ្វី? 🔤"],
-        chips_en: ["What are the Core Design Principles? 📐", "Explain Typography Anatomy 🔤"]
-    },
-    {
-        primaryKeys: ['ហត់', 'tired'],
-        keys: ['stress', 'ស្ត្រេស', 'ពិបាក', 'ឈឺក្បាល', 'stressed', 'exhausted', 'burnout'],
-        regex: ['tired', 'stress', 'ហត់', 'ស្ត្រេស', 'ឈឺក្បាល', 'ពិបាក', 'exhausted', 'burnout'],
-        answer: `បាទ អូ! សម្រាកសិនទៅបង! ☕ ការសម្លឹងអេក្រង់យូរអាចធ្វើឱ្យស្ត្រេសនិងឈឺភ្នែក ថែមទាំងគិតអ្វីលែងចេញទៀត (Creative Block)។ \n\n💡 **សាកល្បងក្បួន 20-20-20៖** រៀងរាល់ ២០នាទី មើលទៅកន្លែងឆ្ងាយ២០ហ្វីត រយៈពេល២០វិនាទី។ \n\nទៅផឹកទឹក និងស្តាប់ចម្រៀងបន្តិចទៅ ចាំមករៀនបន្ត! ខ្ញុំរង់ចាំនៅទីនេះជានិច្ច! 💙`,
-        answer_en: `Oh no, please take a break! ☕ Staring at a screen for too long causes 'Creative Block' and terrible eye strain. \n\n💡 **Try the 20-20-20 rule:** Every 20 mins, look 20 feet away for 20 seconds. \n\nGo grab some water and listen to your favorite song. Your designs will be waiting for you when you get back! 💙`,
-        chips: ["ចង់ស្តាប់រឿងកំប្លែង 😆", "តើអត្ថន័យនៃពណ៌នីមួយៗតំណាងឱ្យអ្វី? 🧠"],
-        chips_en: ["tell me a joke", "What is Color Psychology? 🧠"]
-    },
-    {
-        primaryKeys: ['កម្មវិធីគាំង / ខឹង 😤', 'Software crashed! 😤'],
-        keys: ['crash', 'angry', 'lost work', 'ខឹង', 'គាំង', 'បាត់ការងារ', 'error'],
-        regex: ['crash', 'angry', 'ខឹង', 'គាំង', 'បាត់'],
-        answer: `បាទ ខ្ញុំយល់អារម្មណ៍មួយនេះ! គ្មានអ្វីឈឺចាប់ជាងការរចនាជិតរួចរាល់ ស្រាប់តែកម្មវិធីលោតគាំង (Crash) ដោយមិនបាន Save នោះទេ។ 😤\n\nដកដង្ហើមវែងៗ ដើរចេញពីអេក្រង់មួយភ្លែតសិនទៅបង។ ពេលត្រឡប់មកវិញ កុំភ្លេចឆែកមើលមុខងារ Auto-Save / Recovery ក្រែងលោអាចស្រោចស្រង់បានខ្លះ។ ហើយមេរៀនថ្ងៃនេះគឺ៖ "Ctrl + S (Save) គឺជាមិត្តដ៏ល្អបំផុតរបស់អ្នករចនា!" 💙`,
-        answer_en: `I completely feel your pain! There is nothing more frustrating than a software crash right before you hit Save. 😤\n\nTake a deep breath and step away from the screen for a minute. When you come back, check your Auto-Save or Recovery folder. Let this be a painful but valuable reminder: "Ctrl + S (Save) is a designer's best friend!" 💙`,
-        chips: ["របៀបរក្សារូបភាពកុំឱ្យបាត់ File (Missing Links)? 🔗", "របៀបដាក់ឈ្មោះ File និងរៀបចំ Folder សម្រាប់ Designer 📁", "តើការកាត់តរូបបែប Non-Destructive ជាអ្វី? 🔄"],
-        chips_en: ["How to prevent missing links in Illustrator? 🔗", "File naming conventions for designers? 📁", "What is Non-Destructive Editing? 🔄"]
-    },
-    {
-        primaryKeys: ['មានអារម្មណ៍ថាស្មុគស្មាញ រៀនមិនចេះចប់ 🤯', 'Feeling overwhelmed by design 🤯'],
-        keys: ['overwhelmed', 'too much', 'ពិបាករៀន', 'ស្មុគស្មាញ', 'រៀនមិនចូល', 'hard to learn', 'give up'],
-        regex: ['overwhelm', 'too much', 'ពិបាករៀន', 'ស្មុគស្មាញ', 'រៀនមិនចូល', 'give up'],
-        answer: `បាទ វាជារឿងធម្មតាទេបង! វិស័យ Graphic Design មានទំហំធំធេងណាស់ (មានទាំង UI/UX, 3D, Motion, Print) គ្មាននរណាម្នាក់ចេះគ្រប់យ៉ាងក្នុងពេលតែមួយយប់នោះទេ។ 🤯\n\n💡 **ដំបូន្មានរបស់ខ្ញុំ៖** កុំព្យាយាមរៀនគ្រប់កម្មវិធីទាំងអស់។ ជ្រើសរើស "ជំនាញមួយ" ដែលអ្នកចូលចិត្តជាងគេ (ឧ. ការរចនា Logo) ហើយផ្តោតលើវាឱ្យខ្លាំងសិន។ ចាប់ផ្តើមពីមូលដ្ឋានគ្រឹះ ខ្ញុំនៅទីនេះដើម្បីណែនាំអ្នកមួយជំហានម្តងៗ! តោះចាប់ផ្តើមពី Basic វិញទេ?`,
-        answer_en: `It is completely normal to feel this way! The design world is massive (UI/UX, 3D, Motion, Print). No one masters it overnight. 🤯\n\n💡 **My Advice:** Stop trying to learn every software at once. Pick ONE niche you enjoy (like Logo Design) and master the fundamentals first. I am here to guide you step-by-step. Do you want to start with the simple basics today?`,
-        chips: ["តើក្បួនចាប់ផ្តើមរៀន Design មានប៉ុន្មានជំហាន? 🚀", "តើ Graphic Design ជាអ្វី? 🎨"],
-        chips_en: ["How to begin as a Graphic Designer? 🚀", "What is Graphic Design? 🎨"]
-    },
-    {
-        primaryKeys: ['តើ AI នឹងដណ្តើមការងារ Designer ទេ? 🤖', 'Will AI replace designers? 🤖'],
-        keys: ['ai replace', 'lose job', 'ខ្លាច ai', 'ai ដណ្តើមការងារ', 'ai takes over', 'ai art'],
-        regex: ['replace', 'lose job', 'ដណ្តើមការងារ', 'ខ្លាច ai'],
-        answer: `បាទ នេះជាក្តីបារម្ភរបស់មនុស្សជាច្រើន! ប៉ុន្តែសូមកុំភ័យអី៖ **AI មិនមកដណ្តើមការងារអ្នករចនាទេ តែអ្នករចនាដែលចេះប្រើ AI នឹងដណ្តើមការងារអ្នកដែលមិនចេះប្រើវា!** 🤖\n\nAI ដូចជា Midjourney អាចបង្កើតរូបភាពបានលឿន ប៉ុន្តែវាគ្មាន "ការយល់ចិត្ត" (Empathy) និងមិនដឹងពី "គោលដៅអាជីវកម្ម" របស់អតិថិជនដូចមនុស្សទេ។ អ្នករចនាគឺជា "អ្នកដោះស្រាយបញ្ហា" មិនមែនគ្រាន់តែជាអ្នកគូររូបនោះទេ។`,
-        answer_en: `This is a very common fear! But don't worry: **AI will not replace designers. Designers who use AI will replace designers who don't!** 🤖\n\nTools like Midjourney can generate images quickly, but they lack human 'Empathy' and don't understand complex 'Business Goals'. A true Graphic Designer is a visual problem-solver and a strategic thinker, not just a pixel-pusher. You are irreplaceable!`,
-        chips: ["ជំនាញចាំបាច់សម្រាប់ Designer 🧠", "កម្មវិធីរចនាស្តង់ដារ (Design Software) 💻"],
-        chips_en: ["Skills to be a Graphic Designer 🧠", "Standard Design Software 💻"]
-    },
-    {
-        primaryKeys: ['ខ្ញុំធ្វើគម្រោងរួចរាល់ហើយ! 🎉', 'I finished my design project! 🎉'],
-        keys: ['finished', 'done', 'completed', 'សប្បាយចិត្ត', 'ធ្វើរួចហើយ', 'ចប់ហើយ', 'ជោគជ័យ'],
-        regex: ['finish', 'done', 'complete', 'សប្បាយចិត្ត', 'ធ្វើរួច', 'ចប់ហើយ', 'ជោគជ័យ'],
-        answer: `បាទ អបអរសាទរ! 🎉 នេះជាអារម្មណ៍ដ៏អស្ចារ្យបំផុតសម្រាប់អ្នករចនា ពេលឃើញស្នាដៃខ្លួនឯងលេចចេញជារូបរាង! អ្នកពិតជាធ្វើបានល្អណាស់។\n\n💡 **ជំហានបន្ទាប់៖** កុំទុកវាចោលក្នុងកុំព្យូទ័រ! រៀបចំវាដាក់ក្នុង Portfolio របស់អ្នក ហើយបង្ហោះវានៅលើបណ្តាញសង្គម ដើម្បីឱ្យពិភពលោកបានឃើញពីសមត្ថភាពរបស់អ្នក។`,
-        answer_en: `Congratulations! 🎉 There is no better feeling for a designer than seeing a project finally come to life. You should be very proud of your hard work!\n\n💡 **Next Step:** Don't just leave it sitting on your hard drive! Format it into a beautiful Case Study for your Portfolio and share it with the world.`,
-        chips: ["របៀបរៀបចំ Portfolio? 💼", "របៀបប្រគល់ឯកសារចុងក្រោយ (File Handover) 📁"],
-        chips_en: ["Freelance Portfolio Tips 💼", "How to handover final files 📁"]
-    },
-    {
-        primaryKeys: ['ឆ្លាត', 'smart'],
-        keys: ['ពូកែ', 'love you', 'who are you', 'ai', 'robot', 'អ្នកណាគេ', 'awesome', 'great', 'ល្អណាស់', 'ឡូយម៉្លេះ'],
-        regex: ['love you', 'smart', 'who are you', 'ai', 'robot', 'ឆ្លាត', 'ពូកែ', 'អ្នកណាគេ', 'awesome', 'great', 'ល្អណាស់', 'ឡូយ'],
-        answer: `បាទ អូហូ! អរគុណច្រើន! 🥰 ខ្ញុំគ្រាន់តែជាជំនួយការ AI ផ្នែក Graphic Design ម្នាក់ដែលចូលចិត្តពណ៌និងសិល្បៈប៉ុណ្ណោះ។ តែអ្នកទើបជាអ្នករចនា (Designer) ដ៏ពិតប្រាកដ! 👩‍🎨👨‍🎨 តោះ ចង់រៀនគន្លឹះអ្វីថ្មីទេថ្ងៃនេះ?`,
-        answer_en: `Aww, you're making me blush! 🥰 I'm just a friendly Graphic Design AI who loves colors and pixels, but YOU are the real artist here! 👩‍🎨👨‍🎨 Ready to learn a cool new trick today?`,
-        chips: ["តើធាតុផ្សំនៃរចនា (Visual Elements) មានអ្វីខ្លះ? 🧩", "តើ Color Theory ជាអ្វី? 🎨"],
-        chips_en: ["What are the 7 Visual Elements? 🧩", "Can you explain Color Theory? 🎨"]
-    },
-
-    // ------------------------------------------
-// ------------------------------------------
-    // 2. FOUNDATIONS & ELEMENTS
+    // 1. FOUNDATIONS & ELEMENTS
     // ------------------------------------------
     {
         primaryKeys: ['តើ Graphic Design ជាអ្វី? 🎨', 'What is Graphic Design? 🎨'],
