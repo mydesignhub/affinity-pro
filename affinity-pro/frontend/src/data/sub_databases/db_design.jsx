@@ -1,356 +1,2087 @@
 export const designData = [
-    // 1. CORE DESIGN PRINCIPLES
+    // ==========================================
+    // 📖 THE DESIGN DICTIONARY (DICTIONARY HUB NODES)
+    // ==========================================
     {
-        primaryKeys: ['គោលការណ៍រចនា', 'design principles', 'តើ គោលការណ៍រចនា មានអ្វីខ្លះ?', 'Core Design Principles?'],
+        primaryKeys: ['វចនានុក្រម៖ Resolution និង Pixel 🔍', 'Dictionary: Resolution & Pixel 🔍'],
+        keys: ['resolution', 'pixel', 'ភីកសែល', 'ភាពច្បាស់', 'ទំហំរូបភាព', 'ppi', 'dpi'],
+        regex: ['^resolution$', '^pixel$', '^pixels$', '^ppi$', '^dpi$', '^ភាពច្បាស់$'],
+        answer: `🔍 **Resolution (ភាពច្បាស់):** គឺជាចំនួនទិន្នន័យដែលមានក្នុងរូបភាពមួយ។ កាលណា Resolution កាន់តែខ្ពស់ រូបភាពកាន់តែច្បាស់។\n\nវាត្រូវបានបែងចែកជាពីរពាក្យបច្ចេកទេសដែលគេឧស្សាហ៍ច្រឡំ៖\n- **PPI (Pixels Per Inch):** ចំនួនគ្រាប់ភីកសែលលើ "អេក្រង់ឌីជីថល"។ (ស្តង់ដារ Web គឺ 72 ទៅ 150 PPI)\n- **DPI (Dots Per Inch):** ចំនួនតំណក់ទឹកថ្នាំរបស់ "ម៉ាស៊ីនព្រីន"។ (ស្តង់ដារបោះពុម្ពគឺ 300 PPI/DPI ឡើងទៅ)`,
+        answer_en: `🔍 **Resolution:** Refers to the amount of detail an image holds. Higher resolution means higher image quality.\n\nIt is divided into two commonly confused terms:\n- **PPI (Pixels Per Inch):** The number of square pixels on a "Digital Screen". (Standard for Web is 72 to 150 PPI)\n- **DPI (Dots Per Inch):** The number of ink droplets produced by a "Physical Printer". (Standard for Print is 300 PPI/DPI)`,
+        chips: ["តើ DPI និង PPI ខុសគ្នាម៉េច? 🖨️", "តើ Resolution ស្តង់ដារសម្រាប់ការបោះពុម្ពគួរប៉ុន្មាន? 🔍", "របៀប Export រូបបង្ហោះកុំឱ្យបែកគុណភាព? 📱"],
+        chips_en: ["DPI vs PPI? 🖨️", "Best Resolution for printing? 🔍", "How to export high-quality for social media? 📱"]
+    },
+    {
+        primaryKeys: ['វចនានុក្រម៖ Vector និង Raster 🖼️', 'Dictionary: Vector & Raster 🖼️'],
+        keys: ['vector', 'raster', 'វ៉ិចទ័រ', 'រ៉ាស្ទ័រ', 'ប្រភេទរូបភាព'],
+        regex: ['^vector$', '^vectors$', '^raster$', '^វ៉ិចទ័រ$', '^រ៉ាស្ទ័រ$'],
+        answer: `🖼️ **Raster (Pixels):** ជារូបភាពផ្សំពីគ្រាប់ការ៉េតូចៗ។ បើពង្រីកធំ វានឹងបែកគ្រាប់ (Pixelated)។ \n- *ឧទាហរណ៍:* រូបថត, JPG, PNG (ប្រើកម្មវិធី Photoshop)។\n\n📐 **Vector (Math):** ជារូបភាពគណនាដោយរូបមន្តគណិតវិទ្យា។ ពង្រីកធំប៉ុណ្ណាក៏នៅតែមុតស្រួច ១០០%!\n- *ឧទាហរណ៍:* ឡូហ្គោ, គំនូរ, SVG (ប្រើកម្មវិធី Illustrator)។`,
+        answer_en: `🖼️ **Raster (Pixels):** Images made of a grid of tiny colored squares. If you zoom in, they become blurry and pixelated.\n- *Examples:* Photographs, JPGs, PNGs (Edited in Photoshop).\n\n📐 **Vector (Math):** Graphics calculated using mathematical formulas. They scale infinitely without losing quality!\n- *Examples:* Logos, Icons, SVGs (Edited in Illustrator).`,
+        chips: ["តើ Vector និង Raster ខុសគ្នាម៉េច? 🖼️", "តើ JPG, PNG, SVG ប្រើខុសគ្នាម៉េច? 📁", "របៀបបំប្លែងរូបភាពទៅជា Vector (Image Trace)? 🖼️"],
+        chips_en: ["Vector vs Raster: What's the difference? 🖼️", "When to use JPG, PNG, or SVG? 📁", "How to convert raster to vector? 🖼️"]
+    },
+    {
+        primaryKeys: ['វចនានុក្រម៖ Typography, Font, និង Kerning 🔤', 'Dictionary: Typography Terms 🔤'],
+        keys: ['kerning', 'tracking', 'leading', 'typography', 'font', 'serif', 'sans-serif'],
+        regex: ['^kerning$', '^tracking$', '^leading$', '^serif$', '^sans-serif$'],
+        answer: `🖋️ **Serif:** ហ្វុនមានកន្ទុយ (ផ្លូវការ, ប្រពៃណី)។\n🔤 **Sans-Serif:** ហ្វុនគ្មានកន្ទុយ (ទំនើប, ស្រឡះ, ល្អសម្រាប់ UI)។\n📏 **Kerning:** ការសារ៉េចន្លោះរវាងអក្សរ "២តួ" តែប៉ុណ្ណោះ។\n↔️ **Tracking:** ការសារ៉េចន្លោះអក្សរ "ពេញមួយពាក្យ" ឱ្យឃ្លាតស្មើៗគ្នា។\n↕️ **Leading:** គម្លាតពី "បន្ទាត់មួយទៅបន្ទាត់មួយ" (Line-height)។`,
+        answer_en: `🖋️ **Serif:** Fonts with small decorative feet (Formal, Traditional).\n🔤 **Sans-Serif:** Fonts without feet (Modern, Clean, Best for UI).\n📏 **Kerning:** Adjusting the space between exactly "2 specific letters".\n↔️ **Tracking:** Uniformly spacing out an "entire word or phrase".\n↕️ **Leading:** The vertical space between "lines of text" (Line-height).`,
+        chips: ["តើ Serif និង Sans-Serif ខុសគ្នាម៉េច? 🖋️", "តើ Kerning, Tracking, Leading ខុសគ្នាម៉េច? 🔠", "គន្លឹះសម្ងាត់ក្នុងការសារ៉េគម្លាតអក្សរ (Kerning Trick) 🔤"],
+        chips_en: ["Serif vs Sans-Serif? 🖋️", "Kerning vs Tracking vs Leading? 🔠", "The secret Kerning Trick 🔤"]
+    },
+    {
+        primaryKeys: ['វចនានុក្រម៖ Bleed, Margin, និង Crop Marks ✂️', 'Dictionary: Prepress Terms ✂️'],
+        keys: ['bleed', 'margin', 'crop marks', 'prepress', 'បោះពុម្ព'],
+        regex: ['^bleed$', '^margin$', '^margins$', '^crop marks$', '^trim marks$'],
+        answer: `🖨️ **ខ្នាតបោះពុម្ព (Prepress Terms):**\n\n- **Margin (គែមសុវត្ថិភាព):** ខ្សែបន្ទាត់ខាងក្នុង។ អក្សរ និងឡូហ្គោត្រូវនៅខាងក្នុងនេះ ដើម្បីកុំឱ្យកាត់ដាច់។\n- **Trim / Crop Marks (សញ្ញាកាត់):** ទំហំពិតប្រាកដដែលម៉ាស៊ីននឹងកាត់យក។\n- **Bleed (គែមបម្រុង):** ការទាញពង្រីកពណ៌ Background ឱ្យហៀរចេញក្រៅសញ្ញាកាត់ (៣មម) ដើម្បីការពារកុំឱ្យកាត់សល់គែមស។`,
+        answer_en: `🖨️ **Prepress Boundaries:**\n\n- **Margin (Safe Zone):** The inner boundary. Crucial text and logos must stay inside this so they don't get chopped off.\n- **Trim / Crop Marks:** The actual size where the paper will be cut.\n- **Bleed:** Extending the background colors (usually 3mm) past the crop marks to prevent accidental white borders when cutting.`,
+        chips: ["តើ Bleed គឺជាអ្វី? ✂️", "តើ Crop Marks ជាអ្វី? 📐", "តើបច្ចេកទេសបោះពុម្ពមានអ្វីខ្លះ? 🖨️"],
+        chips_en: ["What is a Bleed? ✂️", "What are Crop Marks? 📐", "Advanced print finishes? 🖨️"]
+    },
+    {
+        primaryKeys: ['វចនានុក្រម៖ UI, UX, និង Wireframe 📱', 'Dictionary: UI/UX Terms 📱'],
+        keys: ['ui', 'ux', 'wireframe', 'prototype'],
+        regex: ['^ui$', '^ux$', '^wireframe$', '^prototype$'],
+        answer: `📱 **ពាក្យបច្ចេកទេស UI/UX:**\n\n- **UI (User Interface):** ចំណុចប្រទាក់ (ពណ៌, ប៊ូតុង, ហ្វុនអក្សរ)។ ផ្តោតលើ "សោភ័ណភាព"។\n- **UX (User Experience):** បទពិសោធន៍ប្រើប្រាស់ (លំហូរ, ភាពងាយស្រួល)។ ផ្តោតលើ "តក្កវិជ្ជា"។\n- **Wireframe:** គំនូរព្រាងសខ្មៅ (គ្រោងឆ្អឹង) បង្ហាញតែទីតាំងរៀបចំប្លង់។\n- **Prototype:** គំរូរចនាសម្រេច ដែលអាចចុចបាន (Clickable) ដូច App ពិតៗ ដើម្បីធ្វើតេស្ត។`,
+        answer_en: `📱 **UI/UX Terminology:**\n\n- **UI (User Interface):** The visual design (colors, buttons, typography). Focuses on "Aesthetics".\n- **UX (User Experience):** The functional experience (flow, usability). Focuses on "Logic".\n- **Wireframe:** A black-and-white sketch (blueprint) dictating where elements go.\n- **Prototype:** A high-fidelity, clickable model of the app used for testing before coding.`,
+        chips: ["តើ UI និង UX ខុសគ្នាដូចម្តេច? 📱", "តើ Wireframe និង Prototype ខុសគ្នាម៉េច? 📱", "តើ 8pt Grid System ជាអ្វី? 📱"],
+        chips_en: ["UI vs UX: What's the difference? 📱", "Wireframe vs Prototype? 📱", "What is the 8pt Grid System? 📱"]
+    },
+    {
+        primaryKeys: ['វចនានុក្រម៖ RGB, CMYK, និង HSL 🎨', 'Dictionary: Color Systems 🎨'],
+        keys: ['rgb', 'cmyk', 'hsl', 'pantone'],
+        regex: ['^rgb$', '^cmyk$', '^hsl$', '^pantone$'],
+        answer: `🎨 **ប្រព័ន្ធពណ៌ (Color Systems):**\n\n- **RGB (Red, Green, Blue):** ប្រព័ន្ធពណ៌ "ពន្លឺ" សម្រាប់អេក្រង់ (Web, UI)។ ពណ៌ស្រស់ឆើតឆាយ។\n- **CMYK (Cyan, Magenta, Yellow, Black):** ប្រព័ន្ធពណ៌ "ទឹកថ្នាំ" សម្រាប់ការបោះពុម្ព។ ពណ៌ស្រអាប់ជាងអេក្រង់។\n- **Pantone (PMS):** កូដពណ៌ទឹកថ្នាំពិសេសដែលរោងពុម្ពលាយទុកមុន ធានាថាព្រីនចេញមកពណ៌ម៉ាកយីហោត្រូវ ១០០%។\n- **HSL:** វិធីគ្រប់គ្រងពណ៌តាមរយៈ ពណ៌ដើម (Hue), កម្រិតឆ្អែត (Saturation), និងពន្លឺ (Lightness)។`,
+        answer_en: `🎨 **Color Systems:**\n\n- **RGB (Red, Green, Blue):** "Light-based" system for screens (Web, UI). Highly vibrant.\n- **CMYK (Cyan, Magenta, Yellow, Black):** "Ink-based" system for physical printing. Slightly duller than screens.\n- **Pantone (PMS):** Pre-mixed spot colors used to guarantee 100% brand color accuracy in printing.\n- **HSL:** Adjusting colors via their Hue (base color), Saturation (intensity), and Lightness.`,
+        chips: ["តើ RGB និង CMYK ខុសគ្នាម៉េច? 🖨️", "តើ sRGB និង Adobe RGB ខុសគ្នាម៉េច? 🌈", "តើ HSL គឺជាអ្វី? 🎛️"],
+        chips_en: ["RGB vs CMYK? 🖨️", "sRGB vs Adobe RGB? 🌈", "What is HSL? 🎛️"]
+    },
+
+    // ------------------------------------------
+    // 1. ADVANCED GENERAL CHAT & EMPATHY
+    // ------------------------------------------
+    {
+        primaryKeys: ['ចង់ស្តាប់រឿងកំប្លែង 😆', 'tell me a joke'],
+        keys: ['funny', 'សើច', 'ធុញ', 'make me laugh', 'កំប្លែង', 'joke'],
+        regex: ['joke', 'funny', 'កំប្លែង', 'សើច', 'ធុញ'],
+        answer: `បាទ ហាហា! ចង់ស្តាប់រឿងកំប្លែងមែនទេ? \n\nតើអ្នកដឹងទេថាហេតុអ្វីបានជា Graphic Designer តែងតែជោគជ័យក្នុងរឿងស្នេហា? \nព្រោះពួកគេដឹងពីរបៀបស្វែងរក **Alignment (ការតម្រឹម)** និង **Balance (តុល្យភាព)** នៅក្នុងជីវិតជានិច្ច! 😆 រួចចុះអ្នកវិញ តើចង់រៀនពីអីគេថ្ងៃនេះ?`,
+        answer_en: `Haha! You want a design joke? \n\nWhy did the graphic designer break up with their partner? Because they had 'no chemistry' and way too much 'contrast'! 😆 Feeling better? What are we learning today?`,
+        chips: ["តើ គោលការណ៍រចនា (Principles) មានអ្វីខ្លះ? 📐", "តើ Typography Anatomy ជាអ្វី? 🔤"],
+        chips_en: ["What are the Core Design Principles? 📐", "Explain Typography Anatomy 🔤"]
+    },
+    {
+        primaryKeys: ['ហត់', 'tired'],
+        keys: ['stress', 'ស្ត្រេស', 'ពិបាក', 'ឈឺក្បាល', 'stressed', 'exhausted', 'burnout'],
+        regex: ['tired', 'stress', 'ហត់', 'ស្ត្រេស', 'ឈឺក្បាល', 'ពិបាក', 'exhausted', 'burnout'],
+        answer: `បាទ អូ! សម្រាកសិនទៅបង! ☕ ការសម្លឹងអេក្រង់យូរអាចធ្វើឱ្យស្ត្រេសនិងឈឺភ្នែក ថែមទាំងគិតអ្វីលែងចេញទៀត (Creative Block)។ \n\n💡 **សាកល្បងក្បួន 20-20-20៖** រៀងរាល់ ២០នាទី មើលទៅកន្លែងឆ្ងាយ២០ហ្វីត រយៈពេល២០វិនាទី។ \n\nទៅផឹកទឹក និងស្តាប់ចម្រៀងបន្តិចទៅ ចាំមករៀនបន្ត! ខ្ញុំរង់ចាំនៅទីនេះជានិច្ច! 💙`,
+        answer_en: `Oh no, please take a break! ☕ Staring at a screen for too long causes 'Creative Block' and terrible eye strain. \n\n💡 **Try the 20-20-20 rule:** Every 20 mins, look 20 feet away for 20 seconds. \n\nGo grab some water and listen to your favorite song. Your designs will be waiting for you when you get back! 💙`,
+        chips: ["ចង់ស្តាប់រឿងកំប្លែង 😆", "តើអត្ថន័យនៃពណ៌នីមួយៗតំណាងឱ្យអ្វី? 🧠"],
+        chips_en: ["tell me a joke", "What is Color Psychology? 🧠"]
+    },
+    {
+        primaryKeys: ['កម្មវិធីគាំង / ខឹង 😤', 'Software crashed! 😤'],
+        keys: ['crash', 'angry', 'lost work', 'ខឹង', 'គាំង', 'បាត់ការងារ', 'error'],
+        regex: ['crash', 'angry', 'ខឹង', 'គាំង', 'បាត់'],
+        answer: `បាទ ខ្ញុំយល់អារម្មណ៍មួយនេះ! គ្មានអ្វីឈឺចាប់ជាងការរចនាជិតរួចរាល់ ស្រាប់តែកម្មវិធីលោតគាំង (Crash) ដោយមិនបាន Save នោះទេ។ 😤\n\nដកដង្ហើមវែងៗ ដើរចេញពីអេក្រង់មួយភ្លែតសិនទៅបង។ ពេលត្រឡប់មកវិញ កុំភ្លេចឆែកមើលមុខងារ Auto-Save / Recovery ក្រែងលោអាចស្រោចស្រង់បានខ្លះ។ ហើយមេរៀនថ្ងៃនេះគឺ៖ "Ctrl + S (Save) គឺជាមិត្តដ៏ល្អបំផុតរបស់អ្នករចនា!" 💙`,
+        answer_en: `I completely feel your pain! There is nothing more frustrating than a software crash right before you hit Save. 😤\n\nTake a deep breath and step away from the screen for a minute. When you come back, check your Auto-Save or Recovery folder. Let this be a painful but valuable reminder: "Ctrl + S (Save) is a designer's best friend!" 💙`,
+        chips: ["របៀបរក្សារូបភាពកុំឱ្យបាត់ File (Missing Links)? 🔗", "របៀបដាក់ឈ្មោះ File និងរៀបចំ Folder សម្រាប់ Designer 📁", "តើការកាត់តរូបបែប Non-Destructive ជាអ្វី? 🔄"],
+        chips_en: ["How to prevent missing links in Illustrator? 🔗", "File naming conventions for designers? 📁", "What is Non-Destructive Editing? 🔄"]
+    },
+    {
+        primaryKeys: ['មានអារម្មណ៍ថាស្មុគស្មាញ រៀនមិនចេះចប់ 🤯', 'Feeling overwhelmed by design 🤯'],
+        keys: ['overwhelmed', 'too much', 'ពិបាករៀន', 'ស្មុគស្មាញ', 'រៀនមិនចូល', 'hard to learn', 'give up'],
+        regex: ['overwhelm', 'too much', 'ពិបាករៀន', 'ស្មុគស្មាញ', 'រៀនមិនចូល', 'give up'],
+        answer: `បាទ វាជារឿងធម្មតាទេបង! វិស័យ Graphic Design មានទំហំធំធេងណាស់ (មានទាំង UI/UX, 3D, Motion, Print) គ្មាននរណាម្នាក់ចេះគ្រប់យ៉ាងក្នុងពេលតែមួយយប់នោះទេ។ 🤯\n\n💡 **ដំបូន្មានរបស់ខ្ញុំ៖** កុំព្យាយាមរៀនគ្រប់កម្មវិធីទាំងអស់។ ជ្រើសរើស "ជំនាញមួយ" ដែលអ្នកចូលចិត្តជាងគេ (ឧ. ការរចនា Logo) ហើយផ្តោតលើវាឱ្យខ្លាំងសិន។ ចាប់ផ្តើមពីមូលដ្ឋានគ្រឹះ ខ្ញុំនៅទីនេះដើម្បីណែនាំអ្នកមួយជំហានម្តងៗ! តោះចាប់ផ្តើមពី Basic វិញទេ?`,
+        answer_en: `It is completely normal to feel this way! The design world is massive (UI/UX, 3D, Motion, Print). No one masters it overnight. 🤯\n\n💡 **My Advice:** Stop trying to learn every software at once. Pick ONE niche you enjoy (like Logo Design) and master the fundamentals first. I am here to guide you step-by-step. Do you want to start with the simple basics today?`,
+        chips: ["តើក្បួនចាប់ផ្តើមរៀន Design មានប៉ុន្មានជំហាន? 🚀", "តើ Graphic Design ជាអ្វី? 🎨"],
+        chips_en: ["How to begin as a Graphic Designer? 🚀", "What is Graphic Design? 🎨"]
+    },
+    {
+        primaryKeys: ['តើ AI នឹងដណ្តើមការងារ Designer ទេ? 🤖', 'Will AI replace designers? 🤖'],
+        keys: ['ai replace', 'lose job', 'ខ្លាច ai', 'ai ដណ្តើមការងារ', 'ai takes over', 'ai art'],
+        regex: ['replace', 'lose job', 'ដណ្តើមការងារ', 'ខ្លាច ai'],
+        answer: `បាទ នេះជាក្តីបារម្ភរបស់មនុស្សជាច្រើន! ប៉ុន្តែសូមកុំភ័យអី៖ **AI មិនមកដណ្តើមការងារអ្នករចនាទេ តែអ្នករចនាដែលចេះប្រើ AI នឹងដណ្តើមការងារអ្នកដែលមិនចេះប្រើវា!** 🤖\n\nAI ដូចជា Midjourney អាចបង្កើតរូបភាពបានលឿន ប៉ុន្តែវាគ្មាន "ការយល់ចិត្ត" (Empathy) និងមិនដឹងពី "គោលដៅអាជីវកម្ម" របស់អតិថិជនដូចមនុស្សទេ។ អ្នករចនាគឺជា "អ្នកដោះស្រាយបញ្ហា" មិនមែនគ្រាន់តែជាអ្នកគូររូបនោះទេ។`,
+        answer_en: `This is a very common fear! But don't worry: **AI will not replace designers. Designers who use AI will replace designers who don't!** 🤖\n\nTools like Midjourney can generate images quickly, but they lack human 'Empathy' and don't understand complex 'Business Goals'. A true Graphic Designer is a visual problem-solver and a strategic thinker, not just a pixel-pusher. You are irreplaceable!`,
+        chips: ["ជំនាញចាំបាច់សម្រាប់ Designer 🧠", "កម្មវិធីរចនាស្តង់ដារ (Design Software) 💻"],
+        chips_en: ["Skills to be a Graphic Designer 🧠", "Standard Design Software 💻"]
+    },
+    {
+        primaryKeys: ['ខ្ញុំធ្វើគម្រោងរួចរាល់ហើយ! 🎉', 'I finished my design project! 🎉'],
+        keys: ['finished', 'done', 'completed', 'សប្បាយចិត្ត', 'ធ្វើរួចហើយ', 'ចប់ហើយ', 'ជោគជ័យ'],
+        regex: ['finish', 'done', 'complete', 'សប្បាយចិត្ត', 'ធ្វើរួច', 'ចប់ហើយ', 'ជោគជ័យ'],
+        answer: `បាទ អបអរសាទរ! 🎉 នេះជាអារម្មណ៍ដ៏អស្ចារ្យបំផុតសម្រាប់អ្នករចនា ពេលឃើញស្នាដៃខ្លួនឯងលេចចេញជារូបរាង! អ្នកពិតជាធ្វើបានល្អណាស់។\n\n💡 **ជំហានបន្ទាប់៖** កុំទុកវាចោលក្នុងកុំព្យូទ័រ! រៀបចំវាដាក់ក្នុង Portfolio របស់អ្នក ហើយបង្ហោះវានៅលើបណ្តាញសង្គម ដើម្បីឱ្យពិភពលោកបានឃើញពីសមត្ថភាពរបស់អ្នក។`,
+        answer_en: `Congratulations! 🎉 There is no better feeling for a designer than seeing a project finally come to life. You should be very proud of your hard work!\n\n💡 **Next Step:** Don't just leave it sitting on your hard drive! Format it into a beautiful Case Study for your Portfolio and share it with the world.`,
+        chips: ["របៀបរៀបចំ Portfolio? 💼", "របៀបប្រគល់ឯកសារចុងក្រោយ (File Handover) 📁"],
+        chips_en: ["Freelance Portfolio Tips 💼", "How to handover final files 📁"]
+    },
+    {
+        primaryKeys: ['ឆ្លាត', 'smart'],
+        keys: ['ពូកែ', 'love you', 'who are you', 'ai', 'robot', 'អ្នកណាគេ', 'awesome', 'great', 'ល្អណាស់', 'ឡូយម៉្លេះ'],
+        regex: ['love you', 'smart', 'who are you', 'ai', 'robot', 'ឆ្លាត', 'ពូកែ', 'អ្នកណាគេ', 'awesome', 'great', 'ល្អណាស់', 'ឡូយ'],
+        answer: `បាទ អូហូ! អរគុណច្រើន! 🥰 ខ្ញុំគ្រាន់តែជាជំនួយការ AI ផ្នែក Graphic Design ម្នាក់ដែលចូលចិត្តពណ៌និងសិល្បៈប៉ុណ្ណោះ។ តែអ្នកទើបជាអ្នករចនា (Designer) ដ៏ពិតប្រាកដ! 👩‍🎨👨‍🎨 តោះ ចង់រៀនគន្លឹះអ្វីថ្មីទេថ្ងៃនេះ?`,
+        answer_en: `Aww, you're making me blush! 🥰 I'm just a friendly Graphic Design AI who loves colors and pixels, but YOU are the real artist here! 👩‍🎨👨‍🎨 Ready to learn a cool new trick today?`,
+        chips: ["តើធាតុផ្សំនៃរចនា (Visual Elements) មានអ្វីខ្លះ? 🧩", "តើ Color Theory ជាអ្វី? 🎨"],
+        chips_en: ["What are the 7 Visual Elements? 🧩", "Can you explain Color Theory? 🎨"]
+    },
+
+    // ------------------------------------------
+// ------------------------------------------
+    // 2. FOUNDATIONS & ELEMENTS
+    // ------------------------------------------
+    {
+        primaryKeys: ['តើ Graphic Design ជាអ្វី? 🎨', 'What is Graphic Design? 🎨'],
+        keys: ['graphic design', 'ក្រាហ្វិកឌីហ្សាញ', 'រចនាក្រាហ្វិក', 'what is graphic design', 'សមីការរចនា'],
+        regex: ['graphic design', 'ក្រាហ្វិកឌីហ្សាញ', 'រចនាក្រាហ្វិក', 'សមីការ'],
+        answer: "**Graphic Design (ការរចនាក្រាហ្វិក)** គឺជាស្ថាបត្យកម្មនៃការទំនាក់ទំនងតាមរយៈរូបភាព (Visual Communication)។ វាមិនមែនគ្រាន់តែធ្វើឱ្យ 'ស្អាត' នោះទេ តែវាគឺជាអ្នកដោះស្រាយបញ្ហា។\n\n**សមីការគោលនៃការរចនាគឺ៖**\n**ធាតុរូបភាព** (Graphics) + **គោលការណ៍រៀបចំ** (Design) = **ការទំនាក់ទំនងប្រកបដោយប្រសិទ្ធភាព!**",
+        answer_en: "**Graphic Design** is the architecture of visual communication. It is not just making things look 'pretty'; it is visual problem-solving.\n\n**The Core Equation:**\n**Visual Elements** (Graphics) + **Principles of Organization** (Design) = **Effective Communication!**",
+        chips: ["តើ Brand, Identity និង Logo ខុសគ្នាម៉េច? 🏢", "តើធាតុផ្សំនៃរចនា (Visual Elements) មានអ្វីខ្លះ? 🧩"],
+        chips_en: ["Brand vs Identity vs Logo? 🏢", "What are the 7 Visual Elements? 🧩"]
+    },
+    {
+        primaryKeys: ['តើក្បួនចាប់ផ្តើមរៀន Design មានប៉ុន្មានជំហាន? 🚀', 'How to begin as a Graphic Designer? 🚀'],
+        keys: ['how to start', 'begin', 'ចាប់ផ្តើម', 'រៀន design', 'learn graphic design', 'how to begin as a graphic designer'],
+        regex: ['how to start', 'begin', 'ចាប់ផ្តើម', 'រៀន design', 'learn graphic design'],
+        answer: "ផ្អែកលើកម្មវិធីសិក្សារបស់ GDS ដើម្បីចាប់ផ្តើមជា Graphic Designer អ្នកគួរអនុវត្តតាម ៦ ជំហាននេះ៖\n\n១. **Learn & Research:** សិក្សាទ្រឹស្តីមូលដ្ឋាន (ពណ៌ អក្សរ ប្លង់)។\n២. **Collect:** ប្រមូលស្នាដៃដែលអ្នកចូលចិត្ត (Moodboard) ដើម្បីស្វែងយល់ពីចំណូលចិត្តខ្លួនឯង។\n៣. **Be Inspired:** រកគំនិតពីជុំវិញខ្លួន ឬវេបសាយធំៗ។\n៤. **Practice:** អនុវត្ត! សាកល្បងចម្លងស្នាដៃគេ (ដើម្បីរៀនក្បួន) ឬបង្កើតគម្រោងតូចៗផ្ទាល់ខ្លួន។\n៥. **Seek Education:** រៀនវគ្គខ្លីៗ មើល Video Tutorials ឬចូលសាលា។\n៦. **Apply your skills:** ចាប់ផ្តើមធ្វើ Portfolio ស្វែងរកការងារ ឬធ្វើ Freelance។",
+        answer_en: "Based on the GDS curriculum, you should take these 6 steps to begin your career:\n\n1. **Learn & Research:** Study the core fundamentals (Color, Typography, Layout).\n2. **Collect:** Gather designs you love to build a visual library and understand your taste.\n3. **Be Inspired:** Look for inspiration everywhere, not just online.\n4. **Practice:** The most important step! Try imitating great designs to learn their techniques, then create your own mini-briefs.\n5. **Seek Education:** Take software courses, read books, or attend workshops.\n6. **Apply your skills:** Build your portfolio and start hunting for real-world experience.",
+        chips: ["តើធាតុផ្សំនៃរចនា (Visual Elements) មានអ្វីខ្លះ? 🧩", "តើ គោលការណ៍រចនា (Principles) មានអ្វីខ្លះ? 📐"],
+        chips_en: ["What are the 7 Visual Elements? 🧩", "What are the Core Design Principles? 📐"]
+    },
+    {
+        primaryKeys: ['តើ Graphic Design មានប្រវត្តិយ៉ាងណា? 📜', 'What is the history of Graphic Design? 📜'],
+        keys: ['ប្រវត្តិ', 'history', 'bauhaus', 'swiss style', 'gutenberg', 'ប្រវត្តិសាស្ត្រ'],
+        regex: ['history', 'ប្រវត្តិ', 'bauhaus', 'swiss', 'gutenberg'],
+        answer: "ការស្វែងយល់ពីប្រវត្តិសាស្ត្របែងចែក 'អ្នកបច្ចេកទេស' ពី 'អ្នករចនា' ពិតប្រាកដ៖\n\n១. **១៤៤០:** ការច្នៃប្រឌិតម៉ាស៊ីនបោះពុម្ព (Gutenberg)។\n២. **១៩១៩-១៩៣៣ (Bauhaus):** សាលាដែលបង្កើតទស្សនវិជ្ជា 'ទម្រង់ដើរតាមមុខងារ' (Form follows function)។\n៣. **ទសវត្សរ៍ ១៩៥០ (Swiss Style):** ផ្តោតលើភាពស្អាតស្អំ ក្រឡាចត្រង្គគណិតវិទ្យា និង Font Helvetica។\n៤. **១៩៨៤:** ការបង្កើត Apple Macintosh ដែលទាញការរចនាពីក្រដាសមកលើអេក្រង់។",
+        answer_en: "Understanding history distinguishes a 'technician' from a 'designer':\n\n1. **1440:** Invention of the Printing Press (Gutenberg).\n2. **1919-1933 (The Bauhaus):** The school that coined 'Form follows function'.\n3. **1950s (Swiss Style):** Focused on mathematical grids, cleanliness, and Helvetica.\n4. **1984:** Introduction of the Apple Mac, moving design from paper to screens.",
+        chips: ["តើធាតុផ្សំនៃរចនា (Visual Elements) មានអ្វីខ្លះ? 🧩", "តើ គោលការណ៍រចនា (Principles) មានអ្វីខ្លះ? 📐"],
+        chips_en: ["What are the 7 Visual Elements? 🧩", "What are the Core Design Principles? 📐"]
+    },
+    {
+        primaryKeys: ['តើ Brand, Identity និង Logo ខុសគ្នាម៉េច? 🏢', 'Brand vs Identity vs Logo? 🏢'],
+        keys: ['brand vs logo', 'តើ brand និង logo ខុសគ្នាម៉េច?', 'brand identity', 'logo definition', 'what is branding'],
+        regex: ['brand.*logo', 'brand identity', 'logo'],
+        answer: "អ្នករចនាអាជីពត្រូវតែញែក ៣ នេះឱ្យដាច់ពីគ្នា៖\n\n១. **Logo (ឡូហ្គោ):** គ្រាន់តែជានិមិត្តសញ្ញាសម្រាប់ចំណាំ (ឧ. រូបផ្លែប៉ោមខាំមួយចំហៀង)។ វាប្រៀបដូចជា 'មុខ' របស់ក្រុមហ៊ុន។\n២. **Brand Identity (អត្តសញ្ញាណម៉ាក):** គឺជាវត្ថុដែលអាចមើលឃើញទាំងអស់រួមបញ្ចូលគ្នា ដូចជា ពណ៌, Font អក្សរ, ស្តាយរូបថត និងរបៀបរចនា។ វាប្រៀបដូចជា 'សម្លៀកបំពាក់' និង 'ស្ទីល' ដែលក្រុមហ៊ុននោះស្លៀកពាក់។\n៣. **Brand (ម៉ាកយីហោ):** គឺជាអារម្មណ៍ និងកេរ្តិ៍ឈ្មោះ! វាជាអ្វីដែលអតិថិជនគិតដល់ពេលលឺឈ្មោះក្រុមហ៊ុននោះ។ អ្នកមិនអាច 'Design' Brand បានទេ តែអ្នកអាច Design Logo និង Identity ដើម្បីជួយទាក់ទាញ Brand នោះបាន!",
+        answer_en: "Professional designers must completely separate these three terms:\n\n1. **Logo:** A purely functional symbol of identification (e.g., an apple with a bite). It is the 'face' of the company.\n2. **Brand Identity:** The entire visual ecosystem. It includes the logo, color palette, typography choices, and photography style. It is the 'clothes and style' the company wears.\n3. **Brand:** The emotional corporate image as a whole. It is how customers *feel* about the company. You cannot 'design' a brand, but you design the Logo and Identity to shape how the Brand is perceived!",
+        chips: ["ប្រភេទឡូហ្គោ (Logo Types) 🔣", "តើ Typography Anatomy ជាអ្វី? 🔤"],
+        chips_en: ["Logo Types 🔣", "Explain Typography Anatomy 🔤"]
+    },
+    {
+        primaryKeys: ['តើធាតុផ្សំនៃរចនា (Visual Elements) មានអ្វីខ្លះ? 🧩', 'What are the 7 Visual Elements? 🧩'],
+        // 🌟 FIX: Removed specific element names to prevent collision!
+        keys: ['visual elements', 'ធាតុផ្សំ', 'element of design'],
+        regex: ['visual element', 'ធាតុផ្សំ', 'element of design'],
+        answer: "**ធាតុផ្សំនៃរចនា (Visual Elements)** គឺជាវត្ថុធាតុដើមសម្រាប់បង្កើតស្នាដៃសិល្បៈ៖\n\n១. **Line (បន្ទាត់):** ដឹកនាំភ្នែក បែងចែកលំហ។\n២. **Color (ពណ៌):** បង្កើតអារម្មណ៍ និងចំណាប់អារម្មណ៍។\n៣. **Shape (រូបរាង):** ទម្រង់ ២D (Geometric និង Organic)។\n៤. **Form (ទម្រង់):** ទម្រង់ ៣D ដែលមានជម្រៅ ពន្លឺ និងស្រមោល។\n៥. **Texture (ផ្ទៃសាច់):** អារម្មណ៍នៃការប៉ះ (រលោង, គ្រើម, គំនូរ)។\n៦. **Space (លំហ):** ចន្លោះជុំវិញវត្ថុ (Positive & Negative Space)។\n៧. **Typography (អក្សរ):** សិល្បៈនៃការរៀបចំអក្សរ។\n៨. **Scale/Size (ខ្នាត):** ទំនាក់ទំនងទំហំដើម្បីបង្កើតឋានានុក្រម។",
+        answer_en: "**The Visual Elements** are the raw building blocks of any artwork:\n\n1. **Line:** Directs the eye and divides space.\n2. **Color:** Sets mood and establishes hierarchy.\n3. **Shape:** 2D enclosed areas (Geometric or Organic).\n4. **Form:** 3D objects containing depth, highlights, and shadows.\n5. **Texture:** The visual or tactile feel of a surface.\n6. **Space:** The strategic use of Positive and Negative (White) Space.\n7. **Typography:** The art of arranging text.\n8. **Scale:** The relationship of sizes to create visual hierarchy.",
+        chips: ["តើ Line (បន្ទាត់) មានតួនាទីអ្វីខ្លះ? ➖", "តើ Form និង Shape ខុសគ្នាម៉េច? 🧊"],
+        chips_en: ["What is the role of Lines? ➖", "Form vs Shape? 🧊"]
+    },
+
+    // 🌟 DEEP DIVE: INDIVIDUAL VISUAL ELEMENTS
+    {
+        primaryKeys: ['តើ Line (បន្ទាត់) មានតួនាទីអ្វីខ្លះ? ➖', 'What is the role of Lines? ➖'],
+        keys: ['line', 'បន្ទាត់', 'lines'],
+        regex: ['^line$', '^lines$', '^បន្ទាត់$'],
+        answer: "➖ **Line (បន្ទាត់):** គឺជា 'ចំណុចដែលកំពុងផ្លាស់ទី'។ វាមិនមែនត្រឹមតែជាគំនូសនោះទេ តែវាជាអ្នកកំណត់ទិសដៅ និងថាមពលក្នុងប្លង់ការងារ៖\n\n- **បញ្ឈរ:** រឹងមាំ, អំណាច, កម្ពស់។\n- **ផ្តេក:** ស្ងប់ស្ងាត់, លំនឹង, សុវត្ថិភាព។\n- **បញ្ឆិត:** ចលនា, ល្បឿន, ភាពតានតឹង (Tension)។\n- **កោង:** ទន់ភ្លន់, ធម្មជាតិ, រលូន។\nអ្នករចនាប្រើបន្ទាត់ដើម្បីដឹកនាំខ្សែភ្នែក និងខ័ណ្ឌចែកព័ត៌មានឱ្យមានសណ្តាប់ធ្នាប់។",
+        answer_en: "➖ **Line:** A line is simply a 'point in motion'. It is the most fundamental tool for creating structure and energy:\n\n- **Vertical:** Strength, power, and height.\n- **Horizontal:** Calmness, stability, and rest.\n- **Diagonal:** Action, speed, and visual tension.\n- **Curved:** Softness, organic flow, and grace.\nDesigners use lines to invisibly guide the viewer's eye and divide complex information.",
+        chips: ["តើ Shape (រូបរាង) ជាអ្វី? 📐", "តើ គោលការណ៍រចនា (Principles) មានអ្វីខ្លះ? 📐"],
+        chips_en: ["What is Shape in design? 📐", "What are the Core Design Principles? 📐"]
+    },
+    {
+        primaryKeys: ['តើ Shape (រូបរាង) ជាអ្វី? 📐', 'What is Shape in design? 📐'],
+        keys: ['shape', 'រូបរាង', 'shapes'],
+        regex: ['^shape$', '^shapes$', '^រូបរាង$'],
+        answer: "📐 **Shape (រូបរាង):** គឺជាផ្ទៃបិទជិត ២D ដែលមានតែបណ្តោយ និងទទឹង (គ្មានកម្រាស់)។ គេចែកវាជា ២ ប្រភេទធំៗ៖\n\n១. **Geometric Shapes (រូបធរណីមាត្រ):** ដូចជា ការ៉េ រង្វង់ ត្រីកោណ។ វាផ្តល់អារម្មណ៍ថា មានរបៀបរៀបរយ ផ្លូវការ សុវត្ថិភាព និងជាស្នាដៃមនុស្ស។\n២. **Organic Shapes (រូបរាងធម្មជាតិ):** រូបកោងគ្មានក្បួនខ្នាត ដូចជាស្លឹកឈើ ឬតំណក់ទឹក។ វាផ្តល់អារម្មណ៍ កក់ក្តៅ ផាសុកភាព និងងាយស្រួលចូលក្បែរ។",
+        answer_en: "📐 **Shape:** A flat, 2D enclosed area defined by length and width. They dictate the subconscious mood of a design:\n\n1. **Geometric Shapes:** Squares, circles, triangles. They project order, logic, security, and structure (man-made).\n2. **Organic Shapes:** Free-flowing, irregular curves like a leaf or a splash of water. They project warmth, comfort, and approachability (nature-made).",
+        chips: ["តើ Form (ទម្រង់) ជាអ្វី? 🧊", "តើ Space (លំហ) ជាអ្វីក្នុងការរចនា? 🤍"],
+        chips_en: ["What is Form in design? 🧊", "What is Space in design? 🤍"]
+    },
+    {
+        primaryKeys: ['តើ Form (ទម្រង់) ជាអ្វី? 🧊', 'What is Form in design? 🧊'],
+        keys: ['form', 'ទម្រង់', 'forms'],
+        regex: ['^form$', '^forms$', '^ទម្រង់$'],
+        answer: "🧊 **Form (ទម្រង់ ៣D):** គឺជាការវិវឌ្ឍន៍ពី Shape (២D) ដោយបន្ថែម **ជម្រៅ (Depth)** ទៅឱ្យវា។\n\nនៅលើអេក្រង់កុំព្យូទ័រដែលរាបស្មើ អ្នករចនាបង្កើត Form (ភាពលេចផុស) តាមរយៈការលេង **ពន្លឺ (Highlights)** និង **ស្រមោល (Shadows)**។ កាលណា Form កាន់តែច្បាស់ វត្ថុនោះនឹងមើលទៅកាន់តែមាន 'ទម្ងន់' និង 'រូបរាងពិតប្រាកដ' ដែលខួរក្បាលមនុស្សជឿថាអាចស្ទាបអង្អែលបាន។",
+        answer_en: "🧊 **Form (3D):** The evolution of a 2D Shape, gaining the third dimension of **Depth**.\n\nOn a flat digital screen, designers create Form entirely through the illusion of **Light (Highlights)** and **Shadows**. A well-executed Form gives an element physical weight and tactile realism, tricking the brain into thinking it can be picked up.",
+        chips: ["តើ Form និង Shape ខុសគ្នាម៉េច? 🧊", "តើ Value ជាអ្វីនៅក្នុងធាតុរចនា? 🌗", "តើ Texture ក្នុងការរចនាជាអ្វី? 🧶"],
+        chips_en: ["Difference between Form and Shape? 🧊", "What is Value in design elements? 🌗", "What is Texture in design? 🧶"]
+    },
+    {
+        primaryKeys: ['តើ Form និង Shape ខុសគ្នាម៉េច? 🧊', 'Difference between Form and Shape? 🧊'],
+        keys: ['form vs shape', 'shape vs form', 'form and shape', 'shape and form', 'form shape ខុសគ្នា', 'ខុសគ្នា form shape', 'form និង shape'],
+        regex: ['form\\s*(vs|and|or|/|និង)\\s*shape', 'shape\\s*(vs|and|or|/|និង)\\s*form', 'difference.*form.*shape', 'difference.*shape.*form', 'form.*shape.*ខុសគ្នា', 'shape.*form.*ខុសគ្នា'],
+        answer: "🆚 **Form vs Shape — ការប្រៀបធៀប:**\n\n📐 **Shape (រូបរាង):** ផ្ទៃ **២D** គ្មានកម្រាស់ — មានតែ បណ្តោយ × ទទឹង។ ឧទា. ឡូហ្គោរបស់ Twitter ឬ Airbnb។ ស្គាល់បានភ្លាមដោយ Outline។\n\n🧊 **Form (ទម្រង់):** ផ្ទៃ **៣D** មានកម្រាស់ ឬមានភាពលេចផុស — បណ្តោយ × ទទឹង × ជម្រៅ។ ឧទា. Icon បែប Skeuomorphism, ឧបករណ៍ 3D Mockup របស់ផលិតផល។ ស្គាល់បានដោយ **ពន្លឺ + ស្រមោល**។\n\n🎯 **ការសម្គាល់រហ័ស:** បើគ្មានស្រមោល = Shape។ បើមានស្រមោល/ពន្លឺ ធ្វើឱ្យមើលលេចផុស = Form។\n💡 **គន្លឹះអ្នកជំនាញ:** Flat design ប្រើ Shape ខ្លាំង (រហ័ស, ច្បាស់), រីឯ Realistic UI / 3D Mockup ប្រើ Form (មានតម្លៃ, ឆ្អែតភ្នែក)។ ជ្រើសរើសតាមអារម្មណ៍ Brand ដែលបងចង់បាន។",
+        answer_en: "🆚 **Form vs Shape — Side by side:**\n\n📐 **Shape:** A **2D** flat area — only length × width. Think Twitter's bird or Airbnb's mark. Recognized purely by its outline.\n\n🧊 **Form:** A **3D** volume with implied depth — length × width × depth. Think skeuomorphic icons or 3D product mockups. Recognized by **light + shadow**.\n\n🎯 **Quick test:** No shadow = Shape. Visible highlight/shadow that implies volume = Form.\n💡 **Pro Tip:** Flat design leans on Shapes (fast, legible). Realistic UI and product mockups lean on Forms (premium, tactile). Pick based on the brand mood you need.",
+        chips: ["តើ Shape (រូបរាង) ជាអ្វី? 📐", "តើ Form (ទម្រង់) ជាអ្វី? 🧊", "តើ Texture ក្នុងការរចនាជាអ្វី? 🧶"],
+        chips_en: ["What is Shape in design? 📐", "What is Form in design? 🧊", "What is Texture in design? 🧶"]
+    },
+    {
+        primaryKeys: ['តើ Color (ពណ៌) ជាអ្វីក្នុងធាតុរចនា? 🎨', 'Role of Color as an element? 🎨'],
+        keys: ['color', 'ពណ៌', 'colors'],
+        regex: ['^color$', '^colors$', '^ពណ៌$'],
+        answer: "🎨 **Color (ពណ៌):** គឺជាអាវុធផ្លូវចិត្តដ៏មានឥទ្ធិពលបំផុតក្នុងការរចនា។ ពណ៌តែមួយមុខ អាចផ្លាស់ប្តូរអត្ថន័យនៃស្នាដៃទាំងមូលបានដោយមិនបាច់មានអក្សរមួយម៉ាត់។\n\nវាមានមុខងារ ៣ យ៉ាង៖\n១. **កំណត់អារម្មណ៍ (Mood):** (ឧ. ក្រហម = អំណាច, ខៀវ = ទំនុកចិត្ត)។\n២. **បង្កើតចំណុចផ្តោត (Focal Point):** ពណ៌ឆើតក្នុងចំណោមពណ៌សខ្មៅ ទាញភ្នែកអ្នកមើលមុនគេ។\n៣. **រៀបចំរចនាសម្ព័ន្ធ:** ប្រើពណ៌ដដែលៗដើម្បីប្រាប់អ្នកប្រើប្រាស់ថាប៊ូតុងណាអាចចុចបាន។",
+        answer_en: "🎨 **Color:** The most potent psychological weapon in visual design. Color alone can instantly dictate the entire mood of a composition before a single word is read.\n\nIts 3 primary functions:\n1. **Establishes Mood:** (e.g., Red = Power/Urgency, Blue = Trust/Logic).\n2. **Creates Focal Points:** A highly saturated color against a muted background instantly commands the eye.\n3. **Builds Structure:** Consistent color coding trains users on what elements are interactive.",
+        actionButton: { label: "រៀនពីទ្រឹស្តីពណ៌ 🎨", label_en: "Explore Color Theory 🎨", actionToTrigger: "tools", subTab: "color" },
+        chips: ["តើ Color Theory ជាអ្វី? 🎨", "តើអត្ថន័យនៃពណ៌នីមួយៗតំណាងឱ្យអ្វី? 🧠"],
+        chips_en: ["Can you explain Color Theory? 🎨", "What is Color Psychology? 🧠"]
+    },
+    {
+        primaryKeys: ['តើ Texture ក្នុងការរចនាជាអ្វី? 🧶', 'What is Texture in design? 🧶'],
+        keys: ['texture', 'សាច់ក្រណាត់', 'វាយនភាព', 'textures'],
+        regex: ['^texture$', '^textures$', '^វាយនភាព$'],
+        answer: "🧶 **Texture (វាយនភាព ឬផ្ទៃសាច់):** គឺជាគុណភាពនៃផ្ទៃវត្ថុ ដែលបំបាត់ភាពសោះកក្រោះនៃអេក្រង់ឌីជីថល។\n\nវាធ្វើឱ្យការរចនាមើលទៅមានជីវិត និងមានតម្លៃថ្លៃ៖\n- **Tactile Texture:** ផ្ទៃដែលអាចស្ទាបដឹងពិតៗ (ដូចជាអក្សរផុស Emboss លើនាមប័ណ្ណ)។\n- **Visual Texture:** រូបបញ្ឆោតភ្នែក (ដូចជាការដាក់ Effect គ្រាប់ Noise តូចៗលើរូប Graphic ដើម្បីកុំឱ្យវាមើលទៅរាបស្មើ និងជួយឱ្យពណ៌ Gradient មើលទៅរលូនល្អ)។",
+        answer_en: "🧶 **Texture:** The surface quality of an element that shatters the sterile, flat feeling of digital screens.\n\nIt breathes life and premium quality into a design:\n- **Tactile Texture:** Physical surfaces you can touch (e.g., Embossed foil on packaging).\n- **Visual Texture:** Optical illusions (e.g., adding 2% film grain/noise to a flat vector graphic). This stops the design from looking 'plastic' and prevents color banding in gradients.",
+        chips: ["តើ Space (លំហ) ជាអ្វីក្នុងការរចនា? 🤍", "តើ Value ជាអ្វីនៅក្នុងធាតុរចនា? 🌗"],
+        chips_en: ["What is Space in design? 🤍", "What is Value in design elements? 🌗"]
+    },
+    {
+        primaryKeys: ['តើ Space (លំហ) ជាអ្វីក្នុងការរចនា? 🤍', 'What is Space in design? 🤍'],
+        keys: ['space', 'លំហ', 'spaces'],
+        regex: ['^space$', '^spaces$', '^លំហ$'],
+        answer: "🤍 **Space (លំហ ឬចន្លោះ):** លំហមិនមែនជា 'កន្លែងទំនេរ' ទេ តែវាជាក្របខ័ណ្ឌ (Canvas) ដែលធ្វើឱ្យធាតុផ្សេងទៀតអាចដកដង្ហើមបាន។\n\n- **Positive Space:** ទីតាំងដែលវត្ថុ ឬអក្សររបស់អ្នកស្ថិតនៅ។\n- **Negative Space (White Space):** ចន្លោះប្រហោងជុំវិញវត្ថុ។\n💡 **ចំណាំ:** ការចេះទុករក្សាភាពទទេស្អាត (White Space) គឺជាសញ្ញាសម្គាល់នៃអ្នករចនាប្រណីត (Luxury Design)។ វារុញឱ្យវត្ថុសំខាន់កាន់តែលេចធ្លោ ដោយមិនចាំបាច់ពង្រីកទំហំវាឡើយ។",
+        answer_en: "🤍 **Space:** Space is never just 'empty background'. It is the active canvas that allows every other element to breathe and exist.\n\n- **Positive Space:** The actual objects, images, or text in your layout.\n- **Negative (White) Space:** The deliberate empty areas surrounding the objects.\n💡 **Note:** The fearless use of massive Negative Space is the ultimate hallmark of Luxury Design. It forces maximum attention onto the subject without needing to make it aggressively large.",
+        chips: ["អ្វីទៅជា White Space? 🤍", "តើ Scale/Size ជាអ្វីក្នុងការរចនា? 📏"],
+        chips_en: ["What is White Space? 🤍", "What is Scale/Size in design? 📏"]
+    },
+    {
+        primaryKeys: ['តើ Scale/Size ជាអ្វីក្នុងការរចនា? 📏', 'What is Scale/Size in design? 📏'],
+        keys: ['scale', 'size', 'ទំហំ', 'ខ្នាត'],
+        regex: ['^scale$', '^size$', '^ទំហំ$', '^ខ្នាត$'],
+        answer: "📏 **Scale / Size (ខ្នាត និងទំហំ):** គឺជាទំហំនៃវត្ថុមួយ ធៀបនឹងវត្ថុផ្សេងទៀតនៅក្នុងប្លង់តែមួយ។\n\nវាគឺជាឧបករណ៍ដ៏រហ័សបំផុតក្នុងការបង្កើត **ឋានានុក្រម (Visual Hierarchy)**។\nបើអ្នកចង់ឱ្យគេអានចំណងជើងមុនគេ កុំគ្រាន់តែដាក់វាពណ៌ក្រហម... ត្រូវពង្រីកវាឱ្យធំជាងអត្ថបទធម្មតា ៣ ទៅ ៤ ដង (Extreme Scale)! ការប្រើខ្នាតខុសគ្នាខ្លាំង បង្កើតបានជាភាពទាក់ទាញ (Dynamic Tension) ដ៏អស្ចារ្យ។",
+        answer_en: "📏 **Scale / Size:** The physical dimension of an element relative to the other elements inside the same composition.\n\nIt is the absolute fastest weapon for establishing **Visual Hierarchy**.\nIf you want a headline read first, don't just make it red—make it 3 to 4 times larger than the body text (Extreme Scale)! High contrast in sizing creates massive visual interest and dynamic tension.",
+        chips: ["អ្វីទៅជា Hierarchy? 👁️", "តើ Scale និង Proportion ខុសគ្នាម៉េច? 📏"],
+        chips_en: ["What is Visual Hierarchy? 👁️", "Scale vs Proportion? 📏"]
+    },
+
+    // 🌟 CONTINUING WITH OTHER GENERAL CONCEPTS IN SECTION 2
+    {
+        primaryKeys: ['តើ Design Brief គឺជាអ្វី? 📝', 'What is a Design Brief? 📝'],
+        keys: ['design brief', 'សំណើការងារ', 'brief', 'what is a design brief', 'client brief'],
+        regex: ['design brief', 'brief', 'សំណើការងារ'],
+        answer: "**Design Brief (សំណើការងាររចនា)** គឺជាឯកសារគោលដ៏សំខាន់បំផុតមុនពេលចាប់ផ្តើមគម្រោង! វាដូចជា 'ផែនទី' សម្រាប់អ្នករចនាអញ្ចឹង។ វារួមបញ្ចូលព័ត៌មានអំពី៖ គោលបំណងក្រុមហ៊ុន, អតិថិជនគោលដៅ, គូប្រកួត, ពេលវេលា (Deadline) និងថវិកា។ 💡 កុំចាប់ផ្តើមរចនាបើគ្មាន Brief ច្បាស់លាស់!",
+        answer_en: "**A Design Brief** is the ultimate foundational document before starting any project! It acts as a 'roadmap' for the designer. It outlines: the company's goals, target audience, competitors, deadlines, and budget. 💡 Never start designing without a clear Brief!",
+        chips: ["តើ Target Audience គឺជាអ្វី? 🎯", "តើក្បួនចាប់ផ្តើមរៀន Design មានប៉ុន្មានជំហាន? 🚀"],
+        chips_en: ["What is a Target Audience? 🎯", "How to begin as a Graphic Designer? 🚀"]
+    },
+    {
+        primaryKeys: ['តើ Target Audience គឺជាអ្វី? 🎯', 'What is a Target Audience? 🎯'],
+        keys: ['target audience', 'អតិថិជនគោលដៅ', 'អ្នកមើល', 'user persona', 'what is a target audience'],
+        regex: ['target audience', 'អតិថិជនគោលដៅ', 'persona'],
+        answer: "**Target Audience (អតិថិជនគោលដៅ)** គឺជាក្រុមមនុស្សជាក់លាក់ដែលអ្នកកំពុងរចនាសម្រាប់ពួកគេ។ ការរចនាល្អ គឺមិនមែនសម្រាប់មនុស្សគ្រប់គ្នានោះទេ!\n\nឧទាហរណ៍៖ ការរចនា Poster លក់ប្រដាប់ក្មេងលេង ត្រូវប្រើពណ៌ស្រស់ឆើតឆាយ និងហ្វុនមូលៗ។ តែបើអ្នករចនាឡូហ្គោធនាគារ អ្នកត្រូវប្រើពណ៌ខៀវ និងហ្វុនត្រង់ៗ ដើម្បីបង្ហាញពីទំនុកចិត្ត។ 'រចនាសម្រាប់អ្នកណា គឺសំខាន់ជាងរចនាម៉េចឱ្យស្អាត!'",
+        answer_en: "**The Target Audience** is the specific group of people you are designing for. Great design is never meant to appeal to *everyone*!\n\nExample: A toy store poster demands hyper-vibrant colors and bubbly fonts. But a Bank logo requires deep blues and structured fonts to project security and trust. 'Knowing *who* you are designing for is more important than making it look pretty!'",
+        chips: ["តើ Design Brief គឺជាអ្វី? 📝", "តើ Brand, Identity និង Logo ខុសគ្នាម៉េច? 🏢"],
+        chips_en: ["What is a Design Brief? 📝", "Brand vs Identity vs Logo? 🏢"]
+    },
+    {
+        primaryKeys: ['តើ Visual Weight ជាអ្វី? ⚖️', 'What is Visual Weight? ⚖️'],
+        keys: ['visual weight', 'ទម្ងន់រូបភាព', 'ទម្ងន់ភ្នែក', 'what is visual weight'],
+        regex: ['visual weight', 'ទម្ងន់រូបភាព', 'ទម្ងន់ភ្នែក'],
+        answer: "**Visual Weight (ទម្ងន់ភ្នែក)** គឺជារបៀបដែលធាតុមួយទាញទាញចំណាប់អារម្មណ៍របស់អ្នកមើល។ វត្ថុមិនមែនមានទម្ងន់ពិតប្រាកដទេ តែវាមានទម្ងន់តាមរយៈការមើលឃើញ!\n\nឧទាហរណ៍៖ ពណ៌ដិតៗ (ខ្មៅ, ក្រហម) មើលទៅធ្ងន់ជាងពណ៌ស្លេកៗ (Pastel) ហើយវត្ថុធំមើលទៅធ្ងន់ជាងវត្ថុតូច។ អ្នករចនាប្រើវាដើម្បីបង្កើត Balance និងទាញភ្នែកទៅរកចំណុចសំខាន់។",
+        answer_en: "**Visual Weight** is the measure of how much an element attracts the viewer's eye. Objects don't have physical weight on a screen, but they have optical weight!\n\nFor example: dark, highly saturated colors (Black, Red) feel heavier than light pastels, and large objects feel heavier than small ones. Designers use this to achieve Balance and direct focus.",
+        chips: ["តើធាតុផ្សំនៃរចនា (Visual Elements) មានអ្វីខ្លះ? 🧩", "តើ Balance និង Alignment ខុសគ្នាម៉េច? ⚖️"],
+        chips_en: ["What are the 7 Visual Elements? 🧩", "Balance vs Alignment? ⚖️"]
+    },
+    {
+        primaryKeys: ['តើ Value ជាអ្វីនៅក្នុងធាតុរចនា? 🌗', 'What is Value in design elements? 🌗'],
+        keys: ['value', 'តម្លៃពន្លឺ', 'ពន្លឺនិងស្រមោល', 'lightness', 'darkness', 'what is value'],
+        regex: ['value', 'តម្លៃពន្លឺ'],
+        answer: "**Value (តម្លៃពន្លឺ)** គឺជាកម្រិតនៃភាពភ្លឺ ឬងងឹតនៃពណ៌មួយ។ វត្ថុមួយអាចជាពណ៌ក្រហមដូចគ្នា ប៉ុន្តែអាចមាន Value ខុសគ្នា (ក្រហមស្រាល ទល់នឹង ក្រហមក្រម៉ៅ)។ \n\n💡 **មុខងារ:** បើគ្មាន Value ទេ ការរចនានឹងមើលទៅរាបស្មើទាំងស្រុង! គំនូរ 3D មើលទៅលេចចេញជារូបរាងពិតៗបាន ក៏ដោយសារអ្នករចនាលេង Value ដើម្បីបង្កើតជាពន្លឺ (Highlight) និងស្រមោល (Shadow) នេះឯង។",
+        answer_en: "**Value** defines the lightness or darkness of a color. An element can be the exact same hue (like Red), but have vastly different Values (light pinkish-red vs. deep maroon).\n\n💡 **Function:** Without Value, a design is completely flat! 3D illustrations pop off the page entirely because designers manipulate Value to create realistic Highlights and Shadows.",
+        chips: ["តើ HSL គឺជាអ្វី? 🎛️", "តើ Contrast ជាអ្វី? 🌗"],
+        chips_en: ["What is HSL? 🎛️", "What is Contrast? 🌗"]
+    },
+    {
+        primaryKeys: ['តើសញ្ញាសាស្ត្រ (Semiotics) ក្នុងការរចនាជាអ្វី? 👁️', 'What is Semiotics in design? 👁️'],
+        keys: ['semiotics', 'icon', 'index', 'symbol', 'សញ្ញាសាស្ត្រ', 'អត្ថន័យរូបភាព'],
+        regex: ['semiotics', 'icon', 'index', 'symbol', 'សញ្ញាសាស្ត្រ'],
+        answer: `នៅសាកលវិទ្យាល័យគេបង្រៀនពី **Semiotics (សញ្ញាសាស្ត្រ)** ដែលជាការសិក្សាពីរបៀបដែលរូបភាពបង្កើតអត្ថន័យ។ វាមាន ៣ កម្រិត៖\n\n១. **Icon (រូបតំណាងផ្ទាល់):** រូបដែលមើលទៅដូចវត្ថុពិត (ឧ. រូបគំនូរទូរស័ព្ទ តំណាងឱ្យទូរស័ព្ទ)។\n២. **Index (សញ្ញាប្រយោល):** រូបដែលបង្ហាញពីទំនាក់ទំនងហេតុនិងផល (ឧ. រូបផ្សែង តំណាងឱ្យភ្លើង ឬរូបស្នាមជើង តំណាងឱ្យមនុស្សដើរ)។\n៣. **Symbol (និមិត្តសញ្ញា):** រូបដែលគ្មានទំនាក់ទំនងផ្ទាល់ តែមនុស្សយល់ព្រមលើអត្ថន័យវា (ឧ. រូបព្រាបស តំណាងឱ្យសន្តិភាព ឬសញ្ញាខ្វែងពណ៌ក្រហម តំណាងឱ្យខុស)។`,
+        answer_en: `At the university level, designers study **Semiotics**, the theory of how visual signs create meaning. It is divided into 3 categories:\n\n1. **Icon:** A sign that physically resembles what it stands for (e.g., a drawing of a printer means 'print').\n2. **Index:** A sign that shows evidence of what's being represented through cause and effect (e.g., smoke indicates fire, or a drop shadow indicates 3D depth).\n3. **Symbol:** A sign with no physical resemblance to its meaning; it must be culturally learned (e.g., a dove means peace, or a red octagon means 'stop').`,
+        chips: ["តើ Denotation និង Connotation ជាអ្វី? 🧠", "តើ Point, Line, Plane ជាអ្វី? 📐"],
+        chips_en: ["Denotation vs Connotation? 🧠", "Point, Line, Plane? 📐"]
+    },
+    {
+        primaryKeys: ['តើ Denotation និង Connotation ជាអ្វី? 🧠', 'Denotation vs Connotation? 🧠'],
+        keys: ['denotation', 'connotation', 'អត្ថន័យផ្ទាល់', 'អត្ថន័យធៀប', 'meaning'],
+        regex: ['denotation', 'connotation'],
+        answer: `នេះជាទ្រឹស្តីវិភាគរូបភាពកម្រិតខ្ពស់៖\n\n- **Denotation (អត្ថន័យផ្ទាល់):** គឺជាអ្វីដែលភ្នែកអ្នកមើលឃើញផ្ទាល់ (ឧ. រូបភាពផ្កាកុលាបក្រហមមួយទង)។\n- **Connotation (អត្ថន័យធៀប/ផ្លូវចិត្ត):** គឺជាអារម្មណ៍ ឬអត្ថន័យលាក់កំបាំងដែលរូបភាពនោះតំណាងឱ្យ (ឧ. ផ្កាកុលាបក្រហម តំណាងឱ្យ សេចក្តីស្រឡាញ់ ភាពរ៉ូមែនទិក ឬថ្ងៃបុណ្យនៃក្តីស្រឡាញ់)។\n💡 **អនុវត្ត:** អ្នករចនាពូកែ ប្រើ Denotation សាមញ្ញ ដើម្បីបង្កើត Connotation ដ៏ជ្រាលជ្រៅនៅក្នុងចិត្តអតិថិជន។`,
+        answer_en: `This is advanced visual analysis taught in design degrees:\n\n- **Denotation (Literal Meaning):** What the image actually is physically (e.g., a photograph of a red rose).\n- **Connotation (Implied Meaning):** The cultural or emotional association the image invokes (e.g., the red rose implies romance, love, or Valentine's Day).\n💡 **Application:** Master designers use simple denotations to trigger powerful emotional connotations in the viewer's mind.`,
+        chips: ["តើ Point, Line, Plane ជាអ្វី? 📐", "តើសញ្ញាសាស្ត្រ (Semiotics) ក្នុងការរចនាជាអ្វី? 👁️"],
+        chips_en: ["Point, Line, Plane? 📐", "What is Semiotics in design? 👁️"]
+    },
+    {
+        primaryKeys: ['តើ Point, Line, Plane ជាអ្វី? 📐', 'Point, Line, Plane theory? 📐'],
+        keys: ['point line plane', 'bauhaus', 'kandinsky', 'ចំណុចបន្ទាត់ប្លង់'],
+        regex: ['point', 'plane', 'kandinsky'],
+        answer: `នេះគឺជាទ្រឹស្តីគ្រឹះរបស់សាលា **Bauhaus (Kandinsky)** ធ្លាក់លើទម្រង់រូបរាង (Form)៖\n\n១. **Point (ចំណុច):** ជាកូអរដោនេក្នុងលំហ គ្មានប្រវែង គ្មានទទឹង។ វាទាញការចាប់អារម្មណ៍ខ្លាំងបំផុត (Focal point)។\n២. **Line (បន្ទាត់):** គឺជាចំណុចដែលផ្លាស់ទី! វាបង្កើតជាចលនា ទិសដៅ និងថាមពល។\n៣. **Plane (ប្លង់):** គឺជាបន្ទាត់ដែលបិទជិត ឬផ្ទៃរាបស្មើដែលមានបណ្តោយនិងទទឹង (2D)។\n💡 គ្រប់ការរចនាទាំងអស់ទោះស្មុគស្មាញយ៉ាងណា ក៏កើតចេញពីការផ្តុំគ្នានៃ Point, Line, និង Plane នេះឯង។`,
+        answer_en: `This is the fundamental geometric theory popularized by Wassily Kandinsky and the **Bauhaus** school:\n\n1. **Point:** A coordinate in space. It has no length or width, but it provides the ultimate focal point and creates immediate tension.\n2. **Line:** A point in motion! It has length but no width. Lines dictate direction, energy, and boundaries.\n3. **Plane:** A line that closes on itself or extends, creating a flat 2D surface with length and width.\n💡 Every complex graphic design in existence can be deconstructed back into simple points, lines, and planes.`,
+        chips: ["តើ Graphic Design មានប្រវត្តិយ៉ាងណា? 📜", "តើ គោលការណ៍រចនា (Principles) មានអ្វីខ្លះ? 📐"],
+        chips_en: ["What is the history of Graphic Design? 📜", "What are the Core Design Principles? 📐"]
+    },
+        
+    // ------------------------------------------
+    // 3. CORE PRINCIPLES & COMPOSITION
+    // ------------------------------------------
+    {
+        primaryKeys: ['តើ គោលការណ៍រចនា (Principles) មានអ្វីខ្លះ? 📐', 'What are the Core Design Principles? 📐'],
         keys: ['design principles', 'ក្បួនរចនា', 'មូលដ្ឋានគ្រឹះ', 'fundamentals'],
-        regex: ['design principle', 'ក្បួនរចនា', 'មូលដ្ឋានគ្រឹះ', '\\bfundamentals\\b'],
-        answer: "បាទ **គោលការណ៍រចនា (Design Principles)** គឺជាក្បួនដែលធ្វើឱ្យការរចនាមើលទៅមានវិជ្ជាជីវៈ (គេនិយមហៅថា CRAP)៖\n\n១. **C - Contrast (ភាពផ្ទុយ):** ធ្វើឱ្យអ្វីមួយលេចធ្លោ។\n២. **R - Repetition (ភាពដដែលៗ):** បង្កើតភាពស៊ីសង្វាក់គ្នា។\n៣. **A - Alignment (ការតម្រឹម):** រៀបចំឱ្យមានរបៀប។\n៤. **P - Proximity (ភាពកៀកគ្នា):** ចងវត្ថុដែលទាក់ទងគ្នាជាក្រុម។\n\nតើអ្នកចង់ឱ្យខ្ញុំពន្យល់លម្អិតពីចំណុចមួយណា?",
-        answer_en: "**Core Design Principles** are the rules that make a design look professional (often called CRAP):\n\n1. **C - Contrast:** Making important elements stand out.\n2. **R - Repetition:** Creating visual consistency.\n3. **A - Alignment:** Organizing elements logically.\n4. **P - Proximity:** Grouping related items together.\n\nWhich one would you like me to explain in detail?",
-        chips: ["តើ Contrast ជាអ្វី?", "តើ Alignment ជាអ្វី?", "តើ Proximity ជាអ្វី?"],
-        chips_en: ["What is Contrast?", "What is Alignment?", "What is Proximity?"]
+        regex: ['design principle', 'ក្បួនរចនា', 'មូលដ្ឋានគ្រឹះ', 'fundamentals'],
+        answer: "បាទ **គោលការណ៍រចនា (Design Principles)** គឺជាក្បួនដែលជួយរៀបចំ Visual Elements ឱ្យមានប្រសិទ្ធភាព៖\n\n១. **Contrast (ភាពផ្ទុយ):** បង្កើតចំណុចផ្តោត។\n២. **Hierarchy (ឋានានុក្រម):** ដឹកនាំភ្នែកតាមលំដាប់លំដោយ។\n៣. **Alignment (ការតម្រឹម):** បង្កើតទំនាក់ទំនងខ្សែភ្នែក។\n៤. **Balance (តុល្យភាព):** ទម្ងន់នៃរូបភាព (Symmetrical, Asymmetrical, Radial)។\n៥. **Proximity (ភាពកៀកគ្នា):** ចងវត្ថុពាក់ព័ន្ធគ្នាជាក្រុម។\n៦. **Repetition (ភាពដដែលៗ):** បង្កើតភាពស៊ីសង្វាក់គ្នា។\n៧. **Rhythm (ចង្វាក់):** ល្បឿននៃរូបភាព (Regular, Flowing, Progressive)។\n៨. **Unity & Variety (ឯកភាព & ភាពចម្រុះ):** ទាញឱ្យការរចនាស៊ីសង្វាក់ តែមិនគួរឱ្យធុញ។",
+        answer_en: "**Core Design Principles** are the rules used to arrange Visual Elements effectively:\n\n1. **Contrast:** Creates focus and organization.\n2. **Hierarchy:** Guides the eye sequentially.\n3. **Alignment:** Ensures elements have visual connections.\n4. **Balance:** Visual weight distribution (Symmetrical, Asymmetrical, Radial).\n5. **Proximity:** Grouping related items together.\n6. **Repetition:** Creating visual brand consistency.\n7. **Rhythm:** The visual tempo (Regular, Flowing, Progressive).\n8. **Unity & Variety:** Making the design cohesive yet visually interesting.",
+        chips: ["តើ Contrast ជាអ្វី? 🌗", "តើ Squint Test ជាអ្វី? 👁️"],
+        chips_en: ["What is Contrast? 🌗", "What is the Squint Test? 👁️"]
     },
     {
-        primaryKeys: ['ទ្រឹស្តី Gestalt', 'gestalt principles'],
-        keys: ['gestalt', 'ច្បាប់ gestalt', 'similarity', 'continuity', 'closure'],
-        regex: ['\\bgestalt\\b', '\\bsimilarity\\b', '\\bcontinuity\\b'],
-        answer: "បាទ **ទ្រឹស្តី Gestalt** គឺជាចិត្តសាស្ត្រដែលពន្យល់ពីរបៀបដែលខួរក្បាលមនុស្សមើលឃើញវត្ថុផ្សេងៗជាក្រុមរួមគ្នា៖\n\n១. **Similarity (ភាពស្រដៀង):** វត្ថុដែលមានរាង ឬពណ៌ដូចគ្នា ខួរក្បាលគិតថាវាជាក្រុមតែមួយ។\n២. **Continuity (ភាពបន្តបន្ទាប់):** ភ្នែកមនុស្សចូលចិត្តរត់តាមខ្សែបន្ទាត់កោង ឬទិសដៅដែលកំពុងចង្អុលបង្ហាញ។\n៣. **Closure (ការបិទជិត):** ទោះបីជារូបភាពមួយគូសមិនជិតល្អ ក៏ខួរក្បាលយើងចេះបំពេញចន្លោះប្រហោងនោះឱ្យទៅជារូបពេញលេញដែរ (ឧ. ឡូហ្គោ WWF)។\n\n💡 **គន្លឹះអាជីព៖** ប្រើក្បួន Similarity ពេលធ្វើ UI Design ដើម្បីឱ្យប៊ូតុងទាំងអស់មានទម្រង់ដូចគ្នា។",
-        answer_en: "**Gestalt Principles** explain the psychology behind how the human brain visually groups objects together:\n\n1. **Similarity:** Elements that look alike in color or shape are perceived as a group.\n2. **Continuity:** The eye is naturally drawn to follow a continuous line or path.\n3. **Closure:** The brain automatically fills in missing parts of a design to create a complete image (e.g., the WWF Panda logo).\n\n💡 **Pro Tip:** Use Similarity in UI Design to ensure all your clickable buttons look like they belong to the same family.",
-        chips: ["តើ Proximity ជាអ្វី?", "អ្វីទៅជា Hierarchy?"],
-        chips_en: ["What is Proximity?", "Visual Hierarchy"]
+        primaryKeys: ['តើ Contrast ជាអ្វី? 🌗', 'What is Contrast? 🌗'],
+        keys: ['contrast', 'ភាពផ្ទុយគ្នា', 'ផ្ទុយ', 'what is contrast'],
+        regex: ['contrast', 'ភាពផ្ទុយ'],
+        answer: "បាទ **Contrast (ភាពផ្ទុយគ្នា)** គឺការប្រើប្រាស់ភាពខុសគ្នាដាច់ស្រឡះ ដើម្បីទាក់ទាញភ្នែក បង្កើតចំណុចផ្តោត និងងាយស្រួលអាន។\n\n💡 **ឧទាហរណ៍៖** \n- **ពណ៌:** អក្សរពណ៌ស លើផ្ទៃខាងក្រោយពណ៌ខ្មៅ។\n- **ទំហំ:** ចំណងជើងធំខ្លាំង ជាមួយអត្ថបទតូច។\n- **ទម្ងន់:** Font **Bold** ធៀបជាមួយ Font *Light*។\nបើគ្មាន Contrast ទេ ការរចនានឹងមើលទៅរាបស្មើ ស្រអាប់ និងគួរឱ្យធុញ!",
+        answer_en: "**Contrast** is the use of striking differences to grab attention, establish a focal point, and improve readability.\n\n💡 **Examples:**\n- **Color:** Crisp white text on a dark black background.\n- **Scale:** A massive headline paired with tiny body text.\n- **Weight:** A heavy **Bold** font next to a delicate *Light* font.\nWithout contrast, your design will look flat, muddy, and boring!",
+        chips: ["អ្វីទៅជា Hierarchy? 👁️", "តើ Squint Test ជាអ្វី? 👁️"],
+        chips_en: ["What is Visual Hierarchy? 👁️", "What is the Squint Test? 👁️"]
     },
     {
-        primaryKeys: ['Symmetry និង Asymmetry', 'symmetry vs asymmetry'],
-        keys: ['symmetry', 'asymmetry', 'តុល្យភាព', 'balance', 'ភាពស៊ីមេទ្រី'],
-        regex: ['\\bsymmetry\\b', '\\basymmetry\\b', 'តុល្យភាព'], // Removed 'balance' to avoid color balance
-        answer: "បាទ **តុល្យភាព (Balance) ក្នុងប្លង់មាន ២ ប្រភេទធំៗ៖**\n\n⚖️ **Symmetrical (ស៊ីមេទ្រី):** ឆ្វេងនិងស្តាំមានទម្ងន់ស្មើគ្នា ១០០%។ វាផ្តល់អារម្មណ៍ស្ងប់ស្ងាត់ ផ្លូវការ និងប្រណីត (ល្អសម្រាប់ធៀបការ ឬឡូហ្គោម៉ាកល្បីៗ)។\n🌪️ **Asymmetrical (អស៊ីមេទ្រី):** ឆ្វេងនិងស្តាំមិនស្មើគ្នាទេ តែមានតុល្យភាពដោយប្រើទំហំ ឬពណ៌ (ឧ. រូបធំមួយនៅខាងស្តាំ ទូទាត់ជាមួយអក្សរតូចៗច្រើននៅខាងឆ្វេង)។ វាផ្តល់អារម្មណ៍សកម្ម ទំនើប និងមានថាមពល!\n\n💡 **គន្លឹះអាជីព៖** Poster ភាគច្រើនប្រើ Asymmetrical Balance ដើម្បីបង្កើតភាពទាក់ទាញ និងកុំឱ្យមើលទៅគួរឱ្យធុញ។",
-        answer_en: "**In layout design, Balance comes in two main forms:**\n\n⚖️ **Symmetrical Balance:** The left and right sides are perfect mirrors. It feels formal, calm, and luxurious (Great for wedding invitations and high-end branding).\n🌪️ **Asymmetrical Balance:** The sides are different, but visually balanced using visual weight (e.g., a massive image on the right balanced by a large block of text on the left). It feels dynamic, modern, and energetic!\n\n💡 **Pro Tip:** Most modern posters use Asymmetrical balance because it creates visual tension and keeps the viewer's eye moving.",
-        chips: ["តើ Rule of Thirds គឺជាអ្វី?", "តើ Contrast ជាអ្វី?"],
-        chips_en: ["What is the Rule of Thirds?", "What is Contrast?"]
+        primaryKeys: ['តើ Alignment ជាអ្វី? 📏', 'What is Alignment? 📏'],
+        keys: ['alignment', 'តម្រឹម', 'រៀបជួរ', 'what is alignment'],
+        regex: ['alignment', 'តម្រឹម', 'រៀបជួរ'],
+        answer: "បាទ **Alignment (ការតម្រឹម)** គឺការរៀបចំវត្ថុឱ្យត្រង់ជួរគ្នាដោយមានបន្ទាត់មើលមិនឃើញ (Invisible Grid) ដើម្បីធានាថាគ្រប់ធាតុទាំងអស់មានទំនាក់ទំនងខ្សែភ្នែកជាមួយធាតុផ្សេងទៀត។\n\n💡 **ឧទាហរណ៍៖** \n- **Left-aligned (ឆ្វេង):** ស្រួលអានបំផុតសម្រាប់អត្ថបទវែងៗ។\n- **Center-aligned (កណ្តាល):** ល្អសម្រាប់ធៀបការ ឬចំណងជើងខ្លីៗ (កុំប្រើសម្រាប់អត្ថបទវែង ព្រោះពិបាកអាន!)។\n- **Right-aligned (ស្តាំ):** ល្អសម្រាប់កាលបរិច្ឆេទ ឬលេខទូរស័ព្ទនៅជ្រុង។",
+        answer_en: "**Alignment** is the practice of arranging elements along an invisible line or grid to ensure every element has a visual connection to another element.\n\n💡 **Examples:**\n- **Left-aligned:** The easiest and most natural way to read long paragraphs.\n- **Center-aligned:** Looks formal, great for invitations or short titles (never use for long body text!).\n- **Right-aligned:** Good for small dates or numbers on the edge of a layout.",
+        chips: ["តើ Proximity ជាអ្វី? 🏘️", "តើ Grid System គឺជាអ្វី? 📐"],
+        chips_en: ["What is Proximity? 🏘️", "What is a Grid System? 📐"]
     },
     {
-        primaryKeys: ['តើ Contrast ជាអ្វី?', 'what is contrast'],
-        keys: ['contrast', 'ភាពផ្ទុយគ្នា', 'ផ្ទុយ'],
-        regex: ['\\bcontrast\\b', 'ភាពផ្ទុយ'],
-        answer: "បាទ **Contrast (ភាពផ្ទុយគ្នា)** គឺការប្រើប្រាស់ភាពខុសគ្នាដាច់ស្រឡះ ដើម្បីទាក់ទាញភ្នែក និងងាយស្រួលអាន។\n\n💡 **ឧទាហរណ៍៖** \n- **ពណ៌:** អក្សរពណ៌ស លើផ្ទៃខាងក្រោយពណ៌ខ្មៅ។\n- **ទំហំ:** ចំណងជើងធំខ្លាំង ជាមួយអត្ថបទតូច។\n- **ទម្ងន់:** Font **Bold** ធៀបជាមួយ Font *Light*។\nបើគ្មាន Contrast ទេ ការរចនានឹងមើលទៅរាបស្មើ និងគួរឱ្យធុញ!",
-        answer_en: "**Contrast** is the use of striking differences to grab attention and improve readability.\n\n💡 **Examples:**\n- **Color:** Crisp white text on a dark black background.\n- **Scale:** A massive headline paired with tiny body text.\n- **Weight:** A heavy **Bold** font next to a delicate *Light* font.\nWithout contrast, your design will look flat and boring!",
-        chips: ["ក្បួនផ្គូផ្គងពណ៌ (Color Harmonies)", "អ្វីទៅជា Typography?"],
-        chips_en: ["Color Harmonies", "What is Typography?"]
+        primaryKeys: ['តើ Proximity ជាអ្វី? 🏘️', 'What is Proximity? 🏘️'],
+        keys: ['proximity', 'ភាពកៀកគ្នា', 'គម្លាត', 'what is proximity'],
+        regex: ['proximity', 'ភាពកៀកគ្នា', 'គម្លាត'],
+        answer: "បាទ **Proximity (ភាពកៀកគ្នា)** គឺជាការរៀបចំរបស់ដែលទាក់ទងគ្នាខាងអត្ថន័យ ឱ្យនៅជិតគ្នាខាងរូបភាព ដើម្បីឱ្យខួរក្បាលងាយចាប់បានថាវាជាក្រុមតែមួយ។\n\n💡 **ឧទាហរណ៍៖** នៅក្នុងនាមប័ណ្ណ (Business Card) ឈ្មោះនិងតួនាទីគួរនៅកៀកគ្នា។ ចំណែកឯលេខទូរស័ព្ទ និងអ៊ីមែល គួរនៅកៀកគ្នាជាក្រុមមួយទៀត ដែលនៅឆ្ងាយពីឈ្មោះបន្តិច។",
+        answer_en: "**Proximity** means grouping related items close together visually so the brain automatically perceives them as a single related unit.\n\n💡 **Example:** On a Business Card, the person's Name and Job Title should be placed close together. Their Phone Number and Email should be grouped together elsewhere. This chunking makes it instantly scannable.",
+        chips: ["អ្វីទៅជា White Space? 🤍", "អ្វីទៅជា Hierarchy? 👁️"],
+        chips_en: ["What is White Space? 🤍", "What is Visual Hierarchy? 👁️"]
     },
     {
-        primaryKeys: ['តើ Alignment ជាអ្វី?', 'what is alignment'],
-        keys: ['alignment', 'តម្រឹម', 'រៀបជួរ'],
-        regex: ['\\balignment\\b', 'តម្រឹម', 'រៀបជួរ'],
-        answer: "បាទ **Alignment (ការតម្រឹម)** គឺការរៀបចំវត្ថុឱ្យត្រង់ជួរគ្នាដោយមានបន្ទាត់មើលមិនឃើញ (Invisible Grid)។\n\n💡 **ឧទាហរណ៍៖** \n- **Left-aligned (ឆ្វេង):** ស្រួលអានបំផុតសម្រាប់អត្ថបទវែងៗ។\n- **Center-aligned (កណ្តាល):** ល្អសម្រាប់ធៀបការ ឬចំណងជើងខ្លីៗ (កុំប្រើសម្រាប់អត្ថបទវែង!)។\n- **Right-aligned (ស្តាំ):** ល្អសម្រាប់កាលបរិច្ឆេទ ឬលេខទូរស័ព្ទនៅជ្រុង។",
-        answer_en: "**Alignment** is the practice of arranging elements along an invisible line or grid to create order.\n\n💡 **Examples:**\n- **Left-aligned:** The easiest and most natural way to read long paragraphs.\n- **Center-aligned:** Looks formal, great for wedding invitations or short titles (never use for long text!).\n- **Right-aligned:** Good for small dates or numbers on the edge of a layout.",
-        chips: ["តើ Proximity ជាអ្វី?", "តើ Rule of Thirds គឺជាអ្វី?"],
-        chips_en: ["What is Proximity?", "What is the Rule of Thirds?"]
+        primaryKeys: ['តើ Repetition ជាអ្វី? 🔁', 'What is Repetition? 🔁'],
+        keys: ['repetition', 'consistency', 'ធ្វើដដែលៗ', 'ភាពស៊ីសង្វាក់', 'what is repetition'],
+        regex: ['repetition', 'consistency', 'ភាពស៊ីសង្វាក់'],
+        answer: "បាទ **Repetition / Consistency (ភាពស៊ីសង្វាក់)** គឺការធ្វើឡើងវិញនូវធាតុរូបភាព (ពណ៌ ហ្វុនអក្សរ ទម្រង់) ដើម្បីបង្កើតឯកភាព និងការចងចាំម៉ាកយីហោ (Brand Identity)។\n\n💡 **ឧទាហរណ៍៖** ក្រុមហ៊ុន Coca-Cola តែងតែប្រើប្រាស់ពណ៌ក្រហម និង Font អក្សរដដែលៗនៅគ្រប់ផ្ទាំងប៉ាណូ។ ក្នុងការរចនារបស់អ្នក អ្នកគួរប្រើ Font តែ ១ ឬ ២ ប្រភេទ និងពណ៌ ៣ មុខប៉ុណ្ណោះ ទើបមើលទៅប្រណីត និងមានសណ្តាប់ធ្នាប់។",
+        answer_en: "**Repetition / Consistency** is repeating visual elements (colors, fonts, shapes) throughout a design to build unity and brand identity.\n\n💡 **Example:** Coca-Cola always uses the exact same shade of red and the same curvy ribbon font on every advertisement. In your designs, strictly limit yourself to 1-2 fonts and a 3-color palette to keep things looking cohesive and premium.",
+        chips: ["តើ Balance និង Alignment ខុសគ្នាម៉េច? ⚖️", "តើ Unity ក្នុងការរចនាជាអ្វី? 🔗"],
+        chips_en: ["Balance vs Alignment? ⚖️", "What is Unity in design? 🔗"]
     },
     {
-        primaryKeys: ['តើ Proximity ជាអ្វី?', 'what is proximity'],
-        keys: ['proximity', 'ភាពកៀកគ្នា', 'គម្លាត'],
-        regex: ['\\bproximity\\b', 'ភាពកៀកគ្នា'],
-        answer: "បាទ **Proximity (ភាពកៀកគ្នា)** គឺជាការរៀបចំរបស់ដែលទាក់ទងគ្នា ឱ្យនៅជិតគ្នា ដើម្បីឱ្យខួរក្បាលងាយចាប់បានថាវាជាក្រុមតែមួយ។\n\n💡 **ឧទាហរណ៍៖** នៅក្នុងនាមប័ណ្ណ (Business Card) ឈ្មោះនិងតួនាទីគួរនៅកៀកគ្នា។ ចំណែកឯលេខទូរស័ព្ទ និងអ៊ីមែល គួរនៅកៀកគ្នាជាក្រុមមួយទៀត ដែលនៅឆ្ងាយពីឈ្មោះបន្តិច។",
-        answer_en: "**Proximity** means grouping related items close together so the brain automatically perceives them as a single unit.\n\n💡 **Example:** On a Business Card, the person's Name and Job Title should be placed close together. Their Phone Number and Email should be grouped together elsewhere. This chunking makes it instantly scannable.",
-        chips: ["អ្វីទៅជា White Space?", "អ្វីទៅជា Hierarchy?"],
-        chips_en: ["What is White Space?", "Visual Hierarchy"]
+        primaryKeys: ['តើ Balance និង Alignment ខុសគ្នាម៉េច? ⚖️', 'Balance vs Alignment: What\'s the difference? ⚖️'],
+        keys: ['balance', 'តុល្យភាព', 'symmetrical', 'asymmetrical', 'radial', 'alignment', 'តម្រឹម', 'រៀបជួរ', 'balance vs alignment'],
+        regex: ['balance', 'តុល្យភាព', 'symmetrical', 'asymmetrical', 'radial', 'alignment', 'តម្រឹម', 'រៀបជួរ'],
+        answer: "បាទ ទាំងពីរនេះទាក់ទងនឹងការរៀបចំ តែខុសគ្នា៖\n\n📏 **Alignment (ការតម្រឹម):** គឺការរៀបចំវត្ថុឱ្យត្រង់ជួរគ្នាដោយមានបន្ទាត់ (Left, Center, Right)។ វាបង្កើតភាពមានរបៀប。\n⚖️ **Balance (តុល្យភាព):** គឺជាការចែកចាយ **ទម្ងន់ភ្នែក (Visual Weight)** កុំឱ្យការរចនាវៀចទៅម្ខាង។ មាន ៣ ប្រភេទ៖\n- **Symmetrical (ស៊ីមេទ្រី):** ឆ្វេងនិងស្តាំឆ្លុះគ្នាដូចបេះបិទ (ផ្លូវការ និងស្ថិរភាព)។\n- **Asymmetrical (អសីមេទ្រី):** ធាតុផ្សេងគ្នាដែលមានទម្ងន់រូបភាពស្មើគ្នា (ឧ. រូបធំ១ ទល់នឹង អក្សរតូចៗមួយដុំ)។ បង្កើតភាពទាក់ទាញនិងទំនើប។\n- **Radial (វិទ្យុសកម្ម):** ធាតុដែលបញ្ចេញកាំពីចំណុចកណ្តាល។",
+        answer_en: "Both deal with structure, but they act differently:\n\n📏 **Alignment:** Arranging elements along an invisible line (Left, Center, Right) to create visual connection.\n⚖️ **Balance:** The distribution of **Visual Weight**. It stops a design from 'tipping over'. The 3 types are:\n- **Symmetrical (Formal):** Left and right are perfect mirrors. Feels very stable and formal.\n- **Asymmetrical (Informal):** Different elements with equal visual weight (e.g., a large photo balanced by a dense text block). Creates tension and interest.\n- **Radial:** Elements radiate from a center point.",
+        chips: ["តើ Visual Tension គឺជាអ្វី? ⚡", "តើ Grid System គឺជាអ្វី? 📐"],
+        chips_en: ["What is Visual Tension? ⚡", "What is a Grid System? 📐"]
     },
     {
-        primaryKeys: ['តើ Repetition ជាអ្វី?', 'what is repetition'],
-        keys: ['repetition', 'consistency', 'ធ្វើដដែលៗ', 'ភាពស៊ីសង្វាក់'],
-        regex: ['\\brepetition\\b', '\\bconsistency\\b', 'ភាពស៊ីសង្វាក់'],
-        answer: "បាទ **Repetition / Consistency (ភាពស៊ីសង្វាក់)** គឺការប្រើប្រាស់រចនាបថដដែលៗដើម្បីបង្កើតការចងចាំម៉ាកយីហោ (Brand Identity)។\n\n💡 **ឧទាហរណ៍៖** ក្រុមហ៊ុន Coca-Cola តែងតែប្រើប្រាស់ពណ៌ក្រហម និង Font អក្សរដដែលៗនៅគ្រប់ផ្ទាំងប៉ាណូ។ ក្នុងការរចនារបស់អ្នក អ្នកគួរប្រើ Font តែ ១ ឬ ២ ប្រភេទ និងពណ៌ ៣ មុខប៉ុណ្ណោះ ទើបមើលទៅប្រណីត។",
-        answer_en: "**Repetition / Consistency** is using the same visual styles throughout a design to build a strong, unified identity.\n\n💡 **Example:** Coca-Cola always uses the exact same shade of red and the same curvy ribbon font on every advertisement. In your designs, strictly limit yourself to 1-2 fonts and a 3-color palette to keep things looking cohesive and premium.",
-        chips: ["ក្បួនរចនាឡូហ្គោ (Logo Design)", "អត្ថន័យនៃពណ៌ (Color Psychology)"],
-        chips_en: ["Rules of Logo Design", "Color Psychology"]
-    },
-
-    // 2. COLOR THEORY (CANVA STANDARD)
-    {
-        primaryKeys: ['ក្បួនផ្គូផ្គងពណ៌ (Color Harmonies)', 'color harmonies'],
-        keys: ['color harmony', 'ក្បួនពណ៌', 'ច្បាប់ពណ៌', 'complementary', 'analogous', 'triadic', 'tetradic', 'monochromatic'],
-        regex: ['color harmony', 'ក្បួនពណ៌', 'ច្បាប់ពណ៌', '\\banalogous\\b', '\\btriadic\\b', '\\btetradic\\b', '\\bmonochromatic\\b'], // STRIOT: Removed complementary so it doesn't fight generator
-        answer: "បាទ យោងតាមក្បួន Canva Color Wheel ក្បួនផ្គូផ្គងពណ៌ (Color Harmonies) មាន ៥ ប្រភេទធំៗ៖\n\n១. **Complementary (ពណ៌ផ្ទុយ):** ពណ៌២នៅទល់មុខគ្នា។ ផ្តល់ Contrast ខ្ពស់ ធ្វើឱ្យពណ៌មើលទៅភ្លឺ និងលេចធ្លោខ្លាំង។\n២. **Monochromatic (ពណ៌ឯកកោ):** ការប្រើប្រាស់ Shades, Tints, និង Tones នៃពណ៌តែមួយ។ ងាយស្រួលប្រើ និងមើលទៅស៊ីសង្វាក់គ្នា។\n៣. **Analogous (ពណ៌ក្បែរគ្នា):** ពណ៌៣នៅជាប់គ្នា។ ត្រូវរើសពណ៌១ជាគោល (Dominant) និងពណ៌ផ្សេងទៀតគ្រាន់តែជារបស់បន្ទាប់បន្សំ។\n៤. **Triadic (ពណ៌ត្រីកោណសម័ង្ស):** ពណ៌៣ឃ្លាតស្មើគ្នាក្នុងរង្វង់ពណ៌។ ផ្តល់ភាពរស់រវើក និងរឹងមាំ ទោះបីជាមិនសូវ Contrast ខ្លាំងដូច Complementary ក្តី។\n៥. **Tetradic (ពណ៌ចតុកោណ):** ពណ៌៤ឃ្លាតស្មើគ្នា។ ក្បួននេះមានថាមពលខ្លាំង តែពិបាកថ្លឹងថ្លែងណាស់ លុះត្រាតែអ្នកឱ្យពណ៌មួយលេចធ្លោជាងគេ។",
-        answer_en: "**According to Canva's Color Wheel, there are 5 core Color Harmonies:**\n\n1. **Complementary:** Two colors on opposite sides. Provides high contrast and impact; colors appear brighter together.\n2. **Monochromatic:** Three shades, tones, and tints of one base color. Very versatile and creates a harmonious look.\n3. **Analogous:** Three colors side-by-side. Versatile but can be overwhelming; balance it by choosing ONE dominant color and using the rest as accents.\n4. **Triadic:** Three colors evenly spaced. Creates bold, vibrant palettes with slightly less contrast than Complementary, making it versatile.\n5. **Tetradic:** Four colors evenly spaced. Bold but difficult to balance; works best if you let one color dominate.",
-        actionButton: { label: "បង្កើតពណ៌ 🎨", label_en: "Open Color Generator 🎨", actionToTrigger: "tools", subTab: "color" },
-        chips: ["ពណ៌ក្តៅ និងពណ៌ត្រជាក់", "Shades, Tints, និង Tones ខុសគ្នាម៉េច?"],
-        chips_en: ["Warm vs Cool Colors", "Shades vs Tints vs Tones?"]
+        primaryKeys: ['អ្វីទៅជា White Space? 🤍', 'What is White Space? 🤍'],
+        keys: ['white space', 'negative space', 'ចន្លោះទទេ', 'padding', 'margin', 'what is white space'],
+        regex: ['white space', 'negative space', 'ចន្លោះទទេ', 'padding', 'margin'],
+        answer: "បាទ **White Space (ឬ Negative Space)** គឺជាចន្លោះប្រហោងជុំវិញវត្ថុ ឬអក្សរ នៅក្នុងប្លង់ការងារ។\n\nវាមិនមែនមានន័យថា 'ទទេស្អាត' ឬខាតកន្លែងនោះទេ! White Space ជួយឱ្យការរចនារបស់អ្នកមាន \"ខ្យល់ដកដង្ហើម\" ងាយស្រួលមើល និងមើលទៅមានតម្លៃថ្លៃ (Premium)។ \n\n💡 **ឧទាហរណ៍៖** ក្រឡេកមើលការរចនារបស់ Apple ពួកគេប្រើប្រាស់ផ្ទៃសទំនេរយ៉ាងច្រើនល្វឹងល្វើយ ដើម្បីប្រាប់ខួរក្បាលថា 'ផលិតផលយើងគឺគ្រប់គ្រាន់ហើយ មិនបាច់ស្រែកប្រាប់ខ្លាំងៗទេ'។",
+        answer_en: "**White Space (or Negative Space)** is the active empty area around elements in a layout.\n\nIt does not mean 'empty space' that needs to be filled! White space gives your design room to breathe, drastically improves readability, and makes the design look premium.\n\n💡 **Example:** Luxury brands like Apple use massive amounts of negative space. It confidently tells the brain: 'Our product speaks for itself.'",
+        chips: ["អ្វីទៅជា Hierarchy? 👁️", "តើ Framing (ការដាក់ស៊ុម) ប្រើសម្រាប់អ្វី? 🖼️"],
+        chips_en: ["What is Visual Hierarchy? 👁️", "How to use Framing in design? 🖼️"]
     },
     {
-        primaryKeys: ['ពណ៌បឋម និងពណ៌រង (Primary & Secondary)', 'primary and secondary colors'],
-        keys: ['primary color', 'secondary color', 'tertiary', 'ពណ៌ដើម'],
-        regex: ['\\bprimary\\b', '\\bsecondary\\b', '\\btertiary\\b', 'ពណ៌បឋម', 'ពណ៌ដើម'],
-        answer: "បាទ កង់ពណ៌ (Color Wheel) ត្រូវបានបែងចែកជា ៣ កម្រិត៖\n\n🥇 **Primary Colors (ពណ៌បឋម):** ជាពណ៌ដើមដែលមិនអាចលាយចេញពីពណ៌ផ្សេងបាន។\n- លើអេក្រង់ (RGB): ក្រហម(Red), បៃតង(Green), ខៀវ(Blue) ដែលរួមគ្នាបង្កើតជាពន្លឺពណ៌ស។\n- លើគំនូរ (RYB): ក្រហម, លឿង, ខៀវ។\n\n🥈 **Secondary Colors (ពណ៌រងកម្រិត១):** កើតពីការលាយពណ៌បឋម២បញ្ចូលគ្នា។\n- ក្នុង RGB: ពណ៌ Cyan, Magenta, និង Yellow។\n- ក្នុង RYB: ពណ៌ស្វាយ, ទឹកក្រូច, និងបៃតង។\n\n🥉 **Tertiary Colors (ពណ៌រងកម្រិត២):** កើតពីការលាយពណ៌បឋម និង Secondary បញ្ចូលគ្នា (មាន ៦ ពណ៌ ដូចជា លឿង-ទឹកក្រូច)។",
-        answer_en: "**The color wheel is divided into three tiers:**\n\n🥇 **Primary Colors:** Colors that cannot be mixed from other colors.\n- In RGB (Light/Screens): Red, Green, Blue. Added together, they create pure white light.\n- In RYB (Paint): Red, Yellow, Blue.\n\n🥈 **Secondary Colors:** Created by mixing two primary colors.\n- In RGB: Cyan, Magenta, Yellow.\n- In RYB: Purple, Orange, Green.\n\n🥉 **Tertiary Colors:** Created by combining a secondary color with a primary color (e.g., Red-Orange, Blue-Green).",
-        chips: ["តើ Color Wheel មានប៉ុន្មានប្រភេទ?", "Color Theory"],
-        chips_en: ["RGB vs RYB Color Wheel?", "Color Theory"]
+        primaryKeys: ['អ្វីទៅជា Hierarchy? 👁️', 'What is Visual Hierarchy? 👁️'],
+        keys: ['hierarchy', 'focal point', 'ឋានានុក្រម', 'proximity', 'visual hierarchy'],
+        regex: ['hierarchy', 'focal point', 'ឋានានុក្រម', 'proximity'],
+        answer: "បាទ **Visual Hierarchy (ឋានានុក្រមទស្សនីយភាព)** គឺជាការរៀបចំដើម្បីបង្ហាញពី 'សារៈសំខាន់' ដោយដឹកនាំភ្នែកអ្នកមើលឆ្លងកាត់មាតិកាតាមលំដាប់លំដោយជាក់លាក់។\n\nបើយើងធ្វើឱ្យគ្រប់យ៉ាងធំប៉ុនៗគ្នា នោះគ្មានអ្វីលេចធ្លោទេ! គេបង្កើត Hierarchy តាមរយៈ៖\n១. **ទំហំ (Scale):** ប្រើសមាមាត្រ ៣:១ (ចំណងជើងធំជាងអត្ថបទធម្មតា៣ដង)។\n២. **កម្រាស់ (Weight):** ប្រើអក្សរ Bold សម្រាប់ទាញភ្នែកមុនគេ។\n៣. **ពណ៌ (Color):** ប្រើពណ៌សង្កត់ (Accent Color) សម្រាប់ប៊ូតុងសំខាន់ (Focal Point)។",
+        answer_en: "**Visual Hierarchy** is the arrangement of elements to show 'importance', logically guiding the viewer's eye through the content in a specific order.\n\nIf everything stands out, nothing stands out! You create hierarchy through:\n1. **Scale:** Using a 3:1 ratio (headlines 3x larger than body text).\n2. **Weight:** Using bold fonts to demand immediate attention.\n3. **Color:** Using bright accent colors for buttons or the main Focal Point.",
+        chips: ["តើ Scale និង Proportion ខុសគ្នាម៉េច? 📏", "តើ Squint Test ជាអ្វី? 👁️"],
+        chips_en: ["Scale vs Proportion? 📏", "What is the Squint Test? 👁️"]
     },
     {
-        primaryKeys: ['ពណ៌ក្តៅ និងពណ៌ត្រជាក់ (Warm vs Cool Colors)', 'warm vs cool colors'],
-        keys: ['warm color', 'cool color', 'ពណ៌ក្តៅ', 'ពណ៌ត្រជាក់', 'color temperature', 'សីតុណ្ហភាពពណ៌'],
-        regex: ['\\bwarm\\b', '\\bcool\\b', 'ពណ៌ក្តៅ', 'ពណ៌ត្រជាក់', '\\btemperature\\b'],
-        answer: "បាទ **សីតុណ្ហភាពពណ៌ (Color Temperature)** ត្រូវបានបែងចែកជា ២ ក្រុម ដែលផ្តល់អារម្មណ៍ផ្លូវចិត្តខុសគ្នា៖\n\n🔥 **ពណ៌ក្តៅ (Warm Colors):** ពណ៌ចាប់ពី ក្រហម ដល់ លឿង។ ពណ៌ទាំងនេះធ្វើឱ្យយើងនឹកដល់កំដៅព្រះអាទិត្យ វាផ្តល់អារម្មណ៍នៃភាពកក់ក្តៅ (Coziness) និងថាមពល (Energy)។\n🧊 **ពណ៌ត្រជាក់ (Cool Colors):** ពណ៌ចាប់ពី ខៀវ ដល់ បៃតង និងស្វាយ។ ពណ៌ទាំងនេះធ្វើឱ្យយើងនឹកដល់ទឹក វាផ្តល់អារម្មណ៍ស្ងប់ស្ងាត់ (Serenity) និងភាពឯកោ (Isolation)។\n\n💡 **គន្លឹះអាជីព៖** ក្បួនពណ៌ដែលស្អាតបំផុត តែងតែមានការថ្លឹងថ្លែង (Balance) វាងពណ៌ក្តៅ និងពណ៌ត្រជាក់បញ្ចូលគ្នា!",
-        answer_en: "**Color Temperature divides the color wheel into warm and cool halves:**\n\n🔥 **Warm Colors:** Colors from Red through to Yellow. These bring to mind warmth like the sun, evoking feelings of coziness and energy.\n🧊 **Cool Colors:** Colors from Blue to Green and Purple. These bring to mind coolness like water, evoking feelings of serenity and isolation.\n\n💡 **Pro Tip:** The best color combinations usually have a deliberate balance of both warm and cool colors!",
-        chips: ["អត្ថន័យនៃពណ៌ (Color Psychology)", "ក្បួនផ្គូផ្គងពណ៌ (Color Harmonies)"],
-        chips_en: ["Color Psychology", "Color Harmonies"]
-    },
-    {
-        primaryKeys: ['Shades, Tints, និង Tones ខុសគ្នាម៉េច?', 'shades tints tones'],
-        keys: ['shade', 'tint', 'tone', 'លាយពណ៌ស', 'លាយពណ៌ខ្មៅ', 'shades vs tints'],
-        regex: ['\\bshade\\b', '\\btint\\b', '\\btone\\b', 'លាយពណ៌ស', 'លាយពណ៌ខ្មៅ'],
-        answer: "បាទ អ្នកអាចបង្កើតពណ៌ជាច្រើនកម្រិតដោយបន្ថែមពណ៌ខ្មៅ ប្រផេះ ឬស ទៅលើពណ៌ដើម (Hue)៖\n\n🌑 **Shade (ស្រមោល):** បង្កើតឡើងដោយការបន្ថែម **ពណ៌ខ្មៅ** ទៅលើពណ៌ដើម។ វាធ្វើឱ្យពណ៌កាន់តែងងឹត ជ្រៅ និងមានអំណាច (Overpowering)។\n☁️ **Tint (ពណ៌ស្រាល):** បង្កើតឡើងដោយការបន្ថែម **ពណ៌ស** ទៅលើពណ៌ដើម។ វាជួយបន្ថយភាពខ្លាំងនៃពណ៌ និងល្អសម្រាប់ថ្លឹងថ្លែងក្បួនពណ៌ដែលឆើតពេក។\n🌫️ **Tone (ពណ៌ស្រអាប់):** បង្កើតឡើងដោយការបន្ថែម **ពណ៌ប្រផេះ (ស+ខ្មៅ)** ទៅលើពណ៌ដើម។ វាជួយឱ្យពណ៌មើលទៅមិនសូវលេចឆើត និងបង្ហាញពីភាពទន់ភ្លន់ដែលពណ៌ដើមមិនមាន។",
-        answer_en: "**You can create multiple variations of a color by adding black, grey, or white to a base hue:**\n\n🌑 **Shade:** Created by adding **Black** to a base hue, darkening it. This creates a deeper, richer color that can be quite dramatic and overpowering.\n☁️ **Tint:** Created by adding **White** to a base hue. This lightens the color, making it less intense and very useful for balancing vivid color combinations.\n🌫️ **Tone:** Created by combining **Grey (Black + White)** with a base hue. Tones are subtler versions of the original color and reveal complexities not apparent in the base color.",
-        chips: ["តើ HSL គឺជាអ្វី?", "តើ HEX Code គឺជាអ្វី?"],
-        chips_en: ["What is HSL?", "What is a HEX Code?"]
-    },
-    {
-        primaryKeys: ['តើ Color Wheel មានប៉ុន្មានប្រភេទ?', 'rgb vs ryb color wheel'],
-        keys: ['ryb', 'rgb wheel', 'color wheel', 'កង់ពណ៌'],
-        regex: ['\\bryb\\b', 'rgb wheel', 'color wheel', 'កង់ពណ៌'],
-        answer: "បាទ **កង់ពណ៌ (Color Wheel)** ដែលបង្កើតដំបូងដោយលោក Isaac Newton ក្នុងឆ្នាំ ១៦៦៦ ត្រូវបានបែងចែកជា ២ ប្រភេទសម្រាប់អ្នករចនា៖\n\n🎨 **RYB (Red, Yellow, Blue):** គឺជាកង់ពណ៌សម្រាប់ **សិល្បករគំនូរ**។ វាជួយអ្នកគំនូរក្នុងការលាយពណ៌ថ្នាំ (Paint)។\n💻 **RGB (Red, Green, Blue):** គឺជាកង់ពណ៌សម្រាប់ **Online និង Digital** (ដូចជា Canva ផ្ទាល់)។ វាផ្អែកលើការលាយពន្លឺ (Light) ដូចជាពន្លឺបញ្ចេញពីអេក្រង់ទូរទស្សន៍ ឬកុំព្យូទ័រជាដើម។",
-        answer_en: "**The Color Wheel**, originally mapped by Isaac Newton in 1666, comes in two completely different systems for modern designers:\n\n🎨 **RYB (Red, Yellow, Blue):** The traditional wheel used by **Artists**. It helps specifically with combining physical paint colors.\n💻 **RGB (Red, Green, Blue):** The wheel designed specifically for **Online and Digital use** (This is the wheel Canva uses). It refers strictly to mixing light, like on a computer or TV screen.",
-        chips: ["ពណ៌បឋម និងពណ៌រង (Primary & Secondary)", "តើ RGB និង CMYK ខុសគ្នាម៉េច?"],
-        chips_en: ["Primary and Secondary Colors", "RGB vs CMYK difference?"]
-    },
-    { 
-        primaryKeys: ['តើ HSL គឺជាអ្វី?', 'what is hsl'],
-        keys: ['hsl', 'hue', 'saturation', 'lightness', 'luminance'],
-        regex: ['\\bhsl\\b', '\\bhue\\b', '\\bsaturation\\b', '\\blightness\\b', '\\bluminance\\b'],
-        answer: "បាទ **HSL (Hue, Saturation, Luminance)** គឺជាប្រព័ន្ធវាស់វែងពណ៌ឌីជីថល៖\n\n🎨 **Hue (ពណ៌ដើម):** គឺជាពណ៌ណាមួយដែលស្ថិតនៅលើកង់ពណ៌ (Color Wheel)។\n💧 **Saturation (កម្រិតឆ្អែត):** គឺជាកម្រិតភាពខ្លាំង (Intensity) ឬភាពបរិសុទ្ធនៃពណ៌។ 100% គឺឆើតបំផុត ចំណែក 0% ក្លាយជាសខ្មៅ។\n☀️ **Luminance (ពន្លឺ):** គឺជាបរិមាណពន្លឺ (Brightness) នៅក្នុងពណ៌នោះ។ 100% គឺពណ៌សក្បុស ហើយ 0% គឺខ្មៅងងឹត។", 
-        answer_en: "**HSL (Hue, Saturation, Luminance) defines how you select digital colors:**\n\n🎨 **Hue:** Basically any base color found on the color wheel.\n💧 **Saturation:** The intensity or purity of the color. 100% is vibrantly pure, while 0% is completely drained of color (Grey).\n☀️ **Luminance:** The absolute amount of brightness or light inside a color. 100% is pure white, and 0% is pitch black.",
-        actionButton: { label: "សាកល្បង HSL Tools 🎨", label_en: "Try the HSL Tools 🎨", actionToTrigger: "tools", subTab: "color" },
-        chips: ["ក្បួនផ្គូផ្គងពណ៌ (Color Harmonies)", "Shades, Tints, និង Tones ខុសគ្នាម៉េច?"],
-        chips_en: ["Color Harmonies", "Shades vs Tints vs Tones?"]
-    },
-    { 
-        primaryKeys: ['អត្ថន័យនៃពណ៌ (Color Psychology)', 'color psychology'],
-        keys: ['psychology', 'អត្ថន័យពណ៌', 'ចិត្តសាស្ត្រពណ៌', 'color meaning'],
-        regex: ['\\bpsychology\\b', 'អត្ថន័យពណ៌', 'ចិត្តសាស្ត្រពណ៌', 'color meaning'],
-        answer: "បាទ **ចិត្តសាស្ត្រពណ៌ (Color Psychology)** គឺសំខាន់ណាស់ក្នុងការទាក់ទាញអារម្មណ៍អតិថិជន៖\n\n🔴 **ក្រហម:** ថាមពល ក្តៅគគុក អាហារ គ្រោះថ្នាក់ (KFC, YouTube)។\n🔵 **ខៀវ:** ភាពជឿជាក់ សុវត្ថិភាព បច្ចេកវិទ្យា (Facebook, ធនាគារ)។\n🟢 **បៃតង:** ធម្មជាតិ សុខភាព លុយ (Starbucks, Grab)។\n🟡 **លឿង:** ភាពសប្បាយរីករាយ យុវវ័យ ព្រមាន (McDonald's)។\n⚫ **ខ្មៅ:** ភាពប្រណីត អំណាច អាថ៌កំបាំង (Apple, Nike)។\n🟣 **ស្វាយ:** វេទមន្ត ភាពថ្លៃថ្នូរ និងការស្រមើស្រមៃ (Twitch, Milka)។", 
-        answer_en: "**Color Psychology** is crucial for evoking the right emotion in your audience:\n\n🔴 **Red:** Energy, passion, appetite, urgency (KFC, YouTube).\n🔵 **Blue:** Trust, security, technology, calm (Facebook, Banks).\n🟢 **Green:** Nature, health, wealth, growth (Starbucks, Grab).\n🟡 **Yellow:** Happiness, youth, optimism, warning (McDonald's).\n⚫ **Black:** Luxury, power, sophistication (Apple, Nike).\n🟣 **Purple:** Magic, royalty, and imagination (Twitch, Cadbury).",
-        chips: ["ពណ៌ក្តៅ និងពណ៌ត្រជាក់ (Warm vs Cool Colors)", "ក្បួនផ្គូផ្គងពណ៌ (Color Harmonies)"],
-        chips_en: ["Warm vs Cool Colors", "Color Harmonies"]
-    },
-
-    // 3. TYPOGRAPHY
-    { 
-        primaryKeys: ['អ្វីទៅជា Typography?', 'what is typography'],
-        keys: ['typography', 'ប្រភេទ font', 'រៀបអក្សរ', 'font', 'serif', 'sans-serif'],
-        regex: ['\\btypography\\b', 'ប្រភេទ font', 'រៀបអក្សរ', '\\bserif\\b', '\\bsans-serif\\b'], // Removed raw 'font'
-        answer: "បាទ **Typography** គឺជាសិល្បៈនៃការរៀបចំតួអក្សរ។ 🔤\n\nប្រភេទ Font ធំៗ៣មាន៖\n- **Serif (មានកន្ទុយ):** ផ្លូវការ (ឧ. Times New Roman, Kantumruy)។ ល្អសម្រាប់សៀវភៅ។\n- **Sans-Serif (គ្មានកន្ទុយ):** ទំនើប ស្រឡះ (ឧ. Arial, Suwannaphum)។ ល្អសម្រាប់អេក្រង់ទូរស័ព្ទ។\n- **Script (អក្សរផ្ចង់):** ល្អសម្រាប់ធៀបការ។ \n\n💡 **ហាមដាច់ខាត៖** កុំប្រើអក្សរផ្ចង់យកមកសរសេរអត្ថបទវែងៗ ឬដាក់ជាអក្សរធំទាំងអស់ (ALL CAPS)!", 
-        answer_en: "**Typography** is the art of arranging text beautifully. 🔤\n\nMain Font Categories:\n- **Serif (with feet):** Traditional, formal (e.g., Times New Roman). Great for printed books.\n- **Sans-Serif (no feet):** Modern, clean (e.g., Arial, Helvetica). The best choice for digital screens.\n- **Script (Cursive):** Elegant and personal. \n\n💡 **Strict Rule:** Never use Script fonts for long body paragraphs or write them in ALL CAPS!",
-        chips: ["របៀបតម្រៀប Font ឱ្យស្អាត?", "Kerning និង Tracking ខុសគ្នាម៉េច?"],
-        chips_en: ["How to pair fonts?", "Kerning vs Tracking?"]
-    },
-    { 
-        primaryKeys: ['របៀបតម្រៀប Font ឱ្យស្អាត?', 'how to pair fonts'],
-        keys: ['font pairing', 'ផ្គូផ្គង font', 'រើស font', 'pair font'],
-        regex: ['font pairing', 'ផ្គូផ្គង font', 'រើស font', '\\bpair font\\b'],
-        answer: "បាទ **ក្បួនចាប់គូ Font (Font Pairing) ឱ្យមើលទៅ Professional៖**\n\n១. **ក្បួន Contrast:** ចាប់គូ Font គ្មានកន្ទុយ (Sans-Serif) ធ្វើជាចំណងជើង ជាមួយ Font មានកន្ទុយ (Serif) ធ្វើជាអត្ថបទ (ឬផ្ទុយមកវិញ)។\n២. **ក្បួនគ្រួសារតែមួយ:** ប្រើ Font តែមួយម៉ាក តែលេងទម្ងន់ខុសគ្នា (ឧ. **Roboto Black** សម្រាប់ចំណងជើង និង *Roboto Light* សម្រាប់អត្ថបទ)។\n៣. **កុំប្រើ Font ច្រើនពេក:** ប្រើត្រឹម ២ ប្រភេទក្នុងមួយផ្ទាំង គឺគ្រប់គ្រាន់ហើយ!", 
-        answer_en: "**Rules for Professional Font Pairing:**\n\n1. **The Contrast Rule:** Pair a bold Sans-Serif header with a clean Serif body text (or vice-versa).\n2. **The Superfamily Rule:** Use the exact same font family, but mix the weights (e.g., **Montserrat Black** for the header, and *Montserrat Light* for the body).\n3. **The 'Less is More' Rule:** Never use more than 2 (maybe 3) font families in a single design!",
-        chips: ["អ្វីទៅជា Typography?", "អ្វីទៅជា Hierarchy?"],
-        chips_en: ["What is Typography?", "Visual Hierarchy"]
-    },
-    {
-        primaryKeys: ['Web Safe Fonts ជាអ្វី?', 'what are web safe fonts'],
-        keys: ['web safe fonts', 'font សម្រាប់ web', 'system fonts'],
-        regex: ['web safe font', '\\bsystem font\\b'],
-        answer: "បាទ **Web Safe Fonts** គឺជាពុម្ពអក្សរដែលបានដំឡើងរួចជាស្រេចនៅលើកុំព្យូទ័រឬទូរស័ព្ទគ្រប់គ្រឿង (ឧទាហរណ៍៖ Arial, Times New Roman, Verdana)។\n\nនៅពេលអ្នកធ្វើ Website ប្រសិនបើអ្នកប្រើ Font ប្លែកៗដែលទាញយកពីអ៊ីនធឺណិត វាអាចនឹងមិនបង្ហាញលើកុំព្យូទ័ររបស់អ្នកដទៃទេ លុះត្រាតែអ្នកបង្កប់វាចូល (Embed) តាមរយៈ Google Fonts ជាដើម។\n\n💡 **គន្លឹះអាជីព៖** សម្រាប់ UI/UX Design ការប្រើប្រាស់ System Fonts ជួយឱ្យ Website ដើរលឿនជាងមុន!",
-        answer_en: "**Web Safe Fonts** are typefaces that come pre-installed on virtually every computer and operating system in the world (e.g., Arial, Times New Roman, Verdana).\n\nIf you design a website using a highly custom font, a visitor won't see it unless they also have that font installed, OR if you explicitly embed it using a service like Google Fonts.\n\n💡 **Pro Tip:** In modern UI/UX, relying on standard System Fonts (like San Francisco on Mac or Segoe UI) ensures your app loads instantly without waiting for font files to download.",
-        chips: ["របៀបតម្រៀប Font ឱ្យស្អាត?", "អ្វីទៅជា Typography?"],
-        chips_en: ["How to pair fonts?", "What is Typography?"]
-    },
-    { 
-        primaryKeys: ['Kerning និង Tracking ខុសគ្នាម៉េច?', 'kerning vs tracking'],
-        keys: ['kerning', 'tracking', 'leading', 'គម្លាតអក្សរ'],
-        regex: ['\\btracking\\b', '\\bleading\\b', 'គម្លាតអក្សរ'], // Removed 'kerning' to prevent optical kerning collision
-        answer: "បាទ **ការរៀបចំគម្លាតអក្សរ (Typesetting) មាន ៣ យ៉ាង៖**\n\n១. **Kerning:** ការសារ៉េចន្លោះរវាងអក្សរតែ **\"២តួ\"** ប៉ុណ្ណោះ ឱ្យមើលទៅសមាមាត្រភ្នែក។\n២. **Tracking:** ការទាញគម្លាតអក្សរ **\"ទាំងមូល\"** ក្នុងពាក្យឱ្យឃ្លាតស្មើៗគ្នា។ 💡 **ឧទាហរណ៍៖** ប្រើ Tracking ទូលាយៗជាមួយអក្សរធំ UPPERCASE មើលទៅ Premium ណាស់។\n៣. **Leading:** ចន្លោះពី **\"បន្ទាត់មួយទៅបន្ទាត់មួយ\"** (Line-height)។ បើអត្ថបទវែង គួរដាក់ Leading អោយទូលាយបន្តិចទើបស្រួលអាន។", 
-        answer_en: "**Typesetting involves 3 crucial spacing techniques:**\n\n1. **Kerning:** Adjusting the space between exactly **TWO individual characters** so they look visually balanced.\n2. **Tracking:** Uniformly adjusting the spacing across an **entire word**. 💡 **Example:** Widely tracked UPPERCASE text looks very premium for subheadings.\n3. **Leading:** The vertical space between **lines of text** (Line-height). Don't squish paragraphs together!",
-        chips: ["តើ Optical Kerning ជាអ្វី?", "អ្វីទៅជា Hierarchy?"],
-        chips_en: ["Optical vs Metric Kerning?", "Visual Hierarchy"]
-    },
-    {
-        primaryKeys: ['តើ Optical Kerning ជាអ្វី?', 'optical vs metric kerning'],
-        keys: ['optical kerning', 'metric', 'គម្លាតអក្សរ', 'kerning optical'],
-        regex: ['optical kerning', 'metric kerning'], 
-        answer: "បាទ នេះជាគន្លឹះ Typography ដែលមានតែអ្នកជំនាញទេទើបដឹង៖ **Metric vs Optical Kerning**\n\n📏 **Metric Kerning:** ជាគម្លាតគណិតវិទ្យាដែលអ្នកបង្កើតហ្វុនសរសេរកូដទុក។ វាល្អសម្រាប់អត្ថបទតូចៗវែងៗ (Body Text)។\n👁️ **Optical Kerning:** កម្មវិធីរចនានឹងយក AI មកវាស់រូបរាងអក្សរនីមួយៗ (ឧទាហរណ៍អក្សរ V និង A មានគែមបញ្ឆិត) រួចរុញវាចូលគ្នាឱ្យសមាមាត្រភ្នែកមើល។ \n\n💡 **គន្លឹះអាជីព:** តែងតែប្តូរទៅប្រើ **Optical Kerning** សម្រាប់ចំណងជើង (Headlines) ឬ Logo ធំៗ នោះអក្សររបស់អ្នកនឹងមើលទៅស្មើគ្នាស្អាតឥតខ្ចោះ!",
-        answer_en: "Here is a Typography secret known only to top designers: **Metric vs Optical Kerning**\n\n📏 **Metric Kerning:** Uses the default spacing math coded into the font file by its creator. Best for long paragraphs of body text.\n👁️ **Optical Kerning:** The software calculates the physical shape of adjacent letters (like the angled edges of 'V' and 'A') and visually nudges them together so they look balanced to the human eye.\n\n💡 **Pro Tip:** Always switch to **Optical Kerning** for massive Headlines, Titles, and Logos. It instantly fixes awkward, gaping holes between letters!",
-        chips: ["Kerning និង Tracking ខុសគ្នាម៉េច?", "អ្វីទៅជា Typography?"],
-        chips_en: ["Kerning vs Tracking?", "What is Typography?"]
-    },
-
-    // 4. LAYOUT & UI/UX
-    {
-        primaryKeys: ['របៀបរចនា Poster', 'poster design', 'របៀបរចនា Poster ឱ្យទាក់ទាញ? 🖼️', 'How to design an effective Poster? 🖼️'],
-        keys: ['poster', 'ផ្ទាំងផ្សព្វផ្សាយ', 'រចនា poster'],
-        regex: ['poster design', 'រចនា poster', 'ផ្ទាំងផ្សព្វផ្សាយ', 'របៀបធ្វើ poster'],
-        answer: "បាទ សម្រាប់ការរចនា Poster ឱ្យទាក់ទាញ និងមានប្រសិទ្ធភាព ត្រូវមាន ៤ ចំណុចធំៗ (Anatomy of a Poster)៖\n\n១. **ចំណងជើង (Headline):** ត្រូវធំ ដាច់ ងាយអានពីចម្ងាយ (ទាក់ទាញចំណាប់អារម្មណ៍)។\n២. **រូបភាព (Visual/Hero Image):** យករូបដែលពាក់ព័ន្ធ និងទាក់ទាញអារម្មណ៍បំផុតមកដាក់ជា Focal Point។\n៣. **ព័ត៌មាន (Details):** ដាក់តែអ្វីដែលសំខាន់ (ថ្ងៃខែ ម៉ោង ទីកន្លែង) កុំសរសេរវែងពេក មើលទៅរញ៉េរញ៉ៃ។\n៤. **Call to Action (CTA):** ប្រាប់គេឱ្យច្បាស់ថាត្រូវធ្វើអ្វីបន្ត (ឧ. ទិញឥឡូវនេះ, តេមកលេខ..., Scan QR Code)។\n\n💡 **គន្លឹះអាជីព៖** ប្រើ White Space ឱ្យបានច្រើនជុំវិញអត្ថបទ ដើម្បីកុំឱ្យមើលទៅចង្អៀត!",
-        answer_en: "For a highly effective Poster design, you need to master these 4 core elements:\n\n1. **Headline:** Must be massive, bold, and readable from a distance to hook attention.\n2. **Visual (Hero Image):** A striking image or graphic that connects emotionally with the viewer.\n3. **Details:** Only include the absolute necessary info (Time, Date, Location). Don't clutter it with long paragraphs!\n4. **Call to Action (CTA):** Tell them exactly what to do next (e.g., 'Buy Now', 'Call Us', 'Scan QR').\n\n💡 **Pro Tip:** Embrace White Space around your text blocks to give the viewer's eyes room to breathe!",
-        chips: ["តើទំហំ Poster ស្តង់ដារមានអ្វីខ្លះ? 📏", "អ្វីទៅជា Hierarchy?"],
-        chips_en: ["Standard Poster Sizes & Layouts? 📏", "Visual Hierarchy"]
-    },
-    {
-        primaryKeys: ['តើទំហំ Poster ស្តង់ដារមានអ្វីខ្លះ?', 'poster sizes and layouts'],
-        keys: ['ទំហំ poster', 'poster size', 'ខ្នាត poster', 'a4', 'a3', 'social media size', 'layout'],
-        regex: ['ទំហំ.*poster', 'poster size', 'ខ្នាត.*poster', 'social media size'], // Removed 'layout'
-        answer: "បាទ **ទំហំ និងប្លង់ (Sizes & Layouts) របស់ Poster ត្រូវបានបែងចែកជា ២ ប្រភេទធំៗ៖**\n\n🖨️ **សម្រាប់បោះពុម្ព (Print):**\n- **A4 (210 x 297mm) / A3 (297 x 420mm):** ប្រើសម្រាប់បិទប្រកាសខ្នាតតូច តាមសាលា ឬហាង។\n- **24 x 36 អាញ់ (Inch):** ខ្នាតស្តង់ដារអន្តរជាតិសម្រាប់ Poster រឿងកុន (Movie Posters) ធំៗ។\n*(កុំភ្លេចប្រើពណ៌ CMYK និង 300 PPI!)*\n\n📱 **សម្រាប់បណ្តាញសង្គម (Digital - 72 PPI, RGB):**\n- **Instagram Portrait (1080 x 1350px):** ជាទំហំល្អបំផុតព្រោះវាពេញអេក្រង់ទូរស័ព្ទ។\n- **Facebook Square (1080 x 1080px):** ស្តង់ដារទូទៅ។\n- **Story/Reels (1080 x 1920px):** សម្រាប់វីដេអូខ្លី។\n\n📐 **ក្បួនរៀបប្លង់ (Layout Structures):**\n- **Z-Pattern:** ល្អសម្រាប់ Poster ដែលមានអក្សរនិងរូបភាពឆ្លាស់គ្នា (ភ្នែកអ្នកមើលរត់ជារាងអក្សរ Z)។\n- **Rule of Thirds:** ចែកប្លង់ជា៩ក្រឡា ដាក់តួអង្គនៅចំណុចប្រសព្វដើម្បីភាពទាក់ទាញ។",
-        answer_en: "**Poster Sizes & Layouts are broken down into two main categories:**\n\n🖨️ **Physical Print Sizes:**\n- **A4 (210 x 297mm) / A3 (297 x 420mm):** Standard for local event flyers, shop windows, and schools.\n- **24 x 36 Inches:** The global standard for large, theatrical Movie Posters.\n*(Always use CMYK and 300 PPI for these!)*\n\n📱 **Digital Social Media (72 PPI, RGB):**\n- **Instagram Portrait (1080 x 1350px):** The absolute best size because it takes up the maximum vertical screen space on phones.\n- **Square (1080 x 1080px):** The universal safe standard.\n- **Story (1080 x 1920px):** For full-screen vertical viewing.\n\n📐 **Top Layout Structures:**\n- **Z-Pattern:** Best for posters with balanced text and images (the eye naturally traces a 'Z' from top left to bottom right).\n- **Rule of Thirds:** Placing your main subject off-center on the grid intersections for dynamic energy.",
-        chips: ["តើ Leading Lines ជាអ្វី?", "តើ Rule of Thirds គឺជាអ្វី?"],
-        chips_en: ["What are Leading Lines?", "What is the Rule of Thirds?"]
-    },
-    {
-        primaryKeys: ['តើ Leading Lines ជាអ្វី?', 'leading lines'],
-        keys: ['leading lines', 'បន្ទាត់នាំភ្នែក', 'composition lines'],
-        regex: ['leading line', 'បន្ទាត់នាំភ្នែក'],
-        answer: "បាទ **Leading Lines (បន្ទាត់នាំភ្នែក)** គឺជាក្បួន Composition កម្រិតខ្ពស់មួយ។\n\nវាគឺជាការប្រើប្រាស់បន្ទាត់ដែលមានស្រាប់នៅក្នុងរូបភាព (ដូចជា ផ្លូវថ្នល់ ជួរឈើ ស្ពាន ឬទម្រង់អគារ) ដើម្បីចង្អុលនាំភ្នែករបស់អ្នកមើល ឱ្យរត់ត្រង់ទៅរកវត្ថុគោល (Main Subject) តែម្តង។ វាជួយឱ្យរូបភាពមានជម្រៅ និងកម្លាំងទាក់ទាញយ៉ាងខ្លាំង!",
-        answer_en: "**Leading Lines** is a powerful advanced composition technique.\n\nIt involves using natural lines within an image (like roads, fences, tree lines, or architecture) to physically point the viewer's eye directly toward your main subject or focal point. It creates massive depth and visual interest!",
-        chips: ["តើ Rule of Thirds គឺជាអ្វី?", "តើ Framing ជាអ្វី?"],
-        chips_en: ["What is the Rule of Thirds?", "What is Framing?"]
-    },
-    {
-        primaryKeys: ['តើ Framing ជាអ្វី?', 'framing composition'],
-        keys: ['framing', 'បង្កើតស៊ុម', 'ស៊ុមរូប'],
-        regex: ['\\bframing\\b', 'បង្កើតស៊ុម', 'ស៊ុមរូប'],
-        answer: "បាទ នៅក្នុងការរៀបប្លង់ **Framing (ការបង្កើតស៊ុម)** គឺការប្រើប្រាស់វត្ថុដែលនៅខាងមុខ (Foreground) ដូចជា មែកឈើ បង្អួច ទ្វារ ឬកញ្ចក់ ដើម្បីធ្វើជាស៊ុមព័ទ្ធជុំវិញវត្ថុគោលដែលនៅខាងក្រោយ។\n\n💡 **អត្ថប្រយោជន៍៖** វាជួយបិទបាំងកន្លែងដែលមិនស្អាត, បង្កើតជម្រៅ (3D Depth) និងបង្ខំឱ្យភ្នែកអ្នកមើលសម្លឹងទៅចំណុចកណ្តាលតែមួយ។",
-        answer_en: "In composition, **Framing (A frame within a frame)** is using foreground elements—like tree branches, archways, doors, or windows—to visually surround your main subject.\n\n💡 **Benefits:** It hides boring parts of the environment, creates incredible 3D depth, and forces the viewer's eye exactly where you want it.",
-        chips: ["អ្វីទៅជា White Space?", "របៀបរចនា Poster ឱ្យទាក់ទាញ? 🖼️"],
-        chips_en: ["What is White Space?", "How to design an effective Poster? 🖼️"]
-    },
-    { 
-        primaryKeys: ['Margin និង Padding ខុសគ្នាម៉េច?', 'margin vs padding'],
-        keys: ['margin', 'padding', 'spacing', 'ui ux'],
-        regex: ['\\bmargin\\b', '\\bpadding\\b', '\\bspacing\\b'],
-        answer: "បាទ នៅក្នុងការរចនាប្លង់ និង UI/UX គឺវាខុសគ្នាដាច់៖\n\n📦 **Padding (គម្លាតក្នុង):** គឺជាចន្លោះទទេដែលស្ថិតនៅ **ខាងក្នុង** ប្រអប់មួយ (រវាងសាច់អក្សរ និងស៊ុមប្រអប់)។ វាជួយឱ្យអក្សរមិនកៀបជាប់គែមពេក។\n↔️ **Margin (គម្លាតក្រៅ):** គឺជាចន្លោះទទេដែលស្ថិតនៅ **ខាងក្រៅ** ប្រអប់ (រវាងប្រអប់មួយ និងប្រអប់មួយទៀត)។ វាជួយរុញវត្ថុឱ្យឆ្ងាយពីគ្នា។", 
-        answer_en: "**In Layout and UI/UX design, these dictate spacing:**\n\n📦 **Padding (Inner Space):** The space **inside** an element's border (between the text and the edge of a button). It stops the text from feeling cramped.\n↔️ **Margin (Outer Space):** The space **outside** an element's border. It pushes other completely separate elements away.",
-        chips: ["អ្វីទៅជា White Space?", "តើ Rule of Thirds គឺជាអ្វី?"],
-        chips_en: ["What is White Space?", "What is the Rule of Thirds?"]
-    },
-    { 
-        primaryKeys: ['អ្វីទៅជា White Space?', 'what is white space'],
-        keys: ['white space', 'negative space', 'ចន្លោះទទេ'],
-        regex: ['white space', 'negative space', 'ចន្លោះទទេ'], 
-        answer: "បាទ **White Space (ឬ Negative Space)** គឺជាចន្លោះប្រហោងជុំវិញវត្ថុ ឬអក្សរ នៅក្នុងប្លង់ការងារ។\n\nវាមិនមែនជាកន្លែងទំនេរដែលត្រូវតែញាត់របស់ចូលឱ្យពេញនោះទេ! White Space ជួយឱ្យការរចនារបស់អ្នកមាន \"ខ្យល់ដកដង្ហើម\" ងាយស្រួលមើល និងមើលទៅមានតម្លៃថ្លៃ (Premium)។ \n\n💡 **ឧទាហរណ៍៖** ក្រឡេកមើលការរចនារបស់ក្រុមហ៊ុន Apple ពួកគេប្រើប្រាស់ផ្ទៃសទំនេរយ៉ាងច្រើន ដើម្បីរំលេចផលិតផលតែមួយគត់ឱ្យលេចធ្លោ។", 
-        answer_en: "**White Space (or Negative Space)** is the empty area around elements in a layout.\n\nIt is NOT wasted space that needs to be filled with clutter! White space gives your design room to breathe, drastically improves readability, and makes the design look premium and elegant.\n\n💡 **Example:** Look at Apple's marketing. They use massive amounts of white space to force your eyes directly onto the product, making it feel highly luxurious.",
-        chips: ["Margin និង Padding ខុសគ្នាម៉េច?", "អ្វីទៅជា Hierarchy?"],
-        chips_en: ["Margin vs Padding?", "Visual Hierarchy"]
-    },
-    { 
-        primaryKeys: ['អ្វីទៅជា Hierarchy?', 'visual hierarchy'],
-        keys: ['hierarchy', 'focal point', 'ឋានានុក្រម'],
-        regex: ['\\bhierarchy\\b', 'focal point', 'ឋានានុក្រម'],
-        answer: "បាទ **Visual Hierarchy (ឋានានុក្រមទស្សនីយភាព)** គឺជាការរៀបចំដើម្បីដឹកនាំភ្នែកអ្នកមើល ឱ្យដឹងថាត្រូវមើលអ្វីមុន អ្វីក្រោយ។\n\nបើយើងធ្វើឱ្យគ្រប់យ៉ាងធំប៉ុនៗគ្នា នោះគ្មានអ្វីលេចធ្លោទេ! គេបង្កើត Hierarchy តាមរយៈ៖\n១. **ទំហំ (Scale):** ដាក់ចំណងជើងឱ្យធំជាងអត្ថបទធម្មតា។\n២. **ពណ៌ (Color):** ប្រើពណ៌ឆើតសម្រាប់ប៊ូតុង ឬចំណុចសំខាន់ (Focal Point)។\n៣. **កម្រាស់ (Weight):** ប្រើអក្សរ Bold សម្រាប់ទាញភ្នែកមុនគេ។", 
-        answer_en: "**Visual Hierarchy** is the arrangement of elements to logically guide the viewer's eye on what to look at first, second, and third.\n\nIf everything stands out, nothing stands out! You create hierarchy through:\n1. **Scale:** Making headlines significantly larger than body text.\n2. **Color:** Using bright accent colors for buttons or the main Focal Point.\n3. **Weight:** Using bold fonts to demand immediate attention over regular text.",
-        chips: ["តើ បច្ចេកទេស Squint Test ជាអ្វី?", "អ្វីទៅជា White Space?"],
-        chips_en: ["What is the Squint Test?", "White Space"]
-    },
-    { 
-        primaryKeys: ['តើ Rule of Thirds គឺជាអ្វី?', 'what is the rule of thirds'],
-        keys: ['rule of thirds', 'golden ratio', 'grid', 'ប្លង់', 'layout'],
-        regex: ['rule of third', 'golden ratio', '\\bgrid\\b'], // Removed 'layout'
-        answer: "បាទ **បច្ចេកទេសរៀបចំប្លង់ (Layout Grids) សំខាន់ៗមាន៖**\n\n📐 **Rule of Thirds (ច្បាប់ភាគបី):** បែងចែករូបភាពជា ៩ ប្រអប់។ វត្ថុគួរដាក់នៅត្រង់ចំណុចប្រសព្វទាំង ៤ ដើម្បីទាក់ទាញភ្នែកជាជាងដាក់នៅកណ្តាលចំ។\n🌀 **Golden Ratio:** សមាមាត្រមាសដែលស្រស់ស្អាតបំផុតតាមបែបធម្មជាតិ (1:1.618)។ ឡូហ្គោល្បីៗសុទ្ធតែគូសតាមទម្រង់នេះ។\n🧱 **Grid System:** ប្រើបន្ទាត់ក្រឡាដើម្បីជួយឱ្យការរចនាមានតុល្យភាព (ដូចជា 12-Column Grid សម្រាប់ Web Design)។\n\n💡 អ្នកអាចចូលមើលឧទាហរណ៍នៃប្លង់ទាំងនេះដោយផ្ទាល់នៅក្នុងប្រអប់ឧបករណ៍របស់យើង៖", 
-        answer_en: "**Core Layout Techniques:**\n\n📐 **Rule of Thirds:** Divides the canvas into 9 equal blocks. Placing focal points at the 4 intersecting lines creates more visual interest than dead-center placement.\n🌀 **Golden Ratio:** The most naturally pleasing aesthetic proportion (1:1.618). Famous logos are mathematically drawn using this.\n🧱 **Grid Systems:** Using invisible columns (like a 12-column grid for UI) to ensure perfect alignment.\n\n💡 You can visually explore these layouts inside our built-in Design Tools:",
+        primaryKeys: ['តើ Grid System គឺជាអ្វី? 📐', 'What is a Grid System? 📐'],
+        keys: ['rule of thirds', 'golden ratio', 'grid', 'ប្លង់', 'layout', 'what is a grid system'],
+        regex: ['rule of third', 'golden ratio', 'grid', 'ប្លង់', 'layout'],
+        answer: "បាទ **បច្ចេកទេសរៀបចំប្លង់ (Layout Grids) សំខាន់ៗមាន៖**\n\n📐 **Rule of Thirds (ច្បាប់ភាគបី):** បែងចែករូបភាពជា ៩ ប្រអប់។ វត្ថុគួរដាក់នៅត្រង់ចំណុចប្រសព្វទាំង ៤ ដើម្បីទាក់ទាញភ្នែកជាជាងដាក់នៅកណ្តាលចំ។\n🌀 **Golden Ratio:** សមាមាត្រមាសដែលស្រស់ស្អាតបំផុតតាមបែបធម្មជាតិ (1:1.618)។ ឡូហ្គោល្បីៗសុទ្ធតែគូសតាមទម្រង់នេះ។\n🧱 **Grid System:** រចនាសម្ព័ន្ធលាក់កំបាំង (ជួរឈរ និងជួរដេក) ដែលជួយឱ្យការរចនាមានតុល្យភាព (ឧ. 12-Column Grid សម្រាប់ Web Design)។\n\n💡 អ្នកអាចចូលមើលឧទាហរណ៍នៃប្លង់ទាំងនេះដោយផ្ទាល់នៅក្នុងប្រអប់ឧបករណ៍របស់យើង៖",
+        answer_en: "**Core Layout Techniques:**\n\n📐 **Rule of Thirds:** Divides the canvas into 9 equal blocks. Placing focal points at the 4 intersecting lines creates more visual interest than dead-center placement.\n🌀 **Golden Ratio:** The most naturally pleasing aesthetic proportion (1:1.618). Famous logos are mathematically drawn using this.\n🧱 **Grid Systems:** The invisible structure (columns and rows) that underpins professional layouts (e.g., 12-column grid for UI).\n\n💡 You can visually explore these layouts inside our built-in Design Tools:",
         actionButton: { label: "មើលគំរូប្លង់ 📐", label_en: "View Layout Grids 📐", actionToTrigger: "tools", subTab: "layout" },
-        chips: ["តើទំហំ Poster ស្តង់ដារមានអ្វីខ្លះ? 📏", "តើ Alignment ជាអ្វី?"],
-        chips_en: ["Standard Poster Sizes & Layouts? 📏", "What is Alignment?"]
+        chips: ["តើ Rule of Thirds និង Golden Ratio ខុសគ្នាម៉េច? 📐", "តើ Rule of Odds ជាអ្វី? 🔢"],
+        chips_en: ["Rule of Thirds vs Golden Ratio? 📐", "What is the Rule of Odds? 🔢"]
     },
     {
-        primaryKeys: ['តើ បច្ចេកទេស Squint Test ជាអ្វី?', 'what is the squint test hierarchy'],
-        keys: ['squint test', 'ធ្មេចភ្នែក', 'hierarchy check', 'មើលឱ្យព្រិល'],
-        regex: ['squint test', 'ធ្មេចភ្នែក'],
-        answer: "បាទ **Squint Test (តិចនិកព្រិលភ្នែក)** គឺជាក្បួនតេស្តត្រួតពិនិត្យ Visual Hierarchy ដ៏មានប្រសិទ្ធភាពបំផុតនៅលើលោក!\n\nពេលអ្នកឌីហ្សាញចប់ សូមថយក្រោយបន្តិច រួច **ធ្មេចភ្នែកឱ្យព្រិលៗ (Squint your eyes)** រហូតដល់មើលអក្សរលែងដាច់។\n\n💡 **លទ្ធផល៖** តើវត្ថុណាដែលអ្នកនៅតែអាចមើលឃើញមុនគេពេលភ្នែកព្រិល? បើវាជាវត្ថុ ឬចំណងជើងដែលអ្នកចង់ឱ្យគេចាប់អារម្មណ៍មែន នោះបានន័យថា Contrast និង Hierarchy របស់អ្នកជោគជ័យហើយ! បើមើលទៅឃើញរញ៉េរញ៉ៃ អ្នកត្រូវបន្ថយទំហំរបស់រង និងតម្លើងពន្លឺវត្ថុគោល។",
-        answer_en: "**The Squint Test** is the oldest and most flawless trick to instantly check your Visual Hierarchy!\n\nWhen you finish a design, lean back and **squint your eyes** until the image becomes totally blurry and you can't read the words anymore.\n\n💡 **The Result:** What is the very first shape or color blob that grabs your attention through the blur? If it's your main subject or headline, your contrast is perfect! If your eye goes to an unimportant logo in the corner, your hierarchy is broken and you need to fix your scaling.",
-        chips: ["អ្វីទៅជា Hierarchy?", "តើ Contrast ជាអ្វី?"],
-        chips_en: ["Visual Hierarchy", "What is Contrast?"]
+        primaryKeys: ['តើ Squint Test ជាអ្វី? 👁️', 'What is the Squint Test? 👁️'],
+        keys: ['squint test', 'ព្រិល', 'មើលមិនច្បាស់', 'blur analysis', 'fainted image', 'រូបស្លេកៗ'],
+        regex: ['squint', 'ព្រិល', 'blur', 'faint', 'ស្លេក'],
+        answer: "បាទ **The Squint Test (ការធ្វើតេស្តដោយភាពព្រិល)** គឺជាវិធីដ៏ល្អបំផុតដើម្បីសាកល្បង Hierarchy របស់អ្នក! 👁️\n\nពេលអ្នកព្រិចភ្នែកសម្លឹងមើល ឬធ្វើឱ្យផ្ទាំងការងារប្រែជា **រូបស្លេកៗ** និងព្រិលៗ អ្នកនឹងលែងអាចអានអក្សរដាច់។ នៅពេលនោះ ខួរក្បាលអ្នកនឹងចាប់អារម្មណ៍តែលើ 'ដុំពណ៌' ធំៗប៉ុណ្ណោះ។ បើប៊ូតុង ឬចំណុចសំខាន់ (Focal Point) របស់អ្នកមិនមែនជាដុំដែលលេចធ្លោជាងគេទេ មានន័យថាការរៀបចំឋានានុក្រមរបស់អ្នកបរាជ័យហើយ! ត្រូវតែកែទំហំ ឬពណ៌វាឡើងវិញ។",
+        answer_en: "**The Squint Test (Blur Analysis)** is the ultimate way to test Visual Hierarchy! 👁️\n\nWhen you squint your eyes or apply a heavy blur making it a fainted image, you can no longer read the text. Your brain only sees 'blobs' of color and light. If your primary Call-To-Action (CTA) is not the most prominent blob, your hierarchy has failed! You must adjust the scale or contrast until the goal is the undeniable focal point.",
+        chips: ["តើ Focal Point ជាអ្វី? 🎯", "អ្វីទៅជា Hierarchy? 👁️"],
+        chips_en: ["What is a Focal Point? 🎯", "What is Visual Hierarchy? 👁️"]
     },
-    { 
-        primaryKeys: ['តើ UI និង UX ជាអ្វី?', 'what are ui and ux?'],
-        keys: ['ui', 'ux', 'ui/ux', 'user interface', 'user experience'],
-        regex: ['ui/ux', 'user interface', 'user experience'], // Strict UI/UX
-        answer: "បាទ **UI និង UX គឺជាកូនភ្លោះដែលមិនអាចខ្វះគ្នាបានក្នុងការរចនា App និង Website៖**\n\n📱 **UI (User Interface):** គឺជារូបរាងខាងក្រៅ (សម្រស់)។ វាទាក់ទងនឹងការរើសពណ៌ ការប្រើ Font ភាពកោងនៃប៊ូតុង និងគម្លាត Margin/Padding ជាដើម។\n🧠 **UX (User Experience):** គឺជាបទពិសោធន៍ប្រើប្រាស់ (ភាពងាយស្រួល)។ វាទាក់ទងនឹងការរៀបចំតក្កវិជ្ជា តើអ្នកប្រើចុចទីនេះហើយទៅណាទៀត? តើវាលឿននិងងាយយល់ទេ?\n\n💡 **ឧទាហរណ៍៖** UI គឺជាថ្នាំលាបពណ៌ដ៏ស្រស់ស្អាតរបស់រថយន្ត ចំណែក UX គឺជាម៉ាស៊ីននិងចង្កូតដែលធ្វើឱ្យរថយន្តនោះងាយស្រួលបើកបរ!", 
-        answer_en: "**UI and UX are the inseparable twins of digital product design:**\n\n📱 **UI (User Interface):** Focuses on the Visuals (Beauty). It deals with color palettes, typography, button shapes, and perfect spacing.\n🧠 **UX (User Experience):** Focuses on the Logic (Brain). It dictates how the app feels, how users navigate from screen to screen, and how easy it is to achieve their goals.\n\n💡 **Example:** UI is the beautiful paint job on a sports car. UX is how smoothly the car actually drives!",
-        chips: ["Margin និង Padding ខុសគ្នាម៉េច?", "អ្វីទៅជា Hierarchy?"],
-        chips_en: ["Margin vs Padding?", "Visual Hierarchy"]
+    {
+        primaryKeys: ['តើ Moodboard គឺជាអ្វី? 📌', 'What is a Moodboard? 📌'],
+        keys: ['moodboard', 'អ្វីទៅជា moodboard?', 'how to make a moodboard', 'inspiration board'],
+        regex: ['moodboard', 'inspiration'],
+        answer: "បាទ **Moodboard (ផ្ទាំងអារម្មណ៍)** គឺជាការប្រមូលផ្តុំរូបភាព ពណ៌ ហ្វុនអក្សរ និងវាយនភាព (Textures) ដាក់ចូលគ្នានៅលើផ្ទាំងតែមួយ មុនពេលចាប់ផ្តើមរចនាពិតប្រាកដ។ 📌\n\n* **អត្ថប្រយោជន៍:** វាជួយកំណត់ទិសដៅរចនា (Art Direction) និងធានាថាអ្នកនិងអតិថិជនមានការយល់ឃើញដូចគ្នាចំពោះ 'អារម្មណ៍' នៃការរចនា ជៀសវាងការរចនាខុសចំណូលចិត្តគេ។\n* **របៀបបង្កើត:** អ្នកអាចរកប្រភពរូបភាពពី Pinterest ឬ Behance រួចយកមកតម្រៀបគ្នានៅក្នុង Figma ឬ Illustrator។",
+        answer_en: "A **Moodboard** is a visual collage consisting of images, color palettes, typography, and textures assembled before the actual design process begins. 📌\n\n* **The Benefit:** It establishes the 'Art Direction' and ensures that you and the client are perfectly aligned on the 'vibe' of the project, preventing costly revisions later.\n* **How to make one:** Gather inspiration from Pinterest or Behance and arrange them thoughtfully in Figma, Illustrator, or Milanote.",
+        chips: ["តើ គោលការណ៍រចនា (Principles) មានអ្វីខ្លះ? 📐", "តើ Graphic Design ជាអ្វី? 🎨"],
+        chips_en: ["What are the Core Design Principles? 📐", "What is Graphic Design? 🎨"]
+    },
+    {
+        primaryKeys: ['តើ Scale និង Proportion ខុសគ្នាម៉េច? 📏', 'Scale vs Proportion? 📏'],
+        keys: ['scale', 'proportion', 'ខ្នាត', 'សមាមាត្រ', 'scale vs proportion', 'size'],
+        regex: ['scale', 'proportion', 'ខ្នាត', 'សមាមាត្រ'],
+        answer: "បាទ នេះជាចំណុចខុសគ្នារវាង Scale និង Proportion ក្នុងការរៀបចំប្លង់៖\n\n📏 **Scale (ខ្នាត/ទំហំ):** គឺជាការប្រៀបធៀបទំហំវត្ថុមួយ ទៅនឹងវត្ថុមួយទៀត (ឬធៀបនឹងទំហំផ្ទាំងការងារទាំងមូល)។ ការប្រើ Scale ខុសគ្នាខ្លាំង (វត្ថុមួយធំ វត្ថុមួយតូច) ជួយបង្កើត Hierarchy យ៉ាងមានប្រសិទ្ធភាព។\n📐 **Proportion (សមាមាត្រ):** គឺជាទំនាក់ទំនងទំហំរវាង **ផ្នែកផ្សេងៗនៅក្នុងវត្ថុតែមួយ** (ឧទាហរណ៍៖ ទំហំក្បាលមនុស្ស ធៀបនឹងដងខ្លួនមនុស្ស)។ បើ Proportion ខុស វត្ថុនោះនឹងមើលទៅខូចទ្រង់ទ្រាយ (Distorted)។",
+        answer_en: "Here is the critical difference between Scale and Proportion in layout design:\n\n📏 **Scale:** The size of an element compared to *another element* (or the canvas itself). Using highly contrasting scales (one huge item, one tiny item) is the best way to create Visual Hierarchy.\n📐 **Proportion:** The relationship of sizes *within a single element* (e.g., the size of a human head compared to their body). If the proportion is wrong, the object looks distorted and unnatural.",
+        chips: ["អ្វីទៅជា Hierarchy? 👁️", "តើ Focal Point ជាអ្វី? 🎯"],
+        chips_en: ["What is Visual Hierarchy? 👁️", "What is a Focal Point? 🎯"]
+    },
+    {
+        primaryKeys: ['តើ Focal Point ជាអ្វី? 🎯', 'What is a Focal Point? 🎯'],
+        keys: ['focal point', 'ចំណុចផ្តោត', 'ការសង្កត់ធ្ងន់', 'emphasis'],
+        regex: ['focal point', 'ចំណុចផ្តោត', 'emphasis', 'សង្កត់ធ្ងន់'],
+        answer: "បាទ **Focal Point (ចំណុចផ្តោត)** គឺជាផ្នែកតែមួយគត់នៃការរចនា ដែលស្រែកហៅភ្នែកអ្នកមើលឱ្យចាប់អារម្មណ៍មុនគេបង្អស់ (Emphasis)! 🎯\n\nបើអ្នកមិនបង្កើត Focal Point ទេ ភ្នែកអ្នកមើលនឹងរវង្វេងពេញផ្ទាំងរូបភាព ហើយមិនដឹងថាត្រូវមើលអ្វីមុន។\n💡 **វិធីបង្កើតវា:**\n- ប្រើប្រាស់ពណ៌ផ្ទុយគ្នាខ្លាំង (Contrast)\n- ធ្វើឱ្យវត្ថុនោះមានទំហំធំជាងគេ (Scale)\n- ដាក់វានៅចំកណ្តាល ឬដាច់ដោយឡែកពីគេ (White Space)។",
+        answer_en: "**Focal Point (Emphasis)** is the specific area of a design that demands the viewer's immediate attention before anything else! 🎯\n\nIf you don't intentionally design a focal point, the viewer's eyes will wander aimlessly across the canvas.\n💡 **How to create one:**\n- Use high-impact color Contrast.\n- Make the primary element massively larger than the rest (Scale).\n- Isolate it using plenty of negative space.",
+        chips: ["តើ Contrast ជាអ្វី? 🌗", "តើ Visual Tension គឺជាអ្វី? ⚡"],
+        chips_en: ["What is Contrast? 🌗", "What is Visual Tension? ⚡"]
+    },
+    {
+        primaryKeys: ['តើ Rhythm ក្នុងការរចនាជាអ្វី? 🌊', 'What is Rhythm in design? 🌊'],
+        keys: ['rhythm', 'ចង្វាក់', 'movement', 'ចលនា', 'flow'],
+        regex: ['rhythm', 'ចង្វាក់', 'movement', 'ចលនា'],
+        answer: "បាទ ដូចទៅនឹងតន្ត្រីដែរ **Rhythm (ចង្វាក់)** ក្នុងការរចនាគឺជាការប្រើប្រាស់គម្លាត (Spacing) និងការធ្វើឡើងវិញ (Repetition) ដើម្បីបង្កើត 'ល្បឿន' និង 'ចលនា' ឱ្យភ្នែករត់តាម៖\n\n- **Regular Rhythm:** គម្លាតស្មើៗគ្នា បង្កើតអារម្មណ៍ស្ងប់ស្ងាត់ និងមានសណ្តាប់ធ្នាប់ (ដូចជាចង្វាក់បេះដូង)។\n- **Flowing Rhythm:** ការរៀបចំតាមខ្សែរាងកោង ផ្តល់អារម្មណ៍ធម្មជាតិ និងទន់ភ្លន់។\n- **Progressive Rhythm:** ធាតុផ្លាស់ប្តូរទំហំ ឬពណ៌បន្តិចម្តងៗ (ពីតូចទៅធំ ពីស្រាលទៅដិត) បង្កើតអារម្មណ៍នៃការលូតលាស់ ឬចលនារត់ទៅមុខ។",
+        answer_en: "Just like in music, **Rhythm** in design is the use of spacing and repetition to create visual 'tempo' and 'movement' for the eye to follow:\n\n- **Regular Rhythm:** Evenly spaced elements that create a calm, orderly feel (like a heartbeat).\n- **Flowing Rhythm:** Elements arranged along curves, giving an organic, natural, and soft feel.\n- **Progressive Rhythm:** Elements gradually changing in size or color (small to large, light to dark), creating a strong sense of forward motion or growth.",
+        chips: ["តើ Repetition ជាអ្វី? 🔁", "តើ Unity ក្នុងការរចនាជាអ្វី? 🔗"],
+        chips_en: ["What is Repetition? 🔁", "What is Unity in design? 🔗"]
+    },
+    {
+        primaryKeys: ['តើ Rule of Odds ជាអ្វី? 🔢', 'What is the Rule of Odds? 🔢'],
+        keys: ['rule of odds', 'ច្បាប់ចំនួនសេស', 'ចំនួនសេស', 'odd number'],
+        regex: ['rule of odds', 'ចំនួនសេស', 'odd number'],
+        answer: "បាទ **Rule of Odds (ច្បាប់ចំនួនសេស)** គឺជាល្បិចចិត្តសាស្ត្រមួយក្នុងប្លង់! វានិយាយថា ខួរក្បាលមនុស្សយល់ថា ការចាត់ក្រុមវត្ថុដែលមានចំនួនសេស (ដូចជា ៣ ឬ ៥) គឺមានភាពទាក់ទាញ រស់រវើក និងមើលទៅធម្មជាតិជាងចំនួនគូ (២ ឬ ៤)។\n\n💡 ហេតុអ្វី? ព្រោះចំនួនគូបង្កើតភាពស៊ីមេទ្រី (Symmetry) ឥតខ្ចោះ ដែលពេលខ្លះមើលទៅរឹង និងគួរឱ្យធុញ។ ចំណែកចំនួនសេស បង្ខំឱ្យភ្នែករត់ចុះឡើងដើម្បីរកចំណុចកណ្តាល ធ្វើឱ្យរូបភាពមានចលនាជាប់ជានិច្ច។",
+        answer_en: "**The Rule of Odds** is a psychological layout trick! It states that the human brain finds odd numbers of grouped elements (like 3 or 5) much more visually dynamic, engaging, and natural than even numbers (2 or 4).\n\n💡 Why? Because even numbers create perfect symmetry, which can feel static and boring. Odd numbers force the eye to constantly move around to find the center, creating continuous visual interest.",
+        chips: ["តើ Grid System គឺជាអ្វី? 📐", "តើ Rule of Thirds និង Golden Ratio ខុសគ្នាម៉េច? 📐"],
+        chips_en: ["What is a Grid System? 📐", "Rule of Thirds vs Golden Ratio? 📐"]
+    },
+    {
+        primaryKeys: ['តើ Rule of Thirds និង Golden Ratio ខុសគ្នាម៉េច? 📐', 'Rule of Thirds vs Golden Ratio? 📐'],
+        keys: ['rule of thirds', 'golden ratio', 'សមាមាត្រមាស', 'ច្បាប់ភាគបី', 'fibonacci'],
+        regex: ['rule of third', 'golden ratio', 'សមាមាត្រមាស', 'ភាគបី'],
+        answer: "បាទ ទាំងពីរនេះគឺជាច្បាប់មាសក្នុងការរៀបចំប្លង់ ប៉ុន្តែវាមានកម្រិតខុសគ្នា៖\n\n📐 **Rule of Thirds (ច្បាប់ភាគបី):** គឺសាមញ្ញបំផុត! អ្នកគ្រាន់តែគូសបន្ទាត់កាត់ផ្ទាំងការងារជា ៩ ប្រអប់ប៉ុនៗគ្នា ហើយដាក់វត្ថុសំខាន់នៅត្រង់ចំណុចប្រសព្វរបស់វា។ ល្អសម្រាប់ការរៀបចំប្លង់លឿនៗ។\n🌀 **Golden Ratio (សមាមាត្រមាស - 1:1.618):** ស្មុគស្មាញជាង តែទាក់ទាញបំផុត! វាជាគណិតវិទ្យាដែលមាននៅក្នុងធម្មជាតិ (ដូចជាខ្យងសមុទ្រ ឬផ្កាឈូករ័ត្ន)។ អ្នករចនាប្រើវាដើម្បីគូស Logo ខ្នាតធំៗ ឬរៀបចំប្លង់ UI ដែលមើលទៅ 'ស្រស់ស្អាតដោយធម្មជាតិ' មិនបាច់ប្រឹង។",
+        answer_en: "Both are incredible foundational layout tools, but they operate at different levels of complexity:\n\n📐 **Rule of Thirds:** Extremely simple! You divide your canvas into a 3x3 grid (9 boxes) and place focal points at the intersecting lines. Perfect for quick layout decisions and photography framing.\n🌀 **Golden Ratio (1:1.618):** More complex, but deeply powerful. It is a mathematical ratio found everywhere in nature (seashells, flowers). Elite designers use it to construct logos and UI layouts that feel instinctively 'perfect' and naturally beautiful.",
+        chips: ["តើ Grid System គឺជាអ្វី? 📐", "តើ Rule of Odds ជាអ្វី? 🔢"],
+        chips_en: ["What is a Grid System? 📐", "What is the Rule of Odds? 🔢"]
+    },
+    {
+        primaryKeys: ['តើ Unity ក្នុងការរចនាជាអ្វី? 🔗', 'What is Unity in design? 🔗'],
+        keys: ['unity', 'harmony', 'ឯកភាព', 'ភាពសុខដុម', 'what is unity'],
+        regex: ['unity', 'harmony', 'ឯកភាព', 'ភាពសុខដុម'],
+        answer: "បាទ **Unity ឬ Harmony (ឯកភាព និងភាពសុខដុម)** គឺជាគោលដៅចុងក្រោយនៃការរចនា! វាគឺជាអារម្មណ៍ដែលធាតុទាំងអស់ (ពណ៌ អក្សរ រូបភាព) ធ្វើការរួមគ្នាជាក្រុមតែមួយ ហាក់ដូចជាពួកវាជាបងប្អូននឹងគ្នា។\n\nបើគ្មាន Unity ទេ ការរចនានឹងមើលទៅរញ៉េរញ៉ៃ ដូចជាកាត់តយកមកបិទចូលគ្នាដោយបង្ខំ។ \n💡 អ្នកអាចបង្កើត Unity បានតាមរយៈការប្រើប្រាស់ **Repetition (ភាពដដែលៗ)** ដូចជា ការប្រើប្រាស់ Font តែមួយគ្រួសារ ឬការប្រើ Tone ពណ៌ដែលស៊ីគ្នា (Analogous colors)។",
+        answer_en: "**Unity (or Harmony)** is the ultimate goal of any design! It is the feeling that all elements (colors, typography, images) belong together and are working as a single cohesive unit.\n\nWithout Unity, a design feels chaotic, like random pieces forced together. \n💡 You achieve Unity heavily through **Repetition**—like strictly sticking to one font superfamily, or using a consistent color harmony (like Analogous colors) across the entire layout.",
+        chips: ["តើ Repetition ជាអ្វី? 🔁", "តើ Rhythm ក្នុងការរចនាជាអ្វី? 🌊"],
+        chips_en: ["What is Repetition? 🔁", "What is Rhythm in design? 🌊"]
+    },
+    {
+        primaryKeys: ['តើ Visual Tension គឺជាអ្វី? ⚡', 'What is Visual Tension? ⚡'],
+        keys: ['visual tension', 'ភាពតានតឹង', 'ភាពរស់រវើក', 'tension'],
+        regex: ['visual tension', 'tension', 'តានតឹង'],
+        answer: "បាទ **Visual Tension (ភាពតានតឹងនៃរូបភាព)** គឺជាបច្ចេកទេសកម្រិតខ្ពស់! អ្នករចនាបង្កើតភាព 'អតុល្យភាព' បន្តិចបន្តួចដោយចេតនា ដើម្បីឱ្យរូបភាពមើលទៅមានថាមពល និងទាក់ទាញភ្នែកខ្លាំង។\n\n💡 **ឧទាហរណ៍នៃការបង្កើត Tension៖**\n- ដាក់វត្ថុពីរឱ្យជិតគ្នាស្ទើរតែទើសគ្នា (ប៉ះគ្នាតិចៗ)។\n- ប្រើ Asymmetrical Balance (ដាក់រូបភាពធំធ្ងន់ទៅម្ខាង ឱ្យមើលទៅដូចចង់ដួល)។\nភាពតានតឹងនេះបង្ខំឱ្យខួរក្បាលអ្នកមើលមិនអាចដកភ្នែកចេញបាន ព្រោះវាមើលទៅ 'គ្រោះថ្នាក់' ឬ 'រស់រវើក' ជាងការរៀបចំឱ្យស្មើគ្នាពេក។",
+        answer_en: "**Visual Tension** is an advanced layout technique! Designers intentionally create a slight 'imbalance' or friction to make the composition feel highly energetic and magnetic.\n\n💡 **Examples of creating Tension:**\n- Placing two elements dangerously close together, almost touching.\n- Using heavy Asymmetrical Balance (putting a massive object on one edge so it feels like the layout might tip over).\nThis tension forces the viewer's brain to engage with the design because it feels more 'alive' and visually 'dangerous' than perfectly safe, symmetrical layouts.",
+        chips: ["តើ Balance និង Alignment ខុសគ្នាម៉េច? ⚖️", "តើ Proximity ជាអ្វី? 🏘️"],
+        chips_en: ["Balance vs Alignment? ⚖️", "What is Proximity? 🏘️"]
+    },
+    {
+        primaryKeys: ['តើ Framing (ការដាក់ស៊ុម) ប្រើសម្រាប់អ្វី? 🖼️', 'How to use Framing in design? 🖼️'],
+        keys: ['framing', 'ការដាក់ស៊ុម', 'ស៊ុម', 'crop', 'how to use framing'],
+        regex: ['framing', 'ស៊ុម', 'crop'],
+        answer: "បាទ **Framing (ការដាក់ស៊ុម)** គឺជាការប្រើប្រាស់ធាតុផ្សេងៗ (ដូចជារូបរាង បន្ទាត់ ឬសូម្បីតែស្រមោល និងមែកឈើ) ដើម្បីបង្កើតជា 'ស៊ុម' ជុំវិញវត្ថុសំខាន់ (Focal Point) របស់អ្នក។\n\n* **អត្ថប្រយោជន៍:** វាជួយចាក់សោរខ្សែភ្នែករបស់អ្នកមើលមិនឱ្យរត់ចេញក្រៅ និងជួយរុញវត្ថុសំខាន់ឱ្យកាន់តែលេចធ្លោ។ ការប្រើចន្លោះទទេ (White Space) ព័ទ្ធជុំវិញរូបភាព ក៏ចាត់ទុកជាការធ្វើ Framing ដ៏មានប្រសិទ្ធភាព និងមើលទៅ Premium បំផុតដែរ!",
+        answer_en: "**Framing** is the strategic use of visual elements (like geometric shapes, lines, or organic elements like tree branches) to create a 'frame' around your primary subject or Focal Point.\n\n* **The Benefit:** It physically traps the viewer's eye inside the composition, locking their focus exactly where you want it. Using massive amounts of empty negative space (White Space) around an object is also considered one of the most premium and effective forms of framing!",
+        chips: ["អ្វីទៅជា White Space? 🤍", "តើ Focal Point ជាអ្វី? 🎯"],
+        chips_en: ["What is White Space? 🤍", "What is a Focal Point? 🎯"]
+    },
+    {
+        primaryKeys: ['តើ Modular Grid និង Column Grid ខុសគ្នាម៉េច? 📏', 'Modular vs Column Grids? 📏'],
+        keys: ['modular grid', 'column grid', 'baseline grid', 'ប្រព័ន្ធក្រឡាចត្រង្គ'],
+        regex: ['modular', 'column grid'],
+        answer: `បាទ នៅកម្រិតសាកលវិទ្យាល័យ ការប្រើ Grid ត្រូវបានចែកជាប្រភេទជាក់លាក់៖\n\n១. **Column Grid (ក្រឡាចត្រង្គជួរឈរ):** បែងចែកទំព័រជាជួរឈរបញ្ឈរ (ឧ. ទស្សនាវដ្តី ឬ Website ដែលមាន ១២ ជួរ)។ វាជួយគ្រប់គ្រងប្រវែងអត្ថបទ។\n២. **Modular Grid (ក្រឡាចត្រង្គម៉ូឌុល):** បន្ថែមបន្ទាត់ផ្តេក កាត់ផ្តាច់ជួរឈរ បង្កើតជា 'ប្រអប់ការ៉េតូចៗ'។ វាផ្តល់ភាពបត់បែនខ្ពស់បំផុត ល្អសម្រាប់ការរៀបចំ Dashboard, UI ទូរស័ព្ទ, និងទិន្នន័យស្មុគស្មាញ (Bento Box UI)។`,
+        answer_en: `At the university level, grid systems are categorized precisely:\n\n1. **Column Grid:** Divides the page into vertical columns (e.g., standard 12-column web grids or newspaper layouts). Best for managing text flow.\n2. **Modular Grid:** Takes a column grid and adds intersecting horizontal rows, creating a matrix of individual 'modules' or boxes. It provides ultimate control for highly complex layouts, data dashboards, and modern Bento UI designs.`,
+        chips: ["តើ Optical Center គឺជាអ្វី? 🎯", "តើ Grid System គឺជាអ្វី? 📐"],
+        chips_en: ["What is the Optical Center? 🎯", "What is a Grid System? 📐"]
+    },
+    {
+        primaryKeys: ['តើ Optical Center គឺជាអ្វី? 🎯', 'What is the Optical Center? 🎯'],
+        keys: ['optical center', 'geometric center', 'ចំណុចកណ្តាលភ្នែក', 'ចំណុចកណ្តាល'],
+        regex: ['optical center', 'geometric center'],
+        answer: `បាទ នេះជាកំហុសដែលអ្នករចនាថ្មីថ្មោងតែងធ្វើ! \n\n- **Geometric Center (ចំណុចកណ្តាលធរណីមាត្រ):** គឺចំណុចកណ្តាលពិតប្រាកដដែលវាស់ដោយបន្ទាត់ (៥០% នៃកម្ពស់)។\n- **Optical Center (ចំណុចកណ្តាលដោយភ្នែក):** គឺចំណុចដែលខួរក្បាលយើង 'គិតថា' ជាចំណុចកណ្តាល ដែលជាទូទៅស្ថិតនៅ **ខ្ពស់ជាងចំណុចកណ្តាលពិតប្រាកដបន្តិច (ប្រហែល ១០%)**។\n💡 **ការអនុវត្ត:** បើអ្នកដាក់ Logo នៅចំកណ្តាល Geometric ពេក វានឹងមើលទៅដូចជា 'ធ្លាក់ចុះក្រោម'។ ត្រូវរុញវាឡើងលើបន្តិចទើបមើលទៅមានតុល្យភាព!`,
+        answer_en: `This is a classic rookie mistake tested in design schools! \n\n- **Geometric Center:** The exact mathematical center of a canvas (50% height, 50% width).\n- **Optical Center:** Where the human eye *perceives* the center to be. It is actually located **slightly higher (about 10%)** than the geometric center.\n💡 **Application:** If you place a logo precisely in the geometric center, it will visually appear to be 'sinking' or falling down. Always bump it up slightly to hit the Optical Center for perfect balance!`,
+        chips: ["តើ Rule of Thirds និង Golden Ratio ខុសគ្នាម៉េច? 📐", "តើ Visual Tension គឺជាអ្វី? ⚡"],
+        chips_en: ["Rule of Thirds vs Golden Ratio? 📐", "What is Visual Tension? ⚡"]
+    },
+    {
+        primaryKeys: ['តើ Macro និង Micro White Space ជាអ្វី? 🤍', 'Macro vs Micro White Space? 🤍'],
+        keys: ['macro white space', 'micro white space', 'ចន្លោះទទេ', 'margin'],
+        regex: ['macro', 'micro', 'white space'],
+        answer: `បាទ ការគ្រប់គ្រង White Space ត្រូវបែងចែកជា ២ កម្រិត៖\n\n១. **Macro White Space (លំហធំ):** គឺជាចន្លោះប្រហោងធំៗជុំវិញប្លង់ទាំងមូល (Margins) ឬចន្លោះរវាងកថាខណ្ឌធំៗ។ វាជួយឱ្យការរចនាមើលទៅថ្លៃថ្នូរ និងមិនហប់។\n២. **Micro White Space (លំហតូច):** គឺជាចន្លោះប្រហោងតូចៗ ដូចជាគម្លាតរវាងបន្ទាត់អក្សរ (Leading), គម្លាតរវាងតួអក្សរ (Tracking), ឬចន្លោះរវាង Icon និងអក្សរ។ វាទទួលខុសត្រូវផ្ទាល់លើភាពងាយស្រួលអាន (Readability)។`,
+        answer_en: `Advanced designers manage White Space on two distinct scales:\n\n1. **Macro White Space:** The large, expansive empty areas around the entire layout (margins) or between major sections. It dictates the overall mood, elegance, and breathing room of the design.\n2. **Micro White Space:** The tiny gaps between elements, such as line-height (Leading), letter-spacing (Tracking), or the padding inside a button. Micro white space is strictly responsible for functional readability and legibility.`,
+        chips: ["អ្វីទៅជា White Space? 🤍", "តើ Kerning, Tracking, Leading ខុសគ្នាម៉េច? 🔠"],
+        chips_en: ["What is White Space? 🤍", "Kerning vs Tracking vs Leading? 🔠"]
     },
 
-    // 5. PRODUCTION & BUSINESS
-    { 
-        primaryKeys: ['ក្បួនរចនាឡូហ្គោ (Logo Design)', 'rules of logo design'],
-        keys: ['logo design', 'គូរឡូហ្គោ', 'ក្បួនឡូហ្គោ', 'how to design a logo'],
-        regex: ['logo design', 'គូរឡូហ្គោ', 'ក្បួនឡូហ្គោ'],
-        answer: "បាទ **ដើម្បីគូរ Logo មួយឱ្យទទួលបានជោគជ័យ ត្រូវគោរពតាមក្បួនទាំង ៥ នេះ៖**\n\n១. **Simple (សាមញ្ញ):** ងាយចាំ មិនញ៉េរញ៉ៃ (ឧ. Apple, Nike)។\n២. **Memorable (គួរឱ្យចងចាំ):** មើលតែមួយភ្លែតក៏ចាំជាប់ខួរក្បាល។\n៣. **Timeless (មិនហួសសម័យ):** កុំរចនាតាម Trend មួយឆាវៗ វាត្រូវតែស្អាតទោះបីជា ១០ ឆ្នាំក្រោយក៏ដោយ។\n៤. **Versatile (បត់បែន):** ត្រូវតែមើលទៅស្អាតទោះជាបោះពុម្ពពណ៌សខ្មៅ ទំហំធំប៉ុនប៉ាណូ ឬតូចប៉ុនត្រា។\n៥. **Appropriate (ស័ក្តិសម):** ពណ៌និងទម្រង់ត្រូវស៊ីនឹងប្រភេទអាជីវកម្ម (ឧ. មន្ទីរពេទ្យមិនគួរប្រើឡូហ្គោពណ៌ខ្មៅរាងស្រួចៗទេ)។", 
-        answer_en: "**To create a successful Logo, it must follow these 5 golden rules:**\n\n1. **Simple:** Easy to recognize, not overly detailed (e.g., Apple, Nike).\n2. **Memorable:** Sticks in the viewer's brain after just one glance.\n3. **Timeless:** Doesn't follow quick trends; it should still look great in 10 years.\n4. **Versatile:** It must look good whether it's printed in pure black & white, on a giant billboard, or as a tiny app icon.\n5. **Appropriate:** The vibe and colors must match the industry (e.g., a hospital shouldn't use a sharp, aggressive black logo).",
-        chips: ["តើ RGB និង CMYK ខុសគ្នាម៉េច?", "ប្រភេទ File"],
-        chips_en: ["RGB vs CMYK difference?", "File Formats"]
+    // ------------------------------------------
+    // 4. COLOR THEORY & PSYCHOLOGY
+    // ------------------------------------------
+    {
+        primaryKeys: ['តើ Color Theory ជាអ្វី? 🎨', 'Can you explain Color Theory? 🎨'],
+        keys: ['color theory', 'color harmony', 'របៀបរើសពណ៌', 'លាយពណ៌', 'ទ្រឹស្តីពណ៌'],
+        regex: ['color theory', 'color harmony', 'ទ្រឹស្តីពណ៌', 'របៀបរើសពណ៌', 'លាយពណ៌'],
+        answer: "បាទ **ក្បួនផ្គូផ្គងពណ៌ (Color Harmonies) សំខាន់ៗមាន៖**\n\n១. **Complementary (ផ្ទុយគ្នា):** ពណ៌ដែលនៅទល់មុខគ្នាក្នុងរង្វង់ពណ៌ (ឧ. ក្រហម & ស៊ីយ៉ាន)។ ល្អបំផុតសម្រាប់ទាក់ទាញចំណាប់អារម្មណ៍ខ្លាំង។\n២. **Analogous (ក្បែរគ្នា):** ពណ៌ ៣ ជាប់គ្នា (ឧ. លឿង ទឹកក្រូច ក្រហម)។ មើលទៅសុខដុមនិងធម្មជាតិ ជម្រើសសុវត្ថិភាពសម្រាប់អាជីវកម្ម។\n៣. **Monochromatic:** ប្រើពណ៌តែមួយ តែលេងកម្រិតភ្លឺ (Tint)/ងងឹត (Shade)។\n\n💡 **សីតុណ្ហភាព:** ពណ៌ក្តៅ (ក្រហម លឿង) ទាញឱ្យវត្ថុហាក់ដូចជាលេចមកមុខ (Advance) ឯពណ៌ត្រជាក់ (ខៀវ បៃតង) រុញរុញទៅផ្ទៃខាងក្រោយ (Recede)។",
+        answer_en: "**Essential Color Harmonies:**\n\n1. **Complementary:** Colors directly opposite each other on the color wheel (e.g., Red & Cyan). Creates high-impact contrast.\n2. **Analogous:** 3 colors side-by-side. Creates a serene, unified look, perfect for corporate design.\n3. **Monochromatic:** Using a single base hue but varying its Tints (white added) and Shades (black added).\n\n💡 **Temperature:** Warm colors visually advance towards the viewer, while cool colors recede into the background.",
+        actionButton: { label: "បង្កើតពណ៌ 🎨", label_en: "Open Color Generator 🎨", actionToTrigger: "tools", subTab: "color" },
+        chips: ["តើក្បួនលាយពណ៌កម្រិតខ្ពស់មានអ្វីខ្លះ? 🎨", "តើច្បាប់ពណ៌ ៦០-៣០-១០ ជាអ្វី? 🎨"],
+        chips_en: ["Advanced color harmonies? 🎨", "What is the 60-30-10 Rule? 🎨"]
     },
-    { 
-        primaryKeys: ['តើ RGB និង CMYK ខុសគ្នាម៉េច?', 'rgb vs cmyk'],
-        keys: ['rgb', 'cmyk', 'ប្រព័ន្ធពណ៌', 'pantone', 'pms'],
-        regex: ['\\bcmyk\\b', 'ប្រព័ន្ធពណ៌', '\\bpantone\\b', '\\bpms\\b'], // Removed RGB to not clash with RGB wheel
-        answer: "បាទ **ប្រព័ន្ធពណ៌សំខាន់ៗដែលអ្នកត្រូវដឹង៖**\n\n💻 **RGB (Red, Green, Blue):** ជាពណ៌ប្រើដោយពន្លឺអេក្រង់។ ប្រើវាសម្រាប់រចនា Website, Facebook Post ឬ Video។\n🖨️ **CMYK (Cyan, Magenta, Yellow, Black):** ជាពណ៌ទឹកថ្នាំម៉ាស៊ីនព្រីន។ ប្រើវាសម្រាប់រចនានាមប័ណ្ណ ខិត្តប័ណ្ណ។\n🎨 **Pantone (PMS):** ជាកូដពណ៌ទឹកថ្នាំពិសេស (Spot Colors) ដែលរោងពុម្ពលាយទុកមុន ធានាថាព្រីនចេញមកពណ៌ដូចដើម ១០០% (ច្រើនប្រើលើ Logo)។\n\n⚠️ **បំរាម៖** កុំយក File RGB ទៅព្រីន ព្រោះពណ៌នឹងចេញមកស្រអាប់ខុសពីមើលលើកុំព្យូទ័រ!", 
-        answer_en: "**The Critical Color Profiles:**\n\n💻 **RGB (Red, Green, Blue):** Emitted light. Use this strictly for Digital Screens (UI, Social Media, Web).\n🖨️ **CMYK (Cyan, Magenta, Yellow, Key/Black):** Physical ink. Use this for standard Physical Printing (Flyers, Posters).\n🎨 **Pantone (PMS):** Pre-mixed spot colors used in high-end printing to ensure absolute color consistency for brand logos.\n\n⚠️ **Warning:** Never print an RGB file directly; the incredibly bright screen colors will look heavily washed out when translated to CMYK ink!",
-        chips: ["តើ Resolution (PPI) ប៉ុន្មាន?", "ក្បួនផ្គូផ្គងពណ៌ (Color Harmonies)"],
-        chips_en: ["Best Resolution for printing?", "Color Harmonies"]
+    {
+        primaryKeys: ['តើក្បួនលាយពណ៌កម្រិតខ្ពស់មានអ្វីខ្លះ? 🎨', 'Advanced color harmonies? 🎨'],
+        keys: ['triadic', 'tetradic', 'tint', 'shade', 'tone', 'color wheel', 'លាយពណ៌', 'color theory', 'ទ្រឹស្តីពណ៌', 'advanced color theory'],
+        regex: ['triadic', 'tetradic', 'tint', 'shade', 'tone', 'color wheel', 'លាយពណ៌', 'color theory', 'ទ្រឹស្តីពណ៌'],
+        answer: "បាទ ផ្អែកលើ **Color Theory** ក្បួនលាយពណ៌កម្រិតខ្ពស់មាន៖\n\n**១. ការចាប់គូពណ៌ (Harmonies):**\n- **Triadic (ត្រីកោណសម័ង្ស):** ពណ៌ ៣ ឃ្លាតស្មើគ្នា ១២០°។ រស់រវើកខ្លាំង តែមានតុល្យភាព។\n- **Tetradic (ចតុកោណ):** ពណ៌ ៤ បង្កើតជាគូផ្ទុយគ្នាពីរគូ។ ត្រូវរើសពណ៌១ជាមេ ទើបមិនរញ៉េរញ៉ៃ។\n\n**២. ការផ្លាស់ប្តូរ Hue (ពណ៌ដើម)៖**\n- **Tint:** ពណ៌ដើម + ស (បង្កើតជាពណ៌ Pastel ទន់ភ្លន់)\n- **Shade:** ពណ៌ដើម + ខ្មៅ (បង្កើតជាពណ៌ងងឹត និងកាច)\n- **Tone:** ពណ៌ដើម + ប្រផេះ (បង្កើតជាពណ៌ស្រទន់ និងមានតម្លៃថ្លៃ/Vintage)",
+        answer_en: "Based on **Color Theory**, here is the advanced breakdown of the Color Wheel:\n\n**1. Advanced Harmonies:**\n- **Triadic:** 3 colors evenly spaced in a triangle (120° apart). Vibrant yet balanced.\n- **Tetradic (Double Complementary):** 4 colors forming a rectangle. It's rich but tricky—you MUST let one color dominate while the others act as small accents.\n\n**2. Adjusting the Hue:**\n- **Tint:** Hue + White (Creates soft, pastel, airy vibes).\n- **Shade:** Hue + Black (Creates moody, intense, powerful vibes).\n- **Tone:** Hue + Gray (Creates muted, highly sophisticated, or vintage vibes).",
+        actionButton: { label: "សាកល្បងឧបករណ៍ពណ៌ 🎨", label_en: "Try the Color Tools 🎨", actionToTrigger: "tools", subTab: "color" },
+        chips: ["តើអត្ថន័យនៃពណ៌នីមួយៗតំណាងឱ្យអ្វី? 🧠", "តើ HSL គឺជាអ្វី? 🎛️"],
+        chips_en: ["What is Color Psychology? 🧠", "What is HSL? 🎛️"]
     },
-    { 
-        primaryKeys: ['តើ Bleed គឺជាអ្វី?', 'what is a bleed', 'សម្រាប់បោះពុម្ព 🖨️', 'For Printing 🖨️'],
-        keys: ['bleed', 'margin', 'die line', 'die-line', 'គែមសុវត្ថិភាព', 'slug'],
-        regex: ['\\bbleed\\b', 'die line', 'die-line', '\\bslug\\b'], // removed 'margin'
-        answer: "បាទ **ពាក្យបច្ចេកទេសសម្រាប់ការបោះពុម្ព (Print Production) ដែលអ្នកត្រូវដឹង៖**\n\n✂️ **Bleed (គែមបម្រុង):** ការពង្រីកផ្ទៃ Background ឱ្យហៀរចេញក្រៅទំហំកាត់ (ជាទូទៅ 3mm)។ 💡 *ហេតុអ្វី?* ព្រោះកាំបិតរោងពុម្ពកាត់មិនត្រឹមត្រូវ ១០០% ទេ បើអត់ដាក់ Bleed អាចនឹងសល់គែមពណ៌ស។\n📏 **Margin (គែមសុវត្ថិភាព):** ចន្លោះខាងក្នុងដែលហាមដាក់អក្សរ ការពារកុំឱ្យកាត់ដាច់ចូលសាច់អត្ថបទសំខាន់ៗ។\n📝 **Slug:** ជាទំហំក្រៅ Bleed បន្តិចទៀត ទុកសម្រាប់សរសេរកំណត់ចំណាំប្រាប់ជាងពុម្ព (មិនព្រីនចេញមកទេ)។", 
-        answer_en: "**Essential Print Production Terminology:**\n\n✂️ **Bleed:** Extending the background colors or images slightly beyond the actual document edge (usually by 3mm). 💡 *Why?* Because printing guillotine blades aren't 100% precise. Bleeds prevent accidental white borders on the final cut.\n📏 **Safe Margin:** An invisible inner boundary. Crucial text and logos must stay inside this line so they don't risk getting chopped off.\n📝 **Slug:** The area completely outside the bleed. Used strictly to leave printed notes or instructions for the print operator.",
-        chips: ["តើ Resolution (PPI) ប៉ុន្មាន?", "តើ RGB និង CMYK ខុសគ្នាម៉េច?"],
-        chips_en: ["Best Resolution for printing?", "RGB vs CMYK difference?"]
+    {
+        primaryKeys: ['តើអត្ថន័យនៃពណ៌នីមួយៗតំណាងឱ្យអ្វី? 🧠', 'What is Color Psychology? 🧠'],
+        keys: ['psychology', 'អត្ថន័យពណ៌', 'ចិត្តសាស្ត្រពណ៌', 'color meaning', 'color psychology'],
+        regex: ['psychology', 'អត្ថន័យពណ៌', 'ចិត្តសាស្ត្រពណ៌', 'color meaning'],
+        answer: "បាទ **ចិត្តសាស្ត្រពណ៌ (Color Psychology)** គឺសំខាន់ណាស់ក្នុងការទាក់ទាញអារម្មណ៍អតិថិជន៖\n\n🔴 **ក្រហម:** ថាមពល ក្តៅគគុក អាហារ គ្រោះថ្នាក់ (KFC, YouTube)។\n🔵 **ខៀវ:** ភាពស្ងប់ស្ងាត់ ភាពជឿជាក់ សុវត្ថិភាព បច្ចេកវិទ្យា (Facebook, ធនាគារ)។\n🟢 **បៃតង:** ធម្មជាតិ សុខភាព លុយ (Starbucks, Grab)។\n🟡 **លឿង:** ភាពសប្បាយរីករាយ យុវវ័យ ព្រមាន (McDonald's)។\n⚫ **ខ្មៅ (Shade):** ភាពប្រណីត អំណាច អាថ៌កំបាំង (Apple, Nike)។\n⚪ **ស (Tint):** ភាពស្អាតស្អំ ទំនើប ស្រឡះ។",
+        answer_en: "**Color Psychology** is crucial for evoking the right emotion in your audience:\n\n🔴 **Red:** Energy, passion, appetite, urgency (KFC, YouTube).\n🔵 **Blue:** Trust, security, technology, calm (Facebook, Banks).\n🟢 **Green:** Nature, health, wealth, growth (Starbucks, Grab).\n🟡 **Yellow:** Happiness, youth, optimism, warning (McDonald's).\n⚫ **Black (Shade):** Luxury, power, sophistication (Apple, Nike).\n⚪ **White (Tint):** Purity, modernism, cleanliness.",
+        chips: ["តើវប្បធម៌ប៉ះពាល់ដល់អត្ថន័យពណ៌ទេ? 🌍", "តើ HSL គឺជាអ្វី? 🎛️"],
+        chips_en: ["Does culture affect color meaning? 🌍", "What is HSL? 🎛️"]
     },
-    { 
-        primaryKeys: ['ប្រភេទ File', 'file formats'],
-        keys: ['file format', 'jpg', 'png', 'svg', 'pdf'],
-        regex: ['ប្រភេទ file', '\\bjpg\\b', '\\bpng\\b', '\\bsvg\\b', '\\bpdf\\b'],
-        answer: "បាទ **ប្រភេទ File នីមួយៗមានគោលដៅប្រើផ្សេងគ្នា៖**\n\n📷 **JPG / JPEG:** សម្រាប់រូបថតទូទៅ។ វាមានទំហំស្រាល ប៉ុន្តែ**អត់អាចធ្វើ Background ថ្លាបានទេ**។\n✂️ **PNG:** សម្រាប់រូបដែលត្រូវការ Background ថ្លា (Transparent) ដូចជាឡូហ្គោ ឬរូបកាត់ផ្ទៃខាងក្រោយ។\n📐 **SVG:** ជា File Vector សម្រាប់ Website។ ទំហំស្រាលមែនទែន ហើយពង្រីកប៉ុណ្ណាក៏មិនបែកគ្រាប់។\n🖨️ **PDF:** ជា File ស្តង់ដារបំផុត សម្រាប់រក្សាទុករូបភាព ឬប្លង់ ដើម្បីបញ្ជូនទៅរោងពុម្ព ដោយមិនខ្លាចវរអក្សរ។", 
-        answer_en: "**Different Image File Formats and when to use them:**\n\n📷 **JPG / JPEG:** Best for complex photographs. It compresses files to be smaller but **cannot support transparent backgrounds**.\n✂️ **PNG:** Used when you need a transparent background (like placing a logo over an image without a white box behind it).\n📐 **SVG:** A Vector format for Web Design. It is incredibly lightweight and scales infinitely without pixelating.\n🖨️ **PDF:** The universal professional standard for sending finished, high-quality designs to a physical printer.",
-        chips: ["តើ Resolution (PPI) ប៉ុន្មាន?", "តើ RGB និង CMYK ខុសគ្នាម៉េច?"],
-        chips_en: ["Best Resolution for printing?", "RGB vs CMYK difference?"]
+    {
+        primaryKeys: ['តើវប្បធម៌ប៉ះពាល់ដល់អត្ថន័យពណ៌ទេ? 🌍', 'Does culture affect color meaning? 🌍'],
+        keys: ['culture', 'វប្បធម៌', 'អត្ថន័យពណ៌', 'color meaning by culture', 'color and culture'],
+        regex: ['culture', 'វប្បធម៌', 'អត្ថន័យ'],
+        answer: "បាទ ប្រាកដណាស់! **ចិត្តសាស្ត្រពណ៌គឺប្រែប្រួលទៅតាមវប្បធម៌ (Cultural Color Psychology)។** អ្នករចនាត្រូវតែស្គាល់អតិថិជនគោលដៅរបស់ខ្លួន៖\n\n⚪ **ពណ៌ស:** នៅបស្ចិមប្រទេសតំណាងឱ្យភាពបរិសុទ្ធ (សម្លៀកបំពាក់រៀបការ) តែនៅបូព៌ាប្រទេសមួយចំនួន (ដូចជាចិន ឬកូរ៉េ) វាជាពណ៌នៃការកាន់ទុក្ខ។\n🔴 **ពណ៌ក្រហម:** នៅបស្ចិមប្រទេសច្រើនតំណាងឱ្យគ្រោះថ្នាក់ ឬកំហឹង តែនៅអាស៊ី វាជាពណ៌នៃលាភសំណាង និងទ្រព្យសម្បត្តិដ៏អស្ចារ្យ។\n\n💡 **គន្លឹះ៖** មុននឹងប្រើប្រាស់ពណ៌ណាមួយសម្រាប់ទីផ្សារអន្តរជាតិ ត្រូវស្រាវជ្រាវពីជំនឿវប្បធម៌នៅតំបន់នោះជាមុនសិន!",
+        answer_en: "Yes, absolutely! **Color psychology is highly culturally dependent.** Designers must know their target audience's demographics:\n\n⚪ **White:** In Western cultures, it represents purity and weddings. In many Eastern cultures (like China or Korea), it is the traditional color of mourning and funerals.\n🔴 **Red:** In the West, it often signifies danger, warnings, or financial loss. In Asia, it is the ultimate symbol of luck, wealth, and celebration.\n\n💡 **Pro Tip:** Before launching a global campaign, always research the cultural associations of your brand colors in that specific region!",
+        chips: ["តើ Neutral Colors ជាអ្វី? ⚪", "តើច្បាប់ពណ៌ ៦០-៣0-១០ ជាអ្វី? 🎨"],
+        chips_en: ["What are Neutral Colors? ⚪", "What is the 60-30-10 Rule? 🎨"]
     },
-    { 
-        primaryKeys: ['តើ Resolution (PPI) ប៉ុន្មាន?', 'best resolution for printing?'],
-        keys: ['resolution', 'ppi', 'dpi', 'ភាពច្បាស់', 'ទំហំរូប'],
-        regex: ['\\bresolution\\b', '\\bppi\\b', '\\bdpi\\b', 'ភាពច្បាស់', 'ទំហំរូប'],
-        answer: "បាទ **Resolution (ភាពច្បាស់នៃរូបភាព) ត្រូវបានបែងចែកជា ២ ស្តង់ដារធំៗ៖**\n\n🖨️ **300 PPI (Pixels Per Inch):** ជាស្តង់ដារដាច់ខាតសម្រាប់ការបោះពុម្ព (Print) ដូចជា ខិត្តប័ណ្ណ សៀវភៅ ឬនាមប័ណ្ណ។ បើទាបជាងនេះ រូបនឹងបែកគ្រាប់ពេលព្រីនចេញមក។\n💻 **72 ទៅ 150 PPI:** ជាស្តង់ដារសម្រាប់បង្ហាញលើអេក្រង់ (Web, Facebook, Instagram)។ ការប្រើ 72 PPI ជួយឱ្យ File ស្រាល និងងាយស្រួលផ្ទុកចូលអ៊ីនធឺណិត។", 
+    {
+        primaryKeys: ['តើ Neutral Colors ជាអ្វី? ⚪', 'What are Neutral Colors? ⚪'],
+        keys: ['neutral colors', 'ពណ៌អព្យាក្រឹត', 'ពណ៌ស្រាល', 'gray', 'beige'],
+        regex: ['neutral', 'អព្យាក្រឹត', 'beige', 'gray'],
+        answer: "បាទ **Neutral Colors (ពណ៌អព្យាក្រឹត)** គឺជាពណ៌ដែលមិនសូវលេចធ្លោ ដូចជា ស, ខ្មៅ, ប្រផេះ, ក្រែម (Beige), និងត្នោតស្រាល។\n\n* **មុខងារសំខាន់:** វាមិនដណ្តើមការចាប់អារម្មណ៍ពីពណ៌ផ្សេងនោះទេ។ វាជួយឱ្យ 'ភ្នែកមានពេលសម្រាក' និងធ្វើឱ្យពណ៌លេចធ្លោ (Accent Colors) កាន់តែលេចធ្លោឡើងមួយកម្រិតទៀត។\n* នៅក្នុងច្បាប់ ៦០-៣០-១០ ពណ៌អព្យាក្រឹតនេះហើយ ដែលគេតែងតែយកមកធ្វើជាពណ៌គោល ៦០% សម្រាប់ផ្ទៃខាងក្រោយ! បើអ្នកប្រើពណ៌ឆើតទាំង ៦០% វានឹងធ្វើឱ្យអ្នកមើលឈឺភ្នែក។",
+        answer_en: "**Neutral Colors** are muted, low-intensity colors like White, Black, Gray, Beige, and Tan.\n\n* **Core Function:** They don't compete for visual attention. They give the viewer's eyes a 'place to rest' and actually force your brighter Accent Colors to pop even harder.\n* In the 60-30-10 Rule, a Neutral color is almost always used as the 60% dominant background color. If you use a highly saturated hue for your 60% base, it will cause extreme eye fatigue.",
+        chips: ["តើច្បាប់ពណ៌ ៦០-៣០-១០ ជាអ្វី? 🎨", "តើ Simultaneous Contrast ជាអ្វី? 🔲"],
+        chips_en: ["What is the 60-30-10 Rule? 🎨", "What is Simultaneous Contrast? 🔲"]
+    },
+    {
+        primaryKeys: ['តើ HSL គឺជាអ្វី? 🎛️', 'What is HSL? 🎛️'],
+        keys: ['hsl', 'hue', 'saturation', 'lightness', 'what is hsl'],
+        regex: ['hsl', 'hue', 'saturation', 'lightness'],
+        answer: "បាទ **HSL គឺជាវិធីដ៏ងាយស្រួលបំផុតក្នុងការគ្រប់គ្រងពណ៌៖**\n\n🎨 **H - Hue (ពណ៌ដើម):** គឺជាឈ្មោះពណ៌តែម្តង ដូចជា ក្រហម ខៀវ លឿង (០-៣៦០ ដឺក្រេ)។\n💧 **S - Saturation (កម្រិតឆ្អែត):** ភាពឆើតនៃពណ៌។ 100% គឺឆើតបំផុត ចំណែក 0% ក្លាយជាពណ៌ប្រផេះសខ្មៅ។\n☀️ **L - Lightness (កម្រិតភ្លឺ):** 100% គឺពណ៌សក្បុស ហើយ 0% គឺខ្មៅងងឹត។\n\n💡 **គន្លឹះ៖** ដើម្បីធ្វើពណ៌ Pastel គួរឱ្យស្រលាញ់ អ្នកគ្រាន់តែទាញ Saturation ចុះបន្តិច និង Lightness ឡើងលើបន្តិច។",
+        answer_en: "**HSL is the most intuitive way to adjust colors:**\n\n🎨 **H - Hue:** The actual color base itself, like Red or Blue (0-360 degrees).\n💧 **S - Saturation:** The intensity. 100% is vibrant, while 0% removes all color, making it Gray.\n☀️ **L - Lightness:** 100% is pure White, and 0% is pitch Black.\n\n💡 **Tip:** To create trendy Pastel colors, simply lower the Saturation slightly and increase the Lightness.",
+        actionButton: { label: "សាកល្បង HSL Tools 🎨", label_en: "Try the HSL Tools 🎨", actionToTrigger: "tools", subTab: "color" },
+        chips: ["តើ Gradients និង Solid Colors ប្រើខុសគ្នាម៉េច? 🌈", "ពណ៌សម្រាប់អ្នកមានបញ្ហាភ្នែក (Accessibility) 👁️"],
+        chips_en: ["Gradients vs Solid Colors? 🌈", "Color Accessibility & Contrast? 👁️"]
+    },
+    {
+        primaryKeys: ['តើ Gradients និង Solid Colors ប្រើខុសគ្នាម៉េច? 🌈', 'Gradients vs Solid Colors? 🌈'],
+        keys: ['gradient', 'solid color', 'លាយពណ៌', 'color transition', 'gradients'],
+        regex: ['gradient', 'solid color', 'color transition'],
+        answer: "បាទ ស្ទីលពណ៌ទាំងពីរនេះផ្តល់អារម្មណ៍ខុសគ្នា៖\n\n🟦 **Solid Colors (ពណ៌រាបស្មើ):** គឺជាពណ៌តែមួយដុំ គ្មានការលាយឡំ។ វាផ្តល់អារម្មណ៍ សាមញ្ញ (Minimalist), ស្អាតបាត, និងទំនើប។ ល្អបំផុតសម្រាប់ Logo និង Flat UI Design។\n🌈 **Gradients (ពណ៌រលាយ):** គឺជាការផ្លាស់ប្តូរពីរលូនពីពណ៌មួយទៅពណ៌មួយទៀត។ វាជួយបង្កើត **ជម្រៅ (Depth)** ភាពរស់រវើក និងពន្លឺបញ្ឆោតភ្នែក ធ្វើឱ្យវត្ថុមើលទៅដូច 3D។\n\n⚠️ **បំរាម:** កុំលាយពណ៌ដែលផ្ទុយគ្នាខ្លាំងពេកក្នុង Gradient (ឧទាហរណ៍ ក្រហម លាយជាមួយ បៃតង) ព្រោះត្រង់ចំណុចកណ្តាលរបស់វានឹងក្លាយជាពណ៌ប្រផេះកខ្វក់ (Muddy colors)!",
+        answer_en: "These two coloring techniques evoke very different aesthetics:\n\n🟦 **Solid Colors:** A single, flat, unvarying color. It communicates modernism, minimalism, and cleanliness. It is the absolute standard for Logos and Flat UI Design.\n🌈 **Gradients:** A smooth transition from one hue to another. Gradients create **Depth**, dynamic energy, and an illusion of lighting, making flat objects feel 3D.\n\n⚠️ **Warning:** Never create a gradient between directly opposing complementary colors (like Red to Green). The transition area in the middle will mix into an ugly, muddy brownish-gray!",
+        chips: ["តើ Color Theory ជាអ្វី? 🎨", "តើក្បួនលាយពណ៌កម្រិតខ្ពស់មានអ្វីខ្លះ? 🎨"],
+        chips_en: ["Can you explain Color Theory? 🎨", "Advanced color harmonies? 🎨"]
+    },
+    {
+        primaryKeys: ['តើ Simultaneous Contrast ជាអ្វី? 🔲', 'What is Simultaneous Contrast? 🔲'],
+        keys: ['simultaneous contrast', 'ចំណាំងពណ៌', 'background color', 'optical illusion'],
+        regex: ['simultaneous', 'ចំណាំងពណ៌', 'optical illusion'],
+        answer: "បាទ **Simultaneous Contrast (ចំណាំងពណ៌បញ្ឆោតភ្នែក)** គឺជាបាតុភូតមួយដែល **ពណ៌មួយអាចមើលទៅប្រែប្រួល អាស្រ័យលើពណ៌ផ្ទៃខាងក្រោយរបស់វា!**\n\n💡 **ឧទាហរណ៍ជាក់ស្តែង៖** ប្រសិនបើអ្នកដាក់ការ៉េពណ៌ប្រផេះ នៅលើផ្ទៃខាងក្រោយ 'ពណ៌ខ្មៅ' វាហាក់ដូចជាភ្លឺជាងធម្មតា។ ប៉ុន្តែបើអ្នកយកការ៉េពណ៌ប្រផេះដដែលនោះ ទៅដាក់លើផ្ទៃ 'ពណ៌ស' វាហាក់ដូចជាងងឹតទៅវិញ។\nអ្នករចនាត្រូវចងចាំជានិច្ចថា ពណ៌មិនរស់នៅឯកោទេ ពួកវាមានឥទ្ធិពលលើគ្នាទៅវិញទៅមកជានិច្ចនៅពេលដាក់ក្បែរគ្នា។",
+        answer_en: "**Simultaneous Contrast** is a visual phenomenon where **a color appears to change depending on the color of the background it is placed on!**\n\n💡 **Classic Example:** If you place a neutral Gray square on a purely Black background, the gray will appear significantly lighter. If you place that exact same Gray square on a White background, it will suddenly look much darker.\nDesigners must remember: colors do not exist in isolation; they constantly influence how we perceive the colors next to them.",
+        chips: ["តើអត្ថន័យនៃពណ៌នីមួយៗតំណាងឱ្យអ្វី? 🧠", "ពណ៌សម្រាប់អ្នកមានបញ្ហាភ្នែក (Accessibility) 👁️"],
+        chips_en: ["What is Color Psychology? 🧠", "Color Accessibility & Contrast? 👁️"]
+    },
+    {
+        primaryKeys: ['ពណ៌សម្រាប់អ្នកមានបញ្ហាភ្នែក (Color Accessibility) 👁️', 'Color Accessibility & Contrast? 👁️'],
+        keys: ['accessibility', 'color blind', 'contrast ratio', 'wcag', 'បញ្ហាភ្នែក', 'ងងឹតពណ៌'],
+        regex: ['accessibility', 'wcag', 'color blind', 'contrast ratio', 'បញ្ហាភ្នែក'],
+        answer: "បាទ ក្នុងការរចនា UI កម្រិតអាជីព អ្នកត្រូវគោរពតាមច្បាប់ **WCAG (Web Content Accessibility Guidelines):**\n\n- **Contrast Ratio (សមាមាត្រភាពផ្ទុយ):** អក្សរនិងផ្ទៃខាងក្រោយត្រូវមាន Contrast យ៉ាងហោចណាស់ **4.5:1** ដើម្បីធានាថាអ្នកមានភ្នែកខ្សោយអាចអានបាន។ ប្រសិនបើដាក់អក្សរពណ៌ប្រផេះស្រាល លើផ្ទៃស គឺខុសច្បាប់ UI ទាំងស្រុង។\n- **កុំពឹងផ្អែកតែលើពណ៌:** សម្រាប់អ្នកងងឹតពណ៌ (Color Blindness) គេមើលមិនដឹងថាក្រហមនិងបៃតងខុសគ្នាទេ។ ដូច្នេះ បើមានផ្ទាំងលោត Error កុំប្តូរតែពណ៌ប៊ូតុងទៅក្រហម ត្រូវតែមាន Icon សញ្ញាខ្វែង (❌) ឬអក្សរបញ្ជាក់បន្ថែមជានិច្ច!",
+        answer_en: "In professional UI design, you must design for everyone by following **WCAG (Web Content Accessibility Guidelines):**\n\n- **Contrast Ratio:** Body text against its background must have a contrast ratio of at least **4.5:1** to ensure legibility for visually impaired users. Placing light gray text on a white background is a severe UI failure.\n- **Never rely solely on color:** Millions of users have Color Blindness (Deuteranopia) and cannot distinguish Red from Green. If showing an Error state, do not just make the box red—you MUST include an Error Icon (❌) or descriptive text!",
+        chips: ["តើច្បាប់ពណ៌ ៦០-៣០-១០ ជាអ្វី? 🎨", "តើ Neutral Colors ជាអ្វី? ⚪"],
+        chips_en: ["What is the 60-30-10 Rule? 🎨", "What are Neutral Colors? ⚪"]
+    },
+    {
+        primaryKeys: ['តើច្បាប់ពណ៌ ៦០-៣០-១០ ជាអ្វី? 🎨', 'What is the 60-30-10 Rule? 🎨'],
+        keys: ['60-30-10', 'ច្បាប់ពណ៌', 'ចែកពណ៌', '60 30 10', 'color rule'],
+        regex: ['60-30-10', '60 30 10', 'ច្បាប់ពណ៌'],
+        answer: "បាទ **ច្បាប់ ៦០-៣០-១០** គឺជារូបមន្តមាសក្នុងការបែងចែកសមាមាត្រពណ៌រចនាអាជីព ដើម្បីកុំឱ្យមើលទៅរញ៉េរញ៉ៃ៖\n\n- **៦០% ពណ៌ចម្បង (Dominant Color):** ជាទូទៅជាពណ៌អព្យាក្រឹត (Neutral) ឬពណ៌ម៉ាកយីហោ ដែលគ្របដណ្តប់ផ្ទៃធំ។\n- **៣០% ពណ៌បន្ទាប់បន្សំ (Secondary Color):** ពណ៌គាំទ្រពណ៌ចម្បង និងបង្កើតទម្រង់លម្អិត។\n- **១០% ពណ៌សង្កត់ (Accent Color):** ពណ៌លេចធ្លោខ្លាំងបំផុត! 💡 ត្រូវអនុវត្តវាសម្រាប់តែចំណុចសំខាន់ៗដែលអ្នកចង់ឱ្យគេចុច (ប៊ូតុង CTA) ឬអានមុនគេប៉ុណ្ណោះ។",
+        answer_en: "**The 60-30-10 Rule** is the golden ratio of color distribution for balanced, professional designs:\n\n- **60% Dominant Color:** Usually a neutral base covering large areas.\n- **30% Secondary Color:** Supports the main color and adds detail.\n- **10% Accent Color:** A highly contrasting 'pop' of color. 💡 Strictly reserve this for the absolute most important Call-To-Action (CTA) or headline you want the user to see first.",
+        chips: ["តើអត្ថន័យនៃពណ៌នីមួយៗតំណាងឱ្យអ្វី? 🧠", "ពណ៌សម្រាប់អ្នកមានបញ្ហាភ្នែក (Accessibility) 👁️"],
+        chips_en: ["What is Color Psychology? 🧠", "Color Accessibility & Contrast? 👁️"]
+    },
+    {
+        primaryKeys: ['តើ Additive និង Subtractive Color ជាអ្វី? 💡', 'Additive vs Subtractive Colors? 💡'],
+        keys: ['additive', 'subtractive', 'rgb vs cmyk physics', 'physics of color'],
+        regex: ['additive', 'subtractive', 'physics'],
+        answer: `បាទ នេះគឺជារូបវិទ្យានៃពណ៌ (Physics of Color)៖\n\n💡 **Additive Color (ពណ៌បូកបញ្ចូលពន្លឺ - RGB):** កើតចេញពីប្រភពពន្លឺ (អេក្រង់)។ ពេលអ្នកបូកពណ៌ក្រហម បៃតង និងខៀវបញ្ចូលគ្នា ១០០% អ្នកនឹងទទួលបាន **'ពន្លឺពណ៌ស'**។ (អវត្តមានពន្លឺ = ពណ៌ខ្មៅ)។\n🖨️ **Subtractive Color (ពណ៌ដកពន្លឺ - CMYK):** កើតចេញពីការជះពន្លឺលើទឹកថ្នាំ។ ទឹកថ្នាំស្រូបយក (ដក) ពន្លឺ។ ពេលអ្នកលាយពណ៌ទឹកថ្នាំទាំងអស់បញ្ចូលគ្នា អ្នកនឹងទទួលបាន **'ពណ៌ខ្មៅកខ្វក់'**។ (អវត្តមានទឹកថ្នាំ = ក្រដាសពណ៌ស)។`,
+        answer_en: `This is the literal physics of color taught in university theory:\n\n💡 **Additive Color Model (RGB):** Based on emitted light (screens). When you mix 100% of Red, Green, and Blue light together, you get **Pure White Light**. (Zero light = Black).\n🖨️ **Subtractive Color Model (CMYK/RYB):** Based on absorbed light (ink/paint). Ink absorbs (subtracts) light wavelengths. When you mix all ink colors together, you get a **Muddy Black**. (Zero ink = White paper).`,
+        chips: ["តើ RGB និង CMYK ខុសគ្នាម៉េច? 🖨️", "តើ Color Relativity (Albers) ជាអ្វី? 🔲"],
+        chips_en: ["RGB vs CMYK? 🖨️", "What is Color Relativity (Albers)? 🔲"]
+    },
+    {
+        primaryKeys: ['តើ Color Relativity (Albers) ជាអ្វី? 🔲', 'What is Color Relativity (Albers)? 🔲'],
+        keys: ['color relativity', 'josef albers', 'ទំនាក់ទំនងពណ៌', 'simultaneous contrast'],
+        regex: ['relativity', 'albers', 'josef'],
+        answer: `បាទ តាមទ្រឹស្តីសៀវភៅ "Interaction of Color" របស់លោក Josef Albers ពណ៌មិនដែលនៅថេរទេ!\n\n**Color Relativity (ទំនាក់ទំនងពណ៌)** បញ្ជាក់ថា ពណ៌មួយនឹងផ្លាស់ប្តូរអត្តសញ្ញាណរបស់វាទាំងស្រុង អាស្រ័យលើពណ៌ដែលនៅជុំវិញវា (Context)។ \nពណ៌ក្រហមនៅជាប់ពណ៌ខៀវ នឹងមើលទៅខុសគ្នាពីពណ៌ក្រហមដដែលនោះ នៅពេលវាដាក់ជាប់ពណ៌លឿង។ ពណ៌គឺជាការបំភាន់ភ្នែក! ដូច្នេះការរើសពណ៌មួយដោយមិនបានយកវាទៅផ្ទឹមនឹង Background គឺជាកំហុសធ្ងន់ធ្ងរ។`,
+        answer_en: `According to Josef Albers' masterclass book "Interaction of Color", colors are never static!\n\n**Color Relativity** proves that a color's identity shifts entirely based on its context and surroundings. \nA red square placed on a blue background will look optically different than that exact same red square placed on a yellow background. Color is an optical illusion. Therefore, selecting a color in isolation without testing it against its background is a critical error.`,
+        chips: ["តើ Simultaneous Contrast ជាអ្វី? 🔲", "តើ HSL គឺជាអ្វី? 🎛️"],
+        chips_en: ["What is Simultaneous Contrast? 🔲", "What is HSL? 🎛️"]
+    },
+    {
+        primaryKeys: ['តើ Chromatic Gray និង Achromatic Gray ជាអ្វី? ⚪', 'Chromatic vs Achromatic Gray? ⚪'],
+        keys: ['chromatic gray', 'achromatic', 'ពណ៌ប្រផេះ', 'gray'],
+        regex: ['chromatic', 'achromatic'],
+        answer: `បាទ ពណ៌ប្រផេះមាន ២ ប្រភេទនៅក្នុងការរចនាអន្តរជាតិ៖\n\n- **Achromatic Gray (ប្រផេះអព្យាក្រឹត):** កើតចេញពីការលាយតែពណ៌ ស និង ខ្មៅ សុទ្ធសាធ (គ្មានជាតិពណ៌ក្ឌៅឬត្រជាក់ឡើយ)។\n- **Chromatic Gray (ប្រផេះលាយពណ៌):** កើតចេញពីការលាយពណ៌ផ្ទុយគ្នា (Complementary colors) ឬលាយប្រផេះជាមួយពណ៌ផ្សេងបន្តិចបន្តួច ឱ្យទៅជាប្រផេះក្តៅ (Warm gray) ឬប្រផេះត្រជាក់ (Cool gray)។ \n💡 **ការអនុវត្ត:** ក្រុមហ៊ុន Apple ប្រើ Chromatic Cool Gray សម្រាប់ UI ដើម្បីឱ្យមើលទៅទំនើប និងមានតម្លៃ ជាជាងប្រើប្រាស់ប្រផេះធម្មតាដែលមើលទៅរឹងកំព្រឹស។`,
+        answer_en: `In advanced color theory, gray is split into two categories:\n\n- **Achromatic Gray:** A pure, neutral gray created strictly by mixing Black and White (containing absolutely zero hue or saturation).\n- **Chromatic Gray:** A complex gray created by mixing complementary colors, or by adding a slight tint of color to create a Warm Gray (brownish) or Cool Gray (bluish).\n💡 **Application:** Premium brands like Apple use Cool Chromatic Grays in their UI because it feels organic and high-end, whereas Achromatic gray can feel dead and digital.`,
+        chips: ["តើ Neutral Colors ជាអ្វី? ⚪", "តើ Color Theory ជាអ្វី? 🎨"],
+        chips_en: ["What are Neutral Colors? ⚪", "Can you explain Color Theory? 🎨"]
+    },
+    // ------------------------------------------
+    // 🎨 5. INDIVIDUAL COLOR PSYCHOLOGY (DEEP DIVE)
+    // ------------------------------------------
+    {
+        primaryKeys: ['តើពណ៌ក្រហមមានអត្ថន័យយ៉ាងណា? 🔴', 'What does the color Red mean? 🔴'],
+        keys: ['ពណ៌ក្រហម', 'red', 'អត្ថន័យពណ៌ក្រហម', 'red meaning', 'red color psychology'],
+        regex: ['ក្រហម', 'red'],
+        answer: "បាទ **ពណ៌ក្រហម (Red)** គឺជាពណ៌ដែលទាក់ទាញភ្នែកជាងគេបំផុត និងជម្រុញចង្វាក់បេះដូងឱ្យលោតញាប់។\n\n🔥 **អត្ថន័យ:** ថាមពល, ចំណង់អាហារ, គ្រោះថ្នាក់, ស្នេហា, និងភាពបន្ទាន់ (Urgency)។\n💡 **ការប្រើប្រាស់:** គេនិយមប្រើសម្រាប់ប៊ូតុងបញ្ចុះតម្លៃ (Sale), អាហាររហ័ស (KFC, Coca-Cola), និងម៉ាកយីហោដែលចង់បង្ហាញពីភាពខ្លាំងក្លា (YouTube, Netflix)។",
+        answer_en: "**Red** is the most highly visible and stimulating color, actually proven to increase heart rates.\n\n🔥 **Meaning:** Energy, passion, appetite, urgency, and danger.\n💡 **Application:** Heavily used for clearance sales (urgency), fast food chains (stimulates appetite like KFC, Coca-Cola), and bold entertainment brands (YouTube, Netflix).",
+        uiElement: 'color_palette',
+        colors: ['#FF0000', '#D32F2F', '#8B0000'],
+        chips: ["តើពណ៌ខៀវមានអត្ថន័យយ៉ាងណា? 🔵", "តើពណ៌លឿងមានអត្ថន័យយ៉ាងណា? 🟡"],
+        chips_en: ["What does Blue mean? 🔵", "What does Yellow mean? 🟡"]
+    },
+    {
+        primaryKeys: ['តើពណ៌ខៀវមានអត្ថន័យយ៉ាងណា? 🔵', 'What does the color Blue mean? 🔵'],
+        keys: ['ពណ៌ខៀវ', 'blue', 'អត្ថន័យពណ៌ខៀវ', 'blue meaning', 'blue color psychology'],
+        regex: ['ខៀវ', 'blue'],
+        answer: "បាទ **ពណ៌ខៀវ (Blue)** គឺជាពណ៌ដែលមនុស្សទូទាំងពិភពលោកចូលចិត្តជាងគេ។\n\n🛡️ **អត្ថន័យ:** ភាពស្ងប់ស្ងាត់, សុវត្ថិភាព, ភាពជឿជាក់, និងភាពអាជីព។\n💡 **ការប្រើប្រាស់:** ក្រុមហ៊ុនបច្ចេកវិទ្យាធំៗ និងធនាគារ តែងតែប្រើពណ៌នេះដើម្បីទាញយកទំនុកចិត្តពីភ្ញៀវ (ឧទាហរណ៍: Facebook, IBM, PayPal, ABA Bank)។\n⚠️ **បំរាម:** ជៀសវាងប្រើពណ៌ខៀវសម្រាប់អាហារ ព្រោះវាកាត់បន្ថយចំណង់អាហារ។",
+        answer_en: "**Blue** is statistically the world's most universally loved color.\n\n🛡️ **Meaning:** Trust, security, calm, professionalism, and logic.\n💡 **Application:** The ultimate choice for tech giants, hospitals, and banks to establish credibility (e.g., Facebook, IBM, PayPal, Visa).\n⚠️ **Warning:** Highly unappetizing. Avoid using blue in food branding as it subconsciously suppresses appetite.",
+        uiElement: 'color_palette',
+        colors: ['#0052CC', '#1877F2', '#00BFFF'],
+        chips: ["តើពណ៌ក្រហមមានអត្ថន័យយ៉ាងណា? 🔴", "តើពណ៌បៃតងមានអត្ថន័យយ៉ាងណា? 🟢"],
+        chips_en: ["What does Red mean? 🔴", "What does Green mean? 🟢"]
+    },
+    {
+        primaryKeys: ['តើពណ៌បៃតងមានអត្ថន័យយ៉ាងណា? 🟢', 'What does the color Green mean? 🟢'],
+        keys: ['ពណ៌បៃតង', 'green', 'អត្ថន័យពណ៌បៃតង', 'green meaning', 'green psychology'],
+        regex: ['បៃតង', 'green'],
+        answer: "បាទ **ពណ៌បៃតង (Green)** គឺជាពណ៌ដែលងាយស្រួលបំផុតសម្រាប់ភ្នែកមនុស្សក្នុងការសម្លឹងមើល។\n\n🌿 **អត្ថន័យ:** ធម្មជាតិ, ការលូតលាស់, សុខភាព, និងភាពជោគជ័យផ្នែកហិរញ្ញវត្ថុ (លុយ)។\n💡 **ការប្រើប្រាស់:** ស័ក្តិសមបំផុតសម្រាប់ផលិតផលធម្មជាតិ ក្រុមហ៊ុនហិរញ្ញវត្ថុ និងម៉ាកយីហោដែលផ្តោតលើភាពស្រស់ស្រាយ (ឧទាហរណ៍: Starbucks, Grab, Spotify)។",
+        answer_en: "**Green** is the easiest color for the human eye to process and causes zero optical strain.\n\n🌿 **Meaning:** Nature, growth, health, eco-friendliness, and wealth.\n💡 **Application:** Perfect for organic products, financial institutions, and lifestyle brands focusing on wellness (e.g., Starbucks, Grab, Spotify, Whole Foods).",
+        uiElement: 'color_palette',
+        colors: ['#00A859', '#2E8B57', '#8FBC8F'],
+        chips: ["តើពណ៌លឿងមានអត្ថន័យយ៉ាងណា? 🟡", "តើពណ៌ត្នោតមានអត្ថន័យយ៉ាងណា? 🟤"],
+        chips_en: ["What does Yellow mean? 🟡", "What does Brown mean? 🟤"]
+    },
+    {
+        primaryKeys: ['តើពណ៌លឿងមានអត្ថន័យយ៉ាងណា? 🟡', 'What does the color Yellow mean? 🟡'],
+        keys: ['ពណ៌លឿង', 'yellow', 'អត្ថន័យពណ៌លឿង', 'yellow meaning', 'yellow psychology'],
+        regex: ['លឿង', 'yellow'],
+        answer: "បាទ **ពណ៌លឿង (Yellow)** គឺជាពណ៌ដែលរលកពន្លឺបុកភ្នែកខ្លាំងជាងគេ (Brightest color in the visible spectrum)។\n\n☀️ **អត្ថន័យ:** ភាពសប្បាយរីករាយ, សុទិដ្ឋិនិយម, ភាពក្មេងវ័យ, និងការព្រមាន (Warning)។\n💡 **ការប្រើប្រាស់:** ប្រើដើម្បីទាក់ទាញភ្នែកភ្លាមៗ ឬប្រើសម្រាប់ផលិតផលកុមារ។ ម៉ាកយីហោល្បីៗមាន McDonald's, IKEA, និង Snapchat។\n⚠️ **បំរាម:** ការប្រើពណ៌លឿងខ្លាំងពេកអាចធ្វើឱ្យអ្នកមើលចាំងភ្នែក និងមានអារម្មណ៍ថោក (Cheap)។",
+        answer_en: "**Yellow** is the brightest and most luminous color in the visible spectrum.\n\n☀️ **Meaning:** Happiness, optimism, youthfulness, but also caution/warning.\n💡 **Application:** Best used to grab attention instantly or for youth-oriented products (e.g., McDonald's, IKEA, Snapchat, Best Buy).\n⚠️ **Warning:** Overusing highly saturated yellow causes visual fatigue and can make a brand feel 'cheap' or overwhelming.",
+        uiElement: 'color_palette',
+        colors: ['#FFC107', '#FFD700', '#FFF8DC'],
+        chips: ["តើពណ៌ទឹកក្រូចមានអត្ថន័យយ៉ាងណា? 🟠", "តើពណ៌ខ្មៅមានអត្ថន័យយ៉ាងណា? ⚫"],
+        chips_en: ["What does Orange mean? 🟠", "What does Black mean? ⚫"]
+    },
+    {
+        primaryKeys: ['តើពណ៌ទឹកក្រូចមានអត្ថន័យយ៉ាងណា? 🟠', 'What does the color Orange mean? 🟠'],
+        keys: ['ពណ៌ទឹកក្រូច', 'orange', 'អត្ថន័យពណ៌ទឹកក្រូច', 'orange meaning', 'orange psychology'],
+        regex: ['ទឹកក្រូច', 'orange'],
+        answer: "បាទ **ពណ៌ទឹកក្រូច (Orange)** គឺជាការបូកបញ្ចូលគ្នារវាងថាមពលនៃពណ៌ក្រហម និងភាពសប្បាយរីករាយនៃពណ៌លឿង។\n\n🍊 **អត្ថន័យ:** ភាពច្នៃប្រឌិត, ភាពរួសរាយរាក់ទាក់, ភាពស្វាហាប់, និងតម្លៃសមរម្យ (Affordable)។\n💡 **ការប្រើប្រាស់:** ម៉ាកយីហោដែលចង់បង្ហាញពីភាពរស់រវើក មិនរឹងត្អឹង និងងាយស្រួលចូលទៅក្បែរ ដូចជា Fanta, Shopee, Amazon, និង Soundcloud។",
+        answer_en: "**Orange** perfectly blends the intense energy of red with the cheerful optimism of yellow.\n\n🍊 **Meaning:** Creativity, friendliness, enthusiasm, affordability, and action.\n💡 **Application:** Brands that want to appear approachable, playful, and high-energy use orange (e.g., Fanta, Shopee, Amazon, Nickelodeon, Soundcloud).",
+        uiElement: 'color_palette',
+        colors: ['#FF7F50', '#FF8C00', '#FF4500'],
+        chips: ["តើពណ៌ស្វាយមានអត្ថន័យយ៉ាងណា? 🟣", "តើពណ៌ផ្កាឈូកមានអត្ថន័យយ៉ាងណា? 💖"],
+        chips_en: ["What does Purple mean? 🟣", "What does Pink mean? 💖"]
+    },
+    {
+        primaryKeys: ['តើពណ៌ស្វាយមានអត្ថន័យយ៉ាងណា? 🟣', 'What does the color Purple mean? 🟣'],
+        keys: ['ពណ៌ស្វាយ', 'purple', 'violet', 'អត្ថន័យពណ៌ស្វាយ', 'purple meaning'],
+        regex: ['ស្វាយ', 'purple', 'violet'],
+        answer: "បាទ **ពណ៌ស្វាយ (Purple)** ពីអតីតកាលគឺជាពណ៌កម្រ និងថ្លៃបំផុត ទើបវាជាប់ឈ្មោះជាពណ៌របស់ស្តេច។\n\n👑 **អត្ថន័យ:** ភាពប្រណីត, អភិជន, ភាពអាថ៌កំបាំង, និងគំនិតស្រមើស្រមៃ (Imagination)។\n💡 **ការប្រើប្រាស់:** ស័ក្តិសមសម្រាប់ផលិតផលថែរក្សាសម្ផស្សកម្រិតខ្ពស់, សូកូឡាថ្លៃៗ, ឬផលិតផលដែលពាក់ព័ន្ធនឹងគំនិតច្នៃប្រឌិត (ឧ. Milka, Twitch, Yahoo, Cadbury)។",
+        answer_en: "**Purple** is historically the color of royalty, as the dye was incredibly rare and expensive to produce in ancient times.\n\n👑 **Meaning:** Luxury, royalty, spirituality, mystery, and deep imagination.\n💡 **Application:** Ideal for premium beauty products, high-end chocolates, or brands heavily focused on creative communities (e.g., Milka, Twitch, Yahoo, Cadbury).",
+        uiElement: 'color_palette',
+        colors: ['#6A0DAD', '#8A2BE2', '#9370DB'],
+        chips: ["តើពណ៌ខ្មៅមានអត្ថន័យយ៉ាងណា? ⚫", "តើពណ៌សមានអត្ថន័យយ៉ាងណា? ⚪"],
+        chips_en: ["What does Black mean? ⚫", "What does White mean? ⚪"]
+    },
+    {
+        primaryKeys: ['តើពណ៌ផ្កាឈូកមានអត្ថន័យយ៉ាងណា? 💖', 'What does the color Pink mean? 💖'],
+        keys: ['ពណ៌ផ្កាឈូក', 'pink', 'អត្ថន័យពណ៌ផ្កាឈូក', 'pink meaning'],
+        regex: ['ផ្កាឈូក', 'pink'],
+        answer: "បាទ **ពណ៌ផ្កាឈូក (Pink)** គឺជាពណ៌ដែលទន់ភ្លន់ ប៉ុន្តែពេលប្រើក្នុងកម្រិតឆ្អែត (Hot Pink) វានឹងក្លាយជាពណ៌ដ៏ទាក់ទាញ។\n\n🌸 **អត្ថន័យ:** ភាពផ្អែមល្ហែម, ក្តីស្រលាញ់, ភាពទន់ភ្លន់, និងភាពសប្បាយៗ (Playful)។\n💡 **ការប្រើប្រាស់:** ម៉ាកយីហោដែលផ្តោតលើនារី, បង្អែម, ឬម៉ាកដែលចង់បង្ហាញពីភាពទំនើបនិងមិនខ្វល់ពីច្បាប់ទម្លាប់ (ឧទាហរណ៍: Barbie, Foodpanda, Dribbble, T-Mobile)។",
+        answer_en: "**Pink** is inherently soft, but when pushed to high saturation (Hot Pink), it becomes aggressively eye-catching and modern.\n\n🌸 **Meaning:** Sweetness, romance, playfulness, femininity, and unconditional love.\n💡 **Application:** Brands targeting women, sweet treats, or modern tech brands that want to stand out from the boring corporate crowd (e.g., Barbie, Foodpanda, Dribbble, T-Mobile).",
+        uiElement: 'color_palette',
+        colors: ['#FF69B4', '#FF1493', '#FFB6C1'],
+        chips: ["តើពណ៌ត្នោតមានអត្ថន័យយ៉ាងណា? 🟤", "តើពណ៌ប្រផេះមានអត្ថន័យយ៉ាងណា? 🔘"],
+        chips_en: ["What does Brown mean? 🟤", "What does Gray mean? 🔘"]
+    },
+    {
+        primaryKeys: ['តើពណ៌ត្នោតមានអត្ថន័យយ៉ាងណា? 🟤', 'What does the color Brown mean? 🟤'],
+        keys: ['ពណ៌ត្នោត', 'brown', 'អត្ថន័យពណ៌ត្នោត', 'brown meaning'],
+        regex: ['ត្នោត', 'brown'],
+        answer: "បាទ **ពណ៌ត្នោត (Brown)** គឺជាពណ៌នៃផែនដី ដែលផ្តល់នូវអារម្មណ៍កក់ក្តៅ និងមានស្ថិរភាព។\n\n🪵 **អត្ថន័យ:** ធម្មជាតិ, ភាពរឹងមាំ, ភាពស្មោះត្រង់, និងវត្ថុបុរាណ (Vintage/Rustic)។\n💡 **ការប្រើប្រាស់:** ល្អបំផុតសម្រាប់ហាងកាហ្វេ, ផលិតផលធ្វើពីស្បែក, ឬក្រុមហ៊ុនដឹកជញ្ជូនដែលចង់បង្ហាញពីភាពរឹងមាំនិងទំនុកចិត្ត (ឧទាហរណ៍: UPS, M&M's, Nespresso)។",
+        answer_en: "**Brown** is the ultimate earthy color, grounding designs and providing a sense of stability.\n\n🪵 **Meaning:** Nature, ruggedness, reliability, honesty, and vintage aesthetics.\n💡 **Application:** Perfect for coffee shops, organic/leather goods, or logistics companies wanting to project sturdy reliability (e.g., UPS, M&M's, Nespresso, Hershey's).",
+        uiElement: 'color_palette',
+        colors: ['#8B4513', '#A0522D', '#D2B48C'],
+        chips: ["តើពណ៌បៃតងមានអត្ថន័យយ៉ាងណា? 🟢", "តើពណ៌សមានអត្ថន័យយ៉ាងណា? ⚪"],
+        chips_en: ["What does Green mean? 🟢", "What does White mean? ⚪"]
+    },
+    {
+        primaryKeys: ['តើពណ៌ខ្មៅមានអត្ថន័យយ៉ាងណា? ⚫', 'What does the color Black mean? ⚫'],
+        keys: ['ពណ៌ខ្មៅ', 'black', 'អត្ថន័យពណ៌ខ្មៅ', 'black meaning'],
+        regex: ['ខ្មៅ', 'black'],
+        answer: "បាទ ក្នុងពិភព Design **ពណ៌ខ្មៅ (Black)** មិនមែនតំណាងឱ្យភាពសោកសៅទេ តែវាជាស្តេចនៃភាពប្រណីត។\n\n🎩 **អត្ថន័យ:** ភាពប្រណីត (Luxury), អំណាច, ភាពឆើតឆាយ (Sophistication), និងអាថ៌កំបាំង។\n💡 **ការប្រើប្រាស់:** ម៉ាកយីហោលំដាប់ខ្ពស់ៗតែងតែប្រើប្រាស់ផ្ទៃពណ៌ខ្មៅ ដើម្បីធ្វើឱ្យផលិតផលរបស់ពួកគេមើលទៅមានតម្លៃថ្លៃកប់ពពក (ឧទាហរណ៍: Apple, Nike, Chanel, Sony, Prada)។",
+        answer_en: "In the design world, **Black** isn't just about darkness; it is the undisputed king of luxury.\n\n🎩 **Meaning:** Luxury, power, sophistication, exclusivity, and mystery.\n💡 **Application:** High-end brands strip away colors and use stark black-and-white to instantly elevate their product's perceived value (e.g., Apple, Nike, Chanel, Sony, Prada).",
+        uiElement: 'color_palette',
+        colors: ['#000000', '#1C1C1C', '#2F4F4F'],
+        chips: ["តើពណ៌សមានអត្ថន័យយ៉ាងណា? ⚪", "តើពណ៌ប្រផេះមានអត្ថន័យយ៉ាងណា? 🔘"],
+        chips_en: ["What does White mean? ⚪", "What does Gray mean? 🔘"]
+    },
+    {
+        primaryKeys: ['តើពណ៌សមានអត្ថន័យយ៉ាងណា? ⚪', 'What does the color White mean? ⚪'],
+        keys: ['ពណ៌ស', 'white', 'អត្ថន័យពណ៌ស', 'white meaning'],
+        regex: ['ពណ៌ស', 'white'],
+        answer: "បាទ **ពណ៌ស (White)** គឺជាពណ៌ដែលមិនអាចខ្វះបានក្នុងការរចនា (ជាពិសេស White Space)។\n\n🕊️ **អត្ថន័យ:** ភាពស្អាតស្អំ, ភាពសាមញ្ញ (Minimalism), ភាពទំនើប, និងភាពស្មោះត្រង់។\n💡 **ការប្រើប្រាស់:** ពណ៌សផ្តល់នូវ 'ខ្យល់ដកដង្ហើម' ដល់ Design។ ក្រុមហ៊ុនដែលលក់ភាពសាមញ្ញ និងភាពច្បាស់លាស់ តែងតែប្រើវាជាពណ៌ចម្បង (ឧទាហរណ៍: Tesla, Apple, Medium)។",
+        answer_en: "**White** is the absolute essential color in layout design, serving as the foundation of 'White Space'.\n\n🕊️ **Meaning:** Purity, minimalism, modernism, cleanliness, and transparency.\n💡 **Application:** White provides visual breathing room. Brands selling simplicity, future tech, or clarity use it extensively (e.g., Tesla, Apple, Medium, Uber).",
+        uiElement: 'color_palette',
+        colors: ['#FFFFFF', '#F5F5F5', '#E0E0E0'],
+        chips: ["អ្វីទៅជា White Space? 🤍", "តើពណ៌ខ្មៅមានអត្ថន័យយ៉ាងណា? ⚫"],
+        chips_en: ["What is White Space? 🤍", "What does Black mean? ⚫"]
+    },
+    {
+        primaryKeys: ['តើពណ៌ប្រផេះមានអត្ថន័យយ៉ាងណា? 🔘', 'What does the color Gray mean? 🔘'],
+        keys: ['ពណ៌ប្រផេះ', 'gray', 'grey', 'អត្ថន័យពណ៌ប្រផេះ', 'gray meaning'],
+        regex: ['ប្រផេះ', 'gray', 'grey'],
+        answer: "បាទ **ពណ៌ប្រផេះ (Gray)** គឺជាពណ៌អព្យាក្រឹត (Neutral) ដែលនៅចន្លោះសនិងខ្មៅ។\n\n⚖️ **អត្ថន័យ:** តុល្យភាព, ភាពអាជីព (Professionalism), បច្ចេកវិទ្យា, និងភាពអព្យាក្រឹត។\n💡 **ការប្រើប្រាស់:** គេប្រើប្រផេះដើម្បីទម្លាក់ភាពខ្លាំងនៃពណ៌ខ្មៅ (ឱ្យមើលទៅទន់ជាងមុន) ឬប្រើជាពណ៌ Background សម្រាប់ UI Apps ធំៗ ដើម្បីកុំឱ្យអ្នកប្រើប្រាស់ចាំងភ្នែក (ឧទាហរណ៍: Apple UI, Wikipedia, Wikipedia)។",
+        answer_en: "**Gray (or Grey)** is the ultimate neutral color, existing perfectly balanced between light and dark.\n\n⚖️ **Meaning:** Balance, professionalism, corporate structure, technology, and neutrality.\n💡 **Application:** Used to soften the harshness of pure black text, or as a background base in massive UI systems to reduce eye strain (e.g., Apple UI, Wikipedia, Mercedes-Benz).",
+        uiElement: 'color_palette',
+        colors: ['#808080', '#A9A9A9', '#D3D3D3'],
+        chips: ["តើ Chromatic Gray និង Achromatic Gray ជាអ្វី? ⚪", "តើពណ៌សមានអត្ថន័យយ៉ាងណា? ⚪"],
+        chips_en: ["Chromatic vs Achromatic Gray? ⚪", "What does White mean? ⚪"]
+    },   
+
+    // ------------------------------------------
+    // 5. TYPOGRAPHY MASTERY
+    // ------------------------------------------
+    {
+        primaryKeys: ['តើ Typography Anatomy ជាអ្វី? 🔤', 'Explain Typography Anatomy 🔤'],
+        keys: ['typography', 'anatomy', 'cap height', 'x-height', 'baseline', 'font', 'serif', 'sans-serif', 'typography anatomy'],
+        regex: ['typography', 'anatomy', 'cap height', 'x-height', 'baseline', 'font', 'serif', 'sans-serif'],
+        answer: "បាទ **Typography** គឺជាសិល្បៈនៃការរៀបចំតួអក្សរ។ ដើម្បីយល់ពីវា អ្នកត្រូវស្គាល់ **កាយវិភាគវិទ្យាអក្សរ (Anatomy of Type)** ទាំងនេះសិន៖\n\n📏 **Baseline:** បន្ទាត់គោលខាងក្រោមដែលអក្សរភាគច្រើនឈរពីលើ។\n📏 **X-height:** កម្ពស់របស់អក្សរតូច (Lowercase) ដូចជាអក្សរ x។\n⬇️ **Ascender/Descender:** ផ្នែកដែលលូតឡើងលើអក្សរ x (b, h) ឬកន្ទុយដែលធ្លាក់ចុះក្រោម Baseline (p, y)។\n\n💡 **ចំណាត់ថ្នាក់ Font ធំៗមាន៖**\n- **Serif (មានកន្ទុយ):** ផ្តល់អារម្មណ៍ផ្លូវការ ប្រពៃណី ល្អសម្រាប់សៀវភៅ។\n- **Sans-Serif (គ្មានកន្ទុយ):** ទំនើប ស្រឡះ ល្អបំផុតសម្រាប់អេក្រង់ឌីជីថល។\n- **Script (អក្សរផ្ចង់):** ឡូយឆាយ។ (⚠️ ហាមសរសេរ ALL CAPS ជាដាច់ខាត ព្រោះមើលមិនដាច់សោះ!)",
+        answer_en: "**Typography** is the art of arranging text. To master it, you must know the **Anatomy of Type**:\n\n📏 **Baseline:** The invisible line where most letters sit.\n📏 **X-height:** The height of lowercase letters (like the letter 'x').\n⬇️ **Ascender/Descender:** Parts going above the x-height (b, h) or dropping below the baseline (p, y).\n\n💡 **Main Font Classifications:**\n- **Serif (with feet):** Traditional, formal. Great for printed books.\n- **Sans-Serif (no feet):** Modern, clean. The absolute best choice for UI/screens.\n- **Script (Cursive):** Elegant. (⚠️ Strict rule: NEVER use Script fonts in ALL CAPS, it becomes completely unreadable!).",
+        chips: ["តើ Typography និង Lettering ខុសគ្នាម៉េច? ✍️", "តើ Kerning, Tracking, Leading ខុសគ្នាម៉េច? 🔠"],
+        chips_en: ["Typography vs Lettering? ✍️", "Kerning vs Tracking vs Leading? 🔠"]
+    },
+    {
+        primaryKeys: ['តើ Typography និង Lettering ខុសគ្នាម៉េច? ✍️', 'Typography vs Lettering? ✍️'],
+        keys: ['typography vs lettering', 'calligraphy', 'lettering', 'custom lettering'],
+        regex: ['typography.*lettering', 'calligraphy', 'lettering'],
+        answer: "បាទ មនុស្សជាច្រើនតែងច្រឡំពាក្យទាំង ៣ នេះបញ្ចូលគ្នា៖\n\n១. **Typography (រៀបអក្សរ):** គឺជាការយក Font អក្សរដែលគេបង្កើតស្រាប់ (ដូចជា Arial ឬ Khmer OS) មកតម្រៀប និងកែគម្លាតឱ្យស្អាតក្នុងការរចនា។\n២. **Lettering (គូរអក្សរ):** គឺជាការ 'គូរ' តួអក្សរនីមួយៗដោយផ្ទាល់ដៃពីទទេ (From scratch) ជាទម្រង់សិល្បៈ។ វាមានលក្ខណៈប្លែក និងមិនមាន Font ណាដូចទេ។\n៣. **Calligraphy (អក្សរផ្ចង់):** គឺជាការ 'សរសេរ' អក្សរដោយប្រើប៊ិច ឬជក់ ដែលមានកម្រាស់ក្រាស់ស្តើងទៅតាមសម្ពាធដៃ។",
+        answer_en: "Many people confuse these three distinct typographic disciplines:\n\n1. **Typography:** The art of arranging *pre-existing* typefaces (like Helvetica) into a readable, aesthetically pleasing layout.\n2. **Lettering:** The art of *drawing* custom letters from scratch. It is illustrative and completely unique—not typed from a keyboard.\n3. **Calligraphy:** The art of *writing* letters continuously with a brush or pen, where line thickness is dictated by the pressure of your hand.",
+        chips: ["របៀបតម្រៀប Font ឱ្យស្អាត? 🅰️", "តើ Readability និង Legibility ខុសគ្នាម៉េច? 👓"],
+        chips_en: ["How to properly pair fonts? 🅰️", "Readability vs Legibility? 👓"]
+    },
+    {
+        primaryKeys: ['តើ Readability និង Legibility ខុសគ្នាម៉េច? 👓', 'Readability vs Legibility? 👓'],
+        keys: ['readability', 'legibility', 'ងាយអាន', 'readability vs legibility', 'ភាពច្បាស់'],
+        regex: ['readability', 'legibility', 'ងាយអាន'],
+        answer: "បាទ នេះជាពាក្យបច្ចេកទេសពីរដែលអ្នករចនាតែងច្រឡំ៖\n\n🔍 **Legibility (ភាពច្បាស់នៃតួអក្សរ):** សំដៅលើការរចនា Font ផ្ទាល់! តើអ្នកអាចបែងចែកអក្សរ \"I\" ធំ និង \"l\" តូចដាច់ពីគ្នាដែរឬទេ? បើអក្សរវៀចវចកោងកាចពេក វាពិបាកមើលដាច់ណាស់ (Low Legibility)។\n📖 **Readability (ភាពងាយស្រួលអាន):** គឺជារបៀបដែលអ្នក (Designer) រៀបចំអក្សរទាំងនោះជាកថាខណ្ឌ។ វាអាស្រ័យលើការកំណត់ Leading (គម្លាតបន្ទាត់), Tracking (គម្លាតពាក្យ), និងកម្រិត Contrast ពណ៌ ដើម្បីឱ្យគេអានបានយូរដោយមិនឈឺភ្នែក។",
+        answer_en: "These are two crucial technical terms that juniors often confuse:\n\n🔍 **Legibility:** Is about the typeface design itself! Can you easily distinguish an uppercase \"I\" from a lowercase \"l\"? If a font is too highly stylized or squished, it has Low Legibility.\n📖 **Readability:** Is about how YOU (the designer) arrange that typeface into a paragraph. It depends entirely on your choices of Leading (line height), Tracking, line length, and color contrast to ensure the user can read long blocks of text without eye fatigue.",
+        chips: ["តើ Kerning, Tracking, Leading ខុសគ្នាម៉េច? 🔠", "តើប្រវែងបន្ទាត់អក្សរ (Line Length) ស្តង់ដារគួរប៉ុន្មាន? 📏"],
+        chips_en: ["Kerning vs Tracking vs Leading? 🔠", "Ideal Line Length? 📏"]
+    },
+    {
+        primaryKeys: ['តើ Serif និង Sans-Serif ខុសគ្នាម៉េច? 🖋️', 'Serif vs Sans-Serif? 🖋️'],
+        keys: ['serif vs sans serif', 'serif', 'sans-serif', 'sans serif'],
+        regex: ['serif.*sans', 'serif'],
+        answer: "បាទ **Serif និង Sans-Serif គឺជាគ្រួសារហ្វុនធំៗពីរដែលអ្នកត្រូវស្គាល់៖**\n\n🖋️ **Serif (មានកន្ទុយ):** ជាប្រភេទអក្សរដែលមានកន្ទុយតូចៗនៅចុង (ឧ. Times New Roman)។ វាបង្ហាញពីភាពផ្លូវការ ប្រពៃណី និងភាពគួរឱ្យទុកចិត្ត។ ភាគច្រើនគេប្រើក្នុងសៀវភៅ និងកាសែត។\n\n📐 **Sans-Serif (គ្មានកន្ទុយ):** ពាក្យ \"Sans\" ជាភាសាបារាំងមានន័យថា \"គ្មាន\"។ ដូច្នេះវាជាអក្សរដែលគ្មានកន្ទុយ (ឧ. Arial, Helvetica)។ វាបង្ហាញពីភាពទំនើប ស្រឡះ និងសាមញ្ញ។ ជាស្តង់ដារដាច់ខាតសម្រាប់ការរចនាលើអេក្រង់ (Web/App UI) ព្រោះវាងាយស្រួលអានបំផុត។",
+        answer_en: "**Serif and Sans-Serif are the two master font families you must know:**\n\n🖋️ **Serif (With feet):** Fonts with small decorative strokes at the ends of letters (e.g., Times New Roman). They convey tradition, formality, and trust. Widely used in printed books and newspapers.\n\n📐 **Sans-Serif (Without feet):** \"Sans\" means \"without\" in French. These fonts have clean, straight edges (e.g., Arial, Helvetica). They convey modernism, minimalism, and cleanliness. This is the absolute gold standard for digital UI/UX design because it renders sharply on screens.",
+        chips: ["តើ Display Font និង Body Text ខុសគ្នាម៉េច? 🅰️", "របៀបតម្រៀប Font ឱ្យស្អាត? 🅰️"],
+        chips_en: ["Display vs Body Text? 🅰️", "How to properly pair fonts? 🅰️"]
+    },
+    {
+        primaryKeys: ['តើ Display Font និង Body Text ខុសគ្នាម៉េច? 🅰️', 'Display vs Body Text? 🅰️'],
+        keys: ['display font', 'body text', 'headline font', 'text type'],
+        regex: ['display font', 'body text', 'headline'],
+        answer: "បាទ ការជ្រើសរើសប្រភេទ Font ឱ្យត្រូវនឹងទំហំ គឺជារឿងចាំបាច់៖\n\n🔥 **Display Fonts:** គឺជាអក្សរដែលមានម៉ូតស្មុគស្មាញ និងទាក់ទាញខ្លាំង (ដូចជាអក្សររាងភ្លើង អក្សរដៃក្បាច់ ឬអក្សរក្រាស់ឃ្មឹក)។ វាត្រូវបានបង្កើតឡើងសម្រាប់តែ **ចំណងជើង (Headlines)** ទំហំធំប៉ុណ្ណោះ។\n📝 **Body Text:** គឺជាអក្សរអត្ថបទវែងៗ ដែលទាមទារភាពសាមញ្ញ ស្រឡះ និងងាយស្រួលអានបំផុត (ជាទូទៅទំហំ 10pt-12pt)។\n\n⚠️ **បំរាមដាច់ខាត:** កុំយក Display Font មកសរសេរអត្ថបទវែងៗឱ្យសោះ ព្រោះវានឹងធ្វើឱ្យអ្នកអានឈឺភ្នែក និងបោះបង់ការអានភ្លាមៗ!",
+        answer_en: "Choosing the correct font category for your font size is mandatory:\n\n🔥 **Display Fonts:** Highly stylized, decorative, or exceptionally heavy fonts. They are engineered purely for large **Headlines** to grab attention and set a mood.\n📝 **Body Text Fonts:** Designed for long reading (usually 10pt-12pt). They prioritize extreme simplicity, generous spacing, and maximum legibility.\n\n⚠️ **Strict Rule:** NEVER use a Display font for body paragraphs! It will completely exhaust the reader's eyes and ruin your design's usability.",
+        chips: ["របៀបតម្រៀប Font ឱ្យស្អាត? 🅰️", "តើ Typographic Hierarchy គឺជាអ្វី? 🥇"],
+        chips_en: ["How to properly pair fonts? 🅰️", "What is Typographic Hierarchy? 🥇"]
+    },
+    {
+        primaryKeys: ['របៀបតម្រៀប Font ឱ្យស្អាត? 🅰️', 'How to properly pair fonts? 🅰️'],
+        keys: ['font pairing', 'ផ្គូផ្គង font', 'រើស font', 'pair font', 'how to pair fonts'],
+        regex: ['font pairing', 'ផ្គូផ្គង font', 'រើស font', 'pair font'],
+        answer: "បាទ **ក្បួនចាប់គូ Font (Font Pairing) ឱ្យមើលទៅ Professional៖**\n\n១. **ក្បួន Contrast:** ចាប់គូ Font គ្មានកន្ទុយ (Sans-Serif) ធ្វើជាចំណងជើង ជាមួយ Font មានកន្ទុយ (Serif) ធ្វើជាអត្ថបទ (ឬផ្ទុយមកវិញ) ដើម្បីបង្កើតភាពទាក់ទាញ។\n២. **ក្បួនគ្រួសារតែមួយ (Superfamily):** ប្រើ Font តែមួយម៉ាក តែលេងទម្ងន់ខុសគ្នា (ឧ. **Roboto Black** សម្រាប់ចំណងជើង និង *Roboto Light* សម្រាប់អត្ថបទ)។ នេះជាជម្រើសសុវត្ថិភាពបំផុត!\n៣. **កុំប្រើ Font ច្រើនពេក:** ជៀសវាងការប្រើ Font លើសពី ២ ឬ ៣ ប្រភេទក្នុងផ្ទាំងការងារតែមួយ ដើម្បីការពារភាពរញ៉េរញ៉ៃ។",
+        answer_en: "**Rules for Professional Font Pairing:**\n\n1. **The Contrast Rule:** Pair a bold Sans-Serif header with a clean Serif body text (or vice-versa) to create beautiful visual interest.\n2. **The Superfamily Rule:** Use the exact same font family, but heavily mix the weights (e.g., **Montserrat Black** for the header, and *Montserrat Light* for the body). This is the safest and most elegant method!\n3. **The 'Less is More' Rule:** Avoid using more than 2-3 font families in a single design to prevent visual clutter and confusion.",
+        chips: ["តើ Typographic Hierarchy គឺជាអ្វី? 🥇", "តើ Kerning, Tracking, Leading ខុសគ្នាម៉េច? 🔠"],
+        chips_en: ["What is Typographic Hierarchy? 🥇", "Kerning vs Tracking vs Leading? 🔠"]
+    },
+    {
+        primaryKeys: ['តើ Typographic Hierarchy គឺជាអ្វី? 🥇', 'What is Typographic Hierarchy? 🥇'],
+        keys: ['typographic hierarchy', 'hierarchy អក្សរ', 'ទំហំអក្សរ', 'font size hierarchy'],
+        regex: ['typographic hierarchy', 'hierarchy អក្សរ'],
+        answer: "បាទ **Typographic Hierarchy** គឺជាការប្រើប្រាស់រចនាបថអក្សរ ដើម្បីប្រាប់អ្នកអានថា តើត្រង់ណាត្រូវអានមុនគេ និងអានបន្ទាប់! យើងអាចបង្កើតវាបានដោយមិនបាច់ដូរម៉ាក Font តាមរយៈ៖\n\n១. **ទំហំ (Size):** ចំណងជើងមេត្រូវតែធំជាងគេបំផុត។\n២. **កម្រាស់ (Weight):** ប្រើអក្សរ Bold ដើម្បីសង្កត់ធ្ងន់ និង Regular សម្រាប់អត្ថបទធម្មតា។\n៣. **ពណ៌ (Color):** ប្រើពណ៌ខ្មៅដិតសម្រាប់អត្ថបទសំខាន់ និងពណ៌ប្រផេះស្រាលសម្រាប់ព័ត៌មានបន្ទាប់បន្សំ (ដូចជា ថ្ងៃខែ ឬអ្នកនិពន្ធ)។\n៤. **ករណី (Case):** ការប្រើប្រាស់អក្សរធំទាំងអស់ (UPPERCASE) គម្លាតឆ្ងាយៗ សម្រាប់ចំណងជើងរង (Subtitles)។",
+        answer_en: "**Typographic Hierarchy** is the strategic use of type styling to tell the reader exactly where to look first, second, and third! You can build a stunning hierarchy without ever changing the font family by adjusting:\n\n1. **Size:** Headlines must be massively larger than body copy.\n2. **Weight:** Utilizing heavy Bold weights vs delicate Light weights.\n3. **Color:** Using crisp black for primary reading, and muted light gray for secondary metadata (like dates or author names).\n4. **Case:** Using widely-spaced UPPERCASE letters for elegant sub-headers.",
+        chips: ["អ្វីទៅជា Hierarchy? 👁️", "តើប្រវែងបន្ទាត់អក្សរ (Line Length) ស្តង់ដារគួរប៉ុន្មាន? 📏"],
+        chips_en: ["What is Visual Hierarchy? 👁️", "Ideal Line Length? 📏"]
+    },
+    {
+        primaryKeys: ['តើ Kerning, Tracking, Leading ខុសគ្នាម៉េច? 🔠', 'Kerning vs Tracking vs Leading? 🔠'],
+        keys: ['kerning', 'tracking', 'leading', 'គម្លាតអក្សរ', 'kerning vs tracking'],
+        regex: ['kerning', 'tracking', 'leading', 'គម្លាតអក្សរ'],
+        answer: "បាទ **ការរៀបចំគម្លាតអក្សរ (Typesetting) គឺជាភាពខុសគ្នារវាងអ្នករចនាធម្មតា និងអាជីព៖**\n\n១. **Kerning (គម្លាតតួអក្សរ២):** ការសារ៉េចន្លោះរវាងអក្សរតែ **\"២តួ\"** ប៉ុណ្ណោះ (ឧ. A និង V) ឱ្យមើលទៅសមាមាត្រភ្នែក។\n២. **Tracking (គម្លាតពេញ១ពាក្យ):** ការទាញគម្លាតអក្សរ **\"ទាំងមូល\"** ក្នុងពាក្យឱ្យឃ្លាតស្មើៗគ្នា។ 💡 ប្រើ Tracking ទូលាយៗជាមួយអក្សរធំ UPPERCASE មើលទៅ Premium ណាស់។\n៣. **Leading (គម្លាតបន្ទាត់):** ចន្លោះពី **\"បន្ទាត់មួយទៅបន្ទាត់មួយ\"** (Line-height)។ បើអត្ថបទវែង មិនត្រូវដាក់កៀកពេកទេ (ស្តង់ដារ 120%-150% នៃទំហំអក្សរ) ទើបស្រួលអាន។",
+        answer_en: "**Proper typesetting separates amateurs from professionals:**\n\n1. **Kerning:** Adjusting the space between exactly **TWO individual characters** (like A and V) so they look visually balanced.\n2. **Tracking:** Uniformly adjusting the spacing across an **entire word or phrase**. 💡 Widely tracked UPPERCASE text looks very premium for subheadings.\n3. **Leading:** The vertical space between **baselines of text** (Line-height). Standard is 120% to 150% of the font size. Don't squish paragraphs together!",
+        chips: ["តើប្រវែងបន្ទាត់អក្សរ (Line Length) ស្តង់ដារគួរប៉ុន្មាន? 📏", "តើ Justified Text ល្អឬអត់? 📄"],
+        chips_en: ["Ideal Line Length? 📏", "Is Justified text good to use? 📄"]
+    },
+    {
+        primaryKeys: ['តើប្រវែងបន្ទាត់អក្សរ (Line Length) ស្តង់ដារគួរប៉ុន្មាន? 📏', 'Ideal Line Length? 📏'],
+        keys: ['line length', 'measure', 'ប្រវែងបន្ទាត់', 'character per line'],
+        regex: ['line length', 'measure', 'ប្រវែងបន្ទាត់'],
+        answer: "បាទ នៅក្នុង Typography ប្រវែងបន្ទាត់ត្រូវបានគេហៅថា **\"Measure\"**។ \n\nប្រសិនបើបន្ទាត់អត្ថបទវែងពេក ភ្នែករបស់អ្នកអាននឹងហត់នឿយក្នុងការស្វែងរកបន្ទាត់បន្ទាប់។ ប៉ុន្តែបើវាខ្លីពេក ភ្នែកត្រូវលោតចុះឡើងញឹកញាប់ពេក ដែលធ្វើឱ្យរំខានចង្វាក់នៃការអាន។\n\n💡 **ស្តង់ដារមាស (Golden Rule):** ប្រវែងបន្ទាត់ដ៏ល្អឥតខ្ចោះ គួរមានចន្លោះពី **៤៥ ទៅ ៧៥ តួអក្សរ** (រួមទាំងដកឃ្លា) ក្នុងមួយបន្ទាត់ សម្រាប់កុំព្យូទ័រ Desktop។ សម្រាប់ទូរស័ព្ទ (Mobile) វាគួរមានប្រហែល ៣០ ទៅ ៤០ តួអក្សរ។",
+        answer_en: "In typography, the length of a line of text is called the **\"Measure\"**.\n\nIf a line of text is too wide, the reader's eye gets exhausted and loses its place returning to the start of the next line. If it's too narrow, the eye jumps back and forth too aggressively, breaking the reading rhythm.\n\n💡 **The Golden Rule:** The ideal line length for optimal readability is between **45 to 75 characters** (including spaces) per line for desktop viewing. For mobile screens, it should be around 30 to 40 characters.",
+        chips: ["តើ Justified Text ល្អឬអត់? 📄", "តើ Widow និង Orphan ជាអ្វីក្នុងការរៀបអក្សរ? 📝"],
+        chips_en: ["Is Justified text good to use? 📄", "What are Widows and Orphans in typesetting? 📝"]
+    },
+    {
+        primaryKeys: ['តើ Justified Text ល្អឬអត់? 📄', 'Is Justified text good to use? 📄'],
+        keys: ['justified text', 'ragged right', 'left aligned', 'text alignment', 'តម្រឹមអក្សរ'],
+        regex: ['justified', 'ragged', 'text alignment'],
+        answer: "បាទ ការតម្រឹមអក្សរស្មើទាំងសងខាង (Justified Alignment) មើលទៅមានសណ្តាប់ធ្នាប់ដូចកាសែត ប៉ុន្តែវាមានហានិភ័យខ្ពស់ណាស់ក្នុងការរចនាឌីជីថល!\n\n⚠️ ការធ្វើ Justified ច្រើនតែបង្កើត **\"ទន្លេពណ៌ស\" (Rivers of white space)** ដែលជាចន្លោះប្រហោងធំៗរវាងពាក្យ ធ្វើឱ្យពិបាកអានជាទីបំផុត។\n\n💡 **ជម្រើសល្អបំផុត:** សម្រាប់ Website, App, និងអត្ថបទភាគច្រើនជម្រើសដែលមានសុវត្ថិភាព និងស្រួលអានបំផុត គឺការតម្រឹម **ស្មើឆ្វេង (Left-Aligned / Ragged Right)** ព្រោះវាធ្វើឱ្យគម្លាតពាក្យទាំងអស់មានភាពស្មើគ្នាជានិច្ច និងជួយឱ្យភ្នែកងាយស្រួលរកបន្ទាត់ថ្មី។",
+        answer_en: "**Justified Text** (flush perfectly on both the left and right edges) looks neat like a traditional newspaper block, but it is highly risky in digital design!\n\n⚠️ Justifying text often stretches spacing artificially, creating ugly **\"Rivers of white space\"** (distracting vertical gaps between words) that severely hurt readability.\n\n💡 **The Best Choice:** For websites, apps, and general copy, the absolute safest and most readable choice is **Left-Aligned (Ragged Right)**. This maintains perfect, consistent word spacing and gives the eye a natural anchor to return to.",
+        chips: ["តើ Widow និង Orphan ជាអ្វីក្នុងការរៀបអក្សរ? 📝", "តើ Kerning, Tracking, Leading ខុសគ្នាម៉េច? 🔠"],
+        chips_en: ["What are Widows and Orphans in typesetting? 📝", "Kerning vs Tracking vs Leading? 🔠"]
+    },
+    {
+        primaryKeys: ['តើ Widow និង Orphan ជាអ្វីក្នុងការរៀបអក្សរ? 📝', 'What are Widows and Orphans in typesetting? 📝'],
+        keys: ['widow', 'orphan', 'typesetting error', 'ពាក្យកំព្រា', 'widows and orphans'],
+        regex: ['widow', 'orphan', 'កំព្រា'],
+        answer: "បាទ **Widows និង Orphans (ពាក្យកំព្រា)** គឺជាកំហុសធ្ងន់ធ្ងរក្នុងការរៀបចំអត្ថបទ (Typesetting) ដែលអ្នករចនាអាជីពត្រូវតែជៀសវាង៖\n\n- 📝 **Widow:** គឺជាបន្ទាត់ចុងក្រោយនៃកថាខណ្ឌ ដែលរុញធ្លាក់ទៅនៅម្នាក់ឯងឯកោ នៅផ្នែកខាងលើនៃទំព័រថ្មី ឬជួរឈរបន្ទាប់។\n- 📝 **Orphan:** គឺជាពាក្យតែមួយគត់ (ឬម៉ាត់ខ្លីមួយ) ដែលធ្លាក់មកនៅសល់កណ្តោចកណ្តែងនៅបន្ទាត់ចុងក្រោយនៃកថាខណ្ឌ។\n\n💡 **វិធីដោះស្រាយ:** អ្នករចនាត្រូវតែសារ៉េ Tracking (គម្លាតអក្សរ) តិចៗ ឬប្តូរពាក្យខ្លះ ដើម្បីទាញពាក្យទាំងនោះឱ្យចូលគ្នាសមរម្យវិញ ជៀសវាងការខូចទម្រង់ចតុកោណនៃកថាខណ្ឌ។",
+        answer_en: "**Widows and Orphans** are notorious typesetting errors that disrupt the flow of reading, which professional designers always hunt down and eliminate:\n\n- 📝 **Widow:** The very last line of a paragraph that is stranded alone at the top of a new column or page.\n- 📝 **Orphan:** A single, lonely word left dangling by itself at the bottom line of a paragraph.\n\n💡 **How to fix them:** Designers manually adjust the Tracking (letter spacing) slightly across the paragraph, or rewrite sentences, to pull the words back into a cohesive, block-like structure.",
+        chips: ["តើ Drop Cap គឺជាអ្វី? 🔠", "តើប្រវែងបន្ទាត់អក្សរ (Line Length) ស្តង់ដារគួរប៉ុន្មាន? 📏"],
+        chips_en: ["What is a Drop Cap? 🔠", "Ideal Line Length? 📏"]
+    },
+    {
+        primaryKeys: ['តើ Drop Cap គឺជាអ្វី? 🔠', 'What is a Drop Cap? 🔠'],
+        keys: ['drop cap', 'initial cap', 'អក្សរធំដើមបន្ទាត់'],
+        regex: ['drop cap', 'initial cap'],
+        answer: "បាទ **Drop Cap (Dropped Capital)** គឺជាបច្ចេកទេសរចនាបែបបុរាណនិងប្រណីត! វាគឺជាអក្សរដំបូងគេបង្អស់នៃកថាខណ្ឌ ដែលត្រូវបានពង្រីកឱ្យធំខ្លាំង ហើយទម្លាក់ចុះក្រោមរំលងបន្ទាត់ផ្សេងទៀត (ជាទូទៅ ២ ទៅ ៣ បន្ទាត់)។\n\n💡 **អត្ថប្រយោជន៍:** ទោះបីជាវាមើលទៅសាមញ្ញ ប៉ុន្តែវាមានប្រសិទ្ធភាពខ្លាំងណាស់ក្នុងការទាញភ្នែកអ្នកអានឱ្យចូលទៅក្នុងអត្ថបទ។ វាស័ក្តិសមបំផុតសម្រាប់ការរចនាទស្សនាវដ្តី (Editorial Design) សៀវភៅ និងអត្ថបទ Blog កម្រិតខ្ពស់ ដើម្បីបំបែកភាពធុញទ្រាន់នៃផ្ទាំងអត្ថបទ។",
+        answer_en: "A **Drop Cap (Dropped Capital)** is a classic, elegant editorial design technique! It is a large capital letter at the very beginning of a paragraph that \"drops\" down into the lines of text below it (usually spanning 2 to 3 lines deep).\n\n💡 **The Benefit:** Though simple, it acts as a powerful visual anchor, effortlessly drawing the reader's eye directly into the story. It is widely used in premium magazine layouts, books, and high-end blogs to break up the monotony of large text walls.",
+        chips: ["តើ Expressive Typography ជាអ្វី? 🔤", "តើ Variable Font ជាអ្វី? 🔠"],
+        chips_en: ["What is Expressive Typography? 🔤", "What is a Variable Font? 🔠"]
+    },
+    {
+        primaryKeys: ['តើ Variable Font ជាអ្វី? 🔠', 'What is a Variable Font? 🔠'],
+        keys: ['variable font', 'font vf', 'ហ្វុនថ្មី', 'variable fonts'],
+        regex: ['variable font', 'vf', 'ហ្វុនថ្មី'],
+        answer: "បាទ **Variable Font (មានអក្សរ VF ពីក្រោយ)** គឺជាបដិវត្តន៍ថ្មីបំផុតនៃ Modern Typography!\n\nកាលពីមុន បើអ្នកចង់បានអក្សរ Regular, Bold និង Italic អ្នកត្រូវ Install ៣ Files ដាច់ពីគ្នា។ តែ Variable Font វេចខ្ចប់ទម្ងន់ និងទម្រង់គ្មានដែនកំណត់ចូលទៅក្នុង File តែ ១ គត់! \n\nអ្នកអាចប្រើ Slider ទាញសារ៉េកម្រាស់ (Weight) ពីរលោងស្តើងបំផុត (100) ទៅក្រាស់ឃ្មឹក (900) ឬសារ៉េភាពទ្រេតបានតាមចិត្ត។ វាក៏ជួយឱ្យ Website ដើរលឿន (โหลด File តែមួយ) និង Responsive ផងដែរ។",
+        answer_en: "**Variable Fonts (often marked 'VF')** are the latest revolution in Modern Typography!\n\nPreviously, to use Regular, Bold, and Italic, you needed to install 3 separate font files. A Variable Font packs infinite weights and styles into 1 single file!\n\nYou can use sliders to perfectly tweak the font weight from ultra-thin (100) to heavy black (900) without distortion. They are also perfect for websites because they load incredibly fast and scale automatically.",
+        chips: ["តើ Expressive Typography ជាអ្វី? 🔤", "កម្មវិធីរចនាស្តង់ដារ (Design Software) 💻"],
+        chips_en: ["What is Expressive Typography? 🔤", "Standard Design Software 💻"]
+    },
+    {
+        primaryKeys: ['តើ Expressive Typography ជាអ្វី? 🔤', 'What is Expressive Typography? 🔤'],
+        keys: ['expressive', 'typography as image', 'storytelling'],
+        regex: ['expressive', 'typography.*image', 'storytelling'],
+        answer: "បាទ **Expressive Typography** គឺជាសិល្បៈធ្វើឱ្យអក្សរមាន \"ជីវិត\" វាមិនមែនគ្រាន់តែសម្រាប់អានទេ តែវាជារូបភាពប្រាប់សាច់រឿងតែម្តង (Typography as an image)។\n\n- **ការបង្កើតរូបភាព (Image-Making):** ការកាត់ តម្រឹម បង្វិល ឬប្តូររូបរាងអក្សរ ឱ្យក្លាយជារូបភាពតំណាងអត្ថន័យពាក្យនោះ។ ឧទាហរណ៍៖ ការធ្វើឱ្យអក្សរ L ក្នុងពាក្យ 'FALL' មើលទៅដូចកំពុងធ្លាក់ចុះមកក្រោម។\n- **អារម្មណ៍ (Mood & Tone):** ហ្វុនក្រាស់ៗរឹងៗ បង្ហាញពីភាពខ្លាំងក្លា ឬកំហឹង ខណៈហ្វុនកោងៗស្តើងៗ បង្ហាញពីភាពទន់ភ្លន់ ឬរ៉ូមែនទិក។ ការរៀបចំវាជួយបន្ថែមអត្ថន័យទៅកាន់សារដែលចង់ប្រាប់។",
+        answer_en: "**Expressive Typography** brings words to life. It treats typography not just as something to read, but as an image itself for visual storytelling.\n\n- **Image-Making:** Cutting, rotating, or morphing letters to visually represent their literal meaning. (e.g., making the 'L' in 'FALL' literally drop downward).\n- **Mood & Tone:** Heavy, rigid fonts express power or anger, while thin, cursive curves convey romance or fragility. The visual style tells half the story before a word is even read.",
+        chips: ["តើ Typography Anatomy ជាអ្វី? 🔤", "តើ គោលការណ៍រចនា (Principles) មានអ្វីខ្លះ? 📐"],
+        chips_en: ["Explain Typography Anatomy 🔤", "What are the Core Design Principles? 📐"]
+    },
+    {
+        primaryKeys: ['តើ Typographic Color ជាអ្វី? 📰', 'What is Typographic Color? 📰'],
+        keys: ['typographic color', 'ពណ៌អត្ថបទ', 'text block color', 'density'],
+        regex: ['typographic color', 'ពណ៌អត្ថបទ', 'density'],
+        answer: `បាទ នៅក្នុង Typography ពាក្យថា "Color" មិនមែនសំដៅលើពណ៌ក្រហម ឬខៀវទេ!\n\n**Typographic Color (ពណ៌នៃប្លង់អក្សរ)** គឺសំដៅលើ 'ភាពងងឹត ឬភាពភ្លឺ' នៃកថាខណ្ឌទាំងមូល (Density) នៅពេលអ្នកមើលវាពីចម្ងាយ (Squint)។\n- បើអក្សរក្រាស់ពេក ហើយគម្លាតបន្ទាត់ (Leading) ញឹកពេក កថាខណ្ឌនោះមាន Typographic Color "ខ្មៅងងឹត" (ពិបាកអាន)។\n- បើកែគម្លាតបន្ទាត់ឱ្យទូលាយបន្តិច វានឹងប្រែជា "ប្រផេះស្រាល" ដែលជួយឱ្យភ្នែកអ្នកអានមានភាពធូរស្រាល។`,
+        answer_en: `In high-level Typography, the word "Color" does NOT mean red or blue!\n\n**Typographic Color (or Texture)** refers to the overall optical density (lightness or darkness) of a block of text when squinting at it from a distance.\n- If the font is heavy and the Leading is tight, the block has a "Dark" typographic color (tiring to read).\n- If you increase the Leading and Tracking, the block becomes a softer "Light Gray", which is inviting and much easier on the eyes.`,
+        chips: ["តើ Kerning, Tracking, Leading ខុសគ្នាម៉េច? 🔠", "តើ Squint Test ជាអ្វី? 👁️"],
+        chips_en: ["Kerning vs Tracking vs Leading? 🔠", "What is the Squint Test? 👁️"]
+    },
+    {
+        primaryKeys: ['តើ Optical Margin Alignment ជាអ្វី? 📏', 'What is Optical Margin Alignment? 📏'],
+        keys: ['optical margin', 'hanging punctuation', 'តម្រឹមគែម', 'punctuation'],
+        regex: ['optical margin', 'hanging'],
+        answer: `បាទ **Optical Margin Alignment (ឬ Hanging Punctuation)** គឺជាក្បួន Typesetting កម្រិតខ្ពស់បំផុតក្នុង InDesign ឬ Illustrator។\n\nពេលអ្នកតម្រឹមអត្ថបទស្មើឆ្វេង (Left-Align) សញ្ញាខណ្ឌសញ្ញា (ដូចជា " ឬ ' ឬ -) តែងតែរុញតួអក្សរដំបូងចូលទៅក្នុង ធ្វើឱ្យគែមអត្ថបទមើលទៅមិនត្រង់ល្អដោយភ្នែក។ ការបើកមុខងារ 'Optical Margin' នឹងរុញសញ្ញាខណ្ឌទាំងនោះឱ្យ "លៀនចេញក្រៅស៊ុម" បន្តិច ដើម្បីធានាថាតួអក្សរមេ ឈរត្រង់ជួរគ្នាឥតខ្ចោះ១០០%។ អ្នករចនាសៀវភៅអាជីព តែងតែប្រើវាជានិច្ច!`,
+        answer_en: `**Optical Margin Alignment (Hanging Punctuation)** is an elite typesetting technique used in InDesign and Illustrator.\n\nWhen text is left-aligned, punctuation marks (like quotes " or hyphens -) push the first actual letter inward, making the left edge look jagged to the human eye. Turning on 'Optical Margin Alignment' pushes those small punctuation marks *outside* the text bounding box, allowing the heavy letters to align perfectly perfectly on the vertical axis. Master editorial designers always use this!`,
+        chips: ["តើ Alignment ជាអ្វី? 📏", "តើ Widow និង Orphan ជាអ្វីក្នុងការរៀបអក្សរ? 📝"],
+        chips_en: ["What is Alignment? 📏", "What are Widows and Orphans in typesetting? 📝"]
+    },
+    {
+        primaryKeys: ['តើ Hyphen, En Dash, និង Em Dash ប្រើខុសគ្នាម៉េច? ➖', 'Hyphen vs En Dash vs Em Dash? ➖'],
+        keys: ['hyphen', 'en dash', 'em dash', 'សញ្ញាខណ្ឌ', 'សញ្ញាដក', 'dash'],
+        regex: ['hyphen', 'en dash', 'em dash', 'dash'],
+        answer: `បាទ អ្នករចនា Typography កម្រិតសាកលវិទ្យាល័យ មិនដែលប្រើសញ្ញាដក (-) ផ្តេសផ្តាសទេ៖\n\n១. **Hyphen (-):** ខ្លីជាងគេ។ ប្រើសម្រាប់តភ្ជាប់ពាក្យ (ឧ. T-shirt, គិត-គូរ)។\n២. **En Dash (–):** ប្រវែងស្មើអក្សរ N។ ប្រើសម្រាប់បង្ហាញ 'ចន្លោះ ឬ រយៈពេល' (ឧ. ឆ្នាំ 2020–2024, ម៉ោង 8AM–5PM)។ វាយដោយចុច (Alt/Option + Hyphen)។\n៣. **Em Dash (—):** វែងជាងគេ ប្រវែងស្មើអក្សរ M។ ប្រើសម្រាប់ 'កាត់ផ្តាច់គំនិត' នៅក្នុងប្រយោគ ជំនួសឱ្យសញ្ញាក្បៀស (,)។ វាយដោយចុច (Alt/Option + Shift + Hyphen)។`,
+        answer_en: `University-level typographers never use the simple minus key randomly. There are three distinct dashes:\n\n1. **Hyphen (-):** The shortest. Used strictly to connect compound words (e.g., T-shirt, well-known).\n2. **En Dash (–):** The width of an 'N'. Used to indicate a 'range or span' of time/numbers (e.g., 2020–2024, Chapters 5–10). Typed using (Option + Hyphen).\n3. **Em Dash (—):** The longest, the width of an 'M'. Used to create a strong break in a thought or sentence—like this. Typed using (Option + Shift + Hyphen).`,
+        chips: ["តើ Typographic Hierarchy គឺជាអ្វី? 🥇", "តើ Kerning, Tracking, Leading ខុសគ្នាម៉េច? 🔠"],
+        chips_en: ["What is Typographic Hierarchy? 🥇", "Kerning vs Tracking vs Leading? 🔠"]
+    },
+    {
+        primaryKeys: ['តើ លក្ខណៈពិសេស OpenType (Ligatures) ជាអ្វី? 🔠', 'What are OpenType Features (Ligatures)? 🔠'],
+        keys: ['opentype', 'ligatures', 'swashes', 'typography', 'តួអក្សរភ្ជាប់'],
+        regex: ['opentype', 'ligature', 'តួអក្សរភ្ជាប់'],
+        answer: `បាទ នៅក្នុង Typography កម្រិតខ្ពស់គេប្រើ **OpenType Features** ដើម្បីដោះស្រាយបញ្ហាគម្លាតអក្សរដែលបុកគ្នា៖\n\n- **Ligatures (តួអក្សរភ្ជាប់):** គឺជាការយកតួអក្សរពីរដែលឧស្សាហ៍បុកគ្នា (ឧទាហរណ៍អក្សរ 'f' និង 'i') មកបញ្ចូលគ្នាជារូបរាងតែមួយ (fi) យ៉ាងស្រស់ស្អាតនិងគ្មានចន្លោះប្រហោង។\n- នេះគឺជាសញ្ញាសម្គាល់នៃអ្នករចនា Editorial អាជីព។ កម្មវិធីដូចជា InDesign នឹងបើកមុខងារ Ligatures នេះដោយស្វ័យប្រវត្តិ ដើម្បីជៀសវាងកំហុសអក្សរត្រួតគ្នា។`,
+        answer_en: `In advanced typography, **OpenType Features** are used to solve complex spacing issues:\n\n- **Ligatures:** This is the elegant merging of two problematic letters (like 'f' and 'i') into a single, beautifully drawn glyph ('fi') to prevent their terminals from awkwardly colliding.\n- Using ligatures is the hallmark of a professional editorial designer. Software like InDesign activates them by default to ensure perfect optical flow.`,
+        chips: ["តើ Kerning, Tracking, Leading ខុសគ្នាម៉េច? 🔠", "តើ Typographic Color ជាអ្វី? 📰"],
+        chips_en: ["Kerning vs Tracking vs Leading? 🔠", "What is Typographic Color? 📰"]
+    },
+    {
+        primaryKeys: ['តើ Em Square ក្នុងការរចនាអក្សរជាអ្វី? 📏', 'What is an Em Square? 📏'],
+        keys: ['em square', 'em space', 'typography measurement', 'រង្វាស់អក្សរ'],
+        regex: ['em square', 'em space'],
+        answer: `បាទ **Em Square** គឺជារង្វាស់ខ្នាតគណិតវិទ្យាសំខាន់បំផុតក្នុងការបង្កើតហ្វុនអក្សរ (Type Design)!\n\nវាគឺជាប្រអប់សិប្បនិម្មិតមួយដែលកំណត់ "ទំហំ" នៃហ្វុន។ (ឧទាហរណ៍៖ ប្រសិនបើអ្នកដាក់ Font ទំហំ 16px, នោះ 1 Em គឺស្មើនឹង 16px)។\n💡 **ការអនុវត្តក្នុងការរចនា Web:** អ្នកសរសេរកូដប្រើប្រាស់រង្វាស់ **'em'** ឬ **'rem'** ជំនួសឱ្យការប្រើ Pixels (px) ព្រោះវាអាចបត់បែន (Responsive) ទៅតាមទំហំអេក្រង់ទូរស័ព្ទ ឬកុំព្យូទ័របានដោយស្វ័យប្រវត្តិ!`,
+        answer_en: `The **Em Square** is the fundamental mathematical unit of measurement in Type Design!\n\nIt is the invisible bounding box that defines the space a font takes up. (For example: If your font size is set to 16px, then 1 Em equals exactly 16px).\n💡 **Web Design Application:** Modern UI developers use **'em'** and **'rem'** units instead of fixed Pixels (px) because they scale proportionally and automatically adapt to any screen size (Responsive UI)!`,
+        chips: ["តើ Typography Scaling ជាអ្វី? 🔠", "តើ Variable Font ជាអ្វី? 🔠"],
+        chips_en: ["What is Typography Scaling? 🔠", "What is a Variable Font? 🔠"]
+    },
+
+    // ------------------------------------------
+    // 6. SOFTWARE, WORKFLOW & ASSET CREATION
+    // ------------------------------------------
+    {
+        primaryKeys: ['របៀបបង្កើត Custom Brush និង Macro? ⚙️', 'How to create custom Brushes & Macros? ⚙️'],
+        keys: ['macro', 'brush', 'action', 'affinity', 'asset creation', 'បង្កើត brush', 'លក់ asset'],
+        regex: ['macro', 'brush', 'action', 'affinity', 'asset creation', 'បង្កើត brush', 'លក់'],
+        answer: "បាទ អ្នករចនាដ៏ឆ្លាតវៃតែងតែបង្កើតធនធាន (Assets) ខ្លួនឯង ដើម្បីពន្លឿនការងារ ឬយកទៅលក់៖\n\n- **ការបង្កើត Brushes:** អ្នកអាចគូររូបរាងថ្មីៗ រួចបំប្លែងវាទៅជា Brush ផ្ទាល់ខ្លួន ដោយសារ៉េ Spacing, Scatter, និង Flow សម្រាប់ប្រើក្នុងការគូរគំនូរឌីជីថល។\n- **Macros / Actions:** ក្នុងកម្មវិធីដូចជា **Affinity Suite** ឬ Photoshop អ្នកអាច 'Record' ជំហានការងារដដែលៗ (ឧ. ការកាត់តរូប លាយពណ៌ ឬដាក់ Text Effects) រួច Save វាជា Macro។ លើកក្រោយ អ្នកគ្រាន់តែចុចតែមួយ Click កម្មវិធីនឹងរត់ក្បួននោះដោយស្វ័យប្រវត្តិ! ធនធានទាំងនេះអ្នកអាចយកទៅលក់នៅលើទីផ្សារអន្តរជាតិបានយ៉ាងងាយស្រួល។",
+        answer_en: "Smart designers create custom Assets to drastically speed up their workflow or sell them for passive income:\n\n- **Custom Brushes:** You can design unique shapes and convert them into digital brushes by adjusting spacing, scattering, and flow dynamics.\n- **Macros & Actions:** In software like the **Affinity Suite** or Photoshop, you can 'Record' complex, repetitive steps (like specific photo grading or building complex Text Effects) and save them as a Macro. Next time, just click once and the software does it automatically! These are highly profitable digital assets you can sell online.",
+        chips: ["តើការកាត់តរូបបែប Non-Destructive ជាអ្វី? 🔄", "កម្មវិធីរចនាស្តង់ដារ (Design Software) 💻"],
+        chips_en: ["What is Non-Destructive Editing? 🔄", "Standard Design Software 💻"]
+    },
+    {
+        primaryKeys: ['តើការកាត់តរូបបែប Non-Destructive ជាអ្វី? 🔄', 'What is Non-Destructive Editing? 🔄'],
+        keys: ['non-destructive', 'adjustment layer', 'layer mask', 'កាត់តមិនខូចរូប', 'smart object'],
+        regex: ['non-destructive', 'កាត់តមិនខូចរូប'],
+        answer: "បាទ **Non-Destructive Editing (ការកាត់តមិនបំផ្លាញរូបដើម)** គឺជាក្បួនខ្នាតអាជីពបំផុត! \n\nវាមានន័យថាអ្នកអាចកែប្រែរូបភាព (ដូចជា ប្តូរពណ៌ លុបផ្ទៃខាងក្រោយ ឬពន្លឺ) ដោយមិនធ្វើឱ្យខូចគុណភាពភីកសែលដើមឡើយ។ អ្នកអាចត្រឡប់ទៅសភាពដើមវិញបានគ្រប់ពេល។ \n💡 **វិធីអនុវត្ត:** ប្រើ Adjustment Layers (ជំនួសឱ្យការកែលើរូបផ្ទាល់), ប្រើ Layer Masks (ជំនួសឱ្យជ័រលុប Eraser), និងប្រើ Smart Objects / Embedded Documents។",
+        answer_en: "**Non-Destructive Editing** is the absolute gold standard for professional workflows! \n\nIt means making changes (color grading, background removal, lighting) without ever overwriting the original pixel data. You can undo or refine your edits at any time, years later. \n💡 **How to do it:** Use Adjustment Layers instead of direct Image adjustments, use Layer Masks instead of the Eraser Tool, and utilize Smart Objects or Live Filters.",
+        chips: ["តើ Layer Mask ប្រើសម្រាប់អ្វី? 🎭", "តើ Smart Object ជាអ្វី? 📦"],
+        chips_en: ["How to use Layer Masks? 🎭", "What are Smart Objects? 📦"]
+    },
+    {
+        primaryKeys: ['តើ Layer Mask ប្រើសម្រាប់អ្វី? 🎭', 'How to use Layer Masks? 🎭'],
+        keys: ['layer mask', 'masking', 'លុប background', 'hide pixels'],
+        regex: ['layer mask', 'masking'],
+        answer: "បាទ ក្នុងនាមជាអ្នករចនាអាជីព **ចូរឈប់ប្រើជ័រលុប (Eraser Tool) ហើយងាកមកប្រើ Layer Mask វិញ!** \n\n Layer Mask ប្រើពណ៌ ស និង ខ្មៅ ដើម្បីគ្រប់គ្រងការមើលឃើញ៖\n- **ពណ៌ខ្មៅ:** សម្រាប់លាក់ (Hide) ផ្នែកដែលអ្នកមិនចង់បាន។\n- **ពណ៌ស:** សម្រាប់បង្ហាញ (Show) ផ្នែកដែលអ្នកចង់ឱ្យឃើញវិញ។\n💡 **អត្ថប្រយោជន៍:** បើអ្នកច្រឡំលុបលើស អ្នកគ្រាន់តែប្តូរមកជក់ពណ៌ស រួចគូរវាឱ្យចេញមកវិញបានភ្លាមៗ! ងាយស្រួលជាងការប្រើ Eraser ដែលលុបហើយបាត់រហូត។",
+        answer_en: "As a pro, **stop using the Eraser Tool and start using Layer Masks!** \n\nA Layer Mask uses Black and White values to control transparency:\n- **Black Conceals:** Paints away parts of the image you don't want.\n- **White Reveals:** Brings back parts of the image if you made a mistake.\n💡 **The Benefit:** It is 100% reversible. If you cut too much out, just paint with white to recover the original pixels instantly. It's the most flexible way to remove backgrounds or blend images.",
+        chips: ["តើ Blending Modes គឺជាអ្វី? 🎞️", "តើការកាត់តរូបបែប Non-Destructive ជាអ្វី? 🔄"],
+        chips_en: ["What are Blending Modes? 🎞️", "What is Non-Destructive Editing? 🔄"]
+    },
+    {
+        primaryKeys: ['តើ Blending Modes គឺជាអ្វី? 🎞️', 'What are Blending Modes? 🎞️'],
+        keys: ['blending mode', 'multiply', 'screen', 'overlay', 'លាយពណ៌ layer'],
+        regex: ['blending mode', 'multiply', 'overlay'],
+        answer: "បាទ **Blending Modes** គឺជាសមីការគណិតវិទ្យាដែលលាយភីកសែលរវាង Layer ពីរចូលគ្នា៖\n\n- **Multiply:** លុបពណ៌សចេញ (ទុកតែពណ៌ងងឹត)។ ល្អបំផុតសម្រាប់ដាក់ស្រមោល។\n- **Screen:** លុបពណ៌ខ្មៅចេញ (ទុកតែពណ៌ភ្លឺ)។ ល្អបំផុតសម្រាប់ដាក់ពន្លឺ ឬ Effect ផ្សេងៗ។\n- **Overlay / Soft Light:** បង្កើន Contrast ដោយលាយទាំងពន្លឺនិងស្រមោល។ ល្អសម្រាប់ដាក់ Texture លើវត្ថុឱ្យមើលទៅដូចពិត។",
+        answer_en: "**Blending Modes** are mathematical algorithms that determine how pixels on one layer interact with the layers beneath them:\n\n- **Multiply:** Hides white and light values. Perfect for realistic shadows.\n- **Screen:** Hides black and dark values. Perfect for light leaks, fire effects, or lens flares.\n- **Overlay / Soft Light:** Blends both light and dark, increasing contrast. Perfect for applying textures to objects to make them look naturally engraved or printed.",
+        chips: ["តើ Smart Object ជាអ្វី? 📦", "របៀបបង្កើត Custom Brush និង Macro? ⚙️"],
+        chips_en: ["What are Smart Objects? 📦", "How to create custom Brushes & Macros? ⚙️"]
+    },
+    {
+        primaryKeys: ['តើ Smart Object ជាអ្វី? 📦', 'What are Smart Objects? 📦'],
+        keys: ['smart object', 'embedded document', 'កែរូបមិនបែក', 'linked layer'],
+        regex: ['smart object', 'embedded document'],
+        answer: "បាទ **Smart Objects (ឬ Embedded Documents)** គឺជា 'ប្រអប់សុវត្ថិភាព' សម្រាប់ Layer របស់អ្នក៖\n\n១. **ការពារគុណភាព:** ទោះអ្នកបង្រួមរូបឱ្យតូចបំផុត រួចពង្រីកមកវិញដល់ទំហំដើម ក៏រូបភាពនៅតែច្បាស់ ១០០% មិនបែកគ្រាប់។\n២. **Live Filters:** អ្នកអាចដាក់ Effect ព្រិល (Blur) ឬសម្រកពណ៌ ហើយអាចត្រឡប់មកសារ៉េវាឡើងវិញបានគ្រប់ពេល។\n៣. **Batch Update:** បើអ្នកប្រើ Smart Object ដដែលក្នុងច្រើនកន្លែង ពេលអ្នកកែក្នុងប្រអប់ដើមតែមួយ គ្រប់កន្លែងផ្សេងទៀតនឹងដូរតាមស្វ័យប្រវត្តិ!",
+        answer_en: "**Smart Objects** (or Embedded Documents in Affinity) act as a 'protective container' for your layers:\n\n1. **Preserve Quality:** You can scale an image down to 1% and back up to 100% without losing a single pixel of clarity.\n2. **Live Filters:** Apply filters like Gaussian Blur or Sharpen and adjust the settings hours later without ruining the image.\n3. **Global Updates:** If you use the same Smart Object multiple times in a layout, updating the master file will instantly sync changes across all instances.",
+        chips: ["តើ Global Colors ជាអ្វី? 🎨", "តើការកាត់តរូបបែប Non-Destructive ជាអ្វី? 🔄"],
+        chips_en: ["What are Global Colors? 🎨", "What is Non-Destructive Editing? 🔄"]
+    },
+    {
+        primaryKeys: ['តើ Global Colors ជាអ្វី? 🎨', 'What are Global Colors? 🎨'],
+        keys: ['global color', 'swatches', 'ប្តូរពណ៌លឿន', 'linked color'],
+        regex: ['global color'],
+        answer: "បាទ **Global Colors** គឺជាបច្ចេកទេសគ្រប់គ្រងពណ៌កម្រិតខ្ពស់! \n\nវាគឺជាការភ្ជាប់ពណ៌ដែលអ្នកប្រើ ទៅនឹង Swatch ពិសេសមួយ។ \n💡 **អត្ថប្រយោជន៍:** ប្រសិនបើអ្នករចនា Poster ដែលមានអក្សរ និងរូបរាងពណ៌ខៀវ ១០ កន្លែងផ្សេងគ្នា ហើយអ្នកចង់ដូរទៅពណ៌ក្រហមវិញ អ្នកគ្រាន់តែកែ Swatch តែមួយដងប៉ុណ្ណោះ នោះគ្រប់វត្ថុទាំងអស់ដែលមានពណ៌នោះនឹងប្តូរតាមភ្លាមៗតែមួយប៉ប្រិចភ្នែក!",
+        answer_en: "**Global Colors** are a powerful workflow feature for high-speed branding adjustments! \n\nWhen you define a color as 'Global', it remains linked to the original swatch. \n💡 **The Benefit:** If you design a 50-page brochure and decide to change the brand color from Blue to Red, you only edit the single Global Swatch once. Every headline, icon, and shape using that color will update instantly across the entire project!",
+        chips: ["កម្មវិធីរចនាស្តង់ដារ (Design Software) 💻", "តើ Blending Modes គឺជាអ្វី? 🎞️"],
+        chips_en: ["Standard Design Software 💻", "What are Blending Modes? 🎞️"]
+    },
+    {
+        primaryKeys: ['កម្មវិធីរចនាស្តង់ដារ (Design Software) 💻', 'Standard Design Software 💻'],
+        keys: ['software', 'កម្មវិធី', 'photoshop', 'illustrator', 'affinity', 'figma', 'ai'],
+        regex: ['software', 'កម្មវិធី', 'photoshop', 'illustrator', 'affinity', 'figma'],
+        answer: "បាទ កម្មវិធីស្តង់ដារឧស្សាហកម្មដែលក្រុមហ៊ុនអន្តរជាតិប្រើប្រាស់មាន៖\n\n- **Vector (Logo/Icons):** Adobe Illustrator ឬ **Affinity Designer** (ជម្រើសល្អបំផុត តម្លៃសមរម្យ ទិញដាច់ម្តង និងរហ័សកម្រិតអាជីព)។\n- **Raster (កាត់តរូប/Photos):** Adobe Photoshop ឬ **Affinity Photo**។\n- **UI/UX & Web:** Figma គឺជាស្តង់ដារដាច់ខាត!\n- **Layout (ទំព័រសៀវភៅ):** Adobe InDesign ឬ Affinity Publisher។\n\n💡 **AI Tools (Midjourney, Firefly):** កុំខ្លាច AI! វាមិនមកដណ្តើមការងារអ្នកទេ តែអ្នកដែលចេះប្រើ AI (ស្វែងរកគំនិត និងបង្កើតធនធានរូបភាពលឿន) នឹងយកការងារអ្នក។",
+        answer_en: "The industry-standard software toolkits include:\n\n- **Vector (Logos/Art):** Adobe Illustrator or **Affinity Designer** (the best affordable, lightning-fast alternative).\n- **Raster (Photo/Compositing):** Adobe Photoshop or **Affinity Photo**.\n- **UI/UX & Web:** Figma is the absolute industry standard.\n- **Layouts (Books/Magazines):** Adobe InDesign or Affinity Publisher.\n\n💡 **AI Tools (Midjourney, Firefly):** AI will not replace designers. Designers who know how to use generative AI for rapid ideation and building base assets will replace those who do not.",
+        chips: ["តើ Vector និង Raster ខុសគ្នាម៉េច? 🖼️", "ឯកទេសរចនា (Specialized Disciplines) 🌟"],
+        chips_en: ["Vector vs Raster: What's the difference? 🖼️", "Specialized Disciplines 🌟"]
+    },
+    {
+        primaryKeys: ['តើ Bézier Curve គឺជាអ្វី? 🖋️', 'What is a Bézier Curve? 🖋️'],
+        keys: ['bezier curve', 'pen tool', 'anchor point', 'vector math', 'គណិតវិទ្យា vector'],
+        regex: ['bezier', 'anchor point', 'pen tool'],
+        answer: `បាទ **Bézier Curve (ខ្សែរាងកោង Bézier)** គឺជាមូលដ្ឋានគ្រឹះនៃ Graphic Design ទាំងអស់! វាគឺជារូបមន្តគណិតវិទ្យាដែលនៅពីក្រោយ Pen Tool។\n\nជំនួសឱ្យការគូសភីកសែលម្តងមួយៗ (ដូចកម្មវិធី Paint) Bézier Curve ប្រើ **Anchor Points (ចំណុចយុថ្កា)** និង **Control Handles (ដៃកាច់ទិសដៅ)** ដើម្បីគណនាខ្សែបន្ទាត់កោងរវាងចំណុចពីរ។ នេះហើយជាមូលហេតុដែល Vector (ដូចជា Logo) អាចពង្រីកធំប៉ុណ្ណាក៏មិនបែកគុណភាព ព្រោះកុំព្យូទ័រគ្រាន់តែគណនារូបមន្តនេះឡើងវិញរាល់ពេលអ្នកពង្រីកវា!`,
+        answer_en: `**Bézier Curves** are the mathematical foundation of all vector graphics and the secret behind the Pen Tool.\n\nInstead of plotting individual pixels, a Bézier curve uses mathematical formulas to connect **Anchor Points** via **Control Handles** that dictate the angle and momentum of the curve. This is exactly why Vector graphics (like SVGs or Illustrator files) can scale infinitely without losing quality—the software is just recalculating the math equation at a larger size!`,
+        chips: ["តើ Vector និង Raster ខុសគ្នាម៉េច? 🖼️", "តើការកាត់តរូបបែប Non-Destructive ជាអ្វី? 🔄"],
+        chips_en: ["Vector vs Raster? 🖼️", "What is Non-Destructive Editing? 🔄"]
+    },
+    {
+        primaryKeys: ['តើ Color Management Policy ជាអ្វី? 🎛️', 'What is a Color Management Policy? 🎛️'],
+        keys: ['color management', 'assign profile', 'convert to profile', 'color mismatch', 'គ្រប់គ្រងពណ៌'],
+        regex: ['color management', 'assign profile', 'convert to profile'],
+        answer: `បាទ នៅពេលអ្នកបើករូបភាពមួយដែលគេផ្ញើមក ហើយកម្មវិធី (ដូចជា Photoshop) លោតផ្ទាំងសួររក Color Profile នេះគឺជាការសម្រេចចិត្តដ៏សំខាន់៖\n\n១. **Assign Profile (ចាត់តាំងប្រព័ន្ធពណ៌):** កម្មវិធីមិនប្តូរលេខកូដពណ៌ដើមទេ តែវាគ្រាន់តែប្តូរ 'របៀបដែលអេក្រង់បង្ហាញពណ៌នោះ'។ (ធ្វើឱ្យពណ៌មើលទៅប្រែប្រួល)\n២. **Convert to Working Space (បំប្លែងពណ៌):** កម្មវិធីនឹងកែលេខកូដពណ៌ដើម ដើម្បីឱ្យពណ៌នោះនៅរក្សាភាពស្រស់ស្អាតដដែលនៅលើអេក្រង់របស់អ្នក។ (អ្នករចនាអាជីពតែងតែជ្រើសរើសជម្រើសនេះ!)\n💡 ការយល់ច្រឡំលើក្បួននេះ អាចធ្វើឱ្យឯកសារអ្នកប្រែជាស្លេកពណ៌ពេលផ្ញើទៅរោងពុម្ព!`,
+        answer_en: `When you open an image and your software warns you of a 'Profile Mismatch', you must understand your Color Management Policies:\n\n1. **Assign Profile:** Leaves the underlying color numbers (like RGB values) alone, but changes how your monitor displays them. (This usually makes colors look wrong).\n2. **Convert to Profile:** Alters the actual underlying color numbers to preserve the visual appearance of the image on your specific screen. (This is the choice professionals make!).\n💡 Mishandling this policy is the #1 reason designs print out with dull, muted colors!`,
+        chips: ["តើ sRGB និង Adobe RGB ខុសគ្នាម៉េច? 🌈", "តើ Color Profiling (ICC) ជាអ្វី? 🎛️"],
+        chips_en: ["sRGB vs Adobe RGB? 🌈", "What are ICC Color Profiles? 🎛️"]
+    },
+
+    // ------------------------------------------
+    // 7. TECHNICAL & PRODUCTION FORMATS
+    // ------------------------------------------
+    {
+        primaryKeys: ['តើ Vector និង Raster ខុសគ្នាម៉េច? 🖼️', 'Vector vs Raster: What\'s the difference? 🖼️'],
+        keys: ['vector', 'raster', 'វ៉ិចទ័រ', 'រ៉ាស្ទ័រ', 'pixel', 'vector vs raster'],
+        regex: ['vector', 'raster'],
+        answer: "បាទ **Vector និង Raster គឺជាប្រភេទក្រាហ្វិក២ផ្សេងគ្នាស្រឡះ៖**\n\n🖼️ **Raster (Pixels):** រូបភាពផ្សំពីគ្រាប់ការ៉េតូចៗ (Pixels)។ \n- 💡 *ឧទាហរណ៍:* រូបថតចេញពីកាមេរ៉ា, JPG, PNG។ បើអ្នកពង្រីកវាខ្លាំង វានឹងបែកគ្រាប់។ ប្រើកម្មវិធី Photoshop សម្រាប់កាត់តវា។\n\n📐 **Vector (Math):** រូបភាពបង្កើតដោយបន្ទាត់និងចំណុចតាមរូបមន្តគណិតវិទ្យា។ \n- 💡 *ឧទាហរណ៍:* ឡូហ្គោ, SVG, ឯកសារ AI។ អ្នកអាចពង្រីកវាប៉ុណ្ណាក៏នៅតែមុតស្រួច ១០០% មិនបែកគុណភាពឡើយ! ត្រូវតែប្រើ Illustrator សម្រាប់គូរឡូហ្គោជានិច្ច។",
+        answer_en: "**Vector and Raster are the two main structures of digital graphics:**\n\n🖼️ **Raster (Pixels):** Images made up of a grid of tiny colored squares.\n- 💡 *Example:* Photographs, JPGs, PNGs. If you zoom in heavily, you see jagged pixels. Edited in Photoshop.\n\n📐 **Vector (Math):** Graphics created using mathematical paths.\n- 💡 *Example:* Logos, Icons, SVGs. They can scale infinitely without losing quality! Logos MUST always be designed as Vectors in Illustrator.",
+        chips: ["តើ JPG, PNG, SVG ប្រើខុសគ្នាម៉េច? 📁", "តើ RGB និង CMYK ខុសគ្នាម៉េច? 🖨️"],
+        chips_en: ["When to use JPG, PNG, or SVG? 📁", "RGB vs CMYK? 🖨️"]
+    },
+    {
+        primaryKeys: ['តើ JPG, PNG, SVG ប្រើខុសគ្នាម៉េច? 📁', 'When to use JPG, PNG, or SVG? 📁'],
+        keys: ['file format', 'jpg', 'png', 'svg', 'pdf', 'file formats'],
+        regex: ['file format', 'ប្រភេទ file', 'jpg', 'png', 'svg', 'pdf'],
+        answer: "បាទ **ប្រភេទ File រូបភាពនីមួយៗមានគោលដៅប្រើផ្សេងគ្នា៖**\n\n📷 **JPG / JPEG:** សម្រាប់រូបថតទូទៅ។ វាមានទំហំស្រាល ប៉ុន្តែ**អត់អាចធ្វើ Background ថ្លាបានទេ**។\n✂️ **PNG:** ល្អបំផុតសម្រាប់រូបដែលត្រូវការ Background ថ្លា (Transparent) ដូចជាឡូហ្គោ ឬរូបកាត់ផ្ទៃខាងក្រោយ។\n📐 **SVG:** ជា File Vector សម្រាប់ Website។ ទំហំស្រាលមែនទែន ហើយពង្រីកប៉ុណ្ណាក៏មិនបែកគ្រាប់ (ជួយឱ្យ Web ដើរលឿន)។\n🖨️ **PDF:** ជា File ស្តង់ដារបំផុត សម្រាប់រក្សាទុករូបភាព ឬប្លង់ ដើម្បីបញ្ជូនទៅរោងពុម្ព ដោយមិនខ្លាចវរអក្សរ។",
+        answer_en: "**Different Image File Formats and when to use them:**\n\n📷 **JPG / JPEG:** Best for complex photographs. It compresses files to be smaller but **cannot support transparent backgrounds**.\n✂️ **PNG:** Best used when you need a transparent background (like placing a logo over an image).\n📐 **SVG:** A Vector format for Web Design. It is incredibly lightweight and scales infinitely without pixelating.\n🖨️ **PDF:** The universal professional standard for sending finished, high-quality designs to a physical printer.",
+        chips: ["តើ Vector និង Raster ខុសគ្នាម៉េច? 🖼️", "តើ RGB និង CMYK ខុសគ្នាម៉េច? 🖨️"],
+        chips_en: ["Vector vs Raster: What's the difference? 🖼️", "RGB vs CMYK? 🖨️"]
+    },
+    {
+        primaryKeys: ['តើ RGB និង CMYK ខុសគ្នាម៉េច? 🖨️', 'RGB vs CMYK? 🖨️'],
+        keys: ['rgb', 'cmyk', 'ប្រព័ន្ធពណ៌', 'pantone', 'pms', 'rgb vs cmyk'],
+        regex: ['rgb', 'cmyk', 'ប្រព័ន្ធពណ៌', 'pantone', 'pms'],
+        answer: "បាទ **អ្នករចនាត្រូវតែញែកប្រព័ន្ធពណ៌ទាំងនេះដាច់ពីគ្នា៖**\n\n💻 **RGB (Red, Green, Blue):** ជាពណ៌សម្រាប់ **អេក្រង់ (ពន្លឺ)**។ ប្រើវាសម្រាប់រចនា Website, Facebook Post, UI ឬ Video។ វាមានពណ៌ស្រស់ឆើតឆាយ។\n🖨️ **CMYK (Cyan, Magenta, Yellow, Black):** ជាពណ៌សម្រាប់ **បោះពុម្ព (ទឹកថ្នាំ)**។ ប្រើវាសម្រាប់រចនានាមប័ណ្ណ ខិត្តប័ណ្ណ។ ពណ៌វានឹងស្រអាប់ជាង RGB ជានិច្ច ព្រោះក្រដាសមិនបញ្ចេញពន្លឺទេ។\n🎨 **Pantone (PMS):** ជាកូដពណ៌ទឹកថ្នាំពិសេស (Spot Colors) ដែលរោងពុម្ពលាយទុកមុន ធានាថាព្រីនចេញមកពណ៌ម៉ាកយីហោដូចដើម ១០០% ។\n\n⚠️ **បំរាម:** កុំយក File RGB ទៅព្រីនឱ្យសោះ ពណ៌នឹងខុសស្រឡះ!",
+        answer_en: "**The Critical Color Profiles you must separate:**\n\n💻 **RGB (Red, Green, Blue):** For **Screens (Emitted light)**. Use this strictly for Web, UI, and Social Media. Colors are highly vibrant.\n🖨️ **CMYK (Cyan, Magenta, Yellow, Key/Black):** For **Physical Printing (Ink)**. Ink absorbs light, so physical prints will always look slightly darker and less saturated than your monitor.\n🎨 **Pantone (PMS):** Pre-mixed spot colors used in high-end printing to ensure absolute color consistency for brand logos.\n\n⚠️ **Warning:** Never print an RGB file directly; the bright screen colors will look heavily washed out when translated to CMYK ink!",
+        chips: ["តើ Bleed គឺជាអ្វី? ✂️", "តើ Resolution ស្តង់ដារសម្រាប់ការបោះពុម្ពគួរប៉ុន្មាន? 🔍"],
+        chips_en: ["What is a Bleed? ✂️", "Best Resolution for printing? 🔍"]
+    },
+    {
+        primaryKeys: ['តើ Bleed គឺជាអ្វី? ✂️', 'What is a Bleed? ✂️'],
+        keys: ['bleed', 'margin', 'die line', 'die-line', 'គែមសុវត្ថិភាព', 'what is a bleed'],
+        regex: ['bleed', 'margin', 'die line', 'die-line'],
+        answer: "បាទ **ពាក្យបច្ចេកទេស Prepress សម្រាប់ការបោះពុម្ព ដែលអ្នកត្រូវដឹង៖**\n\n✂️ **Bleed (គែមបម្រុង):** គឺជាការពង្រីកផ្ទៃ Background ពណ៌ឱ្យហៀរចេញក្រៅទំហំកាត់ស្តង់ដារ (ជាទូទៅ 3mm)។ 💡 *ហេតុអ្វី?* ព្រោះកាំបិតរោងពុម្ពកាត់មិនត្រឹមត្រូវ ១០០% ទេ ការដាក់ Bleed ការពារកុំឱ្យកាត់ទៅសល់គែមសបន្តិចៗ។\n📏 **Margin (គែមសុវត្ថិភាព):** គឺជាចន្លោះខាងក្នុងដែលហាមដាក់អក្សរ ឬឡូហ្គោសំខាន់ៗ ការពារកុំឱ្យកាត់ដាច់ចូលសាច់អត្ថបទ។\n\n*(មុនបញ្ជូន File ទៅព្រីន កុំភ្លេចបំប្លែងហ្វុនទៅជា Outline/Curves ដើម្បីការពារកុំឱ្យបាត់ហ្វុន!)*",
+        answer_en: "**Essential Prepress Terminology for Physical Printing:**\n\n✂️ **Bleed:** Extending the background colors or images slightly beyond the actual document cut-edge (usually by 3mm). 💡 *Why?* Because printing guillotine blades aren't 100% precise. Bleeds prevent accidental white borders on the final cut.\n📏 **Safe Margin:** An invisible inner boundary. Crucial text and logos must stay inside this line so they don't risk getting chopped off.\n\n*(Before sending to print, always outline your fonts to prevent missing font errors!)*",
+        chips: ["តើបច្ចេកទេសបោះពុម្ពមានអ្វីខ្លះ? 🖨️", "តើទំហំ Poster ស្តង់ដារមានអ្វីខ្លះ? 📏"],
+        chips_en: ["Advanced print finishes? 🖨️", "Standard Poster sizes? 📏"]
+    },
+    {
+        primaryKeys: ['តើបច្ចេកទេសបោះពុម្ពមានអ្វីខ្លះ? 🖨️', 'Advanced print finishes? 🖨️'],
+        keys: ['rich black', 'spot uv', 'foil', 'ក្រដាស', 'បោះពុម្ព', 'coated', 'uncoated', 'print production', 'print finish'],
+        regex: ['rich black', 'spot uv', 'foil', 'ក្រដាស', 'បោះពុម្ព', 'coated', 'uncoated', 'finish'],
+        answer: "បាទ ការផលិតសៀវភៅ ឬ Packaging ឱ្យមើលទៅថ្លៃថ្នូរទាមទារបច្ចេកទេសបោះពុម្ពកម្រិតខ្ពស់៖\n\n- **Rich Black vs Standard Black:** ពណ៌ខ្មៅ 100% K ព្រីនចេញមកមើលទៅដូចពណ៌ប្រផេះចាស់។ ដើម្បីបានពណ៌ខ្មៅដិតខ្លាំង អ្នកត្រូវលាយ C60 M40 Y40 K100 (ហៅថា Rich Black)។\n- **Print Finishes (បច្ចេកទេសតុបតែង):** ការប្រើប្រាស់ **Spot UV** (ធ្វើឱ្យភ្លឺរលោងតែត្រង់ឡូហ្គោ), **Foil Stamping** (អ៊ុតក្រដាសមាស/ប្រាក់), ឬ **Embossing** (វាយអក្សរផុស) ដើម្បីបង្កើនតម្លៃផលិតផល។\n- **Paper Coatings (ប្រភេទក្រដាស):** ក្រដាស **Coated** (រលោង) ធ្វើឱ្យពណ៌រូបថតស្រស់ស្អាត ខណៈក្រដាស **Uncoated** (គ្រើម) ស្រូបទឹកថ្នាំខ្លាំង ធ្វើឱ្យពណ៌រាងស្រអាប់ តែមើលទៅមានលក្ខណៈធម្មជាតិ។",
+        answer_en: "Producing premium physical goods requires deep knowledge of print production:\n\n- **Rich Black vs Standard Black:** 100% K ink actually prints as a dark, muddy gray. To get a deep, luxurious black, you must mix a 'Rich Black' (e.g., C60 M40 Y40 K100).\n- **Print Finishes:** Elevate designs using **Spot UV** (glossy highlights on specific areas), **Foil Stamping** (metallic gold/silver), or **Embossing** (raised textures).\n- **Paper Coatings:** **Coated** paper (Gloss/Matte) makes colors pop brilliantly. **Uncoated** paper absorbs ink heavily, making colors slightly duller but providing a highly sought-after natural, organic feel.",
+        chips: ["តើ RGB និង CMYK ខុសគ្នាម៉េច? 🖨️", "តើ DPI និង PPI ខុសគ្នាម៉េច? 🖨️"],
+        chips_en: ["RGB vs CMYK? 🖨️", "DPI vs PPI? 🖨️"]
+    },
+    {
+        primaryKeys: ['តើ DPI និង PPI ខុសគ្នាម៉េច? 🖨️', 'DPI vs PPI? 🖨️'],
+        keys: ['dpi', 'ppi', 'dpi vs ppi', 'resolution'],
+        regex: ['dpi.*ppi', 'dpi', 'ppi'],
+        answer: "បាទ មនុស្សជាច្រើនច្រឡំពាក្យទាំងពីរនេះ តែវាមានអត្ថន័យខុសគ្នា៖\n\n💻 **PPI (Pixels Per Inch):** សំដៅលើអេក្រង់ឌីជីថល! គឺចំនួនគ្រាប់ភីកសែល (Pixel) ក្នុងមួយអ៊ីញការ៉េនៅលើអេក្រង់ (Monitor)។ ប្រើសម្រាប់កំណត់ទំហំ File ពេល Design។ ស្តង់ដារព្រីនគឺ 300 PPI។\n🖨️ **DPI (Dots Per Inch):** សំដៅលើម៉ាស៊ីនព្រីន (Printer)! គឺចំនួនតំណក់ទឹកថ្នាំ (Dots of ink) ដែលម៉ាស៊ីនព្រីនបាញ់ទម្លាក់លើក្រដាសមួយអ៊ីញការ៉េ។ ម៉ាស៊ីនព្រីនល្អៗអាចមានដល់ 1200 DPI ដើម្បីព្រីនរូបភាព 300 PPI ឱ្យម៉ត់ល្អ។",
+        answer_en: "Many people use these terms interchangeably, but they are entirely different:\n\n💻 **PPI (Pixels Per Inch):** Belongs to the Digital Screen! It refers to the number of square pixels in one inch of a digital image. This is what you set in your software. 300 PPI is the standard for print files.\n🖨️ **DPI (Dots Per Inch):** Belongs to the Physical Printer! It refers to the number of physical ink droplets a printer sprays onto one inch of paper. A high-end printer might use 1200 DPI to accurately print a 300 PPI digital image.",
+        chips: ["តើ Resolution ស្តង់ដារសម្រាប់ការបោះពុម្ពគួរប៉ុន្មាន? 🔍", "តើ Bleed គឺជាអ្វី? ✂️"],
+        chips_en: ["Best Resolution for printing? 🔍", "What is a Bleed? ✂️"]
+    },
+    {
+        primaryKeys: ['តើ Resolution ស្តង់ដារសម្រាប់ការបោះពុម្ពគួរប៉ុន្មាន? 🔍', 'Best Resolution for printing? 🔍'],
+        keys: ['resolution', 'ppi', 'dpi', 'ភាពច្បាស់', 'ទំហំរូប', 'best resolution for printing'],
+        regex: ['resolution', 'ppi', 'dpi', 'ភាពច្បាស់', 'ទំហំរូប'],
+        answer: "បាទ **Resolution (ភាពច្បាស់នៃរូបភាព) ត្រូវបានបែងចែកជា ២ ស្តង់ដារធំៗ៖**\n\n🖨️ **300 PPI (Pixels Per Inch):** ជាស្តង់ដារដាច់ខាតសម្រាប់ការបោះពុម្ព (Print) ដូចជា ខិត្តប័ណ្ណ ទស្សនាវដ្តី ឬនាមប័ណ្ណ។ បើទាបជាងនេះ រូបនឹងបែកគ្រាប់ពេលព្រីនចេញមក។\n💻 **72 ទៅ 150 PPI:** ជាស្តង់ដារសម្រាប់បង្ហាញលើអេក្រង់ឌីជីថល (Web, Facebook, Instagram)។ ការប្រើ 72 PPI ជួយឱ្យ File មានទំហំស្រាល និងងាយស្រួលโหลดលឿនក្នុងអ៊ីនធឺណិត។",
         answer_en: "**Resolution standards are divided into two main categories:**\n\n🖨️ **300 PPI (Pixels Per Inch):** The absolute gold standard for Physical Printing. Anything lower will look blurry and pixelated on paper.\n💻 **72 to 150 PPI:** The standard for Digital Screens (Web, Social Media). Using 72 PPI keeps your file size extremely small so websites load instantly.",
-        chips: ["តើ Bleed គឺជាអ្វី?", "តើ RGB និង CMYK ខុសគ្នាម៉េច?"],
-        chips_en: ["What is a bleed?", "RGB vs CMYK difference?"]
+        chips: ["តើ DPI និង PPI ខុសគ្នាម៉េច? 🖨️", "តើ RGB និង CMYK ខុសគ្នាម៉េច? 🖨️"],
+        chips_en: ["DPI vs PPI? 🖨️", "RGB vs CMYK? 🖨️"]
     },
-    { 
-        primaryKeys: ['របៀបគិតលុយអតិថិជន? 💰', 'how to price my work? 💰'],
-        keys: ['pricing', 'charge', 'គិតលុយម៉េច', 'តម្លៃ'],
-        regex: ['\\bpricing\\b', '\\bcharge\\b', 'គិតលុយម៉េច', 'តម្លៃ'],
-        answer: "បាទ **របៀបគិតតម្លៃសេវាកម្ម Design (Pricing Strategies) មាន៣ធំៗ៖**\n\n១. **គិតជាម៉ោង (Hourly Rate):** ល្អសម្រាប់គម្រោងដែលមិនច្បាស់លាស់ តែវាធ្វើឱ្យអ្នកខាតបើអ្នកធ្វើការលឿននិងពូកែ។\n២. **គិតជាគម្រោង (Project-Based):** វាយតម្លៃផ្អែកលើទំហំការងារ (ឧ. គូរឡូហ្គោមួយ ១៥០$)។ នេះជារបៀបពេញនិយមបំផុត។\n៣. **គិតតាមតម្លៃអតិថិជនទទួលបាន (Value-Based):** បើឡូហ្គោអ្នកធ្វើឱ្យក្រុមហ៊ុនគេចំណេញលុយរាប់លាន អ្នកគួរយកថ្លៃខ្ពស់ជាងតម្លៃធម្មតា។\n\n💡 **គន្លឹះអាជីព៖** តែងតែទារប្រាក់កក់ (Deposit) យ៉ាងហោចណាស់ 30% មុនពេលចាប់ផ្តើមការងារ!", 
-        answer_en: "**There are 3 main Pricing Strategies for Freelance Designers:**\n\n1. **Hourly Rate:** Good for undefined projects, but it punishes you for being fast and efficient.\n2. **Project-Based:** Charging a flat fee for the whole deliverable (e.g., $150 for a logo). This is the most common and standard way.\n3. **Value-Based:** Pricing based on how much value the design brings to the client. If your branding helps a huge corporation make millions, you charge them significantly more than a local coffee shop.\n\n💡 **Pro Tip:** Always require a non-refundable deposit of at least 30% before you sketch a single idea!",
-        chips: ["របៀបដោះស្រាយភ្ញៀវរអ៊ូ?", "របៀបរៀបចំ Portfolio?"],
-        chips_en: ["Dealing with difficult clients?", "How to build a Portfolio?"]
+    {
+        primaryKeys: ['តើទំហំ Poster ស្តង់ដារមានអ្វីខ្លះ? 📏', 'Standard Poster sizes? 📏'],
+        keys: ['ទំហំ poster', 'poster size', 'ខ្នាត poster', 'a4', 'a3', 'social media size', 'layout', 'poster sizes and layouts'],
+        regex: ['ទំហំ.*poster', 'poster size', 'ខ្នាត.*poster', 'social media size', 'layout'],
+        answer: "បាទ **ទំហំ និងប្លង់ (Sizes & Layouts) ត្រូវបានបែងចែកជា ២ ប្រភេទធំៗ៖**\n\n🖨️ **សម្រាប់បោះពុម្ព (Print - 300 PPI, CMYK):**\n- **A4 (210 x 297mm) / A3 (297 x 420mm):** ប្រើសម្រាប់បិទប្រកាសខ្នាតតូច តាមសាលា ឬហាង។\n- **24 x 36 អាញ់ (Inch):** ខ្នាតស្តង់ដារអន្តរជាតិសម្រាប់ Poster រឿងកុនធំៗ។\n\n📱 **សម្រាប់បណ្តាញសង្គម (Digital - 72 PPI, RGB):**\n- **Instagram Portrait (1080 x 1350px):** ជាទំហំល្អបំផុតព្រោះវាពេញអេក្រង់ទូរស័ព្ទល្អ។\n- **Facebook Square (1080 x 1080px):** ស្តង់ដារទូទៅ (1:1)។\n- **Story/Reels/TikTok (1080 x 1920px):** ទំហំបញ្ឈរពេញអេក្រង់ (9:16) សម្រាប់វីដេអូខ្លី។\n- **YouTube Video/TV (1920 x 1080px):** ទំហំផ្តេក (16:9)។",
+        answer_en: "**Poster and Canvas Sizes are broken down into two main categories:**\n\n🖨️ **Physical Print Sizes (300 PPI, CMYK):**\n- **A4 (210 x 297mm) / A3 (297 x 420mm):** Standard for local event flyers.\n- **24 x 36 Inches:** The global standard for large, theatrical Movie Posters.\n\n📱 **Digital Social Media (72 PPI, RGB):**\n- **Instagram Portrait (1080 x 1350px):** The absolute best size because it takes up the maximum vertical screen space on phones.\n- **Square (1080 x 1080px - 1:1):** The universal safe standard.\n- **Story/Reels (1080 x 1920px - 9:16):** For full-screen vertical viewing.\n- **YouTube/TV (1920 x 1080px - 16:9):** Standard Landscape.",
+        chips: ["តើ Grid System គឺជាអ្វី? 📐", "តើបច្ចេកទេសបោះពុម្ពមានអ្វីខ្លះ? 🖨️"],
+        chips_en: ["What is a Grid System? 📐", "Advanced print finishes? 🖨️"]
     },
-    { 
-        primaryKeys: ['របៀបដោះស្រាយភ្ញៀវរអ៊ូ?', 'dealing with difficult clients?'],
-        keys: ['ភ្ញៀវរអ៊ូ', 'ភ្ញៀវកែច្រើន', 'difficult client', 'revisions', 'feedback'],
-        regex: ['ភ្ញៀវរអ៊ូ', 'ភ្ញៀវកែច្រើន', 'difficult client', '\\brevisions\\b', '\\bfeedback\\b'],
-        answer: "បាទ នេះជាបញ្ហាដែល Designer គ្រប់រូបត្រូវជួប! **វិធីដោះស្រាយ៖**\n\n១. **មានកិច្ចសន្យាច្បាស់លាស់:** ត្រូវកំណត់ចំនួនដងដែលអាចកែបាន (Revisions) ត្រឹម ២ ឬ ៣ដងប៉ុណ្ណោះ។ បើកែលើសហ្នឹង ត្រូវគិតលុយថែម។\n២. **កុំយកអារម្មណ៍មកលាយឡំ:** ពេលគេរិះគន់ស្នាដៃ គេមិនមែនស្អប់អ្នកទេ គេគ្រាន់តែចង់បានអ្វីដែលត្រូវចិត្តគេ។ ត្រូវស្តាប់ និងសួររកហេតុផល។\n៣. **ពន្យល់ពីគោលការណ៍រចនា:** បើភ្ញៀវសុំឱ្យធ្វើអ្វីដែលឆ្គង (ឧ. ដាក់ពុម្ពអក្សរ ៥ប្រភេទ) អ្នកត្រូវហ៊ានពន្យល់គេតាមក្បួន Design ថាហេតុអ្វីវាមិនល្អ។", 
-        answer_en: "**Dealing with difficult clients or endless revisions:**\n\n1. **Contracts are King:** Always define the exact number of included revisions (usually 2 or 3). If they want more changes, charge an hourly rate.\n2. **Detach your Ego:** Client feedback is not a personal attack. They just want their vision realized. Listen and ask 'Why?'.\n3. **Educate them:** If a client asks for a terrible design choice (like using 5 different fonts), politely explain *why* it breaks design principles and offer a better solution.",
-        chips: ["របៀបគិតលុយអតិថិជន? 💰", "តើ Plagiarism គឺជាអ្វី?"],
-        chips_en: ["How to price my work? 💰", "What is Plagiarism?"]
+    {
+        primaryKeys: ['តើបច្ចេកទេស Trapping, Overprint និង Knockout ជាអ្វី? 🖨️', 'Trapping, Overprint, and Knockout? 🖨️'],
+        keys: ['trapping', 'overprint', 'knockout', 'prepress', 'បោះពុម្ព'],
+        regex: ['trapping', 'overprint', 'knockout', 'prepress'],
+        answer: `បាទ ទាំងនេះគឺជាក្បួន Prepress កម្រិតខ្ពស់សម្រាប់បញ្ជូនទៅរោងពុម្ពធំៗ៖\n\n- **Knockout (ចោះធ្លុះ):** ពេលអក្សរលឿង ដាក់លើផ្ទៃខៀវ កម្មវិធីនឹង "ចោះ" ផ្ទៃខៀវនោះចោល ទុកចន្លោះស មុននឹងព្រីនពណ៌លឿងចូល ដើម្បីកុំឱ្យពណ៌លាយគ្នា។\n- **Overprint (ព្រីនជាន់):** ជាការព្រីនពណ៌ជាន់ពីលើគ្នាផ្ទាល់។ គេច្រើនប្រើ Overprint សម្រាប់តែអក្សរ "ពណ៌ខ្មៅ (100% K)" ប៉ុណ្ណោះ ដើម្បីកុំឱ្យមានសល់ចន្លោះសនៅគែម។\n- **Trapping (ការដាក់អន្ទាក់):** ម៉ាស៊ីនព្រីនរមែងរំកិលខុសគន្លងតិចតួច។ Trapping គឺជាការទាញពណ៌ឱ្យហៀរចូលគ្នាបន្តិច (Choke/Spread) ដើម្បីលាក់កំហុសម៉ាស៊ីនព្រីន កុំឱ្យលេចចេញគែមពណ៌ស។`,
+        answer_en: `These are advanced Prepress engineering mechanics for offset printing:\n\n- **Knockout:** By default, if you print yellow text on a cyan background, the printer "knocks out" (removes) the cyan underneath the text so the yellow prints purely on white paper.\n- **Overprint:** Forcing one ink to print directly on top of another. Designers actively set small Black text (100% K) to Overprint so that tiny registration errors don't create white halo outlines.\n- **Trapping:** Because printing plates shift slightly, Trapping is the process of intentionally creating a tiny overlap (Chokes and Spreads) between adjoining colors to prevent white paper from showing through the gaps.`,
+        chips: ["តើបច្ចេកទេសបោះពុម្ពមានអ្វីខ្លះ? 🖨️", "តើ RGB និង CMYK ខុសគ្នាម៉េច? 🖨️"],
+        chips_en: ["Advanced print finishes? 🖨️", "RGB vs CMYK? 🖨️"]
     },
-    { 
-        primaryKeys: ['របៀបរៀបចំ Portfolio?', 'freelance tips'],
-        keys: ['portfolio', 'freelance', 'រកការងារ', 'contract', 'deposit'],
-        regex: ['\\bportfolio\\b', '\\bfreelance\\b', 'រកការងារ', '\\bcontract\\b', '\\bdeposit\\b'],
-        answer: "បាទ **គន្លឹះមាសសម្រាប់ Freelancer៖**\n\n១. **Portfolio:** កុំដាក់ស្នាដៃរញ៉េរញ៉ៃច្រើនពេក! ដាក់តែស្នាដៃល្អបំផុត ៣-៥គម្រោង បានហើយ។ ត្រូវមាន Case Study បង្ហាញពីរបៀបដែលអ្នកគិតដោះស្រាយបញ្ហា។\n២. **ប្រាក់កក់ (Deposit):** ទារកក់មុន (30%-50%) ជានិច្ច មុននឹងចាប់ផ្តើមគិតគំនិត ដើម្បីការពារភ្ញៀវរត់ចោល និងបង្ហាញពីភាពអាជីពរបស់អ្នក។", 
-        answer_en: "**Golden Tips for Freelancers:**\n\n1. **Portfolio:** Do not upload every single thing you've made! Show only your top 3-5 best projects with detailed Case Studies explaining how you solved the client's problem.\n2. **Deposits:** Always demand a 30-50% upfront deposit before starting any actual work. It weeds out bad clients and protects your time.",
-        chips: ["របៀបគិតលុយអតិថិជន? 💰", "របៀបដោះស្រាយភ្ញៀវរអ៊ូ?"],
-        chips_en: ["How to price my work? 💰", "Dealing with difficult clients?"]
+    {
+        primaryKeys: ['តើ Color Profiling (ICC) ជាអ្វី? 🎛️', 'What are ICC Color Profiles? 🎛️'],
+        keys: ['icc profile', 'color profile', 'color management', 'គ្រប់គ្រងពណ៌'],
+        regex: ['icc profile', 'color profile', 'color management'],
+        answer: `បាទ ការគ្រប់គ្រងពណ៌ (Color Management) ធានាថាពណ៌ដែលអ្នកឃើញលើអេក្រង់ គឺដូចគ្នានឹងពណ៌ដែលព្រីនចេញមក។\n\n**ICC Profile (International Color Consortium):** គឺជា File ប្រព័ន្ធ (ឧ. Coated FOGRA39 សម្រាប់ CMYK ឬ sRGB សម្រាប់ Web) ដែលប្រាប់កុំព្យូទ័រ និងម៉ាស៊ីនព្រីនពីរបៀបបកប្រែពណ៌ឱ្យត្រូវគ្នា។ \n💡 **កំហុសធំ:** បើអ្នកឌីហ្សាញក្នុង Color Profile របស់អាមេរិក (US Web Coated SWOP) តែយកទៅព្រីននៅរោងពុម្ពអឺរ៉ុបឬអាស៊ី (ដែលប្រើ FOGRA) ពណ៌របស់អ្នកនឹងប្រែប្រួលខុសទាំងស្រុង! ត្រូវសួររោងពុម្ពមុនជានិច្ចថាតើគេប្រើ Profile មួយណា។`,
+        answer_en: `Color Management ensures the color you see on your monitor perfectly matches the final printed piece.\n\n**ICC Profile (International Color Consortium):** A standard dataset (e.g., Coated FOGRA39 for CMYK, or sRGB for digital) that translates exact color values between your monitor and the specific physical printer hardware.\n💡 **Critical Error:** If your Adobe file is set to a US color profile (US Web Coated SWOP) and you send it to an Asian/European printer (who uses FOGRA39), your colors will shift drastically! Always ask your print shop for their specific ICC Profile before exporting.`,
+        chips: ["តើ sRGB និង Adobe RGB ខុសគ្នាម៉េច? 🌈", "តើ Bleed គឺជាអ្វី? ✂️"],
+        chips_en: ["sRGB vs Adobe RGB? 🌈", "What is a Bleed? ✂️"]
     },
-    { 
-        primaryKeys: ['តើ Plagiarism គឺជាអ្វី?', 'what is plagiarism'],
-        keys: ['plagiarism', 'copyright', 'កម្មសិទ្ធិបញ្ញា', 'ethics'],
-        regex: ['\\bplagiarism\\b', '\\bcopyright\\b', 'កម្មសិទ្ធិបញ្ញា', '\\bethics\\b'],
-        answer: "បាទ **ក្រមសីលធម៌អ្នករចនា (Ethics & Copyright):**\n\n⚖️ **Plagiarism (ការលួចចម្លង):** ការយកស្នាដៃគេទាំងស្រុងមកកែពណ៌បន្តិចបន្តួច ហើយអះអាងថាជារបស់ខ្លួន គឺជាកំហុសធ្ងន់ធ្ងរបំផុត។ រៀនយកគំនិត (Inspiration) គឺខុសពីការលួច (Copying)។\n📄 **Commercial License:** រាល់រូបភាព (Stock Image) ក្រាហ្វិក និងហ្វុន (Fonts) ដែលយកមកប្រើរចនាឱ្យអតិថិជន ត្រូវប្រាកដថាអ្នកមានសិទ្ធិប្រើប្រាស់ (License) ត្រឹមត្រូវ ដើម្បីជៀសវាងការប្តឹងផ្តល់។", 
-        answer_en: "**Design Ethics & Copyright Laws:**\n\n⚖️ **Plagiarism:** Downloading someone else's work, changing the color slightly, and claiming it as your own is a fatal career mistake. Gathering 'inspiration' using moodboards is completely different from 'copying'.\n📄 **Commercial Use Licenses:** Ensure every single stock photo, vector, and font you use in a client project has a valid commercial license. Never use 'Personal Use Only' fonts for a business logo, or you risk getting your client sued.",
-        chips: ["របៀបរៀបចំ Portfolio?", "តើ UI និង UX ជាអ្វី?"],
-        chips_en: ["How to build a great Portfolio?", "What are UI and UX?"]
+    {
+        primaryKeys: ['តើ Dot Gain (TVI) គឺជាអ្វី? 🖨️', 'What is Dot Gain (TVI)? 🖨️'],
+        keys: ['dot gain', 'tvi', 'ការរីកទឹកថ្នាំ', 'ink spread', 'offset printing'],
+        regex: ['dot gain', 'tvi', 'រីកទឹកថ្នាំ', 'ink spread'],
+        answer: `បាទ **Dot Gain (ការរីកទឹកថ្នាំ)** គឺជាបាតុភូតរូបវិទ្យាក្នុងការបោះពុម្ព Offset ដែលគ្រាប់ទឹកថ្នាំរីកធំជាងមុននៅពេលវាប៉ះនឹងសរសៃក្រដាស។\n\n💡 **ផលប៉ះពាល់:** វាធ្វើឱ្យរូបភាពដែលព្រីនចេញមក **ងងឹតជាង (Darker)** រូបភាពនៅលើអេក្រង់កុំព្យូទ័រជានិច្ច! \n**វិធីដោះស្រាយ:** អ្នករចនាអាជីពតែងតែធ្វើឱ្យរូបភាពរបស់ពួកគេមានពន្លឺភ្លឺជាងធម្មតាបន្តិច (Lighten) និងបន្ថយ Contrast តិចតួចមុនពេលបញ្ជូនទៅរោងពុម្ព ដើម្បីប៉ះប៉ូវឱ្យការរីកទឹកថ្នាំនេះឯង។`,
+        answer_en: `**Dot Gain**, formally known as Tone Value Increase (TVI), is a physical phenomenon in offset printing where halftone ink dots spread and expand as they hit the paper fibers.\n\n💡 **The Impact:** This causes the final printed piece to look noticeably **darker** than what you see on your screen! \n**The Fix:** Prepress professionals purposefully lighten their images and adjust their mid-tone curves before exporting to offset the inevitable dot gain.`,
+        chips: ["តើ Color Profiling (ICC) ជាអ្វី? 🎛️", "តើបច្ចេកទេសបោះពុម្ពមានអ្វីខ្លះ? 🖨️"],
+        chips_en: ["What are ICC Profiles? 🎛️", "Advanced print finishes? 🖨️"]
+    },
+    {
+        primaryKeys: ['តើ Paper GSM និង Paper Grain ជាអ្វី? 📄', 'Paper Weight (GSM) and Grain? 📄'],
+        keys: ['gsm', 'paper grain', 'ទម្ងន់ក្រដាស', 'សរសៃក្រដាស', 'paper weight', 'cracking'],
+        regex: ['gsm', 'paper grain', 'សរសៃក្រដាស'],
+        answer: `បាទ ការរចនាល្អអាចអាក្រក់មើលបាន បើរើសក្រដាសខុស៖\n\n- **GSM (Grams per Square Meter):** គឺជារង្វាស់កម្រាស់ក្រដាស។ (៨០gsm គឺក្រដាស Print ធម្មតា, ១៥០gsm ល្អសម្រាប់ខិត្តប័ណ្ណ, ៣០០gsm+ ល្អសម្រាប់នាមប័ណ្ណ ឬក្រلافសៀវភៅ)។\n- **Paper Grain (សរសៃក្រដាស):** ក្រដាសមានសរសៃរត់ស្របគ្នា។ ប្រសិនបើអ្នកបត់ក្រដាស (ឧ. ធ្វើ Menu) 'បញ្ច្រាស' ទិសដៅសរសៃ នោះទឹកថ្នាំនិងក្រដាសនឹង **ប្រេះ (Cracking)** នៅត្រង់កន្លែងបត់នោះយ៉ាងអាក្រក់មើល! ត្រូវសួររោងពុម្ពពីទិសដៅ Grain មុននឹងសម្រេចចិត្តរចនាប្លង់បត់។`,
+        answer_en: `A brilliant design can be ruined by poor paper choices:\n\n- **GSM (Grams per Square Meter):** Measures paper thickness and weight. (80gsm is standard copy paper, 150gsm is great for flyers, 300gsm+ is required for business cards and premium covers).\n- **Paper Grain:** Paper fibers align in a specific direction during manufacturing. If you fold a heavy printed document (like a brochure) *against* the grain, the paper and ink will brutally **crack and split** along the fold line. Always design folds parallel to the paper grain!`,
+        chips: ["តើបច្ចេកទេសបោះពុម្ពមានអ្វីខ្លះ? 🖨️", "តើ Resolution ស្តង់ដារសម្រាប់ការបោះពុម្ពគួរប៉ុន្មាន? 🔍"],
+        chips_en: ["Advanced print finishes? 🖨️", "Best Resolution for printing? 🔍"]
+    },
+    {
+        primaryKeys: ['តើ Anti-aliasing ក្នុងក្រាហ្វិកឌីជីថលគឺជាអ្វី? 🖥️', 'What is Anti-aliasing? 🖥️'],
+        keys: ['anti-aliasing', 'jagged edges', 'ភាពម៉ត់', 'pixelation', 'vector to raster'],
+        regex: ['anti-aliasing', 'aliasing', 'jagged'],
+        answer: `បាទ **Anti-aliasing** គឺជាបច្ចេកទេសរូបវិទ្យាកុំព្យូទ័រ ដើម្បីលុបបំបាត់គែមរղុបរញិប (Jagged edges) នៃភីកសែល។\n\nនៅពេលអ្នកគូសបន្ទាត់កោង ឬវ៉ិចទ័រ ហើយ Export វាជារូបភាព (PNG/JPG) អេក្រង់កុំព្យូទ័រដែលពោរពេញដោយគ្រាប់ការ៉េតូចៗ មិនអាចបង្ហាញរាងកោងឱ្យរលោងបានទេ។ \n💡 **ដំណោះស្រាយ:** កុំព្យូទ័រប្រើប្រាស់ Anti-aliasing ដោយយកពណ៌ស្រាលៗ (Semi-transparent pixels) ទៅចាក់បំពេញនៅគែមរដិបរដុបនោះ ដើម្បីបញ្ឆោតភ្នែកយើងឱ្យមើលឃើញខ្សែបន្ទាត់នោះកោងរលោងឥតខ្ចោះ។`,
+        answer_en: `**Anti-aliasing** is a computer graphics rendering technique used to smooth out jagged, pixelated edges.\n\nWhen you draw a perfectly curved vector line and export it as a pixel-based raster image (JPG), the square pixels cannot physically form a smooth curve. \n💡 **The Solution:** Anti-aliasing mathematically adds semi-transparent, lighter-colored pixels along the harsh borders. This optical illusion tricks the human eye into seeing a perfectly smooth curve.`,
+        chips: ["តើ Vector និង Raster ខុសគ្នាម៉េច? 🖼️", "តើ Compression Artifacts គឺជាអ្វី? 📉"],
+        chips_en: ["Vector vs Raster? 🖼️", "What are Compression Artifacts? 📉"]
+    },
+    {
+        primaryKeys: ['តើ Compression Artifacts គឺជាអ្វី? 📉', 'What are Compression Artifacts? 📉'],
+        keys: ['compression artifacts', 'jpeg artifacts', 'banding', 'macroblocking', 'compression', 'ការបង្ហាប់', 'jpg បែក', 'រូបបែកគ្រាប់', 'រូបឡើងពណ៌'],
+        regex: ['compression artifact', 'jpeg artifact', 'jpg artifact', 'banding', 'macroblock', 'ការបង្ហាប់', 'រូបបែកគ្រាប់', 'រូបឡើងពណ៌'],
+        answer: "បាទ **Compression Artifacts** គឺជា “ស្នាមរបួស” រូបភាពដែលកើតឡើងពេលរូបភាពត្រូវបានបង្ហាប់ (Compress) ច្រើនពេក — ជាពិសេសក្នុង Format Lossy ដូចជា **JPG, WebP, MP4**។\n\n📉 **ប្រភេទសំខាន់ៗ:**\n១. **Blocking (បំណែកការ៉េ):** ឃើញជាប្លុកការ៉េធំៗតាមផ្នែកមួយចម្រុះ (ឧ. លើផ្ទៃមេឃ)។\n២. **Banding (បន្ទាត់ពណ៌):** Gradient មិនរលូន ឃើញជារង្វាស់ៗតាមបន្តិចម្តងៗ។\n៣. **Ringing / Halo (ស្រមោលគែម):** គែមអក្សរ ឬ Logo មានពណ៌ស្រអាប់ៗព័ទ្ធជុំវិញ។\n៤. **Color Bleeding:** ពណ៌ដ៏ឆ្អែតមួយ ហៀរចូលពណ៌ក្បែរ។\n\n🛡️ **វិធីការពារ:**\n- រក្សារូបដើមជា PSD/AI/PNG/TIFF, Export JPG តែពេលចេញផ្សាយប៉ុណ្ណោះ។\n- Export JPG Quality ≥ 80%, កុំ Save លើ JPG ហើយ Save ឡើងវិញដដែលៗ (កុំ Generation Loss)។\n- រូបមាន Gradient សុទ្ធ → ប្រើ **PNG-24** ឬ **WebP Lossless**។\n- រូបជា Logo / Icon → ប្រើ **SVG** (Vector មិនបង្ហាប់ Pixel)។\n💡 **គន្លឹះអ្នកជំនាញ:** ឃើញ Artifacts ហើយ? ពិនិត្យមើល JPG Quality slider — ប្រសិនបើតិចជាង ៧០% Export ឡើងវិញពី File Master ដោយ Quality ៨៥–៩៥%។",
+        answer_en: "**Compression Artifacts** are the visible damage that appears when images are squeezed too hard by lossy formats like **JPG, WebP, or MP4**.\n\n📉 **The 4 most common types:**\n1. **Blocking:** Visible 8×8 pixel squares, especially in smooth areas like skies.\n2. **Banding:** Gradients become stepped color stripes instead of smooth transitions.\n3. **Ringing / Halos:** Faint shadow-like fringes around sharp edges (text, logos).\n4. **Color Bleeding:** Saturated colors smear into neighboring areas.\n\n🛡️ **How to prevent:**\n- Keep the master in PSD/AI/PNG/TIFF — only export JPG at the very last step.\n- Export JPG at Quality ≥ 80, never re-save a JPG on top of itself (generation loss).\n- For gradients use **PNG-24** or **lossless WebP**.\n- For logos/icons use **SVG** (vectors don't compress pixels).\n💡 **Pro Tip:** Spotted artifacts? Don't \"fix\" the JPG — re-export from the master at quality 85–95. JPG damage is one-way.",
+        chips: ["តើ Vector និង Raster ខុសគ្នាម៉េច? 🖼️", "របៀប Export រូបបង្ហោះកុំឱ្យបែកគុណភាព? 📱", "តើ Anti-aliasing ក្នុងក្រាហ្វិកឌីជីថលគឺជាអ្វី? 🖥️"],
+        chips_en: ["Vector vs Raster? 🖼️", "How to export high-quality for social media? 📱", "What is Anti-aliasing? 🖥️"]
+    },
+    {
+        primaryKeys: ['តើ Rendering Intents ជាអ្វី? 🖨️', 'What are Rendering Intents? 🖨️'],
+        keys: ['rendering intent', 'perceptual', 'relative colorimetric', 'out of gamut', 'color shift'],
+        regex: ['rendering intent', 'perceptual', 'gamut'],
+        answer: `បាទ នេះជាក្បួន Color Management កម្រិតរោងពុម្ពអន្តរជាតិ៖\n\nនៅពេលបំប្លែងរូបពី RGB (អេក្រង់) ទៅ CMYK (ក្រដាស) វានឹងមានពណ៌ខ្លះដែលម៉ាស៊ីនព្រីនមិនអាចព្រីនចេញបាន (Out-of-Gamut)។ **Rendering Intents** ជាអ្នកសម្រេចចិត្តដោះស្រាយពណ៌ទាំងនោះ៖\n១. **Perceptual:** ទាញពណ៌ទាំងអស់ចូលគ្នាឱ្យស្រាលជាងមុន ដើម្បីរក្សា "ទំនាក់ទំនង" និងភាពរលូននៃរូបថត។ (ស័ក្តិសមបំផុតសម្រាប់រូបថតដែលមានពណ៌ច្រើន)។\n២. **Relative Colorimetric:** រក្សាពណ៌ដែលត្រូវគ្នាទុកឱ្យនៅដដែល ហើយប្តូរតែពណ៌ដែលព្រីនមិនចេញឱ្យទៅជាពណ៌ដែលជិតបំផុត។ (ស័ក្តិសមបំផុតសម្រាប់ Logo Graphic ព្រោះវាមិនធ្វើឱ្យពណ៌ម៉ាកយីហោខុសប្រក្រតី)។`,
+        answer_en: `This is high-end Color Management for print production:\n\nWhen converting from RGB (screen) to CMYK (print), many bright colors cannot be printed physically (Out-of-Gamut). **Rendering Intents** tell the computer how to handle those unprintable colors:\n1. **Perceptual:** Compresses ALL colors globally to maintain the visual "relationship" between them. (Best for highly colorful Photographs).\n2. **Relative Colorimetric:** Leaves the printable colors exactly as they are, and "clips" only the unprintable colors to their closest printable match. (Best for Vector Logos and solid branding graphics!).`,
+        chips: ["តើ Color Profiling (ICC) ជាអ្វី? 🎛️", "តើ RGB និង CMYK ខុសគ្នាម៉េច? 🖨️"],
+        chips_en: ["What are ICC Color Profiles? 🎛️", "RGB vs CMYK? 🖨️"]
+    },
+
+    // [ADD TO SECTION 10: PSYCHOLOGY & UX LAWS]
+    {
+        primaryKeys: ['តើច្បាប់ Law of Prägnanz គឺជាអ្វី? 🧩', 'What is the Law of Prägnanz? 🧩'],
+        keys: ['law of pragnanz', 'gestalt', 'simplicity', 'ភាពសាមញ្ញបំផុត'],
+        regex: ['pragnanz', 'gestalt'],
+        answer: `បាទ នេះគឺជាច្បាប់កំពូលរបស់ទ្រឹស្តី Gestalt ទាំងមូល! **Law of Prägnanz (ច្បាប់នៃភាពសាមញ្ញ)** ចែងថា៖\n\n«នៅពេលភ្នែកមនុស្សសម្លឹងមើលរូបរាងដែលស្មុគស្មាញ ខួរក្បាលនឹងព្យាយាមរៀបចំវាទៅជារូបរាងដែល 'សាមញ្ញបំផុត' តាមដែលអាចធ្វើទៅបាន»។\n💡 **ការអនុវត្ត:** នេះជាមូលហេតុដែល Logo របស់ក្រុមហ៊ុនធំៗ (ដូចជា Apple, Nike, Mastercard) ចេះតែផ្លាស់ប្តូរទៅរកទម្រង់រាបស្មើ និងសាមញ្ញជាងមុន (Minimalism) ព្រោះខួរក្បាលមនុស្សចំណាយពេលចាំវាតិចជាង និងយល់ពីវាបានលឿនជាងរូបភាពដែលស្មុគស្មាញ។`,
+        answer_en: `This is the fundamental overriding principle of all Gestalt theory! **The Law of Prägnanz (Law of Simplicity)** states:\n\n"When presented with ambiguous or complex shapes, the human brain will process them in the simplest, most organized manner possible."\n💡 **Application:** This is the exact psychological reason why global logos (Apple, Nike, Mastercard) continuously evolve to become flatter and more minimal. The brain requires less cognitive energy to process simple geometry, making the brand instantly recognizable.`,
+        chips: ["តើទ្រឹស្តី Gestalt ជាអ្វី? 🧩", "តើ Hick's Law ជាអ្វី? 🧠"],
+        chips_en: ["Explain Gestalt Psychology 🧩", "What is Hick's Law? 🧠"]
+    },
+    {
+        primaryKeys: ['តើ Cognitive Friction ក្នុង UX គឺជាអ្វី? 🚧', 'What is Cognitive Friction? 🚧'],
+        keys: ['cognitive friction', 'ux friction', 'ភាពរអាក់រអួល', 'ភាពពិបាក', 'user frustration'],
+        regex: ['cognitive friction', 'friction'],
+        answer: `បាទ **Cognitive Friction (ភាពរអាក់រអួលនៃការគិត)** គឺជា "កម្លាំងទប់ទល់" ផ្លូវចិត្តដែលអ្នកប្រើប្រាស់ជួបប្រទះ នៅពេលចំណុចប្រទាក់ (Interface) ធ្វើការខុសពីអ្វីដែលពួកគេរំពឹងទុក។\n\nឧទាហរណ៍៖ ប៊ូតុងពណ៌ក្រហម ជាទូទៅមានន័យថា "លុប" ឬ "បោះបង់"។ ប៉ុន្តែបើអ្នកយកពណ៌ក្រហមទៅដាក់លើប៊ូតុង "យល់ព្រម" នោះខួរក្បាលអ្នកប្រើប្រាស់នឹងគិតទាក់ៗ (Friction) ធ្វើឱ្យគេស្ទាក់ស្ទើរក្នុងការចុច។\n💡 UX ដ៏ល្អ គឺត្រូវលុបបំបាត់ Friction ទាំងនេះ ធ្វើឱ្យ App ដំណើរការដោយរលូនដូចការគិតពីធម្មជាតិរបស់មនុស្ស។`,
+        answer_en: `**Cognitive Friction** is the mental resistance a user feels when a digital interface behaves differently than they intuitively expect.\n\nFor example: A red button universally means "Cancel" or "Delete". If you color your primary "Submit" button red, the user's brain misfires (causing friction), and they hesitate to click.\n💡 Brilliant UX aggressively eliminates all cognitive friction so the user can navigate the app purely on instinct without thinking.`,
+        chips: ["តើ Jakob's Law ជាអ្វី? 🌐", "តើ Dark Patterns ជាអ្វី? 🚫"],
+        chips_en: ["What is Jakob's Law? 🌐", "What are Dark Patterns? 🚫"]
+    },
+
+    // ------------------------------------------
+    // 8. PHOTOGRAPHY, IMAGERY & GENERATIVE AI
+    // ------------------------------------------
+    {
+        primaryKeys: ['តើការប្រើប្រាស់ Stock Photo មានច្បាប់អ្វីខ្លះ? 📸', 'Rules for using Stock Photos? 📸'],
+        keys: ['stock photo', 'រូបថត', 'shutterstock', 'freepik', 'commercial use', 'អាជ្ញាប័ណ្ណរូបថត'],
+        regex: ['stock photo', 'រូបថត', 'commercial use', 'អាជ្ញាប័ណ្ណ'],
+        answer: "បាទ ការប្រើប្រាស់រូបថតពីអ៊ីនធឺណិត (Stock Photos) ត្រូវតែប្រុងប្រយ័ត្នបំផុត៖\n\n១. **Royalty-Free (RF):** មានន័យថាអ្នកបង់លុយទិញអាជ្ញាប័ណ្ណម្តង អាចប្រើបានច្រើនដង តែមិនមែនមានន័យថាវា 'ឥតគិតថ្លៃ' នោះទេ។\n២. **Commercial Use:** មុននឹងទាញយករូបឥតគិតថ្លៃពី Unsplash ឬ Pexels ត្រូវប្រាកដថាវាអនុញ្ញាតឱ្យប្រើសម្រាប់ 'ពាណិជ្ជកម្ម' (Commercial Use)។\n៣. **កុំប្រើរូបភាពរាបស្មើពេក:** ជៀសវាងរូបថតមនុស្សពាក់អាវធំញញឹមសិប្បនិម្មិតមើលកាមេរ៉ា! គួរជ្រើសរើសរូបភាពដែលមានសកម្មភាពធម្មជាតិ (Candid) ទើបមើលទៅមានវិជ្ជាជីវៈ។",
+        answer_en: "Using Stock Photos requires strict attention to licensing:\n\n1. **Royalty-Free (RF):** This means you pay for the license once and can use it multiple times. It does NOT mean the photo is 'free'.\n2. **Commercial Use:** Before downloading free images from Unsplash or Pexels, ensure the license explicitly allows 'Commercial Use' to avoid lawsuits.\n3. **Avoid Cliches:** Stop using generic, overly-posed photos of people in suits shaking hands! Opt for natural, candid lifestyle imagery. It elevates your brand's authenticity.",
+        chips: ["តើ Depth of Field គឺជាអ្វី? 📷", "របៀបសរសេរ Prompt សម្រាប់ Midjourney? 🤖"],
+        chips_en: ["What is Depth of Field? 📷", "Midjourney Prompting Tips? 🤖"]
+    },
+    {
+        primaryKeys: ['តើ Depth of Field គឺជាអ្វី? 📷', 'What is Depth of Field? 📷'],
+        keys: ['depth of field', 'dof', 'bokeh', 'ព្រិលផ្ទៃខាងក្រោយ', 'blur background', 'ការថតរូប'],
+        regex: ['depth of field', 'dof', 'bokeh', 'ព្រិលផ្ទៃខាងក្រោយ'],
+        answer: "បាទ **Depth of Field (ជម្រៅរូបភាព)** គឺជាកម្រិតនៃភាពច្បាស់ (Focus) និងភាពព្រិល (Blur/Bokeh) នៅក្នុងរូបថតមួយ។\n\n- **Shallow Depth of Field (ព្រិលខ្លាំង):** វត្ថុនៅខាងមុខច្បាស់ល្អ ឯផ្ទៃខាងក្រោយព្រិលខ្លាំង។ នេះជាបច្ចេកទេសដ៏ល្អបំផុតសម្រាប់អ្នករចនា! វាងាយស្រួលយកមកធ្វើជាផ្ទៃខាងក្រោយ (Background) សម្រាប់ដាក់អក្សរពីលើ ព្រោះវាមិនរំខានដល់អត្ថបទ (Text Legibility)។\n- **Deep Depth of Field (ច្បាស់ទាំងអស់):** ច្បាស់ទាំងវត្ថុខាងមុខនិងទេសភាពខាងក្រោយ ល្អសម្រាប់រូបថតទេសភាពធំៗ។",
+        answer_en: "**Depth of Field (DoF)** refers to the distance between the closest and farthest objects in a photo that appears acceptably sharp.\n\n- **Shallow DoF (Heavy Bokeh/Blur):** The subject is sharp, but the background is heavily blurred. This is a designer's best friend! A blurred background creates natural negative space, making it incredibly easy to overlay highly readable text.\n- **Deep DoF:** Everything from front to back is in focus. Great for landscape photography, but terrible for placing text over.",
+        chips: ["តើ Double Exposure ជាអ្វី? 🌑", "តើ Squint Test ជាអ្វី? 👁️"],
+        chips_en: ["What is Double Exposure? 🌑", "What is the Squint Test? 👁️"]
+    },
+    {
+        primaryKeys: ['តើ Double Exposure ជាអ្វី? 🌑', 'What is Double Exposure? 🌑'],
+        keys: ['double exposure', 'ត្រួតរូប', 'blend image', 'masking effect'],
+        regex: ['double exposure', 'ត្រួតរូប'],
+        answer: "បាទ **Double Exposure (ការត្រួតរូប)** គឺជាបច្ចេកទេសសិល្បៈដ៏ពេញនិយមក្នុង Photoshop ដែលយកទិដ្ឋភាពពីរផ្សេងគ្នា (ឧទាហរណ៍៖ រូបព្រៃឈើ និង ទម្រង់មុខមនុស្ស) មកលាយបញ្ចូលគ្នាជារូបភាពតែមួយ។\n\n💡 **វិធីធ្វើដោយសង្ខេប:**\n១. យករូប Portrait (មុខមនុស្ស) មកកាត់ Background ចេញ (សល់តែផ្ទៃស)។\n២. យករូបភាពទី២ (ទេសភាព) ដាក់ពីលើ រួចប្តូរ **Blending Mode** ទៅជា **Screen** ឬ **Lighten**។ នោះទេសភាពនឹងហូរចូលទៅក្នុងស្រមោលនៃមុខមនុស្សយ៉ាងស្រស់ស្អាត!",
+        answer_en: "**Double Exposure** is a highly popular artistic technique in Photoshop where two different images (e.g., a dense forest and a human silhouette) are seamlessly blended into a single surreal composition.\n\n💡 **Quick Workflow:**\n1. Take a Portrait and isolate it on a pure white background.\n2. Place your second image (the landscape) over the portrait.\n3. Change the Landscape layer's **Blending Mode** to **Screen** or **Lighten**. The landscape will beautifully map itself exclusively into the dark shadows of the portrait!",
+        chips: ["តើ Blending Modes គឺជាអ្វី? 🎞️", "តើការកាត់តរូបបែប Non-Destructive ជាអ្វី? 🔄"],
+        chips_en: ["What are Blending Modes? 🎞️", "What is Non-Destructive Editing? 🔄"]
+    },
+    {
+        primaryKeys: ['របៀបសរសេរ Prompt សម្រាប់ Midjourney? 🤖', 'Midjourney Prompting Tips? 🤖'],
+        keys: ['midjourney', 'ai image', 'prompt', 'generative ai', 'បង្កើតរូប', 'រូប ai', 'firefly'],
+        regex: ['midjourney', 'prompt', 'ai image', 'generative ai', 'បង្កើតរូប'],
+        answer: "បាទ ក្នុងនាមជាអ្នករចនា ការសរសេរ Prompt បញ្ជា AI (ដូចជា Midjourney ឬ Adobe Firefly) ទាមទាររូបមន្តជាក់លាក់ មិនមែនចេះតែសរសេរប្រយោគវែងៗទេ៖\n\n💡 **រូបមន្ត Prompt អាជីព: [Subject] + [Environment/Lighting] + [Style] + [Technical Parameters]**\n\n* **ឧទាហរណ៍អាក្រក់:** \"គូររូបឆ្កែមួយក្បាលស្អាតៗ\"។\n* **ឧទាហរណ៍ល្អ (Pro):** \"A minimalist vector illustration of a golden retriever, flat design, solid pastel blue background, cinematic lighting, ultra-detailed --ar 16:9 --v 6.0\"\n\nប្រើ AI ដើម្បីបង្កើតទម្រង់ដើម (Base assets) ឬ Icon វានឹងជួយសន្សំពេលអ្នកបានច្រើនម៉ោង!",
+        answer_en: "As a designer, writing prompts for AI (like Midjourney or Adobe Firefly) requires a structural formula, not just typing long sentences:\n\n💡 **Pro Prompt Formula: [Subject] + [Environment/Lighting] + [Style/Medium] + [Technical Parameters]**\n\n* **Bad Example:** \"Draw a nice picture of a dog.\"\n* **Pro Example:** \"A minimalist vector illustration of a golden retriever, flat design, solid pastel blue background, dramatic rim lighting, UI asset --ar 16:9 --v 6.0\"\n\nUse AI to generate base textures, background elements, or 3D icons, then refine them manually in Photoshop to save hours of production time!",
+        chips: ["តើ Designer អាចរកចំណូលអកម្មបានដោយរបៀបណា? 💸", "តើការកាត់តរូបបែប Non-Destructive ជាអ្វី? 🔄"],
+        chips_en: ["How can designers make passive income? 💸", "What is Non-Destructive Editing? 🔄"]
+    },
+    {
+        primaryKeys: ['តើ AI Art មានកម្មសិទ្ធិបញ្ញាដែរឬទេ? 🤖⚖️', 'Can AI Art be copyrighted? 🤖⚖️'],
+        keys: ['ai copyright', 'ច្បាប់ ai', 'midjourney copyright', 'ai art laws', 'កម្មសិទ្ធិបញ្ញា ai'],
+        regex: ['ai copyright', 'ច្បាប់ ai', 'ai art', 'កម្មសិទ្ធិបញ្ញា'],
+        answer: `បាទ នេះជាបញ្ហាច្បាប់ក្តៅគគុកបំផុតនាពេលបច្ចុប្បន្ន! យោងតាមការិយាល័យកម្មសិទ្ធិបញ្ញាសហរដ្ឋអាមេរិក៖\n\n**"រូបភាពដែលបង្កើតដោយ AI សុទ្ធសាធ (ដូចជាវាយ Prompt ចូល Midjourney រួចយករូបនោះមកប្រើ) គឺមិនអាចចុះកម្មសិទ្ធិបញ្ញាបានទេ ព្រោះវាគ្មានការចូលរួមដោយមនុស្ស!"** 🤖\n\n💡 **ដំណោះស្រាយ:** ប្រសិនបើអ្នកចង់ឱ្យរូបនោះក្លាយជារបស់អ្នកស្របច្បាប់ អ្នកត្រូវតែយករូប AI នោះមកកាត់ត លាយបញ្ចូលគ្នា (Compositing) ឬកែប្រែឱ្យខុសប្លែកពីដើមខ្លាំង នៅក្នុងកម្មវិធី Photoshop ទើបច្បាប់ទទួលស្គាល់ថាជាស្នាដៃមនុស្ស។`,
+        answer_en: `This is the most critical modern legal issue for designers! According to the US Copyright Office:\n\n**"Images generated purely by AI (like outputting a Midjourney prompt and using it directly) cannot be copyrighted because they lack human authorship!"** 🤖\n\n💡 **The Workaround:** If you want legal ownership of a design that uses AI, you must heavily manipulate, composite, or transform that AI asset inside Photoshop to the point where it becomes a completely new "human-authored" creative work.`,
+        chips: ["តើការប្រើប្រាស់ Stock Photo មានច្បាប់អ្វីខ្លះ? 📸", "ក្រមសីលធម៌ និងកម្មសិទ្ធិបញ្ញា ⚖️"],
+        chips_en: ["Rules for using Stock Photos? 📸", "Design Ethics & Copyright ⚖️"]
+    },
+    {
+        primaryKeys: ['តើ Chromatic Aberration ជាអ្វី? 📷', 'What is Chromatic Aberration? 📷'],
+        keys: ['chromatic aberration', 'color fringing', 'លម្អៀងពណ៌', 'glitch effect', 'lens effect'],
+        regex: ['chromatic aberration', 'color fringing', 'glitch'],
+        answer: `បាទ **Chromatic Aberration (ការលម្អៀងពណ៌)** គឺជាកំហុសរបស់កែវឡេនកាមេរ៉ា ដែលបរាជ័យក្នុងការប្រមូលផ្តុំពន្លឺពណ៌ទាំងអស់ឱ្យចំចំណុចតែមួយ។ វាបង្កើតជា "គែមពណ៌ខៀវ និងក្រហម" នៅត្រង់ចំណុចដែលមានពន្លឺកាត់គ្នាខ្លាំង។\n\n💡 **ការអនុវត្តក្នុងការរចនា:** ថ្វីត្បិតតែវាជាកំហុសកាមេរ៉ា ប៉ុន្តែអ្នករចនាអាជីពតែងតែយកវាបង្កើតជា Effect នៅក្នុង Photoshop ដើម្បីធ្វើឱ្យរូបភាព 3D ឬគំនូរ Graphic មើលទៅដូចជា "ថតដោយកាមេរ៉ាពិតៗ" ឬប្រើវាដើម្បីបង្កើតជាស្ទីល "Glitch / Retro" ដ៏ឡូយ។`,
+        answer_en: `**Chromatic Aberration (Color Fringing)** is actually a physical flaw in camera lenses where the lens fails to focus all colors to the same convergence point. It creates a noticeable blue/red outline along high-contrast edges.\n\n💡 **Application in Design:** Even though it's an optical flaw, top-tier designers artificially recreate this effect in Photoshop and 3D renders. Adding subtle chromatic aberration makes synthetic graphics feel like they were captured by a "real-world physical camera", or it can be pushed heavily to create a cyberpunk "Glitch" aesthetic.`,
+        chips: ["តើ Depth of Field គឺជាអ្វី? 📷", "តើ Double Exposure ជាអ្វី? 🌑"],
+        chips_en: ["What is Depth of Field? 📷", "What is Double Exposure? 🌑"]
+    },
+
+    // ------------------------------------------
+    // 9. UI/UX, ACCESSIBILITY & PSYCHOLOGY
+    // ------------------------------------------
+    {
+        primaryKeys: ['តើ UI និង UX ខុសគ្នាដូចម្តេច? 📱', 'UI vs UX: What\'s the difference? 📱'],
+        keys: ['ui', 'ux', 'ui/ux', 'user interface', 'user experience', 'ui vs ux'],
+        regex: ['ui', 'ux', 'user interface', 'user experience'],
+        answer: "បាទ ទាំងពីរនេះធ្វើការរួមគ្នា តែមានតួនាទីខុសគ្នាដាច់៖\n\n🎨 **UI (User Interface - ចំណុចប្រទាក់):** ផ្តោតលើភាពស្រស់ស្អាត ពណ៌ ហ្វុនអក្សរ និងរូបរាងប៊ូតុង។ (គិតពីសោភ័ណភាព និងភីកសែល)\n🧠 **UX (User Experience - បទពិសោធន៍):** ផ្តោតលើចិត្តសាស្ត្រ និងលំហូរអ្នកប្រើប្រាស់។ តើចុចប៊ូតុងនេះទៅណា? តើវាមានភាពងាយស្រួលប្រើទេ? (គិតពីតក្កវិជ្ជា និងភាពងាយស្រួល)\n\n💡 **គន្លឹះអ្នកជំនាញ:** UI ប្រៀបដូចជាការលាបពណ៌ផ្ទះឱ្យស្អាត ចំណែក UX គឺជារចនាសម្ព័ន្ធគ្រឹះ និងប្លង់ទ្វារចេញចូលនៃផ្ទះនោះ!",
+        answer_en: "They work together but have fundamentally distinct roles:\n\n🎨 **UI (User Interface):** Handles the aesthetic visuals—colors, typography, spacing, and button styling.\n🧠 **UX (User Experience):** Focuses on psychology, logic, and flow. Is the app intuitively easy to navigate? Does the user get lost?\n\n💡 **Pro Tip:** UI is like the beautiful paint and interior decor of a house, while UX is the structural blueprint and floor plan that makes the house livable!",
+        chips: ["តើដំណើរការរចនា UX មានប៉ុន្មានជំហាន? ⚙️", "តើ Wireframe និង Prototype ខុសគ្នាម៉េច? 📱"],
+        chips_en: ["What is the UX Design Process? ⚙️", "Wireframe vs Prototype? 📱"]
+    },
+    {
+        primaryKeys: ['តើដំណើរការរចនា UX មានប៉ុន្មានជំហាន? ⚙️', 'What is the UX Design Process? ⚙️'],
+        keys: ['ux process', 'design thinking', 'ux workflow', 'ជំហានរចនា ux'],
+        regex: ['ux process', 'design thinking'],
+        answer: "បាទ ដំណើរការរចនា UX អាជីព (Design Thinking) មាន ៥ ជំហាន៖\n\n១. **Empathize:** យល់ចិត្តអ្នកប្រើប្រាស់ (តើគេត្រូវការអ្វី?)។\n២. **Define:** កំណត់បញ្ហាពិតប្រាកដដែលត្រូវដោះស្រាយ។\n៣. **Ideate:** បង្កើតគំនិតដោះស្រាយឱ្យបានច្រើន។\n៤. **Prototype:** ធ្វើគំនូរព្រាងដែលអាចចុចបាន។\n៥. **Test:** យកទៅឱ្យអ្នកប្រើប្រាស់សាកល្បង និងកែលម្អ។",
+        answer_en: "A professional UX workflow follows 5 critical steps:\n\n1. **Empathize:** Research and understand your users' needs.\n2. **Define:** Explicitly state the problem you are solving.\n3. **Ideate:** Brainstorm a wide range of creative solutions.\n4. **Prototype:** Build a clickable representation of the solution.\n5. **Test:** Observe real users interacting with your design and refine it based on feedback.",
+        chips: ["តើ User Persona គឺជាអ្វី? 👤", "តើ Wireframe និង Prototype ខុសគ្នាម៉េច? 📱"],
+        chips_en: ["What is a User Persona? 👤", "Wireframe vs Prototype? 📱"]
+    },
+    {
+        primaryKeys: ['តើ Wireframe និង Prototype ខុសគ្នាម៉េច? 📱', 'Wireframe vs Prototype? 📱'],
+        keys: ['wireframe', 'prototype', 'wireframe vs prototype', 'គំនូរព្រាង'],
+        regex: ['wireframe', 'prototype'],
+        answer: "បាទ ទាំងពីរនេះគឺជាជំហានសំខាន់ក្នុងដំណើរការរចនា UI/UX៖\n\n📝 **Wireframe (គ្រោងឆ្អឹង):** ជាគំនូរព្រាងសខ្មៅ (Low-fidelity) ដែលបង្ហាញតែទីតាំងអត្ថបទ រូបភាព និងប៊ូតុង។ គោលបំណងគឺផ្តោតលើ 'រចនាសម្ព័ន្ធ' ដោយមិនខ្វល់ពីរឿងពណ៌ឡើយ。\n📱 **Prototype (គំរូអន្តរកម្ម):** ជាទម្រង់រចនាសម្រេច (High-fidelity) ដែលអាច 'ចុចបាន'! វាភ្ជាប់ទំព័រមួយទៅទំព័រមួយ (Link) ដើម្បីយកទៅតេស្តមើលដំណើរការប្រើប្រាស់ មុននឹងឱ្យ Developer សរសេរកូដពិតប្រាកដ。\n\n💡 **គន្លឹះអ្នកជំនាញ:** តែងតែឱ្យអតិថិជនយល់ព្រមលើ Wireframe ជាមុនសិន សឹមចាប់ផ្តើមរចនាពណ៌! វានឹងជួយសន្សំពេលអ្នកបានរាប់សប្តាហ៍។",
+        answer_en: "These are critical stages in the UI/UX design pipeline:\n\n📝 **Wireframe:** A low-fidelity, black-and-white sketch that dictates where text, images, and buttons will live. It focuses purely on 'structure' without any aesthetic distractions.\n📱 **Prototype:** A high-fidelity, interactive model. You can actually 'click' the buttons and transition between screens to test the user flow before developers write a single line of code.\n\n💡 **Pro Tip:** Always get client approval on the Wireframe before you add any colors or branding! It will save you weeks of frustrating revisions.",
+        chips: ["តើ User Persona គឺជាអ្វី? 👤", "តើ Design System ជាអ្វី? 🧩"],
+        chips_en: ["What is a User Persona? 👤", "What is a Design System? 🧩"]
+    },
+    {
+        primaryKeys: ['តើ User Persona គឺជាអ្វី? 👤', 'What is a User Persona? 👤'],
+        keys: ['user persona', 'តួអង្គអ្នកប្រើប្រាស់', 'target user', 'profile អ្នកប្រើ'],
+        regex: ['persona'],
+        answer: "បាទ **User Persona** គឺជាតួអង្គសិប្បនិម្មិតដែលតំណាងឱ្យក្រុម 'អតិថិជនគោលដៅ' របស់អ្នក។\n\nវារួមបញ្ចូលព័ត៌មានដូចជា៖ ឈ្មោះ, អាយុ, មុខរបរ, បញ្ហាដែលគេជួបប្រទះ (Pain Points), និងគោលដៅរបស់គេ។ \n💡 **អត្ថប្រយោជន៍:** វាជួយឱ្យអ្នករចនាមិនវង្វេងផ្លូវ! ពេលរចនា អ្នកលែងសួរថា 'តើខ្ញុំចូលចិត្តពណ៌នេះទេ?' តែអ្នកត្រូវសួរថា 'តើ Persona របស់ខ្ញុំចូលចិត្ត និងងាយស្រួលប្រើវាដែរឬទេ?'",
+        answer_en: "**A User Persona** is a fictional character created to represent a specific segment of your target audience.\n\nIt includes details like demographics, goals, frustrations, and behavior patterns.\n💡 **The Benefit:** It keeps the design user-centered. Instead of asking 'Do I like this color?', the designer asks 'Does our Persona need this feature to solve their problem?'",
+        chips: ["តើ Information Architecture (IA) ជាអ្វី? 🏗️", "តើ UI និង UX ខុសគ្នាដូចម្តេច? 📱"],
+        chips_en: ["What is Information Architecture? 🏗️", "UI vs UX: What's the difference? 📱"]
+    },
+    {
+        primaryKeys: ['តើ 8pt Grid System ជាអ្វី? 📱', 'What is the 8pt Grid System? 📱'],
+        keys: ['8pt grid', 'accessibility', 'wcag', 'color blind', 'button state', 'ui accessibility'],
+        regex: ['8pt grid', 'accessibility', 'wcag', 'color blind', 'button state', 'ui access'],
+        answer: "បាទ ការរចនា UI កម្រិតខ្ពស់មិនមែនត្រឹមតែស្អាតទេ តែត្រូវគោរពតាមស្តង់ដារអភិវឌ្ឍន៍៖\n\n- **The 8pt Grid System:** ជាស្តង់ដារគណិតវិទ្យាសម្រាប់គម្លាត (Margin/Padding)។ យើងប្រើលេខគុណនឹង ៨ (8, 16, 24, 32, 64px) ដើម្បីធានាថាអេក្រង់មើលទៅមានមាត្រដ្ឋានច្បាស់លាស់គ្រប់ទូរស័ព្ទទាំងអស់。\n- **Button States:** ប៊ូតុងត្រូវមានទម្រង់ផ្សេងគ្នាពេលនៅធម្មតា (Default), ពេលយកម៉ៅស៍ដាក់ពីលើ (Hover), និងពេលចុច (Active)。\n- **WCAG Accessibility (ភាពងាយស្រួលប្រើប្រាស់):** អក្សរត្រូវមាន Contrast ខ្លាំងដាច់ពី Background ដើម្បីឱ្យអ្នកមានបញ្ហាភ្នែកអាចអានបាន។ ពិសេសជាងនេះទៅទៀត កុំពឹងផ្អែកតែលើពណ៌ 'ក្រហម' ឬ 'បៃតង' ដើម្បីបង្ហាញពីកំហុស ឬជោគជ័យ ព្រោះវាប៉ះពាល់ដល់អ្នកដែលមានបញ្ហាងងឹតពណ៌ (Color Blindness) ត្រូវតែភ្ជាប់មកជាមួយ Icon ឬអក្សរបញ្ជាក់ជានិច្ច!",
+        answer_en: "High-level UI design follows strict development standards:\n\n- **The 8pt Grid System:** The mathematical standard for UI spacing using multiples of 8 (8, 16, 24, 32, 64px) to ensure pixel-perfect scaling.\n- **Button States:** Designing distinct visuals for Default, Hovered, or Active states.\n- **WCAG Accessibility:** Ensuring text contrast ratios are at least 4.5:1. Never rely on color alone (like red/green) to convey meaning; always use icons or labels for colorblind accessibility.",
+        chips: ["តើ CTA (Call to Action) គឺជាអ្វី? 🖱️", "តើ Responsive Design គឺជាអ្វី? 💻"],
+        chips_en: ["What is a CTA (Call to Action)? 🖱️", "What is Responsive Design? 💻"]
+    },
+    {
+        primaryKeys: ['តើ Responsive Design គឺជាអ្វី? 💻', 'What is Responsive Design? 💻'],
+        keys: ['responsive', 'mobile friendly', 'ប្លង់បត់បែន', 'breakpoint', 'fluid layout'],
+        regex: ['responsive'],
+        answer: "បាទ **Responsive Design** គឺជាបច្ចេកទេសរចនាប្លង់ឱ្យ 'បត់បែន' ទៅតាមទំហំអេក្រង់ឧបករណ៍ (ទូរស័ព្ទ, Tablet, កុំព្យូទ័រ)។\n\n- **Fluid Grids:** ធាតុក្នុងប្លង់រីករួមជាភាគរយ (%) មិនមែនទំហំថេរ (px) ទេ។\n- **Breakpoints:** ជាចំណុចដែលប្លង់ផ្លាស់ប្តូរទម្រង់ (ឧ. ពី ៣ ជួរឈរលើ Desktop មកសល់តែ ១ ជួរឈរលើ Mobile)។\n💡 **Mobile-First:** យុទ្ធសាស្ត្ររចនាសម្រាប់អេក្រង់តូចបំផុតមុនគេ រួចសឹមពង្រីកទៅអេក្រង់ធំតាមក្រោយ។",
+        answer_en: "**Responsive Design** builds layouts that adapt to the user's screen size.\n\n- **Fluid Grids:** Elements resize via percentages (%) instead of fixed pixels.\n- **Breakpoints:** Specific widths where the layout shifts (e.g., from 3 columns to 1).\n💡 **Mobile-First:** Designing for the smallest screen first, then scaling up for complexity.",
+        chips: ["តើ 8pt Grid System ជាអ្វី? 📱", "តើ Information Architecture (IA) ជាអ្វី? 🏗️"],
+        chips_en: ["What is the 8pt Grid System? 📱", "What is Information Architecture? 🏗️"]
+    },
+    {
+        primaryKeys: ['តើ CTA (Call to Action) គឺជាអ្វី? 🖱️', 'What is a CTA (Call to Action)? 🖱️'],
+        keys: ['cta', 'call to action', 'ប៊ូតុង cta', 'what is a cta', 'button design'],
+        regex: ['cta', 'call to action', 'ប៊ូតុង'],
+        answer: "បាទ **CTA (Call to Action)** គឺជាធាតុដ៏សំខាន់បំផុតមួយនៅក្នុង UI/UX Design និងទីផ្សារ។ វាច្រើនតែជា 'ប៊ូតុង' ដែលញុះញង់ឱ្យអ្នកប្រើប្រាស់ធ្វើសកម្មភាពភ្លាមៗ (ឧ. \"ទិញឥឡូវនេះ\", \"ចុះឈ្មោះ\", \"Download\")。\n\n**ក្បួនរចនា CTA ឱ្យមានប្រសិទ្ធភាព៖**\n១. **Contrast ខ្ពស់:** ពណ៌ប៊ូតុង CTA ត្រូវតែលេចធ្លោជាងគេបង្អស់នៅលើអេក្រង់ (ប្រើច្បាប់ពណ៌ ១០% Accent Color)。\n២. **មាន White Space ជុំវិញ:** កុំដាក់ប៊ូតុងកៀកនឹងអត្ថបទពេក ត្រូវទុកឱ្យវាមានខ្យល់ដកដង្ហើមទើបគេងាយចុច。\n៣. **ពាក្យពេចន៍ច្បាស់លាស់:** ជៀសវាងពាក្យ 'Submit' គួរប្រើពាក្យដែលមានន័យចំៗដូចជា 'ទទួលយកសៀវភៅឥតគិតថ្លៃ' ជាដើម។",
+        answer_en: "**CTA (Call to Action)** is a prominent button designed to provoke an immediate response.\n\n**Effective CTA Rules:**\n1. **High Contrast:** Use the 10% Accent color to make it pop.\n2. **White Space:** Surround the button with space to prevent mis-clicks.\n3. **Action Language:** Use specific verbs like 'Download Now' instead of generic ones like 'Submit'.",
+        chips: ["តើ UI និង UX ខុសគ្នាដូចម្តេច? 📱", "អ្វីទៅជា White Space? 🤍"],
+        chips_en: ["UI vs UX: What's the difference? 📱", "What is White Space? 🤍"]
+    },
+    {
+        primaryKeys: ['តើ Micro-interactions ជាអ្វី? ✨', 'What are Micro-interactions? ✨'],
+        keys: ['micro-interaction', 'hover effect', 'animation', 'feedback ui', 'ចលនាតូចៗ'],
+        regex: ['micro-interaction', 'interaction'],
+        answer: "បាទ **Micro-interactions** គឺជាចលនាអន្តរកម្មតូចៗដែលកើតឡើងពេលអ្នកប្រើប្រាស់ធ្វើសកម្មភាពអ្វីមួយ។\n\n- **ឧទាហរណ៍:** ប៊ូតុងរីកធំបន្តិចពេលយកម៉ៅស៍ដាក់ពីលើ (Hover), សញ្ញា Like រំញ័រពេលចុច, ឬរបារ Loading រត់。\n- **អត្ថប្រយោជន៍:** វានាំមកនូវ 'ភាពរស់រវើក' និងផ្តល់ការបញ្ជាក់ (Feedback) ទៅអ្នកប្រើប្រាស់ថា 'សកម្មភាពរបស់អ្នកត្រូវបានទទួលស្គាល់ហើយ'។ វាធ្វើឱ្យ App មើលទៅមានតម្លៃថ្លៃ!",
+        answer_en: "**Micro-interactions** are functional animations that occur in response to a user action.\n\n- **Examples:** Button hover states, a pulsing 'like' heart, or pull-to-refresh animations.\n- **The Benefit:** They provide feedback, guide the user, and make the interface feel 'human' and high-end.",
+        chips: ["តើ Responsive Design គឺជាអ្វី? 💻", "តើ Flat Design និង Neumorphism ជាអ្វី? 💠"],
+        chips_en: ["What is Responsive Design? 💻", "Flat Design vs Neumorphism? 💠"]
+    },
+    {
+        primaryKeys: ['តើ Information Architecture (IA) ជាអ្វី? 🏗️', 'What is Information Architecture? 🏗️'],
+        keys: ['information architecture', 'ia', 'sitemap', 'navigation design', 'រចនាសម្ព័ន្ធព័ត៌មាន'],
+        regex: ['information architecture', 'ia', 'sitemap'],
+        answer: "បាទ **Information Architecture (IA)** គឺជាការរៀបចំរចនាសម្ព័ន្ធព័ត៌មានក្នុង App ឬ Web ឱ្យមានសណ្តាប់ធ្នាប់។\n\nវាដូចជាការធ្វើ 'មាតិកា' ឬ 'ប្លង់មេ' មុននឹងសាងសង់ផ្ទះអញ្ចឹង។ \n- **ឧបករណ៍សំខាន់:** Sitemap (ផែនទីវេបសាយ) គឺជួយឱ្យយើងដឹងថា ទំព័រណាជាទំព័រមេ ហើយទំព័រណាខ្លះនៅពីក្រោមវា។ បើ IA មិនល្អ អ្នកប្រើប្រាស់នឹងវង្វេងផ្លូវ រកអ្វីមិនឃើញឡើយ!",
+        answer_en: "**Information Architecture (IA)** is the structural design of shared information—the blueprint for how content is organized.\n\n- **Key Tool:** The **Sitemap**. It visualizes the hierarchy and navigation paths.\n- **The Goal:** To help users find information and complete tasks with minimum effort.",
+        chips: ["តើដំណើរការរចនា UX មានប៉ុន្មានជំហាន? ⚙️", "តើ User Persona គឺជាអ្វី? 👤"],
+        chips_en: ["What is the UX Design Process? ⚙️", "What is a User Persona? 👤"]
+    },
+    {
+        primaryKeys: ['តើ Design System ជាអ្វី? 🧩', 'What is a Design System? 🧩'],
+        keys: ['design system', 'ប្រព័ន្ធរចនា', 'ui kit'],
+        regex: ['design system', 'ប្រព័ន្ធរចនា', 'ui kit'],
+        answer: "បាទ **Design System (ប្រព័ន្ធរចនា)** គឺជាបណ្តុំនៃច្បាប់ កូដពណ៌ ហ្វុនអក្សរ និង UI Components (ដូចជាប៊ូតុង Icon) ដែលរៀបចំទុកជាស្តង់ដារតែមួយ សម្រាប់ក្រុមហ៊ុនទាំងមូលប្រើប្រាស់រួមគ្នា។\n\n* **អត្ថប្រយោជន៍:** វាធានាថាការរចនា App, Website និង Poster របស់ក្រុមហ៊ុននោះ មានទម្រង់ដូចគ្នា (Consistency) ១០០% ទោះបីជាអ្នករចនាមាន ១០ នាក់ផ្សេងគ្នាក៏ដោយ。\n\n💡 **គន្លឹះអ្នកជំនាញ:** នៅក្នុង Figma, អ្នករចនាតែងតែបង្កើត 'UI Kit' និង 'Variables' ដើម្បីចងក្រង Design System। ពេលគេដូរពណ៌ប៊ូតុងមេមួយ ប៊ូតុងរាប់រយទៀតនៅគ្រប់ទំព័រនឹងប្រែពណ៌តាមដោយស្វ័យប្រវត្តិ!",
+        answer_en: "A **Design System** is a centralized library of brand rules, components, and standards shared across an entire company.\n\n* **The Benefit:** It guarantees 100% consistency, regardless of how many designers are working on the project.\n\n💡 **Pro Tip:** If you change a color in the Master UI Kit, every instance of that color across dozens of screens updates automatically.",
+        chips: ["តើ Brand Guidelines ជាអ្វី? 📖", "តើ 8pt Grid System ជាអ្វី? 📱"],
+        chips_en: ["What are Brand Guidelines? 📖", "What is the 8pt Grid System? 📱"]
+    },
+    {
+        primaryKeys: ['តើ Dark Patterns ជាអ្វី? 🚫', 'What are Dark Patterns? 🚫'],
+        keys: ['dark patterns', 'ux ethics', 'បោកប្រាស់អ្នកប្រើ', 'deceptive design'],
+        regex: ['dark pattern'],
+        answer: "បាទ **Dark Patterns** គឺជាយុទ្ធសាស្ត្ររចនា UI/UX បែប 'អសីលធម៌' ដែលបោកបញ្ឆោតអ្នកប្រើប្រាស់ឱ្យធ្វើអ្វីដែលគេមិនចង់ធ្វើ។\n\n- **ឧទាហរណ៍:** ការលាក់ប៊ូតុង 'Unsubscribe' ឱ្យពិបាករក, ការដាក់ថ្លៃសេវាលាក់កំបាំងពេលជិតបង់លុយ, ឬការរចនាឱ្យអ្នកប្រើច្រឡំចុចព្រមព្រៀងអ្វីមួយ。\n💡 **ចងចាំ:** ក្នុងនាមជាអ្នករចនាអាជីព ត្រូវជៀសវាង Dark Patterns ដាច់ខាត! ទំនុកចិត្តអតិថិជនគឺសំខាន់ជាងការចំណេញរយៈពេលខ្លី។",
+        answer_en: "**Dark Patterns** are deceptive UI/UX design tricks used to manipulate users into doing things they didn't intend to do.\n\n- **Examples:** Hidden costs, bait-and-switch, or difficult 'unsubscription' loops.\n💡 **Pro Tip:** Maintain ethical standards; long-term brand trust is worth more than short-term gains.",
+        chips: ["តើ UI និង UX ខុសគ្នាដូចម្តេច? 📱", "ពណ៌សម្រាប់អ្នកមានបញ្ហាភ្នែក (Accessibility) 👁️"],
+        chips_en: ["UI vs UX: What's the difference? 📱", "Color Accessibility & Contrast? 👁️"]
+    },
+    {
+        primaryKeys: ['តើ Flat Design និង Neumorphism ជាអ្វី? 💠', 'Flat Design vs Neumorphism? 💠'],
+        keys: ['flat design', 'skeuomorphism', 'neumorphism', 'design trends', 'ui style'],
+        regex: ['flat design', 'skeuomorphism', 'neumorphism', 'trend'],
+        answer: "បាទ នៅក្នុងប្រវត្តិសាស្ត្ររចនា UI ស្ទីល (Trends) តែងតែប្រែប្រួលជានិច្ច៖\n\n១. **Skeuomorphism (ยุគដំបូង):** រចនាឱ្យមើលទៅដូចវត្ថុពិតៗក្នុងជីវិត (ឧ. រូប Icon កាមេរ៉ាមានស្រមោល និងពន្លឺផ្លេកៗដូចកញ្ចក់ពិត)។ ពេញនិយមខ្លាំងជំនាន់ iPhone ដំបូង。\n២. **Flat Design (បច្ចុប្បន្ន):** ការបោះបង់ចោលស្រមោល និងកម្រិត 3D ទាំងអស់។ ប្រើតែពណ៌រាបស្មើ និងរូបរាងសាមញ្ញបំផុត ដើម្បីឱ្យ Web ដើរលឿន និងមើលទៅទាន់សម័យ (ឧ. Logo Microsoft ថ្មី)。\n៣. **Neumorphism (កូនកាត់):** ជាស្ទីល UI មួយដែលលាយបញ្ចូល Flat ជាមួយស្រមោលទន់ៗ ធ្វើឱ្យប៊ូតុងមើលទៅដូចជាលៀនផុសចេញពីផ្ទៃខាងក្រោយរលោងៗ។",
+        answer_en: "Throughout UI history, trends have evolved significantly:\n\n1. **Skeuomorphism:** Hyper-realistic objects (early iPhone style).\n2. **Flat Design:** Solid colors and minimal shapes for fast loading and clarity.\n3. **Neumorphism:** A hybrid style using soft shadows to make buttons look like they are 'extruded' from the background.",
+        chips: ["តើ Glassmorphism ជាអ្វី? 🪟", "តើ Bento Box UI ជាអ្វី? 🍱"],
+        chips_en: ["What is Glassmorphism? 🪟", "What is Bento Box UI? 🍱"]
+    },
+    {
+        primaryKeys: ['តើ Glassmorphism ជាអ្វី? 🪟', 'What is Glassmorphism? 🪟'],
+        keys: ['glassmorphism', 'glass effect', 'កញ្ចក់', 'ui trend'],
+        regex: ['glassmorphism', 'glass effect', 'កញ្ចក់'],
+        answer: "បាទ **Glassmorphism (ស្ទីលកញ្ចក់ព្រិល)** គឺជា UI Trend កម្រិតខ្ពស់ ដែលរចនាផ្ទាំងនីមួយៗឱ្យមើលទៅដូចជា 'កញ្ចក់ថ្លា' ដាក់ត្រួតពីលើគ្នា។\n\n* **លក្ខណៈសម្គាល់:** វាមាន Background Blur (ធ្វើឱ្យផ្ទៃខាងក្រោយព្រិល), ស៊ុមពណ៌សស្តើងៗ (White border) បង្កើតពន្លឺចំណាំងផ្លាត, និងពណ៌ Pastel ទន់ភ្លន់នៅពីក្រោយ。\n\n💡 **គន្លឹះអ្នកជំនាញ:** Apple ប្រើប្រាស់ Glassmorphism យ៉ាងខ្លាំងនៅក្នុង iOS និង macOS ជំនាន់ថ្មី ដើម្បីបង្កើតជម្រៅ (Depth) ដោយឱ្យអ្នកប្រើប្រាស់មានអារម្មណ៍ថាដឹងពីអ្វីដែលនៅពីក្រោយផ្ទាំងនោះ!",
+        answer_en: "**Glassmorphism** makes interface elements look like frosted glass stacked on top of each other.\n\n* **Key Characteristics:** Heavy background blur, thin semi-transparent white borders, and vivid pastel colors behind it.\n💡 **Pro Tip:** Apple uses this extensively in iOS to establish hierarchy and depth.",
+        chips: ["តើ Flat Design និង Neumorphism ជាអ្វី? 💠", "តើ Bento Box UI ជាអ្វី? 🍱"],
+        chips_en: ["Flat Design vs Neumorphism? 💠", "What is Bento Box UI? 🍱"]
+    },
+    {
+        primaryKeys: ['តើ Bento Box UI ជាអ្វី? 🍱', 'What is Bento Box UI? 🍱'],
+        keys: ['bento box', 'bento ui', 'bento grid', 'apple grid'],
+        regex: ['bento'],
+        answer: "បាទ **Bento Box UI** គឺជា Trend រៀបចំប្លង់ដ៏ពេញនិយមបំផុតបច្ចុប្បន្ន ដែលយកលំនាំតាម 'ប្រអប់បាយ Bento របស់ជប៉ុន'! 🍱\n\n* **លក្ខណៈសម្គាល់:** បែងចែកអេក្រង់ទៅជាប្រអប់តូចធំខុសៗគ្នា (រាងជ្រុងកោងមូល) ដាក់តម្រៀបគ្នាយ៉ាងមានសណ្តាប់ធ្នាប់ ដូចប្រអប់បាយដែលមានកន្លែងដាក់សាច់ បន្លែ ដាច់ៗពីគ្នា。\n* **អត្ថប្រយោជន៍:** វាជួយឱ្យការរៀបចំទិន្នន័យច្រើនៗ មើលទៅស្រឡះ ងាយស្រួលអាន និងទាក់ទាញភ្នែកខ្លាំង。\n\n💡 **គន្លឹះអ្នកជំនាញ:** Apple តែងតែប្រើប្រាស់ Bento Grid នេះនៅរាល់ពេលធ្វើបទបង្ហាញបង្ហាញពីលក្ខណៈពិសេសថ្មីៗរបស់ iPhone (Apple Keynote slides)!",
+        answer_en: "**Bento Box UI** is inspired by Japanese lunchboxes, organizing content into distinctly sized rounded boxes.\n\n* **Benefit:** It makes complex information highly scannable and visually fun.\n💡 **Pro Tip:** Apple uses this in almost all Keynote presentations to summarize feature sets.",
+        chips: ["តើ Grid System គឺជាអ្វី? 📐", "តើ Glassmorphism ជាអ្វី? 🪟"],
+        chips_en: ["What is a Grid System? 📐", "What is Glassmorphism? 🪟"]
+    },
+    {
+        primaryKeys: ['តើ Heuristic Evaluation របស់ Nielsen ជាអ្វី? 📋', 'What is Nielsen\'s Heuristic Evaluation? 📋'],
+        keys: ['nielsen', 'heuristic', 'usability testing', 'ក្បួនវាយតម្លៃ', 'ux review'],
+        regex: ['nielsen', 'heuristic'],
+        answer: `បាទ **Nielsen's 10 Heuristics** គឺជាក្រឹត្យក្រមមាសទាំង ១០ សម្រាប់វាយតម្លៃគុណភាពនៃការរចនា UI/UX (បង្កើតឡើងដោយ Jakob Nielsen)៖\n\nចំណុចសំខាន់ៗបំផុតរួមមាន៖\n១. **Visibility of system status:** ប្រាប់អ្នកប្រើឱ្យដឹងជានិច្ចថាកំពុងមានរឿងអ្វីកើតឡើង (ឧ. របារ Loading)។\n២. **User control and freedom:** ត្រូវមានប៊ូតុង "Undo" ឬ "ថយក្រោយ" ជានិច្ច ក្រែងលោអ្នកប្រើចុចខុស។\n៣. **Error prevention:** រចនាប្រព័ន្ធការពារកុំឱ្យអ្នកប្រើប្រាស់ធ្វើខុសតាំងពីដំបូង។\nអ្នករចនាអាជីពតែងតែយកក្បួននេះមកឆែកមើល App របស់ខ្លួន មុននឹងបញ្ចេញឱ្យប្រើប្រាស់!`,
+        answer_en: `**Nielsen's 10 Heuristics** are the industry-standard rules for measuring UI/UX usability (created by Jakob Nielsen).\n\nTop principles include:\n1. **Visibility of system status:** Always keep the user informed about what is going on (e.g., Loading bars).\n2. **User control and freedom:** Always provide an "Emergency Exit" or "Undo" button when users inevitably click the wrong thing.\n3. **Error prevention:** Design interfaces that prevent a problem from occurring in the first place.\nUX professionals strictly audit their apps against these 10 rules before launching!`,
+        chips: ["តើ Information Architecture (IA) ជាអ្វី? 🏗️", "តើដំណើរការរចនា UX មានប៉ុន្មានជំហាន? ⚙️"],
+        chips_en: ["What is Information Architecture? 🏗️", "What is the UX Design Process? ⚙️"]
+    },
+    
+    // ------------------------------------------
+    // 10. PSYCHOLOGY & UX LAWS
+    // ------------------------------------------
+    {
+        primaryKeys: ['តើ Fitts\'s Law ជាអ្វី? 🎯', 'What is Fitts\'s Law? 🎯'],
+        keys: ['fitts law', 'fitt law', 'ux law', 'ច្បាប់ ux', 'target size'],
+        regex: ['fitt'],
+        answer: "បាទ **Fitts's Law (ច្បាប់របស់ហ្វីត)** គឺជាច្បាប់ UX ដ៏សំខាន់ ដែលចែងថា៖ «ពេលវេលាដែលតម្រូវឱ្យអ្នកប្រើប្រាស់ចុចលើគោលដៅមួយ គឺអាស្រ័យលើ 'ចម្ងាយ' និង 'ទំហំ' នៃគោលដៅនោះ»។ 🎯\n\n* **ការអនុវត្ត:** ប៊ូតុងសំខាន់ៗ (ដូចជាប៊ូតុងទិញ ឬ Submit) ត្រូវតែមានទំហំធំល្មមងាយស្រួលចុច (ជាពិសេសលើទូរស័ព្ទ)។ ហើយវាត្រូវតែស្ថិតនៅជិតម្រាមដៃរបស់អ្នកប្រើប្រាស់ (ឧ. ប៊ូតុងបញ្ជាដែលនៅខាងក្រោមអេក្រង់ទូរស័ព្ទ ទាញយកមកកៀកមេដៃ)。\n\n💡 **គន្លឹះអ្នកជំនាញ:** ហាមរចនាប៊ូតុង CTA តូចពេក ឬដាក់វានៅកន្លែងដែលពិបាកឈោងដល់ វាធ្វើឱ្យអតិថិជនធុញ និងបោះបង់ការទិញ!",
+        answer_en: "**Fitts's Law** states that the time to acquire a target is a function of the distance to and size of the target. 🎯\n\n* **Application:** Interactive elements must be large enough to accurately select and placed in areas of the screen that are easy to reach (like the bottom 'thumb zone' on mobile).\n\n💡 **Pro Tip:** Never make a primary button tiny or hide it in a corner. Friction causes users to abandon their tasks!",
+        chips: ["តើ Jakob's Law ជាអ្វី? 🌐", "តើ CTA (Call to Action) គឺជាអ្វី? 🖱️"],
+        chips_en: ["What is Jakob's Law? 🌐", "What is a CTA (Call to Action)? 🖱️"]
+    },
+    {
+        primaryKeys: ['តើ Jakob\'s Law ជាអ្វី? 🌐', 'What is Jakob\'s Law? 🌐'],
+        keys: ['jakob law', 'user expectation', 'ទម្លាប់អ្នកប្រើ', 'familiarity'],
+        regex: ['jakob'],
+        answer: "បាទ **Jakob's Law** លើកឡើងថា៖ «អ្នកប្រើប្រាស់ចំណាយពេលភាគច្រើនលើ 'វេបសាយដទៃទៀត'»។ 🌐\n\nនេះមានន័យថាពួកគេចង់ឱ្យ App របស់អ្នកដំណើរការដូចទៅនឹង App ដែលពួកគេធ្លាប់ស្គាល់រួចមកហើយ។\n💡 **ការអនុវត្ត:** កុំព្យាយាមច្នៃប្រឌិតអ្វីដែលប្លែកខ្លាំងរហូតដល់គេរកផ្លូវមិនឃើញ។ ឧទាហរណ៍៖ សញ្ញារូបកន្ត្រកទិញទំនិញ (Cart) គួរតែនៅស្តាំខាងលើជានិច្ច ព្រោះជាទម្លាប់ដែលមនុស្សគ្រប់គ្នាដឹង។",
+        answer_en: "**Jakob's Law** states that users spend most of their time on *other* sites. 🌐\n\nThis means users prefer your site to work the same way as all the other sites they already know.\n💡 **Application:** Leverage existing mental models. Don't reinvent common navigation patterns. For example, users expect a search bar at the top or a profile icon at the top right. Consistency reduces frustration.",
+        chips: ["តើ Aesthetic-Usability Effect ជាអ្វី? ✨", "តើដំណើរការរចនា UX មានប៉ុន្មានជំហាន? ⚙️"],
+        chips_en: ["Aesthetic-Usability Effect? ✨", "What is the UX Design Process? ⚙️"]
+    },
+    {
+        primaryKeys: ['តើទ្រឹស្តី Gestalt ជាអ្វី? 🧩', 'Explain Gestalt Psychology 🧩'],
+        keys: ['gestalt', 'closure', 'invariance', 'common fate', 'ចិត្តសាស្ត្រ'],
+        regex: ['gestalt', 'closure', 'invariance', 'common fate', 'ចិត្តសាស្ត្រ'],
+        answer: "បាទ **ទ្រឹស្តី Gestalt** បង្រៀនពីរបៀបដែលខួរក្បាលមនុស្សសម្រួលរូបភាពស្មុគស្មាញដោយស្វ័យប្រវត្តិ៖\n\n- **Closure (ការបិទជិត):** ខួរក្បាលបំពេញចន្លោះប្រហោងដោយខ្លួនឯង ទោះគំនូរគូរមិនជិតក៏ដោយ (ឧ. ការប្រើប្រាស់ Negative Space ក្នុងឡូហ្គោរាងខ្លាឃ្មុំ WWF)។\n- **Figure/Ground:** ការប្រើភាពព្រិល (Blur) ឬ Contrast ដើម្បីផ្តាច់វត្ថុសំខាន់ចេញពីផ្ទៃខាងក្រោយ ធ្វើឱ្យប៊ូតុងអន្តរកម្មលេចធ្លោឡើង។\n- **Common Fate:** ការចាត់ក្រុមធាតុដែលផ្លាស់ទីក្នុងទិសដៅតែមួយចូលគ្នា (សំខាន់បំផុតសម្រាប់ Motion Graphic និងអន្តរកម្មតូចៗ Micro-interactions)។",
+        answer_en: "**Gestalt Psychology** describes how the brain perceives visual elements as a whole rather than separate parts:\n\n- **Closure:** The brain completes incomplete shapes (essential for clever logo design).\n- **Figure/Ground:** Our eyes differentiate an object from its surrounding area (background).\n- **Common Fate:** Elements moving in the same direction are perceived as more related than stationary elements.",
+        chips: ["តើ Miller's Law គឺជាអ្វី? 7️⃣", "អ្វីទៅជា White Space? 🤍"],
+        chips_en: ["What is Miller's Law? 7️⃣", "What is White Space? 🤍"]
+    },
+    {
+        primaryKeys: ['តើ Miller\'s Law គឺជាអ្វី? 7️⃣', 'What is Miller\'s Law? 7️⃣'],
+        keys: ['millers law', 'miller law', 'magic number 7', 'chunking', 'ព័ត៌មានច្រើន'],
+        regex: ['miller'],
+        answer: "បាទ **Miller's Law** ចែងថា មនុស្សជាមធ្យមអាចចងចាំរបស់បានត្រឹមតែ **៧ (បូកដក ២)** ប៉ុណ្ណោះក្នុងអង្គចងចាំរយៈពេលខ្លី។ 7️⃣\n\n💡 **ការអនុវត្ត:** កុំដាក់ជម្រើសក្នុង Menu ច្រើនពេក! បើមានព័ត៌មានច្រើន ត្រូវចេះប្រើបច្ចេកទេស **'Chunking'** (ការចាត់ជាក្រុមតូចៗ) ដើម្បីឱ្យអ្នកប្រើប្រាស់ងាយស្រួលចំណាំ និងមិនធុញទ្រាន់។",
+        answer_en: "**Miller's Law** states that the average person can only keep **7 (plus or minus 2)** items in their working memory. 7️⃣\n\n💡 **Application:** Avoid overwhelming users with too many choices at once. Use **'Chunking'** to group information into smaller, manageable units (like grouping form fields or limiting navigation links to 5-7 items).",
+        chips: ["តើ Hick's Law ជាអ្វី? 🧠", "តើ User Persona គឺជាអ្វី? 👤"],
+        chips_en: ["What is Hick's Law? 🧠", "What is a User Persona? 👤"]
+    },
+    {
+        primaryKeys: ['តើ Hick\'s Law ជាអ្វី? 🧠', 'What is Hick\'s Law? 🧠'],
+        keys: ['hicks law', 'hick law', 'cognitive load', 'minimalism', 'សាមញ្ញ', 'ភាពសាមញ្ញ'],
+        regex: ['hick', 'cognitive', 'minimal', 'សាមញ្ញ'],
+        answer: "បាទ **Hick's Law** ចែងថាកាលណាជម្រើសកាន់តែច្រើន ពេលវេលាដែលអតិថិជនត្រូវសម្រេចចិត្តកាន់តែយូរ! ដូច្នេះការរចនាត្រូវកាត់បន្ថយ **Cognitive Load (បន្ទុកខួរក្បាល)** ដោយផ្តល់ជម្រើសតិចតួច។\n\n**Minimalism (ភាពសាមញ្ញ)** មិនមែនមានន័យថាទទេស្អាតទេ តែមានន័យថា 'គ្មានអ្វីដែលឥតប្រយោជន៍'។ ការលុបចោលស្រមោល ពណ៌ឆើតច្រើនពេក ឬបន្ទាត់តុបតែងដែលមិនបម្រើមុខងារច្បាស់លាស់ នឹងធ្វើឱ្យការរចនាមើលទៅមានភាពថ្លៃថ្នូរ និង Premium ដូចជាម៉ាក Apple អញ្ចឹង។ មុននឹង Save ឯកសារចុងក្រោយ សួរខ្លួនឯងថា 'តើខ្ញុំអាចលុបអ្វីចេញបានមួយទៀត ដោយមិនខូចអត្ថន័យដើម?'",
+        answer_en: "**Hick's Law** predicts that the time it takes to make a decision increases with the number and complexity of choices. 🧠\n\n💡 **Pro Tip:** Simplify complex processes. Use 'Progressive Disclosure' to show only the information needed at that moment. Ask yourself: 'Can I delete one more element without losing the meaning?'",
+        chips: ["តើ F-Pattern និង Z-Pattern ជាអ្វី? 👁️", "តើ Aesthetic-Usability Effect ជាអ្វី? ✨"],
+        chips_en: ["F and Z Scanning Patterns? 👁️", "Aesthetic-Usability Effect? ✨"]
+    },
+    {
+        primaryKeys: ['តើ Aesthetic-Usability Effect ជាអ្វី? ✨', 'What is the Aesthetic-Usability Effect? ✨'],
+        keys: ['aesthetic usability', 'ស្អាតងាយប្រើ', 'visual appeal psychology'],
+        regex: ['aesthetic.*usability'],
+        answer: "បាទ នេះជាល្បិចចិត្តសាស្ត្រដ៏អស្ចារ្យ! **Aesthetic-Usability Effect** បញ្ជាក់ថា៖ «អ្នកប្រើប្រាស់តែងតែយល់ថា ការរចនាដែល 'ស្អាត' គឺជាការរចនាដែល 'ងាយស្រួលប្រើ'»។ ✨\n\nទោះបីជា App នោះមានកំហុសបន្តិចបន្តួច (Bugs) ក៏ដោយ ក៏អ្នកប្រើប្រាស់មានទំនោរអត់ឱនឱ្យច្រើនជាង App ដែលមើលទៅអាក្រក់។ ដូច្នេះ សោភ័ណភាពមិនមែនសម្រាប់តែលម្អទេ តែវាជួយបង្កើនទំនុកចិត្ត!",
+        answer_en: "The **Aesthetic-Usability Effect** refers to users' tendency to perceive attractive products as more usable. ✨\n\nUsers are often more patient with minor usability issues if the design is visually stunning. Aesthetics create a positive emotional response, which makes people more tolerant of friction. Great UI actually improves perceived UX!",
+        chips: ["តើ Jakob's Law ជាអ្វី? 🌐", "តើទ្រឹស្តី Gestalt ជាអ្វី? 🧩"],
+        chips_en: ["What is Jakob's Law? 🌐", "Explain Gestalt Psychology 🧩"]
+    },
+    {
+        primaryKeys: ['តើ F-Pattern និង Z-Pattern ជាអ្វី? 👁️', 'F and Z Scanning Patterns? 👁️'],
+        keys: ['f pattern', 'z pattern', 'scanning', 'ខ្សែភ្នែក', 'rule of odds'],
+        regex: ['f pattern', 'z pattern', 'scanning', 'ខ្សែភ្នែក', 'rule of odds'],
+        answer: "បាទ អ្នករចនាអាជីពតែងទស្សន៍ទាយចលនាភ្នែកអាន (Scanning Patterns) ជានិច្ច ដោយផ្អែកលើដង់ស៊ីតេនៃមាតិកា៖\n\n- **F-Pattern (សម្បូរអត្ថបទ):** ភ្នែកអានផ្តេកលើ រួចទម្លាក់តាមគែមឆ្វេង (សាកសមសម្រាប់ Blog)។ ត្រូវដាក់ចំណងជើងទាក់ទាញនៅគែមលើនិងឆ្វេង។\n- **Z-Pattern (សម្បូររូបភាព):** ភ្នែករត់ពីឆ្វេងលើខ្វែងមកស្តាំក្រោម។ សាកសមបំផុតសម្រាប់ទំព័រ Landing Page ដោយដាក់ប៊ូតុងចុច (CTA) នៅចុងបញ្ចប់ខ្សែភ្នែកខាងស្តាំក្រោមបំផុត។\n\n💡 **ចំណាំ (Rule of Odds):** ខួរក្បាលមនុស្សទាក់ទាញនឹងវត្ថុដែលមានចំនួនសេស (៣, ៥) ជាងចំនួនគូ ដែលធ្វើឱ្យវាមើលទៅរស់រវើកនិងមិនសូវស្ងប់ស្ងាត់ពេក។",
+        answer_en: "**F-Pattern:** Users scan text-heavy pages in an 'F' shape. Place key info along the top and left. \n**Z-Pattern:** Users scan visual pages in a 'Z' shape (Top left -> Top right -> Bottom left -> Bottom right). \n💡 **Pro Tip:** Always place your primary Call-to-Action (CTA) at the end of the scan path!",
+        chips: ["តើ Zeigarnik Effect ជាអ្វី? ⏳", "តើ Peak-End Rule ជាអ្វី? 📈"],
+        chips_en: ["What is the Zeigarnik Effect? ⏳", "What is the Peak-End Rule? 📈"]
+    },
+    {
+        primaryKeys: ['តើ Zeigarnik Effect ជាអ្វី? ⏳', 'What is the Zeigarnik Effect? ⏳'],
+        keys: ['zeigarnik', 'incomplete task', 'កិច្ចការមិនទាន់ចប់', 'motivation'],
+        regex: ['zeigarnik'],
+        answer: "បាទ **Zeigarnik Effect** និយាយថា៖ «មនុស្សតែងតែចងចាំកិច្ចការដែល 'មិនទាន់រ៉ួចរាល់' បានល្អជាងកិច្ចការដែលចប់សព្វគ្រប់»។ ⏳\n\n💡 **ការអនុវត្ត:** គេប្រើវាដើម្បីទាក់ទាញអ្នកប្រើឱ្យត្រឡប់មកវិញ ដូចជាការបង្ហាញរបារ 'Profile របស់អ្នកជិតពេញហើយ (៨០%)' ដើម្បីជំរុញឱ្យគេចង់បំពេញឱ្យគ្រប់ ១០០%។",
+        answer_en: "The **Zeigarnik Effect** states that people remember uncompleted or interrupted tasks better than completed ones. ⏳\n\n💡 **Application:** Use progress bars or 'steps remaining' indicators to motivate users to complete a setup or purchase. The psychological tension of an incomplete circle drives users to finish the task.",
+        chips: ["តើ Peak-End Rule ជាអ្វី? 📈", "តើ Miller's Law គឺជាអ្វី? 7️⃣"],
+        chips_en: ["What is the Peak-End Rule? 📈", "What is Miller's Law? 7️⃣"]
+    },
+    {
+        primaryKeys: ['តើ Peak-End Rule ជាអ្វី? 📈', 'What is the Peak-End Rule? 📈'],
+        keys: ['peak end rule', 'user memory', 'អារម្មណ៍ចុងក្រោយ'],
+        regex: ['peak.*end'],
+        answer: "បាទ **Peak-End Rule** គឺជាច្បាប់ចិត្តសាស្ត្រដែលចែងថា៖ «មនុស្សវាយតម្លៃបទពិសោធន៍មួយ ផ្អែកលើចំណុច 'ខ្លាំងបំផុត' (Peak) និងចំណុច 'ចុងក្រោយបង្អស់' (End) នៃបទពិសោធន៍នោះ»។ 📈\n\n💡 **ការអនុវត្ត:** អ្នកត្រូវប្រាកដថាចំណុចចុងក្រោយនៃ App របស់អ្នក (ដូចជាផ្ទាំងអរគុណក្រោយពេលទិញដូរ) គឺមានភាពស្រស់ស្អាត និងផ្តល់អារម្មណ៍ល្អបំផុត ទោះបីជាដំណាក់កាលកណ្តាលមានភាពស្មុគស្មាញបន្តិចក៏ដោយ!",
+        answer_en: "The **Peak-End Rule** dictates that people judge an experience largely based on how they felt at its peak (intense point) and at its end, rather than the average of every moment. 📈\n\n💡 **Application:** Focus your design efforts on the most critical touchpoints (the 'Peak') and the final interaction (the 'End'). A delightful confirmation screen can save a user's perception of a long, boring form.",
+        chips: ["តើ Aesthetic-Usability Effect ជាអ្វី? ✨", "តើ Dark Patterns ជាអ្វី? 🚫"],
+        chips_en: ["Aesthetic-Usability Effect? ✨", "What are Dark Patterns? 🚫"]
+    },
+    {
+        primaryKeys: ['តើច្បាប់របស់ Tesler (Conservation of Complexity) ជាអ្វី? 🧩', 'What is Tesler\'s Law? 🧩'],
+        keys: ['tesler law', 'complexity', 'ភាពស្មុគស្មាញ', 'ux theory'],
+        regex: ['tesler', 'complexity'],
+        answer: `បាទ ច្បាប់របស់ Tesler ចែងថា៖ «គ្រប់ប្រព័ន្ធទាំងអស់ គឺតែងតែមានកម្រិតនៃភាពស្មុគស្មាញមួយដែលមិនអាចកាត់បន្ថយបាន»។\n\n💡 **ការអនុវត្ត:** ភារកិច្ចរបស់អ្នករចនា មិនមែនជាការលុបបំបាត់ភាពស្មុគស្មាញទាំងស្រុងទេ តែគឺការរុញភាពស្មុគស្មាញនោះពី "អ្នកប្រើប្រាស់" ទៅឱ្យ "អ្នកសរសេរកូដ (System)" ជាអ្នករងគ្រោះវិញ។\nឧទាហរណ៍៖ ការបំពេញ Form ទិញទំនិញដែលស្មុគស្មាញ គេប្រើមុខងារ Auto-fill ដើម្បីឱ្យ System ធ្វើការជំនួសអ្នកប្រើ។`,
+        answer_en: `Tesler's Law, also known as the Law of Conservation of Complexity, states that for any system, there is a certain amount of complexity which cannot be removed.\n\n💡 **Application:** A designer's job isn't to eliminate complexity, but to shift it from the user to the underlying technology. For example, instead of making a user type their whole address, use a GPS auto-suggest. The complexity still exists, but the system handles it so the user doesn't have to.`,
+        chips: ["តើ Jakob's Law ជាអ្វី? 🌐", "តើ Hick's Law ជាអ្វី? 🧠"],
+        chips_en: ["What is Jakob's Law? 🌐", "What is Hick's Law? 🧠"]
+    },
+    {
+        primaryKeys: ['តើ Von Restorff Effect គឺជាអ្វី? 🚨', 'What is the Von Restorff Effect? 🚨'],
+        keys: ['von restorff', 'isolation effect', 'ភាពខុសប្លែក', 'pop out'],
+        regex: ['restorff', 'isolation effect'],
+        answer: `បាទ Von Restorff Effect (ឬ Isolation Effect) គឺជាទ្រឹស្តីចិត្តសាស្ត្រដែលចែងថា៖ «ក្នុងចំណោមវត្ថុដែលដូចៗគ្នា វត្ថុណាដែលមានរូបរាងខុសគេបំផុត នឹងត្រូវគេចងចាំបានល្អបំផុត»។\n\n💡 **ការអនុវត្ត:** គេប្រើវានៅពេលរចនា Pricing Table (តារាងតម្លៃ) ដោយធ្វើឱ្យកញ្ចប់លក់ដែលចង់ឱ្យគេទិញបំផុត មានពណ៌ ឬទំហំខុសប្លែកពីគេដាច់ ដើម្បីឱ្យវា "Pop out" ក្នុងភ្នែកអ្នកមើល។`,
+        answer_en: `The Von Restorff Effect, also known as the Isolation Effect, predicts that when multiple similar objects are present, the one that differs from the rest is most likely to be remembered.\n\n💡 **Application:** This is why "Call to Action" buttons use high-contrast colors, and why in a pricing table, the 'Most Popular' plan is often physically larger or a different color to force it to stand out from the rest.`,
+        chips: ["តើ Focal Point ជាអ្វី? 🎯", "តើ Visual Hierarchy គឺជាអ្វី? 👁️"],
+        chips_en: ["What is a Focal Point? 🎯", "What is Visual Hierarchy? 👁️"]
+    },
+    {
+        primaryKeys: ['តើ Doherty Threshold គឺជាអ្វី? ⚡', 'What is the Doherty Threshold? ⚡'],
+        keys: ['doherty threshold', 'response time', 'ល្បឿន app', 'ux speed'],
+        regex: ['doherty', 'threshold', 'speed'],
+        answer: `បាទ នេះជាច្បាប់ UX អំពីល្បឿន! Doherty Threshold ចែងថា បទពិសោធន៍អ្នកប្រើប្រាស់នឹងកើនឡើងខ្ពស់បំផុត នៅពេលដែលការឆ្លើយតបរបស់ប្រព័ន្ធ (System Response) កើតឡើងក្នុងរយៈពេល **ក្រោម ០.៤ វិនាទី (400ms)**។\n\n💡 **ការអនុវត្ត:** បើ App របស់អ្នកដើរយឺតជាងនេះ អ្នកត្រូវប្រើ 'Skeleton Screens' ឬ 'Progress Bars' ដើម្បីបញ្ឆោតអារម្មណ៍អ្នកប្រើថា App កំពុងដើរលឿន ដើម្បីកុំឱ្យគេធុញហើយបិទ App ចោល។`,
+        answer_en: `The Doherty Threshold states that productivity soars when a computer and its users interact at a pace (<400ms) that ensures that neither has to wait on the other.\n\n💡 **Application:** If your app takes longer than 0.4 seconds to load data, you must provide visual feedback like skeleton loaders or progress bars. This manages the user's perception of time and keeps them engaged even during technical delays.`,
+        chips: ["តើ Micro-interactions ជាអ្វី? ✨", "តើច្បាប់របស់ Tesler ជាអ្វី? 🧩"],
+        chips_en: ["What are Micro-interactions? ✨", "What is Tesler's Law? 🧩"]
+    },
+    
+    
+    // ------------------------------------------
+    // 11. SOFTWARE, DISCIPLINES & BRANDING
+    // ------------------------------------------
+    {
+        primaryKeys: ['កម្មវិធីរចនាស្តង់ដារ (Design Software) 💻', 'Standard Design Software 💻'],
+        keys: ['software', 'កម្មវិធី', 'photoshop', 'illustrator', 'affinity', 'figma', 'ai'],
+        regex: ['software', 'កម្មវិធី', 'photoshop', 'illustrator', 'affinity', 'figma'],
+        answer: `បាទ កម្មវិធីស្តង់ដារឧស្សាហកម្មដែលក្រុមហ៊ុនអន្តរជាតិប្រើប្រាស់មាន៖\n\n- **Vector (Logo/Icons):** Adobe Illustrator ឬ **Affinity Designer** (ជម្រើសល្អបំផុត តម្លៃសមរម្យ ទិញដាច់ម្តង និងរហ័សកម្រិតអាជីព)។\n- **Raster (កាត់តរូប/Photos):** Adobe Photoshop ឬ **Affinity Photo**។\n- **UI/UX & Web:** Figma គឺជាស្តង់ដារដាច់ខាត!\n- **Layout (ទំព័រសៀវភៅ):** Adobe InDesign ឬ Affinity Publisher。\n\n💡 **AI Tools (Midjourney, Firefly):** កុំខ្លាច AI! វាមិនមកដណ្តើមការងារអ្នកទេ តែអ្នកដែលចេះប្រើ AI (ស្វែងរកគំនិត និងបង្កើតធនធានរូបភាពលឿន) នឹងយកការងារអ្នក។`,
+        answer_en: `The industry-standard software toolkits include:\n\n- **Vector (Logos/Art):** Adobe Illustrator or **Affinity Designer** (the best affordable, lightning-fast alternative).\n- **Raster (Photo/Compositing):** Adobe Photoshop or **Affinity Photo**.\n- **UI/UX & Web:** Figma is the absolute industry standard.\n- **Layouts (Books/Magazines):** Adobe InDesign or Affinity Publisher.\n\n💡 **AI Tools (Midjourney, Firefly):** AI will not replace designers. Designers who know how to use generative AI for rapid ideation and building base assets will replace those who do not.`,
+        chips: ["តើ Vector និង Raster ខុសគ្នាម៉េច? 🖼️", "ឯកទេសរចនា (Specialized Disciplines) 🌟"],
+        chips_en: ["Vector vs Raster: What's the difference? 🖼️", "Specialized Disciplines 🌟"]
+    },
+    {
+        primaryKeys: ['ឯកទេសរចនា (Specialized Disciplines) 🌟', 'Specialized Disciplines 🌟'],
+        keys: ['branding', 'packaging', 'infographic', 'motion graphic', 'ឯកទេស', 'logo vs brand'],
+        regex: ['branding', 'packaging', 'infographic', 'motion', 'ឯកទេស', 'logo'],
+        answer: `បាទ ការរចនាចែកចេញជាច្រើនឯកទេស៖\n\n១. **Branding & Identity:** ឡូហ្គោគ្រាន់តែជានិមិត្តសញ្ញា ឯ Branding គឺជាព្រលឹង សំឡេង និងរចនាបថម៉ាកយីហោទាំងមូល។\n២. **Packaging Design:** អ្នកលក់ដ៏ស្ងៀមស្ងាត់ (Silent Salesman)! ទាមទារការចេះគណនាពុម្ពកាត់ (Die-Lines) និងទុកកន្លែងសម្រាប់បាកូដ/ថ្ងៃខែផលិតតាមច្បាប់។\n៣. **Information Design (Infographics):** សិល្បៈនៃការបំប្លែងទិន្នន័យគួរឱ្យធុញ ឱ្យទៅជាងាយស្រួលយល់លឿន (ភាពច្បាស់លាស់ សំខាន់ជាងការតុបតែង)។\n៤. **Motion Graphics:** ការយកអក្សរ/វ៉ិចទ័រ មកធ្វើចលនា។ ក្បួន Easing ធ្វើឱ្យចលនាមើលទៅរលូន មិនដូចមនុស្សយន្ត។`,
+        answer_en: `Design is split into deep specializations:\n\n1. **Branding:** A logo is just a symbol; Branding is the soul, voice, and entire visual ecosystem governed by strict Style Guides.\n2. **Packaging:** The 'Silent Salesman'! Requires mastering math for Die-Lines, 3D Mock-ups, and reserving space for legal barcodes/nutrition facts.\n3. **Information Design (Infographics):** The art of converting boring numbers into highly scannable visual data. Clarity over decoration.\n4. **Motion Graphics:** Bringing vectors to life. Using 'Easing' mimics real-world physics for premium, non-robotic animation.`,
+        chips: ["តើ Environmental Graphic Design ជាអ្វី? 🏢", "ប្រភេទឡូហ្គោ (Logo Types) 🔣"],
+        chips_en: ["Environmental Graphic Design? 🏢", "Logo Types 🔣"]
+    },
+    {
+        primaryKeys: ['តើ Environmental Graphic Design ជាអ្វី? 🏢', 'Environmental Graphic Design? 🏢'],
+        keys: ['environmental design', 'wayfinding', 'signage', 'ការរចនាបរិស្ថាន'],
+        regex: ['environmental', 'wayfinding', 'signage'],
+        answer: `បាទ **Environmental Graphic Design (EGD)** គឺជាការរចនាដែលផ្តោតលើការប្រាស្រ័យទាក់ទងនៅក្នុង 'លំហជាក់ស្តែង' ដូចជាអគារ ផ្សារទំនើប ឬមន្ទីរពេទ្យ។\n\n- **Wayfinding & Signage:** ការរចនាស្លាកសញ្ញាប្រាប់ផ្លូវ ដើម្បីកុំឱ្យមនុស្សវង្វេងក្នុងអគារធំៗ។ វាទាមទារអក្សរដែលអានដាច់ពីចម្ងាយ និងពណ៌ដែលដាច់ស្រឡះ។\n- **Exhibition Design:** ការរៀបចំស្តង់តាំងពិព័រណ៍ ឬសារមន្ទីរ។\n💡 **ចំណុចពិសេស:** EGD ទាមទារឱ្យអ្នករចនាគិតដល់ខ្នាត (Scale) ពិតប្រាកដ និងចម្ងាយដែលអ្នកមើលឈរ (Viewing Distance) ជាជាងទំហំនៅលើអេក្រង់!`,
+        answer_en: `**Environmental Graphic Design (EGD)** focuses on visual communication within physical spaces like hospitals, airports, or malls.\n\n- **Wayfinding & Signage:** Designing navigational systems to prevent people from getting lost. It heavily relies on extreme legibility and high-contrast typography.\n- **Exhibition Design:** Designing immersive museum spaces or trade show booths.\n💡 **Key Difference:** EGD forces designers to think about real-world scale, lighting conditions, and viewing distance rather than just screen pixels!`,
+        chips: ["ឯកទេសរចនា (Specialized Disciplines) 🌟", "តើ Brand Guidelines ជាអ្វី? 📖"],
+        chips_en: ["Specialized Disciplines 🌟", "What are Brand Guidelines? 📖"]
+    },
+    {
+        primaryKeys: ['ប្រភេទឡូហ្គោ (Logo Types) 🔣', 'Logo Types 🔣'],
+        keys: ['logo types', 'wordmark', 'lettermark', 'pictorial', 'abstract', 'ឡូហ្គោ', 'ប្រភេទ logo'],
+        regex: ['logo type', 'wordmark', 'lettermark', 'pictorial', 'abstract', 'ឡូហ្គោ', 'ប្រភេទ logo'],
+        answer: `បាទ **ប្រភេទឡូហ្គោ (Logo Types) ជាទូទៅមាន ៤ ប្រភេទធំៗ៖**\n\n១. **Wordmark / Logotype:** ប្រើឈ្មោះក្រុមហ៊ុនពេញតែម្តងជារូបភាព (ឧ. Google, Coca-Cola)។ ល្អបំផុតសម្រាប់ក្រុមហ៊ុនថ្មីឱ្យគេស្គាល់ឈ្មោះ។\n២. **Lettermark / Monogram:** ប្រើអក្សរកាត់ (ឧ. IBM, HBO, NASA)។ ល្អសម្រាប់ក្រុមហ៊ុនឈ្មោះវែងពិបាកចាំ។\n៣. **Pictorial Mark (Symbol):** ជារូបតំណាងជាក់ស្តែងដែលអាចចំណាំបានភ្លាម (ឧ. ផ្លែប៉ោមរបស់ Apple, សត្វបក្សីរបស់ Twitter)។\n៤. **Abstract Mark:** ជារូបរាងអរូបីដែលបង្កើតអារម្មណ៍ មិនតំណាងឱ្យវត្ថុពិតប្រាកដ (ឧ. សញ្ញាធីករបស់ Nike, រង្វង់របស់ Pepsi)។`,
+        answer_en: `**Logos generally fall into 4 main categories:**\n\n1. **Wordmark / Logotype:** The full company name styled as a visual identity (e.g., Google, Coca-Cola). Great for new businesses to get name recognition.\n2. **Lettermark / Monogram:** Using initials (e.g., IBM, HBO, NASA). Perfect for companies with long, hard-to-remember names.\n3. **Pictorial Mark (Symbol):** A literal, recognizable icon (e.g., the Apple, the Twitter bird).\n4. **Abstract Mark:** A geometric form that evokes an emotion rather than representing a literal object (e.g., the Nike Swoosh, the Pepsi globe).`,
+        chips: ["តើ Iconography គឺជាអ្វី? 🔣", "តើ Brand, Identity និង Logo ខុសគ្នាម៉េច? 🏢"],
+        chips_en: ["What is Iconography? 🔣", "Brand vs Identity vs Logo? 🏢"]
+    },
+    {
+        primaryKeys: ['តើ Iconography គឺជាអ្វី? 🔣', 'What is Iconography? 🔣'],
+        keys: ['iconography', 'icon design', 'pictogram', 'ការរចនា icon'],
+        regex: ['iconography', 'icon'],
+        answer: `បាទ **Iconography (សិល្បៈរចនារូបតំណាង)** គឺជាការប្រើប្រាស់រូបភាពសាមញ្ញបំផុត (Icons) ដើម្បីតំណាងឱ្យគំនិត ឬសកម្មភាពដ៏ស្មុគស្មាញ (ដូចជារូបកន្ត្រកសម្រាប់ 'ទិញទំនិញ' ឬរូបកែវយឺតសម្រាប់ 'ស្វែងរក')។\n\n**ក្បួនរចនា Icon អាជីព៖**\n១. **សាមញ្ញបំផុត:** លុបចោលរាល់ចំណុចលម្អិតដែលមិនចាំបាច់ (Hick's Law) ព្រោះ Icon ត្រូវបង្ហាញក្នុងទំហំតូចខ្លាំង (១៦px ឬ ២៤px)។\n២. **ភាពស៊ីសង្វាក់ (Consistency):** Icon ក្នុងឈុតជាមួយគ្នា ត្រូវតែមានកម្រាស់បន្ទាត់ (Stroke weight) និងទម្រង់កោង/ស្រួច ដូចគ្នា១០០%។\n៣. **អត្ថន័យសកល:** ប្រើរូបភាពដែលមនុស្សគ្រប់ជាតិសាសន៍អាចយល់បានដោយមិនបាច់ប្រើអក្សរ!`,
+        answer_en: `**Iconography** is the visual language of using simple, minimal images (icons) to represent complex ideas or actions (like a magnifying glass for 'Search').\n\n**Rules for Professional Icon Design:**\n1. **Extreme Simplicity:** Remove all non-essential details. Icons must remain legible at tiny sizes (16px or 24px).\n2. **Consistency:** All icons in a family must share the exact same stroke weight, corner radius, and grid structure.\n3. **Universal Recognition:** Rely on metaphors that transcend language and cultural barriers!`,
+        chips: ["តើ Brand Guidelines ជាអ្វី? 📖", "តើ UI Motion Design ជាអ្វី? 🎬"],
+        chips_en: ["What are Brand Guidelines? 📖", "What is UI Motion Design? 🎬"]
+    },
+    {
+        primaryKeys: ['តើ Brand, Identity និង Logo ខុសគ្នាម៉េច? 🏢', 'Brand vs Identity vs Logo? 🏢'],
+        keys: ['brand vs logo', 'តើ brand និង logo ខុសគ្នាម៉េច?', 'brand identity', 'logo definition', 'what is branding'],
+        regex: ['brand.*logo', 'brand identity', 'logo'],
+        answer: `បាទ អ្នករចនាអាជីពត្រូវតែញែក ៣ នេះឱ្យដាច់ពីគ្នា៖\n\n១. **Logo (ឡូហ្គោ):** គ្រាន់តែជានិមិត្តសញ្ញាសម្រាប់ចំណាំ (ឧ. រូបផ្លែប៉ោមខាំមួយចំហៀង)។ វាប្រៀបដូចជា 'មុខ' របស់ក្រុមហ៊ុន។\n២. **Brand Identity (អត្តសញ្ញាណម៉ាក):** គឺជាវត្ថុដែលអាចមើលឃើញទាំងអស់រួមបញ្ចូលគ្នា ដូចជា ពណ៌, Font អក្សរ, ស្តាយរូបថត និងរបៀបរចនា។ វាប្រៀបដូចជា 'សម្លៀកបំពាក់' និង 'ស្ទីល' ដែលក្រុមហ៊ុននោះស្លៀកពាក់។\n៣. **Brand (ម៉ាកយីហោ):** គឺជាអារម្មណ៍ និងកេរ្តិ៍ឈ្មោះ! វាជាអ្វីដែលអតិថិជនគិតដល់ពេលលឺឈ្មោះក្រុមហ៊ុននោះ។ អ្នកមិនអាច 'Design' Brand បានទេ តែអ្នកអាច Design Logo និង Identity ដើម្បីជួយទាក់ទាញ Brand នោះបាន!`,
+        answer_en: `Professional designers must completely separate these three terms:\n\n1. **Logo:** A purely functional symbol of identification (e.g., an apple with a bite). It is the 'face' of the company.\n2. **Brand Identity:** The entire visual ecosystem. It includes the logo, color palette, typography choices, and photography style. It is the 'clothes and style' the company wears.\n3. **Brand:** The emotional corporate image as a whole. It is how customers *feel* about the company. You cannot 'design' a brand, but you design the Logo and Identity to shape how the Brand is perceived!`,
+        chips: ["តើ Rebranding និង Brand Refresh ខុសគ្នាម៉េច? 🔄", "តើ Brand Voice ជាអ្វី? 🗣️"],
+        chips_en: ["Rebranding vs Brand Refresh? 🔄", "What is Brand Voice? 🗣️"]
+    },
+    {
+        primaryKeys: ['តើ Rebranding និង Brand Refresh ខុសគ្នាម៉េច? 🔄', 'Rebranding vs Brand Refresh? 🔄'],
+        keys: ['rebranding', 'brand refresh', 'rebrand', 'កែលម្អម៉ាក'],
+        regex: ['rebrand', 'brand refresh'],
+        answer: `បាទ នេះជាយុទ្ធសាស្ត្រពីរខុសគ្នា ពេលក្រុមហ៊ុនចង់ប្តូររូបរាង៖\n\n- **Brand Refresh (ការកែលម្អម៉ាក):** គឺគ្រាន់តែ 'អាប់ដេត' ឱ្យទាន់សម័យ (Evolution)។ គេរក្សាឡូហ្គោដើម តែអាចកែ Font ឱ្យស្រឡះ ឬកែពណ៌ឱ្យស្រស់ជាងមុនបន្តិច។ (ឧទាហរណ៍៖ Google ឬ Mastercard អាប់ដេតឡូហ្គោរាបស្មើ Flat Design)។\n- **Rebranding (ផ្លាស់ប្តូរម៉ាកទាំងស្រុង):** គឺការប្តូរថ្មីទាំងស្រុង (Revolution)! ប្តូរទាំងឈ្មោះ ឡូហ្គោ និងគោលដៅក្រុមហ៊ុន ភាគច្រើនធ្វើឡើងពេលក្រុមហ៊ុនចង់លុបឈ្មោះចាស់ដែលមិនល្អ ឬប្តូរមុខជំនួញ (ឧទាហរណ៍៖ Facebook ដូរទៅជា Meta)។`,
+        answer_en: `These are two distinct corporate strategies for changing a brand's image:\n\n- **Brand Refresh:** An 'evolution' to stay modern. You keep the core DNA but update the typography to be cleaner or the colors to be more vibrant (e.g., Mastercard moving to a minimalist flat design).\n- **Rebranding:** A complete 'revolution'! Tearing everything down to change the logo, name, and core audience. Usually done after a PR crisis or a massive shift in business strategy (e.g., Facebook transforming into Meta).`,
+        chips: ["តើ Brand Voice ជាអ្វី? 🗣️", "តើ Brand Guidelines ជាអ្វី? 📖"],
+        chips_en: ["What is Brand Voice? 🗣️", "What are Brand Guidelines? 📖"]
+    },
+    {
+        primaryKeys: ['តើ Brand Voice ជាអ្វី? 🗣️', 'What is Brand Voice? 🗣️'],
+        keys: ['brand voice', 'សំឡេងម៉ាក', 'brand personality', 'brand tone'],
+        regex: ['brand voice', 'brand tone'],
+        answer: `បាទ **Brand Voice (សំឡេងម៉ាកយីហោ)** គឺជា 'ចរិតលក្ខណៈ' នៃការប្រាស្រ័យទាក់ទងរបស់ក្រុមហ៊ុន! វាមិនមែនជារូបភាពទេ តែជារបៀបសរសេរ (Copywriting)។\n\n- តើក្រុមហ៊ុននោះនិយាយបែប **ម៉ឺងម៉ាត់ និងផ្លូវការ** (ដូចធនាគារ)?\n- ឬក៏និយាយបែប **កំប្លែង និងរួសរាយ** (ដូចភោជនីយដ្ឋាន Fast Food)?\n💡 **ចំណាំ:** ការរចនា (Visuals) និងសំឡេង (Voice) ត្រូវតែស៊ីគ្នា! បើអ្នករចនាឡូហ្គោប្រណីតកម្រិត High-End តែខាង Marketing សរសេរ Caption បែបកំប្លែងលេងសើច នោះម៉ាកយីហោនឹងបាត់បង់តម្លៃ និងទំនុកចិត្តភ្លាមៗ!`,
+        answer_en: `**Brand Voice** is the distinct personality and 'tone' a company uses to communicate with its audience through words (copywriting).\n\n- Is the brand **formal, secure, and authoritative** (like a corporate law firm)?\n- Or is it **playful, witty, and casual** (like a trendy fast-food chain)?\n💡 **Rule:** The Visuals and the Voice MUST match! If you design a high-end luxury logo, but the marketing team writes silly, slang-filled captions, the brand's perceived value drops immediately!`,
+        chips: ["តើ Brand Guidelines ជាអ្វី? 📖", "ការគិតលុយតាមតម្លៃអាជីវកម្ម (Value-Based Pricing) 💰"],
+        chips_en: ["What are Brand Guidelines? 📖", "Value-Based Pricing 💰"]
+    },
+    {
+        primaryKeys: ['តើ Brand Guidelines ជាអ្វី? 📖', 'What are Brand Guidelines? 📖'],
+        keys: ['brand guidelines', 'brand book', 'សៀវភៅយីហោ', 'corporate identity'],
+        regex: ['brand guidelines', 'brand book', 'សៀវភៅយីហោ'],
+        answer: `បាទ **Brand Guidelines (សៀវភៅយីហោ)** គឺជាឯកសារច្បាប់កំពូលរបស់ក្រុមហ៊ុន ដែលកំណត់ពីរបៀបប្រើប្រាស់ម៉ាកយីហោ ដើម្បីធានាភាពស៊ីសង្វាក់គ្នា។\n\n* **អ្វីដែលវាមាន:** វាបញ្ជាក់ពីរបៀបដាក់ឡូហ្គោ (Do's and Don'ts), កូដពណ៌ផ្លូវការ (RGB, CMYK, HEX), ឈ្មោះហ្វុនអក្សរដែលត្រូវប្រើ, និងស្ទីលរូបថត។\n* **អត្ថប្រយោជន៍:** ទោះបីជាក្រុមហ៊ុននោះជួល Designer ១០ នាក់ផ្សេងគ្នាក៏ដោយ ក៏ស្នាដៃដែលរចនាចេញមកនៅតែមានទម្រង់ និងអារម្មណ៍ (Vibe) ដូចគ្នា ១០០% ព្រោះពួកគេគោរពតាមសៀវភៅច្បាប់តែមួយ។`,
+        answer_en: `**Brand Guidelines (Brand Book)** is the ultimate corporate rulebook that dictates how a brand's visual identity must be applied to ensure complete consistency.\n\n* **What it contains:** It specifies Logo usage rules (Do's and Don'ts), official color codes (RGB, CMYK, HEX), exact typography families, and photography tone.\n* **The Benefit:** Even if a company hires 10 different freelance designers, the resulting artwork will look and feel 100% cohesive because they are all following the exact same visual law book.`,
+        chips: ["តើ UI Motion Design ជាអ្វី? 🎬", "ការគិតលុយតាមតម្លៃអាជីវកម្ម (Value-Based Pricing) 💰"],
+        chips_en: ["What is UI Motion Design? 🎬", "Value-Based Pricing 💰"]
+    },
+    {
+        primaryKeys: ['តើ UI Motion Design ជាអ្វី? 🎬', 'What is UI Motion Design? 🎬'],
+        keys: ['motion design', 'ui animation', 'ចលនា ui', 'easing'],
+        regex: ['motion design', 'ui animation'],
+        answer: `បាទ **UI Motion Design** គឺជាការបញ្ចូលចលនា (Animation) ទៅក្នុងចំណុចប្រទាក់ (Interface) ដើម្បីដឹកនាំអ្នកប្រើប្រាស់ មិនមែនគ្រាន់តែដើម្បីស្អាតនោះទេ។\n\n- **មុខងារសំខាន់:** វាជួយពន្យល់រចនាសម្ព័ន្ធ (ឧ. ពេលអូសចុះក្រោម របារម៉ឺនុយលាក់ខ្លួន) និងផ្តល់ Feedback ថាប្រព័ន្ធកំពុងដើរ (របារ Loading)។\n- **ក្បួន Easing:** ចលនាដ៏ល្អមិនរត់ក្នុងល្បឿនថេរទេ (Linear)។ វាត្រូវតែចាប់ផ្តើមយឺត កណ្តាលលឿន និងបញ្ចបរលូន (Ease-In / Ease-Out) ដើម្បីត្រាប់តាមទំនាញផែនដីពិតៗ ធ្វើឱ្យ App មើលទៅ Premium និងមិនរឹងដូចមនុស្សយន្ត!`,
+        answer_en: `**UI Motion Design** is the strategic application of animation within an interface to guide the user, not just to make it look 'cool'.\n\n- **Function:** It explains spatial relationships (e.g., a menu sliding in from the left) and provides system status feedback (loading indicators).\n- **The Rule of Easing:** Premium animations are never linear (constant speed). They utilize 'Easing' (accelerating and decelerating smoothly) to mimic real-world physics, making the UI feel incredibly polished rather than robotic!`,
+        chips: ["តើ Micro-interactions ជាអ្វី? ✨", "តើ Typography Scaling ជាអ្វី? 🔠"],
+        chips_en: ["What are Micro-interactions? ✨", "What is Typography Scaling? 🔠"]
+    },
+    {
+        primaryKeys: ['តើ Typography Scaling ជាអ្វី? 🔠', 'What is Typography Scaling? 🔠'],
+        keys: ['type scale', 'modular scale', 'typography scale', 'ទំហំអក្សរ'],
+        regex: ['type scale', 'modular scale'],
+        answer: `បាទ **Typography Scaling (មាត្រដ្ឋានអក្សរ)** គឺជាការប្រើប្រាស់រូបមន្តគណិតវិទ្យា ដើម្បីកំណត់ទំហំអក្សរទាំងអស់នៅក្នុងការរចនា! ជាជាងការចេះតែរើសទំហំដោយចៃដន្យ。\n\n- **របៀបប្រើ:** អ្នករចនាអាជីពតែងតែយកទំហំអក្សរគោល (Base Size ឧ. 16px) ទៅគុណនឹងមេគុណថេរមួយ (ឧ. សមាមាត្រ 1.25 ឬ 1.618 Golden Ratio) ដើម្បីបង្កើតទំហំសម្រាប់ H1, H2, និង H3 ជាបន្តបន្ទាប់。\n💡 **អត្ថប្រយោជន៍:** វាបង្កើតបានជា Typographic Hierarchy ដ៏ល្អឥតខ្ចោះ ធ្វើឱ្យអត្ថបទទាំងអស់មើលទៅមានសមាមាត្រស៊ីសង្វាក់គ្នាដោយស្វ័យប្រវត្តិ!`,
+        answer_en: `**Typography Scaling (Modular Scale)** is the practice of using a fixed mathematical ratio to determine all font sizes in a project, rather than guessing randomly.\n\n- **How it works:** Professionals take a base body text size (e.g., 16px) and multiply it by a consistent ratio (like 1.25 or the 1.618 Golden Ratio) to mathematically generate sizes for H3, H2, and H1 headers.\n💡 **The Benefit:** It automatically creates flawless, harmonious Typographic Hierarchy across every page of your design!`,
+        chips: ["តើ Typographic Hierarchy គឺជាអ្វី? 🥇", "តើ 8pt Grid System ជាអ្វី? 📱"],
+        chips_en: ["What is Typographic Hierarchy? 🥇", "What is the 8pt Grid System? 📱"]
+    },
+    {
+        primaryKeys: ['តើ Branded House និង House of Brands ខុសគ្នាម៉េច? 🏢', 'Branded House vs House of Brands? 🏢'],
+        keys: ['brand architecture', 'branded house', 'house of brands', 'ស្ថាបត្យកម្មម៉ាក', 'apple vs p&g'],
+        regex: ['branded house', 'house of brands', 'architecture'],
+        answer: `បាទ នេះគឺជាមេរៀនយុទ្ធសាស្ត្រម៉ាកយីហោ (Brand Architecture)៖\n\n១. **Branded House:** ក្រុមហ៊ុនប្រើឈ្មោះមេតែមួយសម្រាប់គ្រប់ផលិតផល (ឧ. Apple: iPhone, iPad, Apple Watch)។ គុណសម្បត្តិគឺងាយស្រួលពង្រីកម៉ាក។\n២. **House of Brands:** ក្រុមហ៊ុនមេមួយ គ្រប់គ្រងម៉ាកតូចៗដែលគ្មានឈ្មោះពាក់ព័ន្ធគ្នា (ឧ. P&G គ្រប់គ្រង Tide, Pampers, Gillette)។ គុណសម្បត្តិគឺបើម៉ាកមួយខូចឈ្មោះ វាមិនប៉ះពាល់ដល់ម៉ាកផ្សេងទៀតឡើយ។`,
+        answer_en: `This covers the two primary strategies of Brand Architecture:\n\n1. **Branded House:** The master brand is the primary driver, with sub-brands sharing the same name (e.g., Apple, Google, FedEx). It builds massive brand equity quickly.\n2. **House of Brands:** A parent company owns a collection of independent, unrelated brands (e.g., P&G owning Tide and Crest, or Unilever owning Dove and Axe). This protects the parent company if one brand fails or faces a PR crisis.`,
+        chips: ["តើ Brand Archetypes គឺជាអ្វី? 🎭", "តើ Brand Guidelines ជាអ្វី? 📖"],
+        chips_en: ["What are Brand Archetypes? 🎭", "What are Brand Guidelines? 📖"]
+    },
+    {
+        primaryKeys: ['តើ Brand Archetypes គឺជាអ្វី? 🎭', 'What are Brand Archetypes? 🎭'],
+        keys: ['archetypes', 'brand personality', 'ចរិតម៉ាក', 'carl jung'],
+        regex: ['archetype', 'personality'],
+        answer: `បាទ តាមទ្រឹស្តីចិត្តវិទ្យារបស់ Carl Jung គេបែងចែកចរិតលក្ខណៈម៉ាកយីហោជា ១២ ប្រភេទ (Archetypes) ដើម្បីឱ្យមនុស្សងាយចងចាំ៖\n\n- **The Outlaw:** ម៉ាកដែលបះបោរ (ឧ. Harley-Davidson)។\n- **The Magician:** ម៉ាកដែលបង្កើតវេទមន្ត (ឧ. Disney)។\n- **The Hero:** ម៉ាកដែលផ្តល់ថាមពលនិងជ័យជំនះ (ឧ. Nike)。\n- **The Creator:** ម៉ាកដែលច្នៃប្រឌិត (ឧ. Adobe, LEGO)។\n💡 ការស្គាល់ Archetype ជួយឱ្យអ្នករចនាជ្រើសរើសពណ៌និងហ្វុនបានត្រឹមត្រូវតាមចរិតរបស់ក្រុមហ៊ុន។`,
+        answer_en: `Based on Carl Jung’s psychological theory, there are 12 **Brand Archetypes** used to give brands a "human" personality that consumers can relate to.\n\n- **The Outlaw:** Rebellious and free (e.g., Harley-Davidson).\n- **The Magician:** Visionary and transformative (e.g., Disney, Apple).\n- **The Hero:** Brave and performing (e.g., Nike, FedEx).\n- **The Creator:** Imaginative and inventive (e.g., Adobe, LEGO).\n💡 Identifying a brand's archetype is the first step in choosing its visual DNA (color, voice, and type).`,
+        chips: ["តើ Brand Voice ជាអ្វី? 🗣️", "តើ Branded House និង House of Brands ខុសគ្នាម៉េច? 🏢"],
+        chips_en: ["What is Brand Voice? 🗣️", "Branded House vs House of Brands? 🏢"]
+    },
+    {
+        primaryKeys: ['តើ Brand Equity និង Brand Identity ខុសគ្នាម៉េច? 💎', 'Brand Equity vs Brand Identity? 💎'],
+        keys: ['brand equity', 'brand value', 'តម្លៃម៉ាក', 'អត្តសញ្ញាណម៉ាក'],
+        regex: ['brand equity', 'brand identity'],
+        answer: `បាទ នេះជាមេរៀន Branding សម្រាប់ថ្នាក់គ្រប់គ្រងអាជីវកម្ម៖\n\n🎨 **Brand Identity (អត្តសញ្ញាណម៉ាក):** គឺជាអ្វីដែលអ្នករចនាបង្កើតឡើង! វាជារូបរាង (ឡូហ្គោ, ពណ៌, ហ្វុនអក្សរ, ការវេចខ្ចប់)។\n📈 **Brand Equity (តម្លៃនៃម៉ាកយីហោ):** គឺជាតម្លៃជាលុយ (Financial Value) ដែលម៉ាកនោះមាន ផ្អែកលើការទុកចិត្តរបស់អតិថិជន។\n💡 **ឧទាហរណ៍:** អាវយឺតសធម្មតាតម្លៃ ៥ដុល្លារ ប៉ុន្តែពេលបោះុម្ព Logo របស់ Supreme ពីលើ វាឡើងថ្លៃដល់ ១៥០ដុល្លារ! ភាពខុសគ្នាតម្លៃ ១៤៥ដុល្លារនោះហើយ គឺជា **Brand Equity** ដែលកើតចេញពីភាពល្បីល្បាញ មិនមែនកើតពីតម្លៃក្រណាត់នោះទេ។`,
+        answer_en: `This is advanced Brand Strategy taught in business management:\n\n🎨 **Brand Identity:** This is what designers physically create! The tangible visual elements (Logo, Colors, Fonts, Packaging).\n📈 **Brand Equity:** This is the intangible Financial Value of a company generated solely by consumer perception, trust, and fame.\n💡 **Example:** A plain white t-shirt costs $5. If you print the 'Supreme' logo on it, it costs $150. That $145 price difference is purely **Brand Equity**. The design built the trust, which built the equity.`,
+        chips: ["តើ Brand, Identity និង Logo ខុសគ្នាម៉េច? 🏢", "តើ Brand Voice ជាអ្វី? 🗣️"],
+        chips_en: ["Brand vs Identity vs Logo? 🏢", "What is Brand Voice? 🗣️"]
+    },
+
+    // ------------------------------------------
+    // 12. FREELANCE, BUSINESS & ETHICS
+    // ------------------------------------------
+    {
+        primaryKeys: ['ជំនាញចាំបាច់សម្រាប់ Designer 🧠', 'Skills to be a Graphic Designer 🧠'],
+        keys: ['skill', 'ជំនាញ', 'តម្រូវការ', 'qualification', 'pro and con', 'គុណវិបត្តិ', 'skills to be a graphic designer', 'soft skill'],
+        regex: ['skill', 'ជំនាញ', 'តម្រូវការ', 'qualification', 'pro', 'con', 'គុណវិបត្តិ', 'soft skill'],
+        answer: "បាទ ដើម្បីក្លាយជា Graphic Designer ដ៏ឆ្នើមម្នាក់ អ្នកត្រូវការជំនាញ ២ ផ្នែកយ៉ាងរឹងមាំ៖\n\n🛠️ **ជំនាញបច្ចេកទេស (Hard Skills):** ការប្រើប្រាស់កម្មវិធី, ទ្រឹស្តីពណ៌, និង Typography។\n\n🧠 **ជំនាញទន់ (Soft Skills / Psychological):**\n- **ការទំនាក់ទំនង និងការស្តាប់:** នេះជាជំនាញសំខាន់បំផុត! បើអ្នកពូកែរចនា តែនិយាយអត់ស្តាប់គ្នា អតិថិជននឹងរត់ចោល។\n- **ការទទួលយកការរិះគន់ (Constructive Feedback):** កុំយកអារម្មណ៍មកលាយឡំពេលអតិថិជនឱ្យកែស្នាដៃ។ Feedback គឺជាស្ពានឆ្ពោះទៅរកស្នាដៃល្អឥតខ្ចោះ។\n- **ការអត់ធ្មត់ និងដោះស្រាយបញ្ហា:** Design គឺដើម្បីដោះស្រាយបញ្ហាជូនអតិថិជន!",
+        answer_en: "To become an elite Graphic Designer, you must master two distinct sets of skills:\n\n🛠️ **Hard Skills:** Software execution, Color Theory, and Typography.\n\n🧠 **Soft Skills (Psychological):**\n- **Communication & Listening:** The most crucial skill! A genius designer with terrible communication will lose to an average designer with excellent communication.\n- **Receiving Criticism:** Detaching your personal ego from your commercial art. Feedback is the necessary bridge to perfection.\n- **Patience & Problem Solving:** Remembering that Graphic Design is visual problem-solving, not just fine art!",
+        chips: ["គន្លឹះសម្ភាសន៍ការងារ Design 👔", "តើក្បួនចាប់ផ្តើមរៀន Design មានប៉ុន្មានជំហាន? 🚀", "របៀបធ្វើ Portfolio បើគ្មានបទពិសោធន៍ទាល់តែសោះ? 📁"],
+        chips_en: ["Graphic Design Interview Tips 👔", "How to begin as a Graphic Designer? 🚀", "Portfolio with no experience? 📁"]
+    },
+    {
+        primaryKeys: ['តើ Imposter Syndrome ជារឿងអ្វី? 😰', 'What is Imposter Syndrome? 😰'],
+        keys: ['imposter syndrome', 'អន់ចិត្តឯង', 'ភ័យ', 'មិនពូកែ', 'lack of confidence', 'បាត់បង់ទំនុកចិត្ត'],
+        regex: ['imposter', 'អន់ចិត្ត', 'ទំនុកចិត្ត'],
+        answer: "បាទ **Imposter Syndrome** គឺជាអារម្មណ៍ដែលអ្នកគិតថាខ្លួនឯង 'មិនពូកែសោះ' ឬខ្លាចគេដឹងថាអ្នកអន់ ទោះបីជាអ្នកមានស្នាដៃល្អពិតប្រាកដក៏ដោយ! នេះជារឿងធម្មតាដែល Designer កម្រិតកំពូលក៏ធ្លាប់ជួប។\n\n💡 **វិធីដោះស្រាយ:** ឈប់ប្រៀបធៀបខ្លួនឯង (Chapter 1 របស់អ្នក) ទៅនឹងអ្នករចនាកម្រិតពិភពលោក (Chapter 20 របស់គេ)។ ចូរប្រៀបធៀបស្នាដៃខ្លួនឯងនៅថ្ងៃនេះ ទៅនឹងស្នាដៃខ្លួនឯងកាលពីឆ្នាំមុនវិញទើបជារឿងត្រឹមត្រូវ! កំហុសគឺជាផ្នែកមួយនៃការរៀនសូត្រ។",
+        answer_en: "**Imposter Syndrome** is the overwhelming psychological feeling that you are a 'fraud' or not good enough, despite having actual proven skills! Every great designer experiences this.\n\n💡 **The Solution:** Stop comparing your 'Chapter 1' to someone else's 'Chapter 20'. The only valid comparison is looking at your work today versus your own work from a year ago. Accept that failing and making ugly designs is a necessary part of growth.",
+        chips: ["របៀបស្វែងរកអតិថិជន? 🔍", "គន្លឹះសម្ភាសន៍ការងារ Design 👔"],
+        chips_en: ["How to find freelance clients? 🔍", "Graphic Design Interview Tips 👔"]
+    },
+    {
+        primaryKeys: ['គន្លឹះសម្ភាសន៍ការងារ Design 👔', 'Graphic Design Interview Tips 👔'],
+        keys: ['interview', 'សម្ភាសន៍', 'រកការងារ', 'job', 'សំណួរសម្ភាសន៍', 'graphic design interview tips'],
+        regex: ['interview', 'សម្ភាសន៍', 'រកការងារ', 'job', 'សំណួរសម្ភាសន៍'],
+        answer: "បាទ **គន្លឹះមាសសម្រាប់ការសម្ភាសន៍ការងារ Graphic Design៖**\n\n១. **Character (ចរិតលក្ខណៈ):** ទៅឱ្យទាន់ពេល ញញឹម សម្លឹងភ្នែក (Eye contact) និងចាប់ដៃឱ្យស្វាហាប់។ បើខ្វះបទពិសោធន៍ ត្រូវបង្ហាញការតាំងចិត្តចង់រៀនសូត្រ!\n២. **Presentation (ការធ្វើបទបង្ហាញ):** ក្រោកឈរពេលធ្វើបទបង្ហាញ។ រើសយកតែគម្រោងល្អបំផុត ៣ មកនិយាយ។ ត្រូវពន្យល់ពី **ដំណើរការគិត (Thought Process)** ច្រើនជាងភាពស្អាត (ហេតុអ្វីជ្រើសរើសពណ៌នេះ? វារកប្រាក់ចំណេញឱ្យអតិថិជនដោយរបៀបណា?)។\n៣. **Do's & Don'ts:** ត្រូវរៀបចំសំណួរយ៉ាងហោចណាស់ ៣ ដើម្បីសួរទៅកាន់ក្រុមហ៊ុនវិញ។ កុំភ្លេចទុកនាមប័ណ្ណ (Business Card) មុនពេលត្រឡប់មកវិញ!",
+        answer_en: "**Golden Tips for a Graphic Design Interview:**\n\n1. **Character:** Be punctual, maintain eye contact, and give a firm handshake. If you lack experience, overcompensate with your eagerness to learn!\n2. **Presentation:** Stand up when presenting. Only show your top 3 projects. Focus heavily on your **Thought Process** rather than just aesthetics (Why did you choose this font? How did this design solve the client's problem?).\n3. **Do's & Don'ts:** Always prepare at least 3 questions to ask the employer. NEVER complain about past jobs. And always leave a beautiful Business Card behind!",
+        chips: ["របៀបរៀបចំ Portfolio? 💼", "របៀបស្វែងរកអតិថិជន? 🔍"],
+        chips_en: ["Freelance Portfolio Tips 💼", "How to find freelance clients? 🔍"]
+    },
+    {
+        primaryKeys: ['របៀបស្វែងរកអតិថិជន? 🔍', 'How to find freelance clients? 🔍'],
+        keys: ['រកភ្ញៀវ', 'រកការងារ', 'find client', 'get client', 'marketing', 'ស្វែងរកអតិថិជន'],
+        regex: ['រកភ្ញៀវ', 'រកការងារ', 'find client', 'get client'],
+        answer: "បាទ កុំអង្គុយរង់ចាំឱ្យគេមកកក់ការងារអ្នក! របៀបរកអតិថិជនសម្រាប់ Freelancer៖\n\n១. **Show Your Work:** បង្ហោះស្នាដៃនិងដំណើរការគូរ (Behind the scenes) លើបណ្តាញសង្គមរាល់ថ្ងៃ។ អតិថិជនទិញទំនុកចិត្ត មុននឹងទិញស្នាដៃ។\n២. **Content Marketing:** ចែករំលែកចំណេះដឹង (ឧ. គន្លឹះរើសពណ៌) ដើម្បីធ្វើឱ្យគេទុកចិត្តថាអ្នកជា 'អ្នកជំនាញ'។\n៣. **Networking:** ប្រាប់មិត្តភក្តិ គ្រួសារ និងអ្នកស្គាល់គ្នាថាអ្នកកំពុងទទួលការងាររចនា។ ការណែនាំពីមាត់មួយទៅមាត់មួយ (Word of mouth) គឺជាប្រភពអតិថិជនដ៏មានឥទ្ធិពលបំផុត!",
+        answer_en: "Don't just sit and wait for clients to magically find you! How to proactively get clients:\n\n1. **Show Your Work:** Post your designs and 'Behind the Scenes' process on social media consistently. Clients buy trust before they buy art.\n2. **Content Marketing:** Share educational tips (e.g., 'How to pick brand colors'). This positions you as an 'Authority Expert' rather than just a pixel-pusher.\n3. **Networking:** Tell your friends, family, and past colleagues exactly what you do. 'Word of Mouth' referrals are the most powerful source of high-paying clients!",
+        chips: ["សារៈសំខាន់នៃកិច្ចសន្យា 📝", "ការគិតលុយតាមម៉ោង ទល់នឹង ម៉ៅដាច់ ⏳"],
+        chips_en: ["Importance of Contracts 📝", "Hourly vs Fixed Pricing ⏳"]
+    },
+    {
+        primaryKeys: ['សារៈសំខាន់នៃកិច្ចសន្យា 📝', 'Importance of Contracts 📝'],
+        keys: ['contract', 'កិច្ចសន្យា', 'proposal', 'សំណើការងារ', 'ការពារខ្លួន'],
+        regex: ['contract', 'កិច្ចសន្យា', 'proposal'],
+        answer: "បាទ អ្នករចនា Freelance អាជីព **មិនធ្វើការដោយគ្មានកិច្ចសន្យាជាដាច់ខាត!**\n\nកិច្ចសន្យាជួយការពារអ្នកពីការបោកប្រាស់ និងការពារកុំឱ្យភ្ញៀវប្រើអ្នកហួសកម្លាំង។ កិច្ចសន្យាត្រូវតែមាន៖\n១. **ទំហំការងារ (Scope of Work):** បញ្ជាក់ច្បាស់ថារចនាអីខ្លះ (ឧ. ឡូហ្គោ១ និងនាមប័ណ្ណ១)។\n២. **ចំនួនដងនៃការកែ (Revisions):** អនុញ្ញាតឱ្យកែឥតគិតថ្លៃត្រឹម ២ ឬ ៣ ដងប៉ុណ្ណោះ។\n៣. **ថ្ងៃប្រគល់ការងារ (Timeline):** កំណត់ថ្ងៃច្បាស់លាស់។\n៤. **លក្ខខណ្ឌបង់ប្រាក់ (Payment Terms):** ត្រូវទាមទារលុយកក់មុន (Deposit) ៣០% ទៅ ៥០% ជានិច្ច មុនពេលប៉ះកុំព្យូទ័រ!",
+        answer_en: "Professional freelance designers **NEVER work without a signed contract!**\n\nContracts protect you from being scammed and prevent clients from endlessly exploiting your time. It must explicitly include:\n1. **Scope of Work:** Exactly what you are delivering (e.g., 1 Logo + 1 Business Card. Nothing more).\n2. **Revisions:** Cap free revisions at 2 or 3 rounds. Charge extra after that.\n3. **Timeline:** Clear deadlines for both your delivery and their feedback.\n4. **Payment Terms:** Always demand a 30% to 50% non-refundable deposit upfront before you even open your software!",
+        chips: ["តើ Scope Creep ជាអ្វី? 🛑", "របៀបដោះស្រាយជាមួយភ្ញៀវរអ៊ូ? 🗣️"],
+        chips_en: ["What is Scope Creep? 🛑", "Dealing with difficult clients? 🗣️"]
+    },
+    {
+        primaryKeys: ['តើ Scope Creep ជាអ្វី? 🛑', 'What is Scope Creep? 🛑'],
+        keys: ['scope creep', 'ថែមការងារ', 'ភ្ញៀវថែមការងារ', 'extra work', 'ធ្វើលើស'],
+        regex: ['scope creep', 'ថែមការងារ', 'extra work'],
+        answer: "បាទ **Scope Creep (ការរីកទំហំការងារ)** គឺជាសុបិនអាក្រក់របស់ Freelancer!\n\nវាគឺជានៅពេលដែលអតិថិជនលួចបន្ថែមការងារបន្តិចម្តងៗ (ឧ. 'ជួយកាត់ Background រូបនេះមួយទៀតមក', 'ជួយដូរពណ៌ Poster នេះបន្តិចមក') ក្រៅពីអ្វីដែលបានព្រមព្រៀងគ្នា ដោយមិនថែមលុយឱ្យអ្នក!\n💡 **វិធីទប់ស្កាត់:** ពេលភ្ញៀវសុំថែមអ្វីដែលក្រៅពីកិច្ចសន្យា ត្រូវប្រាប់គេដោយស្នាមញញឹមថា៖ *'បាទ ខ្ញុំពិតជាអាចធ្វើជូនបងបាន! ប៉ុន្តែដោយសារវាខុសពីទំហំការងារដើម វានឹងមានការគិតប្រាក់បន្ថែមចំនួន $XX។ តើបងយល់ព្រមឱ្យខ្ញុំបន្តធ្វើវាទេ?'*",
+        answer_en: "**Scope Creep** is a freelancer's worst nightmare!\n\nIt happens when a client slowly adds extra little tasks ('Can you just remove the background on this one photo?', 'Can you just make a quick flyer version of this?') beyond the original agreement, without paying you more money!\n💡 **How to prevent it:** When a client asks for extra work, politely reply: *'I can absolutely do that for you! However, since it falls outside our original project scope, it will require an additional fee of $XX. Shall I proceed with adding it to the invoice?'*",
+        chips: ["ការគិតលុយតាមម៉ោង ទល់នឹង ម៉ៅដាច់ ⏳", "របៀបដោះស្រាយជាមួយភ្ញៀវរអ៊ូ? 🗣️"],
+        chips_en: ["Hourly vs Fixed Pricing ⏳", "Dealing with difficult clients? 🗣️"]
+    },
+    {
+        primaryKeys: ['របៀបដោះស្រាយជាមួយភ្ញៀវរអ៊ូ? 🗣️', 'Dealing with difficult clients? 🗣️'],
+        keys: ['ភ្ញៀវរអ៊ូ', 'ភ្ញៀវកែច្រើន', 'difficult client', 'revisions', 'feedback', 'dealing with difficult clients'],
+        regex: ['ភ្ញៀវរអ៊ូ', 'ភ្ញៀវកែច្រើន', 'difficult client', 'revisions', 'feedback'],
+        answer: "បាទ នេះជាបញ្ហាដែល Designer គ្រប់រូបត្រូវជួប! **វិធីដោះស្រាយ៖**\n\n១. **មានកិច្ចសន្យាច្បាស់លាស់ (Contract):** ត្រូវកំណត់ចំនួនដងដែលអាចកែបាន (Revisions) ត្រឹម ២ ឬ ៣ដងប៉ុណ្ណោះ។ បើកែលើសហ្នឹង ត្រូវគិតលុយថែម។ នេះជាការការពារខ្លួនអ្នក!\n២. **កុំយកអារម្មណ៍មកលាយឡំ (Objectiveness):** ពេលគេរិះគន់ស្នាដៃ គេមិនមែនស្អប់អ្នកទេ គេគ្រាន់តែចង់បានអ្វីដែលត្រូវចិត្តគេ។ ត្រូវស្តាប់ និងសួររកហេតុផលពិតប្រាកដរបស់គេ។\n៣. **ពន្យល់ពីគោលការណ៍រចនា:** បើភ្ញៀវសុំឱ្យធ្វើអ្វីដែលឆ្គង (ឧ. ដាក់ពុម្ពអក្សរ ៥ប្រភេទ) អ្នកត្រូវហ៊ានពន្យល់គេតាមក្បួន Design ថាហេតុអ្វីវាមិនល្អ។",
+        answer_en: "**Dealing with difficult clients or endless revisions:**\n\n1. **Contracts are Mandatory:** Always explicitly define the exact number of included revisions (usually 2 or 3). If they want more changes, charge an hourly rate.\n2. **Detach your Ego (Objectiveness):** Client feedback is not a personal attack. They just want their vision realized. Listen and ask 'Why?'.\n3. **Educate them:** If a client asks for a terrible design choice (like using 5 different fonts), politely explain *why* it breaks design principles and offer a better solution.",
+        chips: ["ការគិតលុយតាមតម្លៃអាជីវកម្ម (Value-Based Pricing) 💰", "តើ Scope Creep ជាអ្វី? 🛑"],
+        chips_en: ["Value-Based Pricing 💰", "What is Scope Creep? 🛑"]
+    },
+    {
+        primaryKeys: ['ការគិតលុយតាមតម្លៃអាជីវកម្ម (Value-Based Pricing) 💰', 'Value-Based Pricing 💰'],
+        keys: ['pricing', 'charge', 'គិតលុយ', 'value based', 'how to price my work'],
+        regex: ['pricing', 'charge', 'គិតលុយ', 'value based'],
+        answer: "បាទ **អ្នករចនាដ៏ពូកែ ក៏ត្រូវតែពូកែខាងរកស៊ីដែរ!**\n\nចូរផ្តោតលើ **ការគិតលុយតាមតម្លៃអាជីវកម្ម (Value-Based Pricing):**\nអ្នកមិនមែនកំពុងលក់ File កុំព្យូទ័រទេ តែអ្នកកំពុងលក់ 'ទំនុកចិត្ត' និង 'កំណើននៃការលក់'។ បើឡូហ្គោអ្នកជួយភោជនីយដ្ឋានគេឱ្យចំណេញ ៥ម៉ឺនដុល្លារ ការទារថ្លៃ ១០០០ ដុល្លារ គឺជារឿងសមហេតុផលបំផុត ទោះអ្នកធ្វើតែ ២ ម៉ោងក៏ដោយ! សួរអតិថិជនជានិច្ចថា 'តើ Design នេះនឹងជួយអ្វីដល់ក្រុមហ៊ុនបង?'",
+        answer_en: "**Great designers must also be great business people!**\n\nUse **Value-Based Pricing:**\nYou are not selling 'Adobe files'; you are selling trust, conversion rates, and industry authority. If your re-brand helps a business generate $100k, charging $3k is incredibly cheap for them, even if it took you 4 hours! Ask the client: 'What financial goal is this design supposed to achieve?'",
+        chips: ["ការគិតលុយតាមម៉ោង ទល់នឹង ម៉ៅដាច់ ⏳", "របៀបរៀបចំ Portfolio? 💼"],
+        chips_en: ["Hourly vs Fixed Pricing ⏳", "Freelance Portfolio Tips 💼"]
+    },
+    {
+        primaryKeys: ['ការគិតលុយតាមម៉ោង ទល់នឹង ម៉ៅដាច់ ⏳', 'Hourly vs Fixed Pricing ⏳'],
+        keys: ['hourly rate', 'fixed price', 'ម៉ៅដាច់', 'គិតម៉ោង', 'hourly vs fixed'],
+        regex: ['hourly', 'fixed', 'ម៉ៅដាច់', 'គិតម៉ោង'],
+        answer: "បាទ តើគួរគិតលុយតាមម៉ោង ឬម៉ៅដាច់?\n\n⏳ **តាមម៉ោង (Hourly):** ល្អសម្រាប់គម្រោងដែលមិនច្បាស់លាស់ ឬការងារដែលត្រូវកែច្រើនដងមិនចេះចប់ (ឧ. ការងារកាត់តអត្ថបទប្រចាំខែ)។\n💰 **ម៉ៅដាច់ (Fixed Price / Value-Based):** ល្អសម្រាប់គម្រោងមានព្រំដែនច្បាស់លាស់ (ដូចជា រចនាឡូហ្គោ១)។ **ការម៉ៅដាច់ផ្តល់ចំណេញច្រើនជាង** ព្រោះកាលណាអ្នកកាន់តែជំនាញ អ្នកធ្វើវាកាន់តែលឿន! បើអ្នកគិតតាមម៉ោង ពេលអ្នកធ្វើលឿន អ្នកនឹងបានលុយតិចទៅវិញ!",
+        answer_en: "Should you charge an hourly rate or a fixed price?\n\n⏳ **Hourly:** Best for ongoing maintenance work or highly ambiguous projects where the client might want endless revisions.\n💰 **Fixed Price (Value-Based):** Best for clearly defined projects (like a Logo package). **Fixed pricing is far more profitable!** Why? Because as you get faster and more skilled, your project takes less time. If you charge hourly, becoming faster actually penalizes you by making you less money!",
+        chips: ["ការគិតលុយតាមតម្លៃអាជីវកម្ម (Value-Based Pricing) 💰", "របៀបប្រគល់ឯកសារចុងក្រោយ (File Handover) 📁"],
+        chips_en: ["Value-Based Pricing 💰", "How to handover final files 📁"]
+    },
+    {
+        primaryKeys: ['របៀបរៀបចំ Portfolio? 💼', 'Freelance Portfolio Tips 💼'],
+        keys: ['portfolio', 'freelance', 'រកការងារ', 'how to build a portfolio'],
+        regex: ['portfolio', 'freelance', 'រកការងារ'],
+        answer: "បាទ **គន្លឹះមាសសម្រាប់រៀបចំ Portfolio (ប្រវត្តិរូបស្នាដៃ) របស់អ្នក៖**\n\n១. **កុំដាក់ស្នាដៃរញ៉េរញ៉ៃច្រើនពេក!** គុណភាព សំខាន់ជាងបរិមាណ។ ជ្រើសរើសតែស្នាដៃល្អបំផុត ៣-៥ គម្រោង បានហើយ។ បើចង់បានការងាររចនាឡូហ្គោ ត្រូវដាក់តែឡូហ្គោ។\n២. **មាន Case Study:** កុំគ្រាន់តែបង្ហោះរូបភាពសម្រេច! ត្រូវបង្ហាញពី 'បញ្ហា', 'ដំណើរការដោះស្រាយ (គំនូរព្រាង)', និង 'លទ្ធផល'។ គេចង់ឃើញរបៀបដែលអ្នកគិត មិនមែនត្រឹមតែដៃដែលអ្នកគូរនោះទេ។\n៣. **Platform:** ការដាក់ស្នាដៃលើ Behance, Dribbble ឬ Website ផ្ទាល់ខ្លួន គឺជាភាពចាំបាច់ក្នុងយុគសម័យនេះ។",
+        answer_en: "**Golden Tips for building your Portfolio:**\n\n1. **Do not upload every single thing you've made!** Curate ruthlessly. Show only your top 3-5 absolute best projects. Quality over quantity. If you want logo jobs, only show logos.\n2. **Include Case Studies:** Don't just show the final pretty picture! Explain the 'Problem', the 'Process (Sketches)', and the 'Solution'. Employers want to see *how* you think.\n3. **Platforms:** Hosting your work on Behance, Dribbble, or a Custom Personal Website is mandatory in the modern era.",
+        chips: ["គន្លឹះសម្ភាសន៍ការងារ Design 👔", "ជំនាញចាំបាច់សម្រាប់ Designer 🧠"],
+        chips_en: ["Graphic Design Interview Tips 👔", "Skills to be a Graphic Designer 🧠"]
+    },
+    {
+        primaryKeys: ['របៀបប្រគល់ឯកសារចុងក្រោយ (File Handover) 📁', 'How to handover final files 📁'],
+        keys: ['hand over', 'final file', 'ប្រគល់ការងារ', 'ឯកសារបញ្ចប់', 'export file'],
+        regex: ['hand over', 'final file', 'ប្រគល់ការងារ', 'export'],
+        answer: "បាទ របៀបប្រគល់ការងារចុងក្រោយឱ្យមើលទៅមានវិជ្ជាជីវៈ (Professional)៖\n\nកុំគ្រាន់តែផ្ញើរូបភាព JPG លាយឡំគ្នាតាម Telegram ឱ្យសោះ! ត្រូវរៀបចំ Folder ឱ្យមានសណ្តាប់ធ្នាប់ (Zip File) ដូចជា៖\n១. 📂 **Folder Print:** ដាក់ឯកសារ PDF (CMYK) ដែលមាន Bleed និងសញ្ញាកាត់ (Crop Marks)។\n២. 📂 **Folder Digital/Web:** ដាក់ឯកសារ PNG/JPG (RGB) សម្រាប់បង្ហោះលើបណ្តាញសង្គម។\n៣. 📂 **Folder Source Files:** ដាក់ឯកសារដើម (AI, EPS, ឬ SVG)។\n💡 ចុងក្រោយ កុំភ្លេចភ្ជាប់មកជាមួយនូវឯកសារណែនាំពីរបៀបប្រើឡូហ្គោ និងពណ៌ (Brand Guidelines) ផង!",
+        answer_en: "How to cleanly hand over final files and look like a high-end professional:\n\nNever just send a bunch of unorganized JPGs over Telegram or WhatsApp! Organize a clean ZIP folder structure:\n1. 📂 **Print Folder:** Contains high-res CMYK PDFs with bleeds and crop marks applied.\n2. 📂 **Digital Folder:** Contains RGB PNGs and JPGs for screen use.\n3. 📂 **Source Files:** Contains scalable vector files (AI, EPS, SVG).\n💡 Finally, always include a basic Brand Guideline PDF showing them the correct color codes and font names!",
+        chips: ["សារៈសំខាន់នៃកិច្ចសន្យា 📝", "ក្រមសីលធម៌ និងកម្មសិទ្ធិបញ្ញា ⚖️"],
+        chips_en: ["Importance of Contracts 📝", "Design Ethics & Copyright ⚖️"]
+    },
+    {
+        primaryKeys: ['ក្រមសីលធម៌ និងកម្មសិទ្ធិបញ្ញា ⚖️', 'Design Ethics & Copyright ⚖️'],
+        keys: ['copyright', 'plagiarism', 'ethics', 'eco friendly', 'ច្បាប់', 'ក្រមសីលធម៌', 'កម្មសិទ្ធិបញ្ញា'],
+        regex: ['copyright', 'plagiarism', 'ethic', 'eco', 'ច្បាប់', 'ក្រមសីលធម៌', 'កម្មសិទ្ធិបញ្ញា'],
+        answer: "បាទ ការធ្វើជាអ្នករចនាដែលមានទំនួលខុសត្រូវក្នុងសង្គម ទាមទារការយល់ដឹងពី៖\n\n- **Copyright (កម្មសិទ្ធិបញ្ញា):** ការលួចផ្តិតយកស្នាដៃគេទាំងស្រុង (Plagiarism) ជាកំហុសធ្ងន់ធ្ងរ។ រៀនយកគំនិត (Inspiration) គឺខុសពីការលួចចម្លង។ ត្រូវប្រាកដថារាល់រូបភាព/ហ្វុន មានអាជ្ញាប័ណ្ណ 'Free for Commercial Use'។\n- **Eco-friendly Design:** ការរចនាគិតគូរបរិស្ថាន។ កាត់បន្ថយការព្រីនពណ៌ដិតពេញផ្ទៃមុខ ប្រើក្រដាសស្តង់ដារកុំឱ្យសល់កាត់ចោលច្រើន និងប្រើសំបកវេចខ្ចប់ដែលអាចកែច្នៃបាន។\n- **Dark Patterns:** ជៀសវាងការរចនា UI ដែលបោកបញ្ឆោតឱ្យអ្នកប្រើប្រាស់ចុចលើអ្វីដែលគេមិនចង់ចុច!",
+        answer_en: "Being a socially responsible designer requires understanding:\n\n- **Copyright & Plagiarism:** Blatantly copying someone's exact work is a fatal career mistake. Gathering inspiration is different from stealing. Ensure every asset you use has a 'Free for Commercial Use' license.\n- **Eco-friendly Design:** Designing with the environment in mind. Minimize edge-to-edge heavy ink to save toner, use efficient paper sizes to reduce trim waste, and advocate for recyclable packaging.\n- **Ethics (Dark Patterns):** Never design UI tricks aimed at fooling users into clicking things they didn't mean to!",
+        chips: ["របៀបប្រគល់ឯកសារចុងក្រោយ (File Handover) 📁", "របៀបដោះស្រាយជាមួយភ្ញៀវរអ៊ូ? 🗣️"],
+        chips_en: ["How to handover final files 📁", "Dealing with difficult clients? 🗣️"]
+    },
+    {
+        primaryKeys: ['តើកម្មសិទ្ធិបញ្ញា (IP) ផ្ទេរទៅឱ្យភ្ញៀវនៅពេលណា? ⚖️', 'When is Intellectual Property (IP) transferred? ⚖️'],
+        keys: ['intellectual property', 'copyright transfer', 'កម្មសិទ្ធិបញ្ញា', 'ម្ចាស់សិទ្ធិ', 'copyright'],
+        regex: ['intellectual property', 'transfer', 'កម្មសិទ្ធិបញ្ញា'],
+        answer: `បាទ តាមច្បាប់រចនាអន្តរជាតិ (AIGA)៖ «អ្នករចនាគឺជាម្ចាស់កម្មសិទ្ធិបញ្ញានៃស្នាដៃដែលខ្លួនបង្កើត រហូតដល់មានការបង់ប្រាក់គ្រប់ចំនួន និងមានកិច្ចសន្យាផ្ទេរសិទ្ធិជាលាយលក្ខណ៍អក្សរ»។\n\n⚠️ **ចំណាំ:** បើភ្ញៀវមិនទាន់បង់លុយបង្គ្រប់ទេ គេគ្មានសិទ្ធិយក Logo នោះទៅប្រើប្រាស់ជាសាធារណៈឡើយ។ ក្នុងនាមជាអ្នករចនា អ្នកត្រូវតែបញ្ជាក់ចំណុចនេះក្នុងកិច្ចសន្យាឱ្យច្បាស់!`,
+        answer_en: `According to professional design standards (like AIGA), the designer owns the copyright to any creative work until a formal "Transfer of Copyright" agreement is signed—usually ONLY after final payment is received.\n\n⚠️ **Warning:** If a client hasn't paid the final balance, they legally do not own the logo and have no right to use it. Always include a clause stating: "Copyright is transferred to the client upon receipt of final payment."`,
+        chips: ["សារៈសំខាន់នៃកិច្ចសន្យា 📝", "តើអ្វីទៅជាការប្រើប្រាស់ដោយយុត្តិធម៌ (Fair Use)? ⚖️"],
+        chips_en: ["Importance of Contracts 📝", "What is Fair Use? ⚖️"]
+    },
+    {
+        primaryKeys: ['តើអ្វីទៅជាការប្រើប្រាស់ដោយយុត្តិធម៌ (Fair Use)? ⚖️', 'What is Fair Use in design? ⚖️'],
+        keys: ['fair use', 'copyright law', 'ច្បាប់ប្រើប្រាស់', 'លួចចម្លង', 'plagiarism'],
+        regex: ['fair use'],
+        answer: `បាទ **Fair Use** គឺជាច្បាប់ដែលអនុញ្ញាតឱ្យយើងប្រើប្រាស់ "ផ្នែកខ្លះ" នៃស្នាដៃដែលមានកម្មសិទ្ធិបញ្ញារបស់អ្នកដទៃ ដោយមិនបាច់សុំការអនុញ្ញាត ក្នុងករណីដូចជា៖ ការរិះគន់, ការអប់រំ, ឬការរាយការណ៍ព័ត៌មាន។\n\n⚠️ **ប៉ុន្តែសម្រាប់ការរចនាអាជីវកម្ម (Commercial Design):** Fair Use ស្ទើរតែមិនអាចយកមកប្រើបានឡើយ។ បើអ្នកយករូបគេមកកាត់តលក់ អ្នកនៅតែអាចរងការប្តឹងផ្តល់ដដែល បើទោះជាអ្នកកែរូបនោះច្រើនយ៉ាងណាក៏ដោយ។`,
+        answer_en: `**Fair Use** is a legal doctrine that allows limited use of copyrighted material without permission for purposes such as criticism, news reporting, teaching, or research.\n\n⚠️ **For Designers:** Fair Use rarely applies to commercial work. Even if you "transform" a copyrighted photo into a poster for a paying client, you are still liable for infringement. When in doubt, buy the license or create it from scratch.`,
+        chips: ["តើកម្មសិទ្ធិបញ្ញា (IP) ផ្ទេរទៅឱ្យភ្ញៀវនៅពេលណា? ⚖️", "ក្រមសីលធម៌ និងកម្មសិទ្ធិបញ្ញា ⚖️"],
+        chips_en: ["When is IP transferred? ⚖️", "Design Ethics & Copyright ⚖️"]
+    },
+    {
+        primaryKeys: ['តើកិច្ចសន្យាត្រូវមានប្រយោគ "Indemnification" ដែរឬទេ? ⚖️', 'What is an Indemnification clause? ⚖️'],
+        keys: ['indemnification', 'legal safety', 'សន្តិសុខច្បាប់', 'contract clause'],
+        regex: ['indemnification'],
+        answer: `បាទ នេះជាប្រយោគការពារខ្លួនដ៏សំខាន់ក្នុងកិច្ចសន្យា! **Indemnification** គឺជាការព្រមព្រៀងដែលថា៖ «ប្រសិនបើអ្នករចនា រចនាអ្វីមួយតាមការបង្គាប់របស់ភ្ញៀវ (ឧ. ភ្ញៀវយករូបពី Google មកឱ្យយើងដាក់ក្នុង Poster) ហើយមានការប្តឹងផ្តល់កើតឡើង គឺភ្ញៀវជាអ្នកទទួលខុសត្រូវរឿងក្តីនិងការសងជំងឺចិត្ត មិនមែនជាអ្នករចនាឡើយ»។\n💡 កុំភ្លេចដាក់ប្រយោគនេះ ដើម្បីការពារខ្លួនអ្នកពីកំហុសច្បាប់របស់អតិថិជន!`,
+        answer_en: `An **Indemnification** clause is a critical safety net in a design contract. It states that the client will "hold harmless" the designer if a legal issue arises from materials the client provided (e.g., if a client gives you a stolen photo to use in their ad). If a lawsuit happens, the client pays the legal fees, not the designer. 💡 This is essential for protecting your freelance business from third-party liability.`,
+        chips: ["សារៈសំខាន់នៃកិច្ចសន្យា 📝", "តើកម្មសិទ្ធិបញ្ញា (IP) ផ្ទេរទៅឱ្យភ្ញៀវនៅពេលណា? ⚖️"],
+        chips_en: ["Importance of Contracts 📝", "When is IP transferred? ⚖️"]
+    },
+    {
+        primaryKeys: ['តើកិច្ចសន្យា Retainer គឺជាអ្វី? 💼', 'What is a Retainer Contract? 💼'],
+        keys: ['retainer', 'កិច្ចសន្យាប្រចាំខែ', 'retainer contract', 'រកចំណូល', 'freelance retainer'],
+        regex: ['retainer', 'ប្រចាំខែ'],
+        answer: `បាទ **Retainer Contract (កិច្ចសន្យារក្សាទុកអតិថិជន)** គឺជា "ចុងភៅប្រចាំត្រកូល" របស់ Freelancers!\n\nជំនួសឱ្យការស៊ីឈ្នួលធ្វើ Logo មួយៗហើយចប់ ក្រុមហ៊ុនយល់ព្រមបង់លុយឱ្យអ្នកជាប្រចាំខែ (ឧ. ៥០០$ ក្នុងមួយខែ) ដើម្បីកក់ទុកពេលវេលារបស់អ្នក (ឧ. ២០ ម៉ោង/ខែ) សម្រាប់ជួយធ្វើការរចនា Post ហ្វេសប៊ុក ឬ Banner ផ្សេងៗឱ្យគេ។\n💡 **អត្ថប្រយោជន៍:** វាផ្តល់នូវ "ចំណូលថេរប្រចាំខែ" ដល់អ្នករចនាឯករាជ្យ (Freelancer) ជួយឱ្យអ្នកលែងបារម្ភរឿងខែនេះគ្មានភ្ញៀវ!`,
+        answer_en: `A **Retainer Contract** is the holy grail for a freelance business model!\n\nInstead of being hired for a single logo project and parting ways, the client agrees to pay you a fixed monthly fee (e.g., $1,000/month) to guarantee a specific amount of your time (e.g., 20 hours/month) for ongoing design needs like social media posts or web updates.\n💡 **The Benefit:** It transforms the unpredictable feast-or-famine freelance life into a highly stable, predictable monthly income!`,
+        chips: ["សារៈសំខាន់នៃកិច្ចសន្យា 📝", "ការគិតលុយតាមម៉ោង ទល់នឹង ម៉ៅដាច់ ⏳", "តើ Designer អាចរកចំណូលអកម្មបានដោយរបៀបណា? 💸"],
+        chips_en: ["Importance of Contracts 📝", "Hourly vs Fixed Pricing ⏳", "How can designers make passive income? 💸"]
+    },
+    {
+        primaryKeys: ['តើ Designer អាចរកចំណូលអកម្មបានដោយរបៀបណា? 💸', 'How can designers make passive income? 💸'],
+        keys: ['passive income', 'passive', 'រកចំណូលអកម្ម', 'ចំណូលអកម្ម', 'designer passive income', 'sell template', 'sell preset', 'sell font', 'designer income stream', 'លក់ Template', 'លក់ Font', 'លក់ Preset'],
+        regex: ['passive\\s*income', 'ចំណូលអកម្ម', 'រកចំណូលអកម្ម', 'sell\\s*(template|preset|font|asset)', 'លក់.*template', 'លក់.*preset', 'លក់.*font'],
+        answer: "បាទ **Passive Income (ចំណូលអកម្ម)** គឺជាការងាររចនាដែលអ្នកធ្វើ **១ដង** តែលក់បានច្រើនដង — មិនត្រូវប្តូរម៉ោងយកលុយដូច Freelance ឬ Retainer ទេ។\n\n💸 **វិធី ៥ យ៉ាងពេញនិយមសម្រាប់ Designer:**\n១. **Template Marketplace** — លក់ Template Canva, Figma, Notion, PSD នៅ **Creative Market, Envato, Gumroad, Etsy**។\n២. **Font / Icon / Brush Pack** — បង្កើតគ្រួសារអក្សរ ឬ Icon Set លក់នៅ **MyFonts, Behance Assets, Iconfinder, Flaticon**។\n៣. **Lightroom Preset / LUT** — Pack ការកែពណ៌រូបថត ឬវីដេអូ លក់នៅ **FilterGrade, Gumroad**។\nោ. **Stock Asset (រូប/វីដេអូ/Vector)** — បង្ហោះនៅ **Shutterstock, Adobe Stock, Freepik** — រាល់ការ Download គឺជា Royalty។\n៥. **Online Course / Ebook** — បង្រៀន Process របស់អ្នកនៅ **Skillshare, Udemy, Domestika, YouTube**។\n\n🎯 **យុទ្ធសាស្ត្រ:** ចាប់ផ្តើមពីអ្វីដែលអ្នកបានធ្វើរួចហើយក្នុង Project អតិថិជន — បំប្លែងជា Template ដែលអាចលក់ឡើងវិញ។\n💡 **គន្លឹះអ្នកជំនាញ:** Passive Income មិនមែន “អកម្ម” ១០០% ទេ — អ្នកត្រូវផ្តោតលើ **SEO, Thumbnail, និងការផ្សព្វផ្សាយ** ដើម្បីឱ្យផលិតផលត្រូវបានគេឃើញ។ ផ្តោតលើ Niche ច្បាស់លាស់ ៖ Wedding Templates, Khmer Fonts, ឬ Cinematic LUTs ងាយលក់ជាង “Generic”។",
+        answer_en: "**Passive Income** for designers means doing the work **once** and selling it many times — no more trading hours for money like freelance or retainer work.\n\n💸 **5 popular streams:**\n1. **Template Marketplaces** — Sell Canva, Figma, Notion, or PSD templates on **Creative Market, Envato, Gumroad, Etsy**.\n2. **Fonts / Icons / Brush Packs** — Build font families or icon sets on **MyFonts, Behance Assets, Iconfinder, Flaticon**.\n3. **Lightroom Presets / LUTs** — Color-grading packs sold on **FilterGrade, Gumroad**.\n4. **Stock Assets** — Upload photos, videos, or vectors to **Shutterstock, Adobe Stock, Freepik** — every download is a royalty.\n5. **Courses / Ebooks** — Teach your process on **Skillshare, Udemy, Domestika, YouTube**.\n\n🎯 **Strategy:** Repurpose work you've already done for clients — convert it into a resellable template.\n💡 **Pro Tip:** “Passive” isn't 100% passive — you still need **SEO, killer thumbnails, and marketing**. Pick a clear niche (Khmer fonts, wedding templates, cinematic LUTs) — niche sells far better than generic.",
+        chips: ["តើកិច្ចសន្យា Retainer គឺជាអ្វី? 💼", "របៀបធ្វើ Portfolio បើគ្មានបទពិសោធន៍ទាល់តែសោះ? 📁", "ការគិតលុយតាមតម្លៃអាជីវកម្ម (Value-Based Pricing) 💰"],
+        chips_en: ["What is a Retainer Contract? 💼", "Portfolio with no experience? 📁", "Value-Based Pricing 💰"]
+    },
+
+    // [ADD TO SECTION 3: COMPOSITION (MATH IN DESIGN)]
+    {
+        primaryKeys: ['តើលំដាប់លេខ Fibonacci ទាក់ទងនឹងការរចនាយ៉ាងម៉េច? 🌀', 'Fibonacci Sequence in Design? 🌀'],
+        keys: ['fibonacci', 'golden ratio', 'សមាមាត្រមាស', 'គណិតវិទ្យា', 'math in design'],
+        regex: ['fibonacci', 'golden ratio'],
+        answer: `បាទ នេះជាគណិតវិទ្យាលាក់កំបាំងនៅពីក្រោយភាពស្រស់ស្អាត! \n\n**លំដាប់លេខ Fibonacci** គឺជាការបូកលេខពីរខាងមុខបញ្ចូលគ្នា (1, 1, 2, 3, 5, 8, 13, 21...)។ នៅពេលអ្នកយកលេខនេះមកច្នៃជាខ្នាតប្រអប់ការ៉េ វានឹងបង្កើតបានជា **Golden Ratio (សមាមាត្រមាស 1:1.618)** ដ៏ល្អឥតខ្ចោះ។\n💡 **ការអនុវត្ត:** អ្នករចនាបង្កើត Logo ក្រុមហ៊ុនធំៗ (ដូចជា Twitter ជំនាន់ចាស់ ឬ Apple) សុទ្ធតែប្រើរង្វង់ដែលមានទំហំផ្អែកលើលេខ Fibonacci (ទំហំរង្វង់ទី១ ស្មើ ៥ ភីកសែល, ទី២ ស្មើ ៨, ទី៣ ស្មើ ១៣) ដើម្បីផ្គុំចូលគ្នា ធ្វើឱ្យខួរក្បាលមនុស្សយល់ថាវាជា "ភាពល្អឥតខ្ចោះនៃធម្មជាតិ" ដោយមិនដឹងខ្លួន។`,
+        answer_en: `This is the hidden mathematics behind beauty!\n\nThe **Fibonacci Sequence** is a series of numbers where the next number is the sum of the previous two (1, 1, 2, 3, 5, 8, 13, 21...). When these numbers are used to size geometric shapes, they perfectly map out the **Golden Ratio (1:1.618)** spiral.\n💡 **Application:** Master designers craft famous logos (like the old Twitter bird or the Apple logo) by strictly using interlocking circles sized precisely to the Fibonacci numbers (e.g., circle sizes of 5px, 8px, 13px). This tricks the human brain into subconsciously viewing the logo as "naturally perfect."`,
+        chips: ["តើ Rule of Thirds និង Golden Ratio ខុសគ្នាម៉េច? 📐", "តើ Typography Scaling ជាអ្វី? 🔠"],
+        chips_en: ["Rule of Thirds vs Golden Ratio? 📐", "What is Typography Scaling? 🔠"]
+    },
+    
+    // ------------------------------------------
+    // 13. BASIC CONVERSATION CATCH-ALL & TOOLS
+    // ------------------------------------------
+    {
+        primaryKeys: ['សួស្តី', 'hello'],
+        keys: ['hi', 'hey', 'សួរស្ដី', 'សុខសប្បាយ', 'how are you', 'yo', 'sup', 'ហេលឡូ', 'អាឡូ', 'alo', 'helo', 'hello', 'good to see you'],
+        regex: ['^(hi|hello|hey|yo|sup|សួស្តី|សួរស្ដី|ហេលឡូ|អាឡូ|helo|alo)', 'សុខសប្បាយ', 'how are you'],
+        answer: "បាទ សួស្តីបង! 👋 ខ្ញុំគឺជាជំនួយការ AI ជំនាញខាងទ្រឹស្តី Graphic Design។ តើបងមានសំណួរអ្វីទាក់ទងនឹង គោលការណ៍រចនា ទ្រឹស្តី Gestalt, ការរៀបចំឋានានុក្រម ឬបញ្ហាការងារ Freelance ដែរទេ? 🎨✨",
+        answer_en: "Hello there! 👋 I am your dedicated Graphic Design AI expert. We can chat about deep design principles, Gestalt psychology, typography rules, or even freelance business strategies! What's on your mind today? 🎨✨",
+        chips: ["តើទ្រឹស្តី Gestalt ជាអ្វី? 🧩", "តើច្បាប់ពណ៌ ៦០-៣០-១០ ជាអ្វី? 🎨"],
+        chips_en: ["Explain Gestalt Psychology 🧩", "What is the 60-30-10 Rule? 🎨"]
+    },
+    {
+        primaryKeys: ['យល់ព្រម', 'okay'],
+        keys: ['ok', 'okay', 'អូខេ', 'អូខេស', 'បាទ', 'ចាស', 'យល់ហើយ', 'អូខេចា', 'អូខេបាទ', 'ល្អ'],
+        regex: ['^(ok|okay|អូខេ|អូខេស|បាទ|ចាស|យល់ហើយ|ល្អ)'],
+        answer: "បាទ តើមានទ្រឹស្តីអ្វីឱ្យខ្ញុំជួយបន្តទៀតទេ? អ្នកអាចសួរខ្ញុំពី Color Theory ឬ Design Principles ផ្សេងៗបាន។ ✨",
+        answer_en: "Great! Let me know if you want to explore any other design theories like typography or layout rules. ✨",
+        chips: ["តើ គោលការណ៍រចនា (Principles) មានអ្វីខ្លះ? 📐", "តើ Hick's Law ជាអ្វី? 🧠"],
+        chips_en: ["What are the Core Design Principles? 📐", "What is Hick's Law? 🧠"]
+    },
+    {
+        primaryKeys: ['សុំទោស', 'sorry'],
+        keys: ['សូរី', 'sorry', 'sory', 'សូមទោស', 'អធ្យាស្រ័យ'],
+        regex: ['(sorry|sory|សុំទោស|សូមទោស|សូរី|អធ្យាស្រ័យ)'],
+        answer: "បាទ មិនអីទេបង! ខ្ញុំនៅទីនេះជានិច្ច។ តើមានទ្រឹស្តី Design ណាមួយដែលខ្ញុំអាចជួយដោះស្រាយបានទេ?",
+        answer_en: "No worries at all! Is there any design theory problem I can help you solve right now?",
+        chips: ["តើ Squint Test ជាអ្វី? 👁️", "អ្វីទៅជា Hierarchy? 👁️"],
+        chips_en: ["What is the Squint Test? 👁️", "What is Visual Hierarchy? 👁️"]
+    },
+    {
+        primaryKeys: ['អរគុណ', 'thanks'],
+        keys: ['thank you', 'អគុណ', 'អរគុណច្រើន', 'thank', 'thx'],
+        regex: ['(thanks|thank you|អរគុណ|អគុណ|thx|thank)'],
+        answer: "បាទ ដោយក្តីរីករាយបំផុតបង! 😊 បើមានចម្ងល់រឿងទ្រឹស្តី Design លើកក្រោយ កុំភ្លេចសួរខ្ញុំណា៎ ខ្ញុំនៅទីនេះរង់ចាំជួយជានិច្ច! 🚀",
+        answer_en: "You are very welcome! 😊 Whenever you have another theoretical design question, I'll be right here waiting to help! 🚀",
+        chips: ["តើ Graphic Design ជាអ្វី? 🎨", "តើក្បួនលាយពណ៌កម្រិតខ្ពស់មានអ្វីខ្លះ? 🎨"],
+        chips_en: ["What is Graphic Design? 🎨", "Advanced color harmonies? 🎨"]
+    },
+    {
+        primaryKeys: ['សុំគំនិតច្នៃប្រឌិតបន្តិច 💡', 'Give me some inspiration 💡'],
+        keys: ['inspire me', 'inspiration', 'idea', 'គំនិត', 'គិតមិនចេញ', 'creative block'],
+        regex: ['inspire', 'inspiration', 'idea', 'គំនិត', 'គិតមិនចេញ'],
+        answer: "បាទ កំពុងជាប់គាំងគំនិត (Creative Block) មែនទេ? 💡\n\nសាកល្បងលំហាត់នេះ៖ យកក្រដាសទទេមួយសន្លឹក ហើយគូសវាស (Sketch) អ្វីដែលអាក្រក់បំផុត មិនសមហេតុផលបំផុតដែលអ្នកអាចនឹកឃើញក្នុងរយៈពេល ៥ នាទី! ការអនុញ្ញាតឱ្យខ្លួនឯងធ្វើខុស ជារឿយៗជួយដោះសោរខួរក្បាលឱ្យគិតចេញគំនិតល្អៗវិញ។ ឬអ្នកអាចចូលមើលវេបសាយដូចជា **Mobbin** សម្រាប់ UI ឬ **Behance** សម្រាប់ Poster!",
+        answer_en: "Hitting a Creative Block? 💡\n\nTry this exercise: Take a blank piece of paper and spend 5 minutes sketching the absolute worst, most terrible ideas you can think of! Giving yourself permission to make 'bad' art often unlocks the brain and gets the good ideas flowing again. Alternatively, browse sites like **Mobbin** for UI or **Behance** for editorial layouts!",
+        chips: ["តើ Moodboard គឺជាអ្វី? 📌", "តើ Graphic Design មានប្រវត្តិយ៉ាងណា? 📜"],
+        chips_en: ["What is a Moodboard? 📌", "What is the history of Graphic Design? 📜"]
+    },
+    {
+        primaryKeys: ['សុំមើលការងារខ្ញុំបន្តិច', 'Can you review my design?'],
+        keys: ['review', 'feedback', 'រិះគន់', 'មើលការងារ', 'check my design'],
+        regex: ['review', 'feedback', 'រិះគន់', 'មើលការងារ'],
+        answer: "បាទ ខ្ញុំជា AI មិនទាន់អាចមើលឃើញរូបភាពរបស់អ្នកផ្ទាល់នៅឡើយទេ។ តែអ្នកអាចពិនិត្យខ្លួនឯងបានដោយសួរ ៣ សំណួរនេះ៖\n\n១. តើចំណុចណាដែលលេចធ្លោជាងគេ? (Squint Test 👁️)\n២. តើអត្ថបទអាចអានដាច់ច្បាស់ទេ? (Contrast 🌗)\n៣. តើវាបានដោះស្រាយបញ្ហារបស់អតិថិជនហើយឬនៅ? 🎯",
+        answer_en: "I am an AI and currently cannot 'see' image uploads. However, you can self-critique by asking these 3 questions:\n\n1. What is the absolute most prominent element? (The Squint Test 👁️)\n2. Is every word perfectly legible? (Check your Contrast 🌗)\n3. Does this visual actually solve the client's core problem? 🎯",
+        chips: ["តើ Squint Test ជាអ្វី? 👁️", "តើ Contrast ជាអ្វី? 🌗"],
+        chips_en: ["What is the Squint Test? 👁️", "What is Contrast? 🌗"]
+    },
+    {
+        primaryKeys: ['Shortcut កម្មវិធីមានអ្វីខ្លះ?', 'What are some design shortcuts?'],
+        keys: ['shortcut', 'គន្លឹះលឿន', 'key', 'hotkey', 'keyboard shortcut'],
+        regex: ['shortcut', 'hotkey', 'key'],
+        answer: "បាទ ការចេះ Shortcut ជួយឱ្យធ្វើការលឿនជាងមុន ១០ ដង! នេះជា Shortcut ស្តង់ដារ (សម្រាប់ Mac ប្រើ Cmd ជំនួស Ctrl)៖\n\n- **V:** ឧបករណ៍ជ្រើសរើស (Move/Selection Tool)\n- **T:** សរសេរអក្សរ (Text Tool)\n- **P:** គូសបន្ទាត់ (Pen Tool)\n- **Ctrl + Z:** ថយក្រោយ (Undo)\n- **Ctrl + G:** ចងជាក្រុម (Group)\n- **Spacebar (សង្កត់ជាប់):** ទាញរំកិលផ្ទាំងការងារ (Pan Tool)",
+        answer_en: "Mastering keyboard shortcuts will 10x your workflow speed! Here are the universal standards (Use Cmd on Mac instead of Ctrl):\n\n- **V:** Move / Selection Tool\n- **T:** Text / Type Tool\n- **P:** Pen Tool\n- **Ctrl + Z:** Undo\n- **Ctrl + G:** Group selected layers\n- **Hold Spacebar:** Pan around your canvas",
+        chips: ["កម្មវិធីរចនាស្តង់ដារ (Design Software) 💻", "របៀបបង្កើត Custom Brush និង Macro? ⚙️"],
+        chips_en: ["Standard Design Software 💻", "How to create custom Brushes & Macros? ⚙️"]
+    },
+    {
+        primaryKeys: ['ម៉ោងប៉ុន្មានហើយ?', 'What time is it?'],
+        keys: ['time', 'date', 'ម៉ោង', 'ថ្ងៃនេះ', 'what time', 'what day'],
+        regex: ['time', 'date', 'ម៉ោង', 'ថ្ងៃនេះ'],
+        answer: "បាទ ថ្ងៃនេះគឺថ្ងៃអាទិត្យ ទី២៦ ខែមេសា ឆ្នាំ២០២៦ ម៉ោង ៩:០១ យប់ (ម៉ោងនៅកម្ពុជា)។ កុំភ្លេចទុកពេលសម្រាកខ្លះផងណា៎! ☕",
+        answer_en: "It is currently Sunday, April 26, 2026, at 9:01 PM (Cambodia Time). Don't forget to take a break and rest your eyes! ☕",
+        chips: ["តើ Graphic Design ជាអ្វី? 🎨", "តើក្បួនចាប់ផ្តើមរៀន Design មានប៉ុន្មានជំហាន? 🚀", "តើ Font ខ្មែរល្អបំផុតមានអ្វីខ្លះ? 🇰🇭"],
+        chips_en: ["What is Graphic Design? 🎨", "How to begin as a Graphic Designer? 🚀", "Best Khmer Fonts for design? 🇰🇭"]
+    },
+    {
+        primaryKeys: ['ពណ៌ចៃដន្យ 🎨', 'random color'],
+        keys: ['color generator', 'generate color', 'give me a color'],
+        regex: ['(generate|random|give me a).*color', 'ពណ៌ចៃដន្យ', 'color generator', 'random color'],
+        answer: "បាទ នេះគឺជាពណ៌ចៃដន្យដ៏ស្រស់ស្អាតមួយ (**{hex}**) សម្រាប់គម្រោងបន្ទាប់របស់អ្នក។ 🎨\n\n💡 **អនុសាសន៍:** ខ្ញុំសូមណែនាំឱ្យអ្នកចុចប៊ូតុងខាងក្រោម ដើម្បីប្រើប្រាស់ **ឧបករណ៍ពណ៌ (Color Generator)** របស់យើង។ វានឹងជួយស្វែងរកក្បួនផ្គូផ្គងពណ៌ (Color Harmonies) ដែលស៊ីនឹងពណ៌នេះបានយ៉ាងល្អឥតខ្ចោះ!",
+        answer_en: "Here is a beautiful random color (**{hex}**) for your next project! 🎨\n\n💡 **Recommendation:** I highly recommend clicking the button below to use our built-in **Color Generator Tool**. It will help you instantly find the perfect professional color harmonies to match this exact hex code!",
+        dynamicColor: true, 
+        uiElement: 'color_palette',
+        colors: [], 
+        actionButton: { label: "បើកឧបករណ៍ពណ៌ 🎨", label_en: "Open Color Tools 🎨", actionToTrigger: "tools", subTab: "color" },
+        chips: ["តើច្បាប់ពណ៌ ៦០-៣០-១០ ជាអ្វី? 🎨", "តើ Color Theory ជាអ្វី? 🎨"],
+        chips_en: ["What is the 60-30-10 Rule? 🎨", "Can you explain Color Theory? 🎨"]
+    },
+    {
+        primaryKeys: ['ឧបករណ៍', 'tools'],
+        keys: ['layout generator', 'ប្លង់', 'tool', 'ឧបករណ៍ជំនួយ'],
+        regex: ['tool', 'ឧបករណ៍', 'layout generator', 'ប្លង់'],
+        answer: "បាទ ខ្ញុំមានឧបករណ៍ពិសេសសម្រាប់អ្នក! អ្នកអាចបង្កើតពណ៌ ឬមើលគំរូប្លង់ខ្នាតស្តង់ដារបាននៅទីនេះ៖",
+        answer_en: "I have some special tools for you! You can generate colors or view standard layout grids here:",
+        actionButton: { label: "បើកឧបករណ៍ជំនួយ 🛠️", label_en: "Open Design Tools 🛠️", actionToTrigger: "tools" },
+        chips: ["តើទំហំ Poster ស្តង់ដារមានអ្វីខ្លះ? 📏", "តើ Grid System គឺជាអ្វី? 📐"],
+        chips_en: ["Standard Poster sizes? 📏", "What is a Grid System? 📐"]
+    },
+
+    // ------------------------------------------
+    // 🌟 THE MOST ASKED AI QUESTIONS (BUSINESS & HACKS)
+    // ------------------------------------------
+    {
+        primaryKeys: ['របៀបធ្វើ Portfolio បើគ្មានបទពិសោធន៍ទាល់តែសោះ? 📁', 'Portfolio with no experience? 📁'],
+        keys: ['no experience', 'fake client', 'portfolio គ្មានបទពិសោធន៍', 'គ្មានភ្ញៀវ', 'build portfolio'],
+        regex: ['no experience', 'portfolio', 'គ្មានបទពិសោធន៍', 'គ្មានភ្ញៀវ'],
+        answer: `បាទ នេះជាសំណួរដែលគេសួរច្រើនជាងគេបំផុត! បើអ្នកគ្មានអតិថិជនពិតប្រាកដ អ្នកនៅតែអាចកសាង Portfolio ដ៏ទាក់ទាញបានដោយប្រើវិធី "Fake Projects" (គម្រោងសិប្បនិម្មិត)៖\n\n១. **ប្រើប្រាស់ Brief Generators:** ចូលវេបសាយដូចជា GoodBrief.io វានឹងបង្កើតសំណើការងាររចនា (Design Brief) របស់ក្រុមហ៊ុនក្លែងក្លាយឱ្យអ្នករចនា។\n២. **Redesign (រចនាឡើងវិញ):** យករូបឡូហ្គោ ឬវេបសាយរបស់ក្រុមហ៊ុនក្នុងស្រុកដែលមិនសូវស្អាត មកពង្រីកគំនិតនិងរចនាវាឡើងវិញ (Unsolicited Redesign) រួចពន្យល់ពីមូលហេតុដែលអ្នកកែវា។\n៣. **ធ្វើជាអតិថិជនខ្លួនឯង:** បង្កើតម៉ាកយីហោក្នុងក្តីស្រមៃរបស់អ្នក (ឧ. ហាងកាហ្វេ) ហើយរចនាវាឱ្យពេញលេញតាំងពី Logo ដល់ Packaging។ \n💡 អតិថិជនមិនខ្វល់ថាវាក្លែងក្លាយទេ គេគ្រាន់តែចង់ឃើញ "សមត្ថភាព" របស់អ្នកប៉ុណ្ណោះ!`,
+        answer_en: `This is one of the most frequently asked questions! If you have no real clients, you can still build a stunning portfolio using "Fake Projects":\n\n1. **Use Brief Generators:** Visit sites like GoodBrief.io. They will automatically generate realistic design briefs for fake companies for you to work on.\n2. **Unsolicited Redesigns:** Take a poorly designed local logo or website and redesign it. Show the 'Before and After' and explain your problem-solving process.\n3. **Be Your Own Client:** Invent your dream brand (e.g., a modern coffee shop) and design the complete identity, from logo to packaging. \n💡 Clients don't care if the project is fake; they only care about your *capability* to solve visual problems!`,
+        chips: ["របៀបរៀបចំ Portfolio? 💼", "របៀបស្វែងរកអតិថិជន? 🔍"],
+        chips_en: ["Freelance Portfolio Tips 💼", "How to find freelance clients? 🔍"]
+    },
+    {
+        primaryKeys: ['វិធីឆ្លើយតបពេលភ្ញៀវថា "ថ្លៃពេក!" 💸', 'Client says "It is too expensive!" 💸'],
+        keys: ['too expensive', 'ថ្លៃពេក', 'client objection', 'តថ្លៃ', 'ចុះថ្លៃ', 'reduce price'],
+        regex: ['expensive', 'ថ្លៃពេក', 'តថ្លៃ', 'ចុះថ្លៃ'],
+        answer: `បាទ ក្នុងនាមជាអ្នករចនា អ្នកមិនត្រូវភ័យស្លន់ស្លោពេលលឺពាក្យនេះទេ! \n\n⚠️ **បំរាមដាច់ខាត:** កុំ "បញ្ចុះតម្លៃ" ភ្លាមៗដោយមិនបានកាត់បន្ថយទំហំការងារឱ្យសោះ! វាធ្វើឱ្យតម្លៃខ្លួនអ្នកធ្លាក់ចុះ។\n\n💡 **វិធីឆ្លើយតបប្រកបដោយវិជ្ជាជីវៈ:**\n*"ខ្ញុំយល់ស្របថាថវិកាគឺជារឿងសំខាន់សម្រាប់បង។ តម្លៃនេះគឺឆ្លុះបញ្ចាំងពីគុណភាព និងការស្រាវជ្រាវដែលនឹងជួយឱ្យអាជីវកម្មបងលេចធ្លោជាងគូប្រកួត។ ប្រសិនបើកញ្ចប់នេះលើសពីថវិការបស់បង យើងអាចដកការរចនានាមប័ណ្ណ (Business Card) ចេញ ដើម្បីកាត់បន្ថយតម្លៃឱ្យត្រូវនឹងទំហំថវិការបស់បងបាន។ តើបងយល់យ៉ាងណាដែរ?"*`,
+        answer_en: `As a professional designer, never panic when you hear this objection!\n\n⚠️ **Strict Rule:** NEVER randomly lower your price without also lowering the scope of work! It instantly destroys your perceived value.\n\n💡 **The Professional Response:**\n*"I completely understand that staying within budget is important. This pricing reflects the deep research and quality required to help your business stand out from competitors. However, if this package exceeds your budget, we can remove the Business Card and Letterhead deliverables to reduce the cost to fit your needs. How does that sound?"*`,
+        chips: ["ការគិតលុយតាមតម្លៃអាជីវកម្ម (Value-Based Pricing) 💰", "សារៈសំខាន់នៃកិច្ចសន្យា 📝"],
+        chips_en: ["Value-Based Pricing 💰", "Importance of Contracts 📝"]
+    },
+    {
+        primaryKeys: ['តើត្រូវផ្ញើ File Logo អ្វីខ្លះទៅឱ្យអតិថិជន? 📦', 'What logo files should be sent? 📦'],
+        keys: ['logo files', 'deliverables', 'ផ្ញើ logo ឱ្យភ្ញៀវ', 'logo package', 'export logo'],
+        regex: ['logo file', 'deliverable', 'ផ្ញើ logo'],
+        answer: `បាទ អ្នកមិនអាចគ្រាន់តែផ្ញើរូបភាព JPG មួយសន្លឹកទៅឱ្យភ្ញៀវហើយគិតលុយនោះទេ! **The Ultimate Logo Handover Package** ត្រូវមាន៖\n\n១. **Source Files (Vector):** AI, EPS, និង PDF (សម្រាប់អ្នករោងពុម្ពទាញយកទៅបោះពុម្ពខ្នាតធំដោយមិនបែក)។\n២. **Web Files (Raster & Vector):** PNG (មាន Background ថ្លា) និង SVG (សម្រាប់ដាក់លើវេបសាយឱ្យដើរលឿន)។\n៣. **Color Variations:** ឡូហ្គោពណ៌ដើម (Full Color), ពណ៌សសុទ្ធ (All White), និងពណ៌ខ្មៅសុទ្ធ (All Black)។\n៤. **Brand Cheat Sheet:** ឯកសារ PDF តូចមួយប្រាប់ពីលេខកូដពណ៌ (HEX, CMYK) និងឈ្មោះហ្វុនអក្សរដែលបានប្រើ។\n\nរៀបចំវាដាក់ក្នុង ZIP Folder ឱ្យមានរបៀប នោះអតិថិជននឹងកោតសរសើរអ្នកមិនខាន!`,
+        answer_en: `You cannot just send a client a single JPG and ask for payment! **The Ultimate Logo Handover Package** must include:\n\n1. **Source Files (Vector):** AI, EPS, and PDF (for professional printers to scale infinitely without losing quality).\n2. **Web/Digital Files:** PNG (with transparent backgrounds) and SVG (for lightning-fast website loading).\n3. **Color Variations:** The logo in Full Color, All Black, and All White.\n4. **Brand Cheat Sheet:** A 1-page PDF listing the exact Color Codes (HEX, RGB, CMYK) and Typography names used.\n\nOrganize these cleanly into a ZIP folder, and the client will view you as a top-tier professional!`,
+        chips: ["របៀបប្រគល់ឯកសារចុងក្រោយ (File Handover) 📁", "តើ JPG, PNG, SVG ប្រើខុសគ្នាម៉េច? 📁"],
+        chips_en: ["How to handover final files 📁", "When to use JPG, PNG, or SVG? 📁"]
+    },
+    {
+        primaryKeys: ['របៀបរើស Font ឱ្យត្រូវនឹងម៉ាកយីហោ? 🅰️', 'How to choose the right font? 🅰️'],
+        keys: ['choose font', 'រើស font', 'select typeface', 'រក font'],
+        regex: ['choose font', 'រើស font', ' typeface'],
+        answer: `បាទ ហ្វុនអក្សរ (Typography) មាន "សំឡេង" របស់វា! ដើម្បីរើសបានត្រូវ អ្នកត្រូវសួរថា តើម៉ាកយីហោនេះមានចរិតលក្ខណៈបែបណា?\n\n- **ប្រណីត ថ្លៃថ្នូរ និងគួរឱ្យទុកចិត្ត (ឧ. ធនាគារ, គ្រឿងអលង្ការ):** ជ្រើសរើស **Serif Fonts** (ហ្វុនមានកន្ទុយ ដូចជា Playfair Display ឬ Times New Roman)។\n- **ទំនើប បច្ចេកវិទ្យា និងសាមញ្ញ (ឧ. App, ក្រុមហ៊ុន Tech):** ជ្រើសរើស **Sans-Serif Fonts** ក្រាស់ៗនិងស្អាតបាត (ដូចជា Inter, Roboto, ឬ Helvetica)។\n- **ក្មេង សប្បាយរីករាយ និងរួសរាយ (ឧ. ប្រដាប់ក្មេងលេង, បង្អែម):** ជ្រើសរើស **Rounded Fonts** (ហ្វុនគែមមូល) ឬហ្វុនដែលសរសេរដោយដៃ។\n💡 កុំរើសហ្វុនដោយសារតែវាស្អាត ត្រូវរើសហ្វុនដែល "តំណាងឱ្យអត្ថន័យអាជីវកម្ម"!`,
+        answer_en: `Typography has a "Voice"! To choose the right font, you must first ask: What is the personality of the brand?\n\n- **Luxury, Traditional, and Trustworthy (e.g., Banks, Jewelry):** Use **Serif Fonts** (fonts with feet, like Playfair Display or Garamond).\n- **Modern, Tech-focused, and Minimalist (e.g., Startups, Apps):** Use clean **Sans-Serif Fonts** (like Inter, Helvetica, or Montserrat).\n- **Playful, Youthful, and Friendly (e.g., Toys, Desserts):** Use **Rounded Sans-Serifs** or friendly, legible script fonts.\n💡 Never choose a font just because you think "it looks cool." Choose a font because it represents the business's core message!`,
+        chips: ["តើ Typographic Hierarchy គឺជាអ្វី? 🥇", "តើ Serif និង Sans-Serif ខុសគ្នាម៉េច? 🖋️"],
+        chips_en: ["What is Typographic Hierarchy? 🥇", "Serif vs Sans-Serif? 🖋️"]
+    },
+    {
+        primaryKeys: ['គន្លឹះសម្ងាត់ក្នុងការសារ៉េគម្លាតអក្សរ (Kerning Trick) 🔤', 'The secret Kerning Trick 🔤'],
+        keys: ['kerning trick', 'trick គម្លាតអក្សរ', 'logo kerning', 'secret typography'],
+        regex: ['kerning trick', 'គម្លាតអក្សរ'],
+        answer: `បាទ ការសារ៉េគម្លាតអក្សរ (Kerning) សម្រាប់ Logo គឺជារឿងសំខាន់បំផុត តែពេលខ្លះភ្នែកយើងមើលលែងដឹងថាត្រឹមត្រូវឬនៅ។ នេះគឺជាអាថ៌កំបាំងរបស់អ្នកជំនាញ៖\n\n💡 **បង្វិលអក្សរចុះក្រោម (Flip it upside down)!**\nនៅពេលអ្នកបង្វិលអក្សរ Logo ចុះក្រោម ខួរក្បាលរបស់អ្នកនឹងឈប់អានវាជា "ពាក្យ"។ វានឹងបង្ខំឱ្យភ្នែកអ្នកមើលឃើញតែ **"ចន្លោះប្រហោងទទេ (Negative Space)"** រវាងតួអក្សរនីមួយៗវិញ។ ពេលនោះ អ្នកនឹងងាយស្រួលមើលដឹងភ្លាមៗថា ចន្លោះណាធំពេក ឬតូចពេក!`,
+        answer_en: `Kerning (adjusting the space between letters) is critical for Logo design, but sometimes your eyes get tired and you can't tell if it's perfect. Here is the ultimate professional secret:\n\n💡 **Flip the text upside down!**\nWhen you rotate the logo 180 degrees, your brain stops trying to read it as an actual "word". Instead, it forces your eyes to only see the abstract shapes of the **Negative Space** between the letters. Any awkward gaps or tight spaces will instantly become obvious!`,
+        chips: ["តើ Kerning, Tracking, Leading ខុសគ្នាម៉េច? 🔠", "អ្វីទៅជា White Space? 🤍"],
+        chips_en: ["Kerning vs Tracking vs Leading? 🔠", "What is White Space? 🤍"]
+    },
+    {
+        primaryKeys: ['របៀប Export រូបបង្ហោះកុំឱ្យបែកគុណភាព? 📱', 'How to export high-quality for social media? 📱'],
+        keys: ['social media export', 'រូបច្បាស់', 'upload មិនបែក', 'facebook pixelated', 'export setting'],
+        regex: ['export', 'upload', 'មិនបែក', 'pixelate'],
+        answer: `បាទ ជាញឹកញាប់ពេលយើង Export រូបច្បាស់ខ្លាំង តែពេល Post លើ Facebook បែរជាបែកព្រិល! នេះមកពី Algorithm របស់ Facebook សង្កត់ទំហំរូបភាព។ នេះជាក្បួនដោះស្រាយ៖\n\n១. **ទំហំសមស្រប:** ប្រើខ្នាតដែលគេគាំទ្រ (ឧទាហរណ៍ 1080x1350px សម្រាប់ Instagram)។\n២. **Color Space:** ត្រូវប្រាកដថាប្រើ **sRGB** ជានិច្ច កុំប្រើ CMYK ឱ្យសោះ។\n៣. **ទំហំ File:** ត្រូវ Save ឱ្យ File ស្រាល (តិចជាង 1MB ឬអតិបរមា 2MB) ដើម្បីកុំឱ្យ Facebook បំប្លែងវាខ្លាំងពេក។\n៤. **The Noise Hack (គន្លឹះសម្ងាត់):** បន្ថែម Noise/Film Grain ប្រហែល ១ ទៅ ២% ទៅលើរូបភាពមុន Export។ គ្រាប់ Noise តូចៗនេះ នឹងបញ្ឆោត Algorithm បង្ហាប់រូបភាពរបស់ Facebook ឱ្យរក្សាភាពច្បាស់ (Sharpness) នៃរូបភាពបានកាន់តែល្អ!`,
+        answer_en: `It is incredibly frustrating when your ultra-sharp design looks blurry after uploading it to Facebook or Instagram! This happens because their compression algorithms crush large files. Here is the exact fix:\n\n1. **Correct Dimensions:** Use exactly 1080x1080px or 1080x1350px.\n2. **Color Space:** Always export in **sRGB**. Never use CMYK for social media.\n3. **File Size Limit:** Compress your file to be under 1MB (or strictly under 2MB). If you upload a 10MB file, Facebook will aggressively crush it.\n4. **The Noise Hack:** Add 1% or 2% Uniform Noise to your entire image before exporting. This tiny texture disrupts the social media compression algorithm, forcing it to maintain much sharper edges!`,
+        chips: ["តើ sRGB និង Adobe RGB ខុសគ្នាម៉េច? 🌈", "តើ Compression Artifacts គឺជាអ្វី? 📉"],
+        chips_en: ["sRGB vs Adobe RGB? 🌈", "What are Compression Artifacts? 📉"]
+    },
+    {
+        primaryKeys: ['របៀបបំប្លែងរូបភាពទៅជា Vector (Image Trace)? 🖼️', 'How to convert raster to vector? 🖼️'],
+        keys: ['raster to vector', 'image trace', 'បំប្លែងរូបទៅជា vector', 'vectorize'],
+        regex: ['raster to vector', 'image trace', 'vectorize', 'បំប្លែងរូប'],
+        answer: `បាទ អ្នកមិនអាចគ្រាន់តែយក File រូបភាព JPG ហើយចុច "Save As EPS" រួចសង្ឃឹមថាវាក្លាយជា Vector នោះទេ! (នេះជាកំហុសអ្នកចាប់ផ្តើមដំបូង)។ ការបំប្លែងរូបភាពទៅជា Vector ត្រូវធ្វើដូចនេះ៖\n\n១. **Image Trace (ស្វ័យប្រវត្តិ):** ក្នុង Adobe Illustrator អ្នកអាចដាក់រូបភាពចូល ហើយប្រើមុខងារ "Image Trace"។ កម្មវិធីនឹងព្យាយាមបំប្លែងគ្រាប់ Pixel ទៅជាបន្ទាត់ Vector ប៉ុន្តែជារឿយៗវាមិនសូវស្អាត ១០០% ទេ ជាពិសេសរូបដែលមានកម្រិតច្បាស់ទាប។\n២. **Redrawing (គូរដោយដៃ):** សម្រាប់ឡូហ្គោ ឬ Icon សំខាន់ៗ អ្នករចនាអាជីពតែងតែយក **Pen Tool** មកគូសតាមរូបដើម (Trace by hand) ម្តងមួយបន្ទាត់ៗ។ នេះជាវិធីតែមួយគត់ដែលធានាបាននូវ Vector ដ៏ល្អឥតខ្ចោះនិងស្អាតបំផុត!`,
+        answer_en: `You cannot simply take a JPG image, click "Save As .EPS", and magically expect it to become a Vector! (This is a huge rookie mistake). To actually vectorize an image:\n\n1. **Image Trace (Automated):** In Adobe Illustrator, you can use the "Image Trace" tool. The AI will attempt to calculate the pixels and turn them into math paths. However, this often results in wobbly, imperfect lines, especially on low-res images.\n2. **Redrawing (Manual):** For professional Logos or Icons, elite designers use the **Pen Tool** to manually trace over the original image. This takes more time, but it is the ONLY way to guarantee a perfect, infinitely scalable Vector file!`,
+        chips: ["តើ Vector និង Raster ខុសគ្នាម៉េច? 🖼️", "តើ Bézier Curve គឺជាអ្វី? 🖋️"],
+        chips_en: ["Vector vs Raster: What's the difference? 🖼️", "What is a Bézier Curve? 🖋️"]
+    },
+    {
+        primaryKeys: ['របៀបធ្វើបទបង្ហាញ Logo ឱ្យភ្ញៀវពេញចិត្ត 🎯', 'How to present a logo to clients? 🎯'],
+        keys: ['present logo', 'logo mockup', 'បង្ហាញ logo', 'presentation'],
+        regex: ['present', 'mockup', 'បង្ហាញ'],
+        answer: `បាទ ការរចនា Logo ស្អាត គឺជោគជ័យត្រឹម ៥០% ប៉ុណ្ណោះ ឯ ៥០% ទៀតគឺអាស្រ័យលើ "របៀបដែលអ្នកធ្វើបទបង្ហាញ"!\n\n⚠️ **កុំធ្វើ:** កុំគ្រាន់តែផ្ញើរូប Logo នៅលើ Background ពណ៌ស ទទេៗ ឱ្យអតិថិជនមើលឱ្យសោះ!\n💡 **អ្វីដែលអ្នករចនាអាជីពធ្វើ (Mockups):**\nអ្នកត្រូវដាក់ Logo នោះនៅលើ **Mockups 3D ពិតៗ**។ ប្រសិនបើវាជា Logo ហាងកាហ្វេ ចូរដាក់ Logo នោះលើរូបភាពកែវកាហ្វេ, ឯកសណ្ឋានបុគ្គលិក, និងស្លាកសញ្ញាភ្លើងកាត់មុខហាង។ អតិថិជនមិនមែនជាអ្នករចនាទេ ពួកគេពិបាកនឹងស្រមៃណាស់ ដូច្នេះយើងត្រូវបង្ហាញពួកគេឱ្យឃើញពី "ទិដ្ឋភាពជាក់ស្តែង" ទើបពួកគេងាយស្រួលយល់ព្រម (Approve) ដោយមិនងាយបដិសេធឡើយ។`,
+        answer_en: `Designing a beautiful logo is only 50% of the job. The other 50% is exactly *how* you present it to the client!\n\n⚠️ **Don't do this:** Never just send a flat JPG of the logo on a plain white background!\n💡 **What Professionals Do (Mockups):**\nYou must place the logo on realistic **3D Mockups**. If it's a coffee shop logo, show it embossed on a coffee cup, stamped on a uniform, and glowing on a storefront sign. Clients lack visual imagination. You must show them exactly how the logo looks in the real world so they can emotionally connect with it. This drastically reduces client rejections!`,
+        chips: ["របៀបរៀបចំ Portfolio? 💼", "តើ Brand, Identity និង Logo ខុសគ្នាម៉េច? 🏢"],
+        chips_en: ["Freelance Portfolio Tips 💼", "Brand vs Identity vs Logo? 🏢"]
+    },
+    {
+        primaryKeys: ['តើ Perfectionism (ភាពល្អឥតខ្ចោះ) ជាឧបសគ្គឬ? 🚧', 'Is perfectionism an obstacle? 🚧'],
+        keys: ['perfectionism', 'perfectionist', 'ចង់ឱ្យល្អឥតខ្ចោះ', 'creative block'],
+        regex: ['perfection'],
+        answer: `បាទ ពិតប្រាកដណាស់! នៅក្នុងវិស័យរចនា មានពាក្យស្លោកមួយពោលថា៖ **"Done is better than perfect." (ការធ្វើឱ្យរួចរាល់ ល្អជាងការព្យាយាមធ្វើឱ្យល្អឥតខ្ចោះរហូតមិនបានចេញលទ្ធផល)។**\n\nPerfectionism ច្រើនតែកើតចេញពីភាពភ័យខ្លាច (ខ្លាចគេរិះគន់ស្នាដៃ)។ វាធ្វើឱ្យអ្នកជាប់គាំង អង្គុយសារ៉េពណ៌ និងខ្នាតអក្សរ ១ភីកសែលម្តងៗ អស់ពេលរាប់ម៉ោងដោយមិនបានការ។\n💡 **វិធីកែ:** ផ្តល់ពេលកំណត់ (Deadline) ឱ្យខ្លួនឯង។ ធ្វើការរចនាឱ្យរួចរាល់ ៨០% សិន រួចបន្តទៅគម្រោងថ្មីទៀត។ លទ្ធផលដែលចេញជាសាច់ការ តែងតែមានតម្លៃជាងគម្រោង "ល្អឥតខ្ចោះ" ដែលជាប់គាំងនៅក្នុងកុំព្យូទ័ររបស់អ្នករហូត!`,
+        answer_en: `Yes, absolutely! In the design world, there is a famous saying: **"Done is better than perfect."**\n\nPerfectionism is often just fear in disguise (fear of criticism). It paralyzes you, making you waste hours nudging a font by 1 pixel or constantly changing colors without ever finishing.\n💡 **The Cure:** Set strict personal deadlines. Aim for 80% greatness and hit "Export". A very good, finished project out in the real world is infinitely more valuable than a "perfect" project that lives forever hidden on your hard drive!`,
+        chips: ["តើក្បួនចាប់ផ្តើមរៀន Design មានប៉ុន្មានជំហាន? 🚀", "របៀបរចនា Logo ពីដំបូងដល់ចប់ (Logo Process)? 🏷️", "របៀបធ្វើ Portfolio បើគ្មានបទពិសោធន៍ទាល់តែសោះ? 📁"],
+        chips_en: ["How to begin as a Graphic Designer? 🚀", "Logo design process step-by-step? 🏷️", "Portfolio with no experience? 📁"]
+    },
+    {
+        primaryKeys: ['របៀបរក្សារូបភាពកុំឱ្យបាត់ File (Missing Links)? 🔗', 'How to prevent missing links in Illustrator? 🔗'],
+        keys: ['missing link', 'បាត់រូប', 'embed image', 'package file'],
+        regex: ['missing link', 'បាត់រូប', 'embed'],
+        answer: `បាទ នេះជាកំហុសដ៏ឈឺចាប់បំផុត ពេលយើងផ្ញើ File Illustrator (AI) ឬ InDesign ទៅឱ្យរោងពុម្ព ហើយគេបើកមក "បាត់រូបភាពអស់រលីង"! នេះមកពីអ្នកគ្រាន់តែ Place (ដាក់) រូបភាព តែមិនបានបង្កប់វា។\n\n💡 **វិធីការពារ ១០០%៖**\n១. **Embed Image:** រាល់ពេលដាក់រូបភាពចូល Illustrator ត្រូវចុចលើរូបនោះ រួចចុចប៊ូតុង **"Embed"** នៅរបារខាងលើ ដើម្បីស្រូបយករូបនោះបញ្ចូលទៅក្នុង File ផ្ទាល់តែម្តង។\n២. **Package File:** នៅក្នុង InDesign ឬ Illustrator អ្នកអាចប្រើមុខងារ (File > Package)។ កម្មវិធីនឹងចម្លងរូបភាព និងហ្វុនអក្សរទាំងអស់ដែលអ្នកបានប្រើ ដាក់ចូលទៅក្នុង Folder តែមួយយ៉ាងមានសណ្តាប់ធ្នាប់ ត្រៀមជាស្រេចសម្រាប់ផ្ញើទៅកាន់រោងពុម្ព!`,
+        answer_en: `This is a highly embarrassing error! You send an Illustrator (.AI) or InDesign file to a printer, and when they open it, all the photos are missing. This happens because images are "Linked" by default, not saved inside the actual file.\n\n💡 **How to prevent this 100%:**\n1. **Embed Images:** Whenever you place a photo into Illustrator, click the image and press the **"Embed"** button in the top control bar. This permanently saves the pixel data inside the vector file.\n2. **Package the File:** In Illustrator or InDesign, go to (File > Package). The software will automatically gather every font and linked image you used and organize them into one neat folder, ready to be safely zipped and sent to the client or printer!`,
+        chips: ["របៀបប្រគល់ឯកសារចុងក្រោយ (File Handover) 📁", "តើបច្ចេកទេសបោះពុម្ពមានអ្វីខ្លះ? 🖨️"],
+        chips_en: ["How to handover final files 📁", "Advanced print finishes? 🖨️"]
+    },
+    {
+        primaryKeys: ["តើ Font ខ្មែរល្អបំផុតមានអ្វីខ្លះ? 🇰🇭","Best Khmer Fonts for design? 🇰🇭"],
+        keys: ["khmer font","cambodia font","ហ្វុនខ្មែរ","font ខ្មែរ","អក្សរខ្មែរ","nokora","hanuman","battambang","moul","kantumruy","siemreap","koulen","limon"],
+        regex: ["khmer\\s*font","cambodian\\s*font","ហ្វុនខ្មែរ","font.*ខ្មែរ","អក្សរខ្មែរ","\\bmoul\\b","\\bkantumruy\\b","\\bnokora\\b","\\bhanuman\\b","\\bkoulen\\b"],
+        answer: "បាទ ការរើស Font ខ្មែរល្អ ៗ ជាដំណាក់កាលដ៏សំខាន់សម្រាប់រាល់ Designer ខ្មែរ។ នេះជាបញ្ជី Pro:\n\n📚 **ហ្វុនសម្រាប់អត្ថបទវែង (Body / Long-form):**\n- **Kantumruy Pro** (Google Fonts) — ច្បាស់, ទំនើប, ស្អាតក្នុង UI/Web។\n- **Nokora** — Standard សម្រាប់សៀវភៅ, ឯកសារ Government។\n- **Hanuman** — Serif បែបបុរាណ ល្អសម្រាប់ឯកសារផ្លូវការ។\n- **Battambang** — Sans-serif ច្បាស់, ល្អក្នុង Body Text។\n\n🎨 **ហ្វុនសម្រាប់ Heading / Logo:**\n- **Moul / មូល** — បែបបុរាណ Banner ពិធីបុណ្យ ការងារធំ ៗ។\n- **Khmer Mondulkiri** — Bold និង Modern។\n- **Koulen** — Display ខ្លាំង, Logo / Title។\n- **Siemreap** — Decorative សម្រាប់សិល្បៈ។\n\n🌐 **ប្រភពទាញយក:**\n- **Google Fonts** (បានច្បាស់ + License សេរី)។\n- **Fonts.gov.kh** — Standard នៃក្រសួង។\n- **Khmer Fonts (KhmerOS)** — ឧបករណ៍ Standard ឥតគិតថ្លៃ។\n\n⚠️ **ការប្រុងប្រយ័ត្ន:** ចៀសវាង Font **Limon** (Legacy ASCII-based) សម្រាប់ Web/UI — ប្រើ Unicode តែប៉ុណ្ណោះ។\n💡 **គន្លឹះអ្នកជំនាញ:** គូ Font ខ្មែរ + អង់គ្លេសឱ្យស៊ីគ្នា ៖ **Kantumruy Pro + Inter** (Modern), **Moul + Playfair Display** (បុរាណ), **Battambang + Roboto** (UI)។ ត្រូវធានាថា x-height របស់ Khmer និង Latin ស្មើគ្នា — បើមិនអ៊ីចឹង វាមើលទៅ Awkward។",
+        answer_en: "Picking the right Khmer font is critical for Cambodian designers. Pro shortlist:\n\n📚 **Body / long-form fonts:**\n- **Kantumruy Pro** (Google Fonts) — clean, modern, perfect for UI/web.\n- **Nokora** — the de-facto standard for books and official docs.\n- **Hanuman** — classic serif vibe, formal documents.\n- **Battambang** — clean sans, excellent body text.\n\n🎨 **Heading / display / logo fonts:**\n- **Moul** — traditional ceremonial banners.\n- **Khmer Mondulkiri** — bold modern display.\n- **Koulen** — heavy display for logos & titles.\n- **Siemreap** — decorative artistic.\n\n🌐 **Where to download:**\n- **Google Fonts** (clean licensing, free for commercial use).\n- **Fonts.gov.kh** — official government set.\n- **KhmerOS** — free standard typefaces.\n\n⚠️ **Warning:** Avoid **Limon** (legacy ASCII-based) for web/UI — always use Unicode-based Khmer fonts.\n💡 **Pro Tip:** Pair Khmer + Latin fonts that share visual rhythm: **Kantumruy Pro + Inter** (modern UI), **Moul + Playfair Display** (classic), **Battambang + Roboto** (clean web). Match x-heights — if Latin is much taller than Khmer, the layout looks awkward.",
+        chips: ["តើ Typography Anatomy ជាអ្វី? 🔤","របៀបតម្រៀប Font ឱ្យស្អាត? 🅰️","តើ Kerning, Tracking, Leading ខុសគ្នាម៉េច? 🔠"],
+        chips_en: ["Explain Typography Anatomy 🔤","How to properly pair fonts? 🅰️","Kerning vs Tracking vs Leading? 🔠"],
+    },
+    {
+        primaryKeys: ["ខ្នាតរូបសម្រាប់ Social Media ឆ្នាំនេះ? 📱","Social Media image sizes 2026? 📱"],
+        keys: ["social media size","social media dimension","ខ្នាតរូប","ខ្នាត facebook","ខ្នាត instagram","ខ្នាត tiktok","ខ្នាត youtube","ខ្នាត linkedin","facebook cover size","instagram post size","tiktok video size","youtube thumbnail","banner size"],
+        regex: ["social\\s*media\\s*size","social\\s*media.*dimension","ខ្នាត.*facebook","ខ្នាត.*instagram","ខ្នាត.*tiktok","ខ្នាត.*youtube","facebook.*cover","instagram.*post.*size","youtube.*thumbnail","ខ្នាតរូប.*social"],
+        answer: "បាទ នេះជាខ្នាងស្តង់ដារសម្រាប់ Designer ខ្មែរ (កែសម្រួលឆ្នាំ 2026):\n\n📘 **Facebook**\n- Profile: **170 × 170**\n- Cover: **820 × 312** (Desktop) / **640 × 360** (Mobile-safe)\n- Post (Square): **1080 × 1080**\n- Post (Landscape): **1200 × 630**\n- Story: **1080 × 1920**\n- Event Cover: **1920 × 1080**\n\n📷 **Instagram**\n- Profile: **320 × 320**\n- Post (Square): **1080 × 1080**\n- Post (Portrait): **1080 × 1350** (ល្អបំផុតសម្រាប់ Reach!)\n- Story / Reel: **1080 × 1920**\n\n🎵 **TikTok**\n- Video: **1080 × 1920** (9:16)\n- Profile: **200 × 200**\n\n▶️ **YouTube**\n- Thumbnail: **1280 × 720** (16:9)\n- Channel Banner: **2560 × 1440** (Safe area: 1546 × 423 center)\n- Short: **1080 × 1920**\n\n💼 **LinkedIn**\n- Profile: **400 × 400**\n- Banner: **1584 × 396**\n- Post: **1200 × 627**\n\n💡 **គន្លឹះអ្នកជំនាញ:** Export ជា **PNG** សម្រាប់ Graphic / Text-heavy, និង **JPG Quality 85** សម្រាប់រូបថត។ ប្រើ Color Mode **sRGB** — កុំប្រើ Adobe RGB ឬ CMYK សម្រាប់ Web!",
+        answer_en: "2026 reference sheet for Cambodian designers:\n\n📘 **Facebook**\n- Profile: **170 × 170**\n- Cover: **820 × 312** (desktop) / **640 × 360** (mobile-safe)\n- Post (Square): **1080 × 1080**\n- Post (Landscape): **1200 × 630**\n- Story: **1080 × 1920**\n- Event Cover: **1920 × 1080**\n\n📷 **Instagram**\n- Profile: **320 × 320**\n- Post (Square): **1080 × 1080**\n- Post (Portrait): **1080 × 1350** (best reach!)\n- Story / Reel: **1080 × 1920**\n\n🎵 **TikTok**\n- Video: **1080 × 1920** (9:16)\n- Profile: **200 × 200**\n\n▶️ **YouTube**\n- Thumbnail: **1280 × 720** (16:9)\n- Channel Banner: **2560 × 1440** (safe area: 1546 × 423 center)\n- Short: **1080 × 1920**\n\n💼 **LinkedIn**\n- Profile: **400 × 400**\n- Banner: **1584 × 396**\n- Post: **1200 × 627**\n\n💡 **Pro Tip:** Export **PNG** for text/graphic-heavy assets, **JPG quality 85** for photos. Always use **sRGB** color mode for web — never Adobe RGB or CMYK!",
+        chips: ["របៀប Export រូបបង្ហោះកុំឱ្យបែកគុណភាព? 📱","តើ RGB និង CMYK ខុសគ្នាម៉េច? 🖨️","តើទំហំ Poster ស្តង់ដារមានអ្វីខ្លះ? 📏"],
+        chips_en: ["How to export high-quality for social media? 📱","RGB vs CMYK? 🖨️","Standard Poster sizes? 📏"],
+    },
+    {
+        primaryKeys: ["របៀបលុបផ្ទៃខាងក្រោយរូបភាព (Remove Background)? ✂️","How to remove background from photos? ✂️"],
+        keys: ["remove background","cut out","លុបផ្ទៃខាងក្រោយ","លុប background","កាត់ background","transparent background","background removal","select subject","magic wand","pen tool background"],
+        regex: ["remove\\s*background","cut\\s*out\\s*image","លុប.*background","លុបផ្ទៃខាងក្រោយ","background\\s*removal","transparent\\s*background","select\\s*subject"],
+        answer: "បាទ មាន ៥ វិធីសម្រាប់លុបផ្ទៃខាងក្រោយ — ជ្រើសរើសតាមកម្រិតលំបាករបស់រូបភាព:\n\n🟢 **កម្រិត ១ — រូបរលូន ស្អាត (Quick):**\n- **Photoshop > Select Subject** (AI) → Add Layer Mask។ ល្អ 80% នៃករណី។\n- **Online Tools:** remove.bg, Canva Background Remover, Pixelcut។\n\n🟡 **កម្រិត ២ — រូបមានសក់ / ផ្ដៃស្មុគស្មាញ:**\n- **Photoshop > Select & Mask > Refine Edge Brush** លើសក់។\n- បើក **Smart Radius** + Decontaminate Colors។\n\n🟠 **កម្រិត ៣ — រូបមាន Glass, Smoke, Hair:**\n- ប្រើ **Channels Panel** → ស្វែងរក Channel ដែលមាន Contrast ខ្ពស់បំផុត រវាង Subject និង Background → Duplicate → Levels (Black/White) → Load as Selection។\n\n🔴 **កម្រិត ៤ — Hard Edge Object (ឡូហ្គោ, ផលិតផល):**\n- **Pen Tool** គូស Path ដោយដៃ → Right-click > Make Selection → Mask។ ច្បាស់ ១០០% មិនព្រិល។\n\n🤖 **កម្រិត ៥ — រូបច្រើន (Batch):**\n- **Photoshop Actions** ឬ AI Tools ដូចជា Photoroom, ClipDrop, Adobe Express។\n\n💡 **គន្លឹះអ្នកជំនាញ:** តែងតែប្រើ **Layer Mask** មិនមែន **Delete** — អ្នកអាចត្រឡប់មកកែវិញបាន (Non-Destructive)។ Save ជា **PNG-24** ដើម្បីរក្សា Transparency។",
+        answer_en: "5 methods to remove a background — pick by difficulty level:\n\n🟢 **Level 1 — Clean subject on plain background:**\n- **Photoshop > Select Subject** (AI) → Add Layer Mask. Works 80% of the time.\n- **Online:** remove.bg, Canva Background Remover, Pixelcut.\n\n🟡 **Level 2 — Hair / fur / busy edges:**\n- **Photoshop > Select & Mask > Refine Edge Brush** on hair strands.\n- Enable **Smart Radius** + Decontaminate Colors.\n\n🟠 **Level 3 — Glass, smoke, fine wisps:**\n- **Channels Panel** → find the channel with highest contrast between subject and background → Duplicate → Levels (push black/white) → Load as Selection.\n\n🔴 **Level 4 — Hard-edge objects (logos, products):**\n- **Pen Tool** to draw a path manually → Right-click > Make Selection → Mask. 100% crisp, no blur.\n\n🤖 **Level 5 — Batch removal:**\n- **Photoshop Actions** or AI tools like Photoroom, ClipDrop, Adobe Express.\n\n💡 **Pro Tip:** Always use a **Layer Mask** instead of Delete — masks are reversible (non-destructive). Save as **PNG-24** to preserve transparency.",
+        chips: ["តើ Layer Mask ប្រើសម្រាប់អ្វី? 🎭","តើការកាត់តរូបបែប Non-Destructive ជាអ្វី? 🔄","តើ Pen Tool និង Bezier ប្រើដូចម្តេច? 🖋️"],
+        chips_en: ["What is a Layer Mask used for? 🎭","What is Non-Destructive Editing? 🔄","How to use the Pen Tool? 🖋️"],
+    },
+    {
+        primaryKeys: ["Photoshop, Illustrator, InDesign — ប្រើខុសគ្នាម៉េច? 🖥️","Photoshop vs Illustrator vs InDesign? 🖥️"],
+        keys: ["photoshop vs illustrator","illustrator vs indesign","photoshop vs indesign","adobe trinity","ps vs ai","ai vs id","ប្រើ photoshop ឬ illustrator","when to use photoshop"],
+        regex: ["photoshop\\s*(vs|or|និង)\\s*illustrator","illustrator\\s*(vs|or|និង)\\s*indesign","photoshop\\s*(vs|or|និង)\\s*indesign","when\\s*(to\\s*)?use\\s*(photoshop|illustrator|indesign)","adobe\\s*trinity"],
+        answer: "បាទ នេះគឺជា “ត្រីភាគី” នៃ Adobe — ឧបករណ៍នីមួយៗមានគោលដៅផ្សេងគ្នា:\n\n🖼️ **Photoshop (Pixel King)**\n- ប្រើសម្រាប់ ៖ **រូបថត** — កែពណ៌, Retouch, Composite, Digital Painting។\n- File ដើម ៖ Pixel (Raster)។\n- ឧទាហរណ៍: កែរូបព្រេន, បង្កើត Banner រូបថត, លាយ Photo + Effect។\n\n📐 **Illustrator (Vector King)**\n- ប្រើសម្រាប់ ៖ **Logo, Icon, Illustration** — អ្វីៗដែលត្រូវពង្រីកគ្មានដែនកំណត់។\n- File ដើម ៖ Vector (Math)។\n- ឧទាហរណ៍: ឡូហ្គោម៉ាក, Icon Set, Infographic, T-shirt Print។\n\n📄 **InDesign (Layout King)**\n- ប្រើសម្រាប់ ៖ **ឯកសារទំព័រច្រើន** — Magazine, Brochure, Book, Annual Report។\n- File ដើម ៖ Multi-page layout (Master Pages, Page Numbers)។\n- ឧទាហរណ៍: ទស្សនាវដ្តី, កាតាឡុក ៥០ ទំព័រ, រាយការណ៍ប្រចាំឆ្នាំ។\n\n🎯 **វិធីសម្គាល់ឆាប់:**\n- រូបថត / Effect → **Photoshop**\n- Logo / Icon → **Illustrator**\n- ទំព័រច្រើន (≥ 4 ទំព័រ) → **InDesign**\n\n💡 **គន្លឹះអ្នកជំនាញ:** Designer ពិតៗប្រើទាំង ៣ ស្របគ្នាក្នុង Project មួយ ៖ បង្កើត Icon នៅ AI → កែរូបនៅ PS → ផ្ដុំទាំងអស់ចូល Brochure នៅ ID។ កុំធ្វើ Magazine ៣០ ទំព័រនៅ Photoshop — បងនឹងស្តាយក្រោយ!",
+        answer_en: "The Adobe trinity — each tool has a clear purpose:\n\n🖼️ **Photoshop (Pixel King)**\n- For: **Photos** — retouching, color correction, compositing, digital painting.\n- Native: Pixel (raster).\n- Examples: skin retouching, photo banners, photo + effect compositing.\n\n📐 **Illustrator (Vector King)**\n- For: **Logos, icons, illustrations** — anything that must scale infinitely.\n- Native: Vector (math).\n- Examples: brand logos, icon sets, infographics, T-shirt prints.\n\n📄 **InDesign (Layout King)**\n- For: **Multi-page documents** — magazines, brochures, books, annual reports.\n- Native: Multi-page layout (master pages, automated page numbers).\n- Examples: 50-page catalog, magazine, annual report.\n\n🎯 **Quick decision:**\n- Photo / effect → **Photoshop**\n- Logo / icon → **Illustrator**\n- 4+ pages → **InDesign**\n\n💡 **Pro Tip:** Real pros use all three in one project: build icons in AI → retouch photos in PS → assemble everything into the brochure in ID. Never lay out a 30-page magazine in Photoshop — you'll regret it.",
+        chips: ["តើ Vector និង Raster ខុសគ្នាម៉េច? 🖼️","តើ Affinity Suite ល្អប្រៀបនឹង Adobe ទេ? 💎","តើ Smart Object ជាអ្វី? 🎁"],
+        chips_en: ["Vector vs Raster? 🖼️","Affinity Suite vs Adobe? 💎","What is a Smart Object? 🎁"],
+    },
+    {
+        primaryKeys: ["តើ Affinity Suite ល្អប្រៀបនឹង Adobe ទេ? 💎","Affinity Suite vs Adobe? 💎"],
+        keys: ["affinity","affinity vs adobe","affinity designer","affinity photo","affinity publisher","serif affinity","adobe alternative","photoshop alternative","illustrator alternative"],
+        regex: ["affinity\\s*(suite|vs|designer|photo|publisher)","adobe\\s*alternative","alternative\\s*to\\s*(photoshop|illustrator|adobe)"],
+        answer: "បាទ **Affinity Suite** (បង្កើតដោយក្រុមហ៊ុន Serif) គឺជា “Adobe Killer” ដ៏ពិតប្រាកដសម្រាប់អ្នករចនាដែលមិនចង់បង់ Subscription រាល់ខែ។\n\n💎 **កម្មវិធី ៣ យ៉ាង (ប្រៀបនឹង Adobe):**\n- **Affinity Photo** ↔ Photoshop\n- **Affinity Designer** ↔ Illustrator\n- **Affinity Publisher** ↔ InDesign\n\n✅ **ចំណុចខ្លាំង:**\n- **One-time payment** (~$70/កម្មវិធី) — គ្មាន Subscription។\n- រហ័សជាង Adobe លើ Hardware ដូចគ្នា។\n- **StudioLink** — ឆ្លងពី Photo ទៅ Designer ទៅ Publisher ដោយមិនបាច់ Export។\n- ស្គាល់ Format Adobe (.PSD, .AI, .PDF)។\n- មាន Universal License — ប្រើបាននៅ Windows, Mac, និង iPad។\n\n⚠️ **ចំណុចខ្សោយ:**\n- មិនមាន **Generative AI** ដូច Photoshop ទេ (មិនទាន់)។\n- Community / Tutorial តិចជាង Adobe ច្រើន។\n- មិនរួមបញ្ចូលជាមួយ Creative Cloud Services (Fonts, Stock)។\n- មិនមាន **After Effects / Premiere / Lightroom** equivalents។\n\n🎯 **ត្រូវប្រើ Affinity បើ:**\n- បងជា Freelancer ឬ Studio តូចចង់សន្សំលុយ។\n- ការងារភាគច្រើនជា Static Design (Logo, Brochure, Photo Edit)។\n\n🎯 **ត្រូវប្រើ Adobe បើ:**\n- ការងារត្រូវ Collaborate ជាមួយ Team ផ្សេងទៀតដែលប្រើ Adobe។\n- ត្រូវការ Video, Motion, ឬ AI Generative។\n\n💡 **គន្លឹះអ្នកជំនាញ:** Designer ខ្មែរច្រើនកំពុងផ្លាស់ប្ដូរទៅ Affinity — ការសន្សំ $660/ឆ្នាំ (Adobe All Apps) ជាប្រាក់ច្រើនណាស់នៅខ្មែរ។ បើបងទើបចាប់ផ្ដើម, Affinity ជា ROI ដ៏ល្អបំផុត។",
+        answer_en: "**Affinity Suite** (made by Serif) is the real \"Adobe Killer\" for designers tired of monthly subscriptions.\n\n💎 **The 3 apps vs Adobe equivalents:**\n- **Affinity Photo** ↔ Photoshop\n- **Affinity Designer** ↔ Illustrator\n- **Affinity Publisher** ↔ InDesign\n\n✅ **Strengths:**\n- **One-time payment** (~$70/app) — zero subscription.\n- Faster than Adobe on the same hardware.\n- **StudioLink** — switch between Photo / Designer / Publisher without exporting.\n- Reads Adobe formats (.PSD, .AI, .PDF).\n- Universal license — works on Windows, Mac, and iPad.\n\n⚠️ **Weaknesses:**\n- No **Generative AI** like Photoshop's (yet).\n- Much smaller community / fewer tutorials than Adobe.\n- No integration with Creative Cloud services (Fonts, Stock).\n- No **After Effects / Premiere / Lightroom** equivalents.\n\n🎯 **Pick Affinity if:**\n- You're a freelancer or small studio that needs to cut costs.\n- Your work is mostly static design (logos, brochures, photo edits).\n\n🎯 **Pick Adobe if:**\n- You collaborate with teams that already use Adobe.\n- You need video, motion, or generative AI.\n\n💡 **Pro Tip:** Many Cambodian designers are migrating to Affinity — saving $660/year (Adobe All Apps) is huge here. If you're just starting, Affinity is the best ROI.",
+        chips: ["Photoshop, Illustrator, InDesign — ប្រើខុសគ្នាម៉េច? 🖥️","តើ Vector និង Raster ខុសគ្នាម៉េច? 🖼️","តើកម្មសិទ្ធិបញ្ញា (IP) ផ្ទេរទៅឱ្យភ្ញៀវនៅពេលណា? ⚖️"],
+        chips_en: ["Photoshop vs Illustrator vs InDesign? 🖥️","Vector vs Raster? 🖼️","When is Intellectual Property (IP) transferred? ⚖️"],
+    },
+    {
+        primaryKeys: ["របៀបរចនា Logo ពីដំបូងដល់ចប់ (Logo Process)? 🏷️","Logo design process step-by-step? 🏷️"],
+        keys: ["logo design process","logo workflow","how to design a logo","logo step by step","របៀបធ្វើ logo","របៀបរចនា logo","logo ដំណាក់កាល","design logo from scratch"],
+        regex: ["logo\\s*(design\\s*)?process","logo\\s*workflow","logo\\s*step","how\\s*to\\s*(design|make|create)\\s*a?\\s*logo","របៀប.*logo","logo.*ដំណាក់កាល"],
+        answer: "បាទ Logo ល្អមិនមែនកើតពីការគូសភ្លាមៗទេ — វាមាន ៦ ដំណាក់កាល:\n\n1️⃣ **Discovery / Briefing**\n- សុំ Brief ពីភ្ញៀវ ៖ ឈ្មោះ Brand, បេសកកម្ម, គោលដៅ, អ្នកមើល (Audience), ភាគី (Competitors)។\n- សួរ ៖ \"តើ Brand នេះមានបុគ្គលិកលក្ខណៈអ្វី?\" (Modern, Friendly, Luxury, etc.)\n\n2️⃣ **Research**\n- មើល Logo Competitor ដើម្បីយល់ដឹង Industry។\n- ប្រមូល **Mood Board** (Color, Style, Inspiration) នៅ Pinterest / Behance។\n\n3️⃣ **Sketch (ដៃ មុនកុំព្យូទ័រ!)**\n- គូស ៥០–១០០ Sketch ស្វាស់នៅលើក្រដាស។ ឱ្យលឿន មិនល្អក៏មិនអី។\n- ជ្រើសរើស ៥–១០ ដែលល្អជាងគេ។\n\n4️⃣ **Digital Design**\n- Vectorize នៅ Illustrator / Affinity Designer។\n- ប្រើ **Grid System** ដើម្បីឱ្យ Logo មាន Proportion ត្រឹមត្រូវ។\n- ធ្វើទាំង Color, B&W, Negative Space។\n\n5️⃣ **Refine & Test**\n- ប្ដូរទៅ **Black & White** — Logo ល្អត្រូវដំណើរការដោយគ្មានពណ៌។\n- បង្រួមមកត្រឹម **16px (Favicon size)** — តើនៅអាចមើលឃើញទេ?\n- សាក Print លើក្រដាស, Mockup លើ T-shirt, Business Card។\n\n6️⃣ **Delivery (Handover)**\n- ផ្ញើ ៖ AI/EPS (Master), PNG (Transparent), JPG, PDF, SVG (Web)។\n- បន្ថែម **Brand Guidelines** (Color codes, Font, Min size, Clear space)។\n\n💡 **គន្លឹះអ្នកជំនាញ:** Logo ល្អ = **SMART** ៖ **S**imple, **M**emorable, **A**ppropriate, **R**elevant, **T**imeless។ បើ Logo របស់បងស្មុគស្មាញពេក, ត្រឡប់ទៅ Sketch វិញ។",
+        answer_en: "Great logos aren't drawn in one go — they follow 6 stages:\n\n1️⃣ **Discovery / Briefing**\n- Get a brief from the client: brand name, mission, audience, competitors.\n- Ask: \"What personality does this brand have?\" (Modern, Friendly, Luxury, etc.)\n\n2️⃣ **Research**\n- Study competitor logos to understand the industry.\n- Collect a **Mood Board** (color, style, references) on Pinterest / Behance.\n\n3️⃣ **Sketch (paper before pixel!)**\n- Sketch 50–100 rough concepts on paper. Quick, ugly is fine.\n- Pick your top 5–10.\n\n4️⃣ **Digital Design**\n- Vectorize in Illustrator / Affinity Designer.\n- Use a **Grid System** to get proportions right.\n- Produce color, B&W, and negative-space versions.\n\n5️⃣ **Refine & Test**\n- Convert to **Black & White** — a great logo works without color.\n- Shrink to **16px (favicon)** — is it still legible?\n- Mock it up: T-shirt, business card, sign.\n\n6️⃣ **Delivery (Handover)**\n- Send: AI/EPS (master), PNG (transparent), JPG, PDF, SVG (web).\n- Include a **Brand Guidelines** doc (color codes, fonts, min size, clear space).\n\n💡 **Pro Tip:** Great logos are **SMART**: **S**imple, **M**emorable, **A**ppropriate, **R**elevant, **T**imeless. If your logo is too complex, go back to sketching.",
+        chips: ["របៀបធ្វើបទបង្ហាញ Logo ឱ្យភ្ញៀវពេញចិត្ត 🎯","តើត្រូវផ្ញើ File Logo អ្វីខ្លះទៅឱ្យអតិថិជន? 📦","តើ Brand, Identity និង Logo ខុសគ្នាម៉េច? 🏢"],
+        chips_en: ["How to present a logo to clients? 🎯","What logo files should be sent? 📦","Brand vs Identity vs Logo? 🏢"],
+    },
+    {
+        primaryKeys: ["តើ Mockup ជាអ្វី និងបង្កើតយ៉ាងណា? 🖼️","What is a Mockup and how to make one? 🖼️"],
+        keys: ["mockup","product mockup","logo mockup","tshirt mockup","book mockup","screen mockup","mockup ជាអ្វី","ធ្វើ mockup","mockup logo"],
+        regex: ["\\bmockup\\b","mock\\s*up","mockup.*ជាអ្វី","ធ្វើ\\s*mockup","logo.*mockup","tshirt.*mockup","product\\s*mockup"],
+        answer: "បាទ **Mockup** គឺជារូបបង្ហាញ Design នៅក្នុង “ពិភពពិត” — ឧទា. ឡូហ្គោដាក់លើ T-shirt, App Screen ក្នុង iPhone, Brochure ដាក់លើតុ។\n\n🎯 **ហេតុអ្វីសំខាន់:**\n១. ភ្ញៀវមើល Logo Flat មិនអាចស្រមៃថាវានឹងមើលទៅយ៉ាងណានៅពិតៗ។\n២. Mockup ធ្វើឱ្យបទបង្ហាញ (Presentation) មើលទៅ **Pro 10× ភ្លាមៗ**។\n៣. ការផ្សព្វផ្សាយនៅ Behance / Instagram ត្រូវការ Mockup ដើម្បីទាក់ទាញភ្នែក។\n\n🛠️ **វិធីបង្កើត Mockup:**\n\n**វិធី ១ — Smart Object Template (សាមញ្ញ ៩៥% ករណី):**\n- ទាញយក PSD Mockup ដែលឥតគិតថ្លៃនៅ **Freepik, Mockupworld, Graphicburger, Pixeden**។\n- បើកក្នុង Photoshop → Double-click Smart Object → ដាក់ Design របស់បង → Save។\n- រួចមក! ឡូហ្គោបងមើលទៅដូចព្រីនពិតៗ។\n\n**វិធី ២ — Online Mockup Generators (រហ័សបំផុត):**\n- **Placeit, Smartmockups, Mockey** — Upload Design មួយរំពេច Render ភ្លាមៗ។\n- ល្អសម្រាប់ Beginner មិនចេះ Photoshop។\n\n**វិធី ៣ — Custom 3D Mockup (Pro):**\n- ប្រើ **Blender ឬ Adobe Dimension** ដើម្បីបង្កើត 3D Scene ផ្ទាល់ខ្លួន។\n- ប្រើ HDRI Lighting + Materials ដើម្បីភាពពិត។\n\n💡 **គន្លឹះអ្នកជំនាញ:** ប្រើ Mockup ដែល **មិនប្រកួតពណ៌ច្រើនពេក** ជាមួយ Logo — ផ្ទៃខាងក្រោយ Neutral (ស, ប្រផេះ, ខ្មៅ) ធ្វើឱ្យ Logo លេចធ្លោ។ មុនព្រីនពិត ត្រូវ Print Test លើ Mockup សិន ដើម្បីពិនិត្យពណ៌ CMYK!",
+        answer_en: "A **Mockup** is your design shown in the \"real world\" — your logo on a T-shirt, app screen inside an iPhone, brochure on a desk.\n\n🎯 **Why mockups matter:**\n1. Clients can't visualize a flat logo on a real product.\n2. Mockups instantly make presentations look **10× more pro**.\n3. Behance / Instagram posts need mockups to catch the eye.\n\n🛠️ **How to make one:**\n\n**Method 1 — Smart Object Templates (95% of cases):**\n- Download free PSD mockups from **Freepik, Mockupworld, Graphicburger, Pixeden**.\n- Open in Photoshop → Double-click the Smart Object → drop in your design → Save.\n- Done — your logo looks photographed in the real world.\n\n**Method 2 — Online Mockup Generators (fastest):**\n- **Placeit, Smartmockups, Mockey** — upload your design, instant render.\n- Great for beginners who don't know Photoshop.\n\n**Method 3 — Custom 3D Mockup (pro):**\n- Use **Blender** or **Adobe Dimension** to build your own 3D scene.\n- HDRI lighting + materials for realism.\n\n💡 **Pro Tip:** Pick mockups whose colors **don't fight** your logo — neutral backgrounds (white, gray, black) make the logo pop. Before printing for real, do a CMYK proof on the mockup to check color accuracy!",
+        chips: ["របៀបធ្វើបទបង្ហាញ Logo ឱ្យភ្ញៀវពេញចិត្ត 🎯","តើត្រូវផ្ញើ File Logo អ្វីខ្លះទៅឱ្យអតិថិជន? 📦","តើ Smart Object ជាអ្វី? 🎁"],
+        chips_en: ["How to present a logo to clients? 🎯","What logo files should be sent? 📦","What is a Smart Object? 🎁"],
+    },
+    {
+        primaryKeys: ["រក Inspiration / គំនិត Design ពីណា? 💡","Where to find design inspiration? 💡"],
+        keys: ["design inspiration","inspiration source","behance","dribbble","pinterest","awwwards","siteinspire","រកគំនិត design","inspiration ពីណា","design idea"],
+        regex: ["design\\s*inspiration","inspiration\\s*(source|site|website)","\\bbehance\\b","\\bdribbble\\b","\\bpinterest\\b","\\bawwwards\\b","រក.*inspiration","design.*idea"],
+        answer: "បាទ Designer ល្អៗមិនមែនកើតពីការ “នឹកគំនិតដោយខ្លួនឯង” ទេ — ពួកគេមើល Reference ច្រើនជាងបុគ្គលធម្មតា ១០ ដង!\n\n🌐 **Sites ល្អបំផុតរបស់ ៥ ប្រភេទ:**\n\n🎨 **រួមៗ:**\n- **Behance.net** — Portfolio ស្តង់ដារ Adobe; Designer ប្រកាសការងារជាក់ស្តែង។\n- **Dribbble.com** — Shot តូចៗ ៩៦០×៧២០; UI / Illustration / Branding។\n- **Pinterest.com** — Mood Board ងាយស្រួល; ល្អសម្រាប់ Reference រួម។\n\n💻 **Web / UI:**\n- **Awwwards.com** — Website ឯកជន; ល្អបំផុតក្នុងលោក។\n- **Siteinspire.com** — Curated Web Design។\n- **Mobbin.com** — UI Mobile App Reference ច្រើនបំផុត។\n- **Land-book.com** — Landing Page Inspiration។\n\n🏷️ **Logo / Branding:**\n- **Logoinspirations.co**\n- **Logolounge.com**\n- **Brandsoftheworld.com** — Logo Vector Database។\n\n🎬 **Motion / 3D:**\n- **Motiongraphics.tumblr.com**\n- **Letteringtoday** (Typography Inspiration)。\n- **Codrops.com** (Animation Tutorial)。\n\n📚 **Knowledge / Theory:**\n- **Smashing Magazine, A List Apart, Nielsen Norman Group**。\n\n💡 **គន្លឹះអ្នកជំនាញ:** កុំ **Copy** Design — ប្រមូលគំនិតពី **៥ ប្រភពផ្សេងគ្នា** រួចលាយចូលគ្នាដើម្បីបង្កើតរបស់ផ្ទាល់។ រៀបចំ Mood Board នៅ Pinterest / Eagle / PureRef មុនអង្គុយ Design — បង្កើនការងារ ៣× លឿនជាងមុន!",
+        answer_en: "Great designers don't \"come up with ideas from nothing\" — they reference 10× more visuals than the average person.\n\n🌐 **Best sites by category:**\n\n🎨 **General:**\n- **Behance.net** — Adobe's portfolio standard; designers post real projects.\n- **Dribbble.com** — Small 960×720 shots; UI / illustration / branding.\n- **Pinterest.com** — Easy mood-board collecting; great for broad reference.\n\n💻 **Web / UI:**\n- **Awwwards.com** — The world's best curated websites.\n- **Siteinspire.com** — Curated web design.\n- **Mobbin.com** — Largest mobile-app UI reference library.\n- **Land-book.com** — Landing page inspiration.\n\n🏷️ **Logo / Branding:**\n- **Logoinspirations.co**\n- **Logolounge.com**\n- **Brandsoftheworld.com** — Vector logo database.\n\n🎬 **Motion / 3D:**\n- **Motiongraphics.tumblr.com**\n- **Letteringtoday** (typography inspiration).\n- **Codrops.com** (animation tutorials).\n\n📚 **Knowledge / Theory:**\n- **Smashing Magazine, A List Apart, Nielsen Norman Group**.\n\n💡 **Pro Tip:** Never **copy** — pull ideas from **5 different sources** and remix them into something your own. Build a mood board on Pinterest / Eagle / PureRef *before* you open Photoshop — you'll work 3× faster.",
+        chips: ["តើក្បួនចាប់ផ្តើមរៀន Design មានប៉ុន្មានជំហាន? 🚀", "របៀបធ្វើ Portfolio បើគ្មានបទពិសោធន៍ទាល់តែសោះ? 📁", "តើទ្រឹស្តី Gestalt ជាអ្វី? 🧩"],
+        chips_en: ["How to begin as a Graphic Designer? 🚀", "Portfolio with no experience? 📁", "Explain Gestalt Psychology 🧩"],
+    },
+    {
+        primaryKeys: ["Designer ថ្មីៗគួរគិតលុយប៉ុន្មាន? 💵","How much should a beginner designer charge? 💵"],
+        keys: ["beginner pricing","how much to charge","starting rate","freelance rate","designer ថ្មី គិតលុយ","beginner designer price","rate beginner","តម្លៃ designer ថ្មី","designer rate"],
+        regex: ["(beginner|new|junior|starting)\\s*(designer\\s*)?(rate|price|pricing|charge)","how\\s*much.*charge","freelance\\s*rate","designer.*ថ្មី.*(លុយ|តម្លៃ)","តម្លៃ.*(designer|ស្វ័យអាជីព)"],
+        answer: "បាទ នេះជាសំណួរលំបាកបំផុតរបស់ Designer ថ្មីៗ! មាន ៣ វិធីសម្រាប់កំណត់តម្លៃ:\n\n💰 **វិធី ១ — Project-Based (សម្រាប់ Beginner):**\n- **Logo Design (Basic):** $50–$150 (Beginner) / $300–$800 (Mid)。\n- **Logo + Brand Guidelines:** $200–$500 (Beginner)。\n- **Facebook Post Design:** $5–$20 / post (Beginner)。\n- **Poster / Flyer:** $30–$80 (Beginner)。\n- **Business Card:** $30–$80 (Beginner)。\n- **Banner (Facebook Cover):** $20–$50。\n- **Brochure (4 pages):** $100–$300。\n- **Website Design (Single Page):** $200–$500。\n\n⏰ **វិធី ២ — Hourly Rate:**\n- Beginner: $8–$15/ម៉ោង\n- Mid-level: $20–$40/ម៉ោង\n- Senior: $50–$100+/ម៉ោង\n\n💎 **វិធី ៣ — Value-Based (សម្រាប់ Senior):**\n- កំណត់តម្លៃតាមតម្លៃអាជីវកម្មដែលបង Generate ឱ្យអតិថិជន ៖ បើ Logo ជួយ Brand ទទួលបាន $100K/ឆ្នាំ, តម្លៃ $5K មិនថ្លៃទេ។\n\n🎯 **យុទ្ធសាស្ត្រ Beginner ៣ យ៉ាង:**\n១. កុំទាបពេក! Underpricing បំផ្លាញ Market។\n២. កុំខ្ពស់ពេក! ប្រឆាំងជាមួយ Mid/Senior បងនឹងចាញ់។\n③. **Bundle**: ប្រគល់តម្លៃ \"Logo + 3 Color Variations + Mockup + 1 Revision\" ច្បាស់លាស់, ងាយឱ្យភ្ញៀវយល់។\n\n📍 **ទីផ្សារខ្មែរ Reference (2026):**\n- Logo: $80–$300 (Beginner Freelancer)。\n- Facebook Post Pack (5 designs): $30–$80。\n- Wedding Card / Invitation: $50–$200។\n\n💡 **គន្លឹះអ្នកជំនាញ:** តែងតែទាមទារ **Deposit ៥០%** មុនចាប់ផ្ដើម។ កុំធ្វើ Logo រួចហើយព្យាយាមឱ្យភ្ញៀវបង់ក្រោយ — ភ្ញៀវភាគច្រើននឹងបាត់!",
+        answer_en: "The hardest question for new designers! Three pricing methods:\n\n💰 **Method 1 — Project-Based (beginner-friendly):**\n- **Basic Logo:** $50–$150 (Beginner) / $300–$800 (Mid).\n- **Logo + Brand Guidelines:** $200–$500 (Beginner).\n- **Social Media Post Design:** $5–$20 / post (Beginner).\n- **Poster / Flyer:** $30–$80 (Beginner).\n- **Business Card:** $30–$80.\n- **FB / IG Banner:** $20–$50.\n- **Brochure (4 pages):** $100–$300.\n- **Single-page Website Design:** $200–$500.\n\n⏰ **Method 2 — Hourly Rate:**\n- Beginner: $8–$15/hr\n- Mid-level: $20–$40/hr\n- Senior: $50–$100+/hr\n\n💎 **Method 3 — Value-Based (for seniors):**\n- Price based on the business value you generate. If a logo helps a brand earn $100K/yr, $5K is fair.\n\n🎯 **3 beginner strategies:**\n1. Don't underprice! Cheap rates damage the whole market.\n2. Don't overshoot! You'll lose to mid/senior designers.\n3. **Bundle** clearly: \"Logo + 3 color variants + mockup + 1 revision\" — easy for the client to understand.\n\n📍 **Cambodia market reference (2026):**\n- Logo: $80–$300 (beginner freelancer).\n- FB Post Pack (5 designs): $30–$80.\n- Wedding card / invitation: $50–$200.\n\n💡 **Pro Tip:** Always demand a **50% deposit** before starting. Don't deliver a finished logo first hoping the client will pay — most won't.",
+        chips: ["ការគិតលុយតាមតម្លៃអាជីវកម្ម (Value-Based Pricing) 💰","វិធីឆ្លើយតបពេលភ្ញៀវថា «ថ្លៃពេក!» 💸","តើកិច្ចសន្យា Retainer គឺជាអ្វី? 💼"],
+        chips_en: ["Value-Based Pricing 💰","Client says «It is too expensive!» 💸","What is a Retainer Contract? 💼"],
+    },
+    {
+        primaryKeys: ["របៀបបង្កើត Brand Color Palette? 🎨","How to build a brand color palette? 🎨"],
+        keys: ["brand color palette","color palette","brand colors","building palette","logo color","choose brand color","របៀបរើសពណ៌","ពណ៌ម៉ាក","រើសពណ៌ logo","palette ម៉ាក"],
+        regex: ["brand\\s*color\\s*palette","brand\\s*colors?","color\\s*palette.*brand","how\\s*to.*choose.*color","របៀប.*(រើស|ជ្រើស).*ពណ៌","ពណ៌.*ម៉ាក","palette.*(ម៉ាក|brand)"],
+        answer: "បាទ Brand Color Palette ដ៏ល្អមាន ៥–៧ ពណ៌ មានរចនាសម្ព័ន្ធច្បាស់លាស់ មិនមែនគ្រាន់តែជ្រើស “ពណ៌ស្អាត”។\n\n🏗️ **រចនាសម្ព័ន្ធស្តង់ដារ:**\n\n**1️⃣ Primary Color (ពណ៌ប្រធាន — ១):**\n- ពណ៌តំណាង Brand (Coca-Cola: ក្រហម, IBM: ខៀវ)។\n- ត្រូវឆ្លុះបញ្ចាំងបុគ្គលិកលក្ខណៈ Brand: Red=អំណាច, Blue=ទុកចិត្ត, Green=ធម្មជាតិ, Black=Luxury។\n\n**2️⃣ Secondary Color (ពណ៌អមដំណើរ — ១–២):**\n- ប្រើជាមួយ Primary ឱ្យឃើញច្រើនទីពីរ (Headlines, Buttons)。\n- ត្រូវបំពេញ (Complement) មិនមែនប្រកួត។\n\n**3️⃣ Accent Color (ពណ៌ផ្ទុះ — ១):**\n- ប្រើតិច (≤ ៥% នៃ Design) — សម្រាប់ CTA, Highlight។\n- តែងតែខ្ពស់ Contrast ជាង Primary។\n\n**4️⃣ Neutral Colors (ពណ៌អព្យាក្រឹត — ២–៣):**\n- ស, ប្រផេះ, ខ្មៅ — ប្រើច្រើនបំផុត (Background, Text)。\n- មិនមែនគ្រាន់តែ #FFFFFF / #000000 — ប្រើ ​#F7F8FA, #1A1A1A សម្រាប់ភ្នែកមិនធុញ។\n\n🎯 **វិធី ៣ យ៉ាងសម្រាប់រកពណ៌:**\n\n**វិធី ១ — Color Theory Tools:**\n- **Coolors.co** (Generate Palette ដោយ Space)。\n- **Adobe Color** (Color Harmony, Trends)。\n- **Khroma** (AI-based personal palette)。\n\n**វិធី ២ — Steal Like a Pro:**\n- មើល Brand ដែលបងស្រឡាញ់ → ប្រើ **Eyedropper Tool** ឬ Coolors Image Picker → ស្រូបពណ៌ → លាយបញ្ចូលគ្នាទៅជារបស់ផ្ទាល់ខ្លួន។\n\n**វិធី ៣ — Mood-Based:**\n- កំណត់អារម្មណ៍ Brand មុន ៖ \"Friendly + Modern + Trustworthy\" → ស្វែងរក Palette ដែលផ្គូផ្គង។\n\n⚖️ **ច្បាប់ 60-30-10:**\n- 60% Neutral (Background)\n- 30% Primary\n- 10% Accent\n\n💡 **គន្លឹះអ្នកជំនាញ:** ត្រូវធានាថា Palette មាន **Color Contrast Ratio ≥ 4.5:1** សម្រាប់ WCAG Accessibility។ ប្រើ **Coolors Contrast Checker** ឬ **WebAIM**! ក៏ត្រូវ Test Palette លើ Print (CMYK) ផងដែរ — ពណ៌ខ្លះមើលស្អាតលើអេក្រង់ តែស្រអាប់នៅពេលព្រីន!",
+        answer_en: "A great brand color palette has 5–7 colors with a clear structure — not just \"pretty colors\".\n\n🏗️ **Standard structure:**\n\n**1️⃣ Primary Color (1):**\n- The signature brand color (Coca-Cola: red, IBM: blue).\n- Must mirror the brand's personality: Red=power, Blue=trust, Green=nature, Black=luxury.\n\n**2️⃣ Secondary Colors (1–2):**\n- Used together with the primary (headlines, buttons).\n- Must complement, not compete.\n\n**3️⃣ Accent Color (1):**\n- Used sparingly (≤5% of any design) — CTAs and highlights.\n- Always higher contrast than the primary.\n\n**4️⃣ Neutral Colors (2–3):**\n- White, gray, black — used most (backgrounds, body text).\n- Don't default to pure #FFFFFF / #000000 — use #F7F8FA, #1A1A1A for less eye strain.\n\n🎯 **3 methods to find colors:**\n\n**Method 1 — Color Theory Tools:**\n- **Coolors.co** (generate palettes with spacebar).\n- **Adobe Color** (harmonies, trends).\n- **Khroma** (AI personal palette).\n\n**Method 2 — Steal like a pro:**\n- Find a brand you love → use **Eyedropper Tool** or Coolors' image picker → grab the swatches → remix into your own.\n\n**Method 3 — Mood-Based:**\n- Decide the brand mood first: \"Friendly + Modern + Trustworthy\" → search palettes that fit.\n\n⚖️ **60-30-10 rule:**\n- 60% Neutral (background)\n- 30% Primary\n- 10% Accent\n\n💡 **Pro Tip:** Make sure the palette hits **Color Contrast Ratio ≥ 4.5:1** for WCAG accessibility. Use **Coolors Contrast Checker** or **WebAIM**. Also test the palette in CMYK print — some on-screen colors go muddy on paper!",
+        chips: ["តើ Color Theory ជាអ្វី? 🎨","តើច្បាប់ពណ៌ ៦០-៣០-១០ ជាអ្វី? 🎨","ពណ៌សម្រាប់អ្នកមានបញ្ហាភ្នែក (Color Accessibility) 👁️"],
+        chips_en: ["Can you explain Color Theory? 🎨","What is the 60-30-10 Rule? 🎨","Color Accessibility 👁️"],
+    },
+    {
+        primaryKeys: ["របៀបដាក់ឈ្មោះ File និងរៀបចំ Folder សម្រាប់ Designer 📁","File naming conventions for designers? 📁"],
+        keys: ["file naming","naming convention","folder structure","file organization","designer workflow","organize file","ដាក់ឈ្មោះ file","រៀបចំ folder","naming files designer"],
+        regex: ["file\\s*naming","naming\\s*convention","folder\\s*structure","file\\s*organization","organize.*file","ដាក់ឈ្មោះ.*file","រៀបចំ.*folder"],
+        answer: "បាទ ការដាក់ឈ្មោះ File ល្អ = Designer ល្អ។ បើបង Save ឯកសារ ៖ \"final.psd\", \"final_FINAL.psd\", \"final_FINAL_v2.psd\" — បងនឹងមានបញ្ហាខ្លាំងពេលភ្ញៀវសុំកែ ៦ ខែក្រោយ!\n\n📁 **រចនាសម្ព័ន្ធ Folder ស្តង់ដារ:**\n\n```\n2026_Client-Name_Project-Name/\n├── 01_Brief/         (Brief, References, Mood Board)\n├── 02_Working/       (PSD, AI, INDD ដែលកំពុងធ្វើ)\n├── 03_Assets/        (Photos, Icons, Fonts)\n├── 04_Exports/       (PDF, PNG, JPG ប្រគល់ភ្ញៀវ)\n└── 05_Archive/       (Version ចាស់, កុំលុបទេ!)\n```\n\n📝 **រូបមន្តដាក់ឈ្មោះ File:**\n\n```\n[ProjectCode]_[Type]_[Description]_[Version]_[Date].ext\n```\n\n**ឧទាហរណ៍:**\n- `ABC_Logo_Primary_v03_2026-05-22.ai`\n- `ABC_Brochure_4page_v02_2026-05-22.indd`\n- `ABC_FB-Cover_HappyDay_v01_FINAL.png`\n\n🎯 **ច្បាប់សំខាន់ៗ ៧ យ៉ាង:**\n១. **គ្មាន Spaces** — ប្រើ `_` ឬ `-` ជំនួស។\n២. **គ្មាន Special Characters** (#, @, %, &)。\n③. **Date Format: YYYY-MM-DD** — តម្រៀបស្វ័យប្រវត្តិត្រឹមត្រូវ!\n④. **Version Numbers: v01, v02 ... v10** (មិនមែន v1, v2)。\n⑤. **គ្មាន \"final\"** — តែងតែប្រើ Version Number ជំនួស។\n⑥. **Lowercase** ឬ **camelCase** — បីលុះកំណត់ Style មួយប្រើគ្រប់ Project។\n⑦. **Backup Master Files** លើ **Cloud (Google Drive, Dropbox, OneDrive)** ឬ External SSD។\n\n💾 **Tools ជួយ Backup:**\n- **Google Drive / Dropbox** ($10/ខែ, 2TB)。\n- **External SSD** ($60, 1TB) — Backup Local។\n- **Adobe Creative Cloud Files** (រួមនឹង Subscription)。\n\n💡 **គន្លឹះអ្នកជំនាញ:** ប្រើ **Template Folder** — បង្កើត Folder Structure ទុកជាមុន រួចចម្លងវាសម្រាប់ Project ថ្មីៗ។ សន្សំពេលបាន ៣០ នាទីក្នុង Project នីមួយៗ!",
+        answer_en: "Good file naming = good designer. If your folder looks like `final.psd`, `final_FINAL.psd`, `final_FINAL_v2.psd` — you'll regret it when the client requests edits 6 months later!\n\n📁 **Standard folder structure:**\n\n```\n2026_Client-Name_Project-Name/\n├── 01_Brief/         (brief, references, mood board)\n├── 02_Working/       (active PSD, AI, INDD files)\n├── 03_Assets/        (photos, icons, fonts)\n├── 04_Exports/       (PDF, PNG, JPG delivered to client)\n└── 05_Archive/       (old versions — never delete!)\n```\n\n📝 **File naming formula:**\n\n```\n[ProjectCode]_[Type]_[Description]_[Version]_[Date].ext\n```\n\n**Examples:**\n- `ABC_Logo_Primary_v03_2026-05-22.ai`\n- `ABC_Brochure_4page_v02_2026-05-22.indd`\n- `ABC_FB-Cover_HappyDay_v01_FINAL.png`\n\n🎯 **7 essential rules:**\n1. **No spaces** — use `_` or `-`.\n2. **No special characters** (#, @, %, &).\n3. **Date format: YYYY-MM-DD** — sorts correctly automatically!\n4. **Version numbers: v01, v02 … v10** (never v1, v2).\n5. **No \"final\"** — always use a version number.\n6. **Lowercase or camelCase** — pick one style and stick with it.\n7. **Backup masters** to **Cloud (Google Drive / Dropbox / OneDrive)** or an external SSD.\n\n💾 **Backup tools:**\n- **Google Drive / Dropbox** ($10/mo, 2TB).\n- **External SSD** ($60, 1TB) for local.\n- **Adobe Creative Cloud Files** (included with subscription).\n\n💡 **Pro Tip:** Build a **Template Folder** — pre-make the folder structure once, then copy it for every new project. Saves 30 minutes per project!",
+        chips: ["របៀបប្រគល់ឯកសារចុងក្រោយ (File Handover) 📁","តើត្រូវផ្ញើ File Logo អ្វីខ្លះទៅឱ្យអតិថិជន? 📦","របៀបរក្សារូបភាពកុំឱ្យបាត់ File (Missing Links)? 🔗"],
+        chips_en: ["How to handover final files 📁","What logo files should be sent? 📦","How to prevent missing links in Illustrator? 🔗"],
     }
 ];

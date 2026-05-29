@@ -5,7 +5,9 @@
 // 🌟 Import Sub-Databases (FULLY DE-DUPLICATED)
 import { basicsData } from './sub_databases/db_basics';
 import { designData } from './sub_databases/db_design';
-import { affinityAndEditingData } from './sub_databases/db_affinity_editing';
+import { layoutData } from './sub_databases/db_layout';
+import { pixelData } from './sub_databases/db_pixel';
+import { vectorData } from './sub_databases/db_vector';
 
 export const SUGGESTED_QUESTIONS = [
     "App នេះជាអ្វី",
@@ -179,5 +181,7 @@ export const QUIZ_INVITATIONS_EN = [
 export const KNOWLEDGE_BASE = [
     ...basicsData,
     ...designData,
-    ...affinityAndEditingData
+    ...layoutData,
+    ...pixelData,
+    ...vectorData
 ];
