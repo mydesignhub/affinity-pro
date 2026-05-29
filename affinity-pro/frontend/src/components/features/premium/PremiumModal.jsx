@@ -65,51 +65,13 @@ export default function PremiumModal({
     const appColor = theme.bg.replace('bg-[', '').replace(']', '');
 
     // Purchase request states
-    const [requestStatus, setRequestStatus] = useState('idle'); // idle | submitting | pending | approved | rejected
-    const [paymentNote, setPaymentNote] = useState('');
-    const [currentRequestId, setCurrentRequestId] = useState(null);
-
     useEffect(() => {
         if (!showRegistration) {
             setCheckoutMode('select');
             setPasscodeInput('');
             setPasscodeError('');
-            setRequestStatus('idle');
-            setPaymentNote('');
-            setCurrentRequestId(null);
         }
     }, [showRegistration]);
-
-    // When QR view opens, point the status listener at this device's request doc.
-    useEffect(() => {
-        if (checkoutMode !== 'qr') {
-            setRequestStatus('idle');
-            setPaymentNote('');
-            setCurrentRequestId(null);
-            return;
-        }
-        setCurrentRequestId(`${activeAppTab}_${getDeviceId()}`);
-    }, [checkoutMode, activeAppTab]);
-
-    // Real-time status for the checkout UI. The actual course unlock is handled
-    // globally in App.jsx so approval reaches the user on ANY screen — here we
-    // only mirror the request status for live feedback while this view is open.
-    // Attaches whenever a request id is known (not gated on 'pending'), so a user
-    // returning after approval correctly sees the approved state instead of a
-    // stale form.
-    useEffect(() => {
-        if (!currentRequestId) return;
-
-        const unsubscribe = onSnapshot(doc(db, C("purchaseRequests"), currentRequestId), (snap) => {
-            if (!snap.exists()) return;
-            const s = snap.data().status;
-            if (s === 'approved') { setRequestStatus('approved'); triggerHaptic('success'); }
-            else if (s === 'rejected') { setRequestStatus('rejected'); triggerHaptic('error'); }
-            else if (s === 'pending') { setRequestStatus('pending'); }
-        });
-
-        return () => unsubscribe();
-    }, [currentRequestId]);
 
     // 🌟 ការឡូកអ៊ីនជាមួយ Google
     const handleGoogleLogin = async () => { 
@@ -163,18 +125,8 @@ export default function PremiumModal({
             }
         }
 
-        // Upgrade maxDevices to 2 for key-based purchases now that Google is linked
-        const keyPurchases = Object.values(finalPurchases)
-            .filter(p => p && p.keyUsed && p.keyUsed !== 'firebase_purchase');
-        for (const purchase of keyPurchases) {
-            try {
-                const actRef = doc(db, C("keyActivations"), purchase.keyUsed);
-                const actSnap = await getDoc(actRef);
-                if (actSnap.exists() && (actSnap.data().maxDevices || 1) < 2) {
-                    await setDoc(actRef, { maxDevices: 2, userId: loggedInUser.uid }, { merge: true });
-                }
-            } catch (e) { /* non-critical */ }
-        }
+        // No longer upgrade maxDevices to 2, keep strictly 1 device per account
+
     };
 
     // Auto-format activation key: PH-Y-XXXXX / DS-Y-XXXXX / PB-Y-XXXXX
@@ -191,29 +143,7 @@ export default function PremiumModal({
         }
     };
 
-    const handleSubmitPurchase = async () => {
-        setRequestStatus('submitting');
-        const reqId = `${activeAppTab}_${getDeviceId()}`;
-        try {
-            await setDoc(doc(db, C("purchaseRequests"), reqId), {
-                deviceId: getDeviceId(),
-                userId: user?.uid || null,
-                userEmail: user?.email || null,
-                app: activeAppTab,
-                appName: appDisplayName,
-                plan,
-                status: 'pending',
-                paymentNote: paymentNote.trim() || null,
-                createdAt: Date.now(),
-            });
-            setCurrentRequestId(reqId);
-            setRequestStatus('pending');
-        } catch (err) {
-            console.error('Failed to submit purchase request:', err);
-            triggerHaptic('error');
-            setRequestStatus('idle');
-        }
-    };
+
 
     // Map key prefix → course tab
     const detectTabFromKey = (code) => {
@@ -230,7 +160,7 @@ export default function PremiumModal({
         if (!activeAppTab) return;
         const code = passcodeInput.trim().toUpperCase();
         const deviceId = getDeviceId();
-        const maxDevices = user ? 2 : 1;
+        const maxDevices = 1;
         setIsVerifying(true);
         setPasscodeError('');
 
@@ -294,10 +224,8 @@ export default function PremiumModal({
                 });
 
                 await applyUnlock(newExpiry);
-                const hint = maxDevices === 1
-                    ? (lang === 'en' ? ' Tip: Link Google to unlock on 2 devices.' : ' គន្លឹះ: ភ្ជាប់ Google ដើម្បីប្រើ ២ ឧបករណ៍។')
-                    : '';
-                finish((lang === 'en' ? `${courseName} Unlocked! 🎉` : `វគ្គ ${courseName} ត្រូវបានដោះសោ! 🎉`) + hint);
+                // Hint removed as it's restricted to 1 device now
+                finish((lang === 'en' ? `${courseName} Unlocked! 🎉` : `វគ្គ ${courseName} ត្រូវបានដោះសោ! 🎉`));
                 return;
             }
 
@@ -320,8 +248,20 @@ export default function PremiumModal({
                     setIsVerifying(false); return;
                 }
 
+                if (act.userId && act.userId !== (user?.uid || null)) {
+                    triggerHaptic('error');
+                    setPasscodeError(lang === 'en' ? 'Key is already linked to another account.' : 'លេខកូដនេះត្រូវបានភ្ជាប់ជាមួយគណនីផ្សេងរួចហើយ។');
+                    setIsVerifying(false); return;
+                }
+
                 const devices = act.devices || [];
                 const effectiveMax = Math.max(act.maxDevices || 1, maxDevices);
+
+                if (devices.length > 0 && devices[0].id !== deviceId) {
+                    triggerHaptic('error');
+                    setPasscodeError(lang === 'en' ? 'Key is already activated on another device.' : 'លេខកូដនេះត្រូវបានប្រើនៅលើឧបករណ៍ផ្សេងរួចហើយ។');
+                    setIsVerifying(false); return;
+                }
 
                 // Already active on this device → just re-sync
                 if (devices.some(d => d.id === deviceId)) {
@@ -330,24 +270,13 @@ export default function PremiumModal({
                     return;
                 }
 
-                let newDevices;
-                let wasReset = false;
-
-                if (devices.length < effectiveMax) {
-                    newDevices = [...devices, { id: deviceId, addedAt: now }];
-                } else {
-                    // Evict oldest device, add this one
-                    newDevices = [...devices.slice(1), { id: deviceId, addedAt: now }];
-                    wasReset = true;
-                }
-
+                // Should not reach here normally if devices.length > 0 and devices[0].id !== deviceId
+                // But just in case for a fresh device array fallback:
+                const newDevices = [{ id: deviceId, addedAt: now }];
                 await setDoc(actRef, { ...act, maxDevices: effectiveMax, devices: newDevices, userId: user?.uid || act.userId }, { merge: true });
                 await applyUnlock(act.expiry);
 
-                const msg = wasReset
-                    ? (lang === 'en' ? `${courseName} transferred! Previous device access revoked.` : `វគ្គ ${courseName} ផ្ទេរជោគជ័យ! ឧបករណ៍ចាស់ត្រូវបានលុបចោល។`)
-                    : (lang === 'en' ? `${courseName} — Device ${newDevices.length} of ${effectiveMax} activated!` : `វគ្គ ${courseName} — ឧបករណ៍ទី ${newDevices.length} ត្រូវបានដោះសោ!`);
-                finish(msg);
+                finish(lang === 'en' ? `${courseName} Activated!` : `វគ្គ ${courseName} ត្រូវបានដោះសោ!`);
                 return;
             }
 
@@ -599,98 +528,21 @@ export default function PremiumModal({
                                             <div className={`h-px flex-1 ${isDarkMode ? 'bg-white/20' : 'bg-black/10'}`}></div>
                                         </div>
 
-                                        {/* IDLE: Submit form */}
-                                        {(requestStatus === 'idle') && (
-                                            <div className="w-full flex flex-col gap-3">
-                                                <p className={`text-[13px] font-khmer text-center leading-relaxed ${isDarkMode ? 'text-[#A0A0A0]' : 'text-gray-500'}`}>
-                                                    {lang === 'en' ? 'After paying, tap the button below. We\'ll review and unlock your course automatically.' : 'បន្ទាប់ពីបង់ប្រាក់ ចុចប៊ូតុងខាងក្រោម យើងនឹងពិនិត្យ ហើយដោះសោដោយស្វ័យប្រវត្តិ។'}
-                                                </p>
-                                                <textarea
-                                                    value={paymentNote}
-                                                    onChange={e => setPaymentNote(e.target.value.slice(0, 200))}
-                                                    placeholder={lang === 'en' ? 'Optional: Enter your ABA transaction ID or name on receipt...' : 'ស្រេចចិត្ត: បញ្ចូល ID ប្រតិបត្តិការ ABA ឬឈ្មោះលើវិក័យប័ត្រ...'}
-                                                    rows={2}
-                                                    className={`w-full px-4 py-3 rounded-[16px] border text-[13px] font-khmer resize-none outline-none transition-colors ${isDarkMode ? 'bg-[#121212] border-[#2C2C2C] text-white placeholder:text-[#555]' : 'bg-[#F8F9FA] border-[#E5E7EB] text-black placeholder:text-gray-400'}`}
-                                                />
-                                                <button
-                                                    onClick={() => { triggerHaptic(); handleSubmitPurchase(); }}
-                                                    className={`w-full py-4 rounded-[20px] flex items-center justify-center gap-2 font-bold font-khmer text-[15px] transition-all active:scale-[0.98] shadow-lg text-white bg-gradient-to-r ${theme.gradient}`}
-                                                >
-                                                    <CheckCircle2 className="w-5 h-5" />
-                                                    {lang === 'en' ? 'I\'ve Paid — Submit for Review' : 'ខ្ញុំបានបង់ — ដាក់ស្នើសុំពិនិត្យ'}
-                                                </button>
-                                            </div>
-                                        )}
-
-                                        {/* SUBMITTING */}
-                                        {requestStatus === 'submitting' && (
-                                            <div className="flex flex-col items-center gap-3 py-4">
-                                                <Loader2 className={`w-8 h-8 animate-spin ${theme.text}`} />
-                                                <p className={`text-[13px] font-khmer font-bold ${isDarkMode ? 'text-[#A0A0A0]' : 'text-gray-500'}`}>
-                                                    {lang === 'en' ? 'Submitting...' : 'កំពុងដាក់ស្នើ...'}
-                                                </p>
-                                            </div>
-                                        )}
-
-                                        {/* PENDING: Waiting for admin */}
-                                        {requestStatus === 'pending' && (
-                                            <div className={`w-full rounded-[24px] p-5 border flex flex-col items-center gap-3 text-center ${isDarkMode ? 'bg-[#1A1A1A] border-[#2C2C2C]' : 'bg-[#F8F9FA] border-[#E5E7EB]'}`}>
-                                                <div className="relative">
-                                                    <Loader2 className={`w-10 h-10 animate-spin ${theme.text}`} />
-                                                </div>
-                                                <p className={`font-black font-khmer text-[16px] ${isDarkMode ? 'text-white' : 'text-black'}`}>
-                                                    {lang === 'en' ? 'Request Submitted!' : 'ដាក់ស្នើដោយជោគជ័យ!'}
-                                                </p>
-                                                <p className={`text-[12px] font-khmer leading-relaxed ${isDarkMode ? 'text-[#A0A0A0]' : 'text-gray-500'}`}>
-                                                    {lang === 'en' ? 'Waiting for admin review. Keep this screen open — your course will unlock automatically once approved.' : 'រង់ចាំការពិនិត្យ។ ទុកអេក្រង់នេះបើក — វគ្គរបស់អ្នកនឹងដោះសោដោយស្វ័យប្រវត្តិ។'}
-                                                </p>
-                                                <div className={`flex items-center gap-2 text-[11px] font-bold uppercase tracking-widest opacity-50 ${isDarkMode ? 'text-white' : 'text-black'}`}>
-                                                    <Clock size={12} />
-                                                    {lang === 'en' ? 'Usually within minutes' : 'ជាធម្មតាក្នុងរយៈពេលប៉ុន្មាននាទី'}
-                                                </div>
-                                            </div>
-                                        )}
-
-                                        {/* APPROVED */}
-                                        {requestStatus === 'approved' && (
-                                            <div className="w-full rounded-[24px] p-5 border border-green-500/30 bg-green-500/10 flex flex-col items-center gap-3 text-center">
-                                                <CheckCircle2 className="w-12 h-12 text-green-500" />
-                                                <p className="font-black font-khmer text-[16px] text-green-500">
-                                                    {lang === 'en' ? 'Payment Approved!' : 'ការបង់ប្រាក់ត្រូវបានអនុម័ត!'}
-                                                </p>
-                                                <p className={`text-[12px] font-khmer ${isDarkMode ? 'text-[#A0A0A0]' : 'text-gray-500'}`}>
-                                                    {lang === 'en' ? 'Your course is now unlocked. Enjoy learning!' : 'វគ្គរបស់អ្នកត្រូវបានដោះសោ។ រីករាយជាមួយការសិក្សា!'}
-                                                </p>
-                                            </div>
-                                        )}
-
-                                        {/* REJECTED */}
-                                        {requestStatus === 'rejected' && (
-                                            <div className="w-full rounded-[24px] p-5 border border-red-500/30 bg-red-500/10 flex flex-col items-center gap-3 text-center">
-                                                <AlertCircle className="w-10 h-10 text-red-500" />
-                                                <p className="font-black font-khmer text-[15px] text-red-500">
-                                                    {lang === 'en' ? 'Payment Not Verified' : 'ការបង់ប្រាក់មិនអាចផ្ទៀងផ្ទាត់បាន'}
-                                                </p>
-                                                <p className={`text-[12px] font-khmer leading-relaxed ${isDarkMode ? 'text-[#A0A0A0]' : 'text-gray-500'}`}>
-                                                    {lang === 'en' ? 'Please contact support on Telegram.' : 'សូមទាក់ទងផ្នែកជំនួយតាម Telegram។'}
-                                                </p>
-                                                <a
-                                                    href="https://t.me/koymy"
-                                                    target="_blank"
-                                                    rel="noopener noreferrer"
-                                                    className="px-6 py-3 rounded-[16px] font-bold font-khmer text-[13px] text-white flex items-center gap-2 active:scale-95"
-                                                    style={{ backgroundColor: '#2AABEE' }}
-                                                >
-                                                    <Send size={16} /> {lang === 'en' ? 'Contact Support' : 'ទំនាក់ទំនងផ្នែកជំនួយ'}
-                                                </a>
-                                                <button
-                                                    onClick={() => { setRequestStatus('idle'); setCurrentRequestId(null); }}
-                                                    className={`text-[11px] font-bold underline opacity-60 ${isDarkMode ? 'text-white' : 'text-black'}`}
-                                                >
-                                                    {lang === 'en' ? 'Try again' : 'ព្យាយាមម្ដងទៀត'}
-                                                </button>
-                                            </div>
-                                        )}
+                                        <div className="w-full flex flex-col gap-3">
+                                            <p className={`text-[13px] font-khmer text-center leading-relaxed ${isDarkMode ? 'text-[#A0A0A0]' : 'text-gray-500'}`}>
+                                                {lang === 'en' ? 'After paying, tap the button below to send your invoice to Admin via Telegram. You will receive an activation key.' : 'បន្ទាប់ពីបង់ប្រាក់ សូមចុចប៊ូតុងខាងក្រោមដើម្បីផ្ញើវិក័យប័ត្រទៅកាន់ Admin តាម Telegram។ អ្នកនឹងទទួលបានលេខកូដដើម្បីចូលរៀន។'}
+                                            </p>
+                                            <a
+                                                href={`https://t.me/koymy?text=${encodeURIComponent(lang === 'en' ? `Hello Admin, I have paid for Affinity Pro (${appDisplayName} - ${plan}). Here is my invoice.` : `សួស្តី Admin ខ្ញុំបានបង់ប្រាក់សម្រាប់ Affinity Pro (${appDisplayName} - ${plan})។ នេះជាវិក័យប័ត្ររបស់ខ្ញុំ។`)}`}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                onClick={() => triggerHaptic()}
+                                                className={`w-full py-4 rounded-[20px] flex items-center justify-center gap-2 font-bold font-khmer text-[15px] transition-all active:scale-[0.98] shadow-lg text-white bg-gradient-to-r ${theme.gradient}`}
+                                            >
+                                                <Send className="w-5 h-5" />
+                                                {lang === 'en' ? 'Send Invoice to Telegram' : 'ផ្ញើវិក័យប័ត្រតាម Telegram'}
+                                            </a>
+                                        </div>
                                     </div>
                                 )}
 

@@ -24,11 +24,9 @@ service cloud.firestore {
       allow write: if false;
     }
 
-    // Purchase requests: clients create and read their own; only Admin SDK can approve/reject
+    // Purchase requests: Deprecated, client access completely denied
     match /ap_purchaseRequests/{requestId} {
-      allow create: if true;
-      allow read: if true;
-      allow update, delete: if false;
+      allow read, write: if false;
     }
 
     // Key activations: clients read/create/update (device tracking); never delete from client
