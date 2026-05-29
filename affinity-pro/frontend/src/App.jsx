@@ -348,9 +348,9 @@ function AppContent() {
   const appDisplayName = activeAppTab ? getAppDisplayName(activeAppTab) : '';
 
   return (
-    <div 
+    <div
         className={`absolute top-0 left-0 right-0 w-full flex flex-col font-khmer overflow-hidden transition-colors duration-500 ease-spring ${isDarkMode ? 'bg-[#0A0A0A] text-[#F1F1F1]' : 'bg-[#F4F5F7] text-[#1A1A1A]'}`}
-        style={{ height: isAndroid ? '100dvh' : 'calc(100dvh + 25px)', paddingLeft: 'env(safe-area-inset-left)', paddingRight: 'env(safe-area-inset-right)' }}
+        style={{ height: isAndroid ? '100dvh' : 'calc(100dvh + 25px)', maxWidth: '100vw', overflowX: 'hidden', paddingLeft: 'env(safe-area-inset-left)', paddingRight: 'env(safe-area-inset-right)' }}
         onContextMenu={(e) => e.preventDefault()}
     >
       <style>{`
@@ -406,7 +406,7 @@ function AppContent() {
       )}
 
       {activeAppTab && !expandedLesson && (
-        <div className={`fixed inset-0 z-[60] overflow-y-auto overflow-x-hidden no-scrollbar flex flex-col ${isDarkMode ? 'bg-[#0A0A0A]' : 'bg-[#F4F5F7]'}`}>
+        <div className={`fixed inset-0 z-[60] overflow-y-auto no-scrollbar flex flex-col ${isDarkMode ? 'bg-[#0A0A0A]' : 'bg-[#F4F5F7]'}`} style={{ overflowX: 'hidden' }}>
             
             <div 
                 className={`sticky top-0 z-50 px-4 pb-3 border-b flex items-center justify-between backdrop-blur-xl ${isDarkMode ? 'border-[#2C2C2C] bg-[#0A0A0A]/90' : 'border-[#E5E7EB] bg-[#FFFFFF]/90'}`}
