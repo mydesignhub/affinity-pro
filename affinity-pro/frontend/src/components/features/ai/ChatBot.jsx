@@ -261,7 +261,19 @@ const FOLLOW_UP_MAP = {
     'Bleed, Margins & Slug': 'Preflight Panel (ឆែកកំហុស)', 'Bleed, Margins & Print Standards': 'Preflight Panel (Live Check)',
     'Preflight Panel (ឆែកកំហុស)': 'PDF Export Settings', 'Preflight Panel (Live Check)': 'CMYK vs RGB Export',
     
-    'Data Merge (ទាញទិន្នន័យស្វ័យប្រវត្តិ)': 'Packaging Files (ប្រមូល File)', 'Automating with Data Merge': 'Packaging Files Workflow'
+    'Data Merge (ទាញទិន្នន័យស្វ័យប្រវត្តិ)': 'Packaging Files (ប្រមូល File)', 'Automating with Data Merge': 'Packaging Files Workflow',
+    
+    // --- New Expanded AI Knowledge Path ---
+    'Stroke Panel (កម្រាស់បន្ទាត់)': 'Appearance Panel (ការតុបតែង)', 'Mastering the Stroke Panel': 'Affinity Appearance Panel',
+    'Isometric Panel (គូរ 3D)': 'Grid Systems & Column Guides', 'Isometric Panel (3D Grids)': 'Grid Systems & Column Guides',
+    
+    'Live Filters Workflow': 'Advanced Masking',
+    'Soft Proofing (ត្រៀមបោះពុម្ព)': 'Preflight Panel (ឆែកកំហុស)', 'Soft Proofing (Print Prep)': 'Preflight Panel (Live Check)',
+    'Blend Ranges (Advanced Selection)': 'Channels Panel',
+    
+    'Table of Contents (ToC)': 'Text Styles (កំណត់ស្តង់ដារអក្សរ)', 'Table of Contents Automation': 'Mastering Text Styles',
+    'Resource Manager (Linked vs Embedded)': 'Packaging Files (ប្រមូល File)', 
+    'Advanced Find and Replace': 'Text Wrap (រុំអក្សរ)'
 };
 
 // ─────────────────────────────────────────────────────────────────────────────
