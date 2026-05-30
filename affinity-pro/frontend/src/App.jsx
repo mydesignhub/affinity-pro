@@ -61,8 +61,12 @@ const getDeviceId = () => {
 
 function AppContent() {
   const { t, lang } = useLanguage();
-  const [activeTab, setActiveTab] = useState('learn');
-  const [activeAppTab, setActiveAppTab] = useState(null); 
+  const [activeTab, setActiveTab] = useState(() => {
+    // Deep-link: ?tab=quiz|tools|ai opens that screen on load (portfolio mockups).
+    const t = new URLSearchParams(window.location.search).get('tab');
+    return ['learn', 'quiz', 'tools', 'ai'].includes(t) ? t : 'learn';
+  });
+  const [activeAppTab, setActiveAppTab] = useState(null);
   const [expandedLesson, setExpandedLesson] = useState(null);
   const [expandedSection, setExpandedSection] = useState(null);
   const [isDarkMode, setIsDarkMode] = useState(true);
