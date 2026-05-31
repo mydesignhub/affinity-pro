@@ -1,7 +1,37 @@
 /* eslint-disable */
 import React, { useState, useRef } from 'react';
-import { Moon, Sun, BookOpen, Award, Zap, Bot, ShieldAlert, Lock, Mail, KeyRound, X, AlertCircle, CheckCircle2, Crown, Triangle } from 'lucide-react';
+import { Moon, Sun, BookOpen, Award, Zap, ShieldAlert, Lock, Mail, KeyRound, X, AlertCircle, CheckCircle2, Crown, Triangle } from 'lucide-react';
 import { useLanguage } from '../../contexts/LanguageContext';
+
+// ─── Custom Bot Avatar (My Design logo SVG) ───────────────────────────────────
+const MY_DESIGN_LOGO_PATHS = (
+    <g>
+        <path d="M117.784,111.227c-3.019,1.194 -5.412,3.587 -6.606,6.606l-3.326,8.385c-0.295,0.765 -1.438,0.765 -1.733,0c-0,-0 -3.326,-8.385 -3.326,-8.385c-1.191,-3.021 -3.585,-5.415 -6.606,-6.606l-8.385,-3.326c-0.958,-0.379 -0.958,-1.354 0,-1.733l8.385,-3.326c3.021,-1.191 5.415,-3.585 6.606,-6.606l3.326,-8.385c0.299,-0.752 1.434,-0.752 1.733,0l3.326,8.385c1.194,3.019 3.587,5.412 6.606,6.606l8.441,3.326c0.757,0.299 0.757,1.434 0,1.733l-8.441,3.326Z" fillRule="nonzero" />
+        <path d="M48.781,50.899l0,9.742l-4.669,0l-1.76,-3.233l0,-18.304l6.428,11.794Z" fillRule="nonzero" />
+        <path d="M59.418,39.157l0,18.243l-1.767,3.241l-4.648,0l0,-9.72l6.414,-11.764Z" fillRule="nonzero" />
+        <path d="M100.633,52.872l0,26.917c0,1.179 -0.483,2.311 -1.343,3.146l-8.604,8.352l-28.303,0l10.002,-9.656l18.301,0l0,-28.759c0,-1.179 -0.483,-2.311 -1.343,-3.146l-2.351,-2.283c-0.86,-0.835 -2.026,-1.304 -3.241,-1.304l-12.964,0l0,26.813l-9.996,18.331l0,-53.371c0,-0.756 0.63,-1.369 1.409,-1.369l21.612,0c1.215,0 2.381,0.469 3.24,1.304l12.236,11.878c0.86,0.835 1.343,1.967 1.343,3.146Z" fillRule="nonzero" />
+        <path d="M40.943,37.912l0,21.423l-9.947,0l0,-18.341c0,-2.457 2.053,-4.449 4.583,-4.449l3.953,0c0.78,0 1.41,0.612 1.41,1.368Z" fillRule="nonzero" />
+        <path d="M55.414,64.743l-4.522,8.294l-0.016,0.031l-4.532,-8.325l9.069,0Z" fillRule="nonzero" />
+        <path d="M35.266,79.911l0,11.374l-0.373,0l-7.695,-14.114l3.797,-6.966l9.947,0l3.799,6.968l-7.695,14.114l-0.373,0l0,-11.376c1.225,-0.313 2.132,-1.425 2.132,-2.747c0,-1.565 -1.27,-2.835 -2.835,-2.835c-1.565,0 -2.835,1.27 -2.835,2.835c0,1.322 0.907,2.434 2.132,2.747Z" fillRule="nonzero" />
+        <path d="M42.353,62.009l0,5.464l-1.409,1.369l-9.948,0l-1.409,-1.369l0,-5.464c0,-0.755 0.631,-1.369 1.409,-1.369l9.947,0c0.779,0.001 1.41,0.613 1.41,1.369Z" fillRule="nonzero" />
+        <path d="M69.56,113.856c3.29,3.113 4.519,6.226 3.786,9.339l-45.473,0c-12.825,0 -23.237,-10.412 -23.237,-23.237l0,-72.085c0,-12.825 10.412,-23.237 23.237,-23.237l72.085,0c12.825,0 23.237,10.412 23.237,23.237l0,45.998c-3.113,0.533 -6.226,-0.401 -9.339,-3.635l-0,-42.364c0,-7.67 -6.227,-13.898 -13.898,-13.898l-72.085,0c-7.67,0 -13.898,6.227 -13.898,13.898l0,72.085c0,7.67 6.227,13.898 13.898,13.898l41.687,-0Z" fillRule="nonzero" />
+    </g>
+);
+
+const BotAvatar = ({ size = 16, className = '', ariaLabel = 'AI assistant' }) => (
+    <svg
+        width={size}
+        height={size}
+        viewBox="0 0 128 128"
+        fill="currentColor"
+        className={className}
+        role="img"
+        aria-label={ariaLabel}
+        style={{ fillRule: 'evenodd', clipRule: 'evenodd', strokeLinejoin: 'round', strokeMiterlimit: 2 }}
+    >
+        {MY_DESIGN_LOGO_PATHS}
+    </svg>
+);
 
 // FIREBASE IMPORTS
 import { signInWithEmailAndPassword, sendPasswordResetEmail, createUserWithEmailAndPassword } from 'firebase/auth';
@@ -171,7 +201,7 @@ export default function Header({ activeTab, setActiveTab, isDarkMode, setIsDarkM
                                     {t_id === 'learn' && <BookOpen size={15}/>}
                                     {t_id === 'quiz' && <Award size={15}/>}
                                     {t_id === 'tools' && <Zap size={15}/>}
-                                    {t_id === 'ai' && <Bot size={15}/>}
+                                    {t_id === 'ai' && <BotAvatar size={15}/>}
                                 </div>
                                 <span className={`font-khmer font-bold uppercase hidden lg:block tracking-wide text-[12px] transition-opacity duration-300 ${activeTab === t_id ? 'opacity-100' : 'opacity-80'}`}>
                                     {t(`tab_${t_id}`)}
