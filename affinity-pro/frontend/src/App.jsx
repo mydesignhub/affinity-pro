@@ -514,7 +514,7 @@ function AppContent() {
                         <div className={`absolute inset-0 opacity-0 group-hover:opacity-10 transition-opacity duration-500 pointer-events-none bg-gradient-to-r ${APP_THEMES.photo.gradient}`}></div>
                         <div className="flex items-center gap-4 sm:gap-5 relative z-10 w-full">
                             <div className={`w-14 h-14 sm:w-16 sm:h-16 shrink-0 rounded-[18px] flex items-center justify-center shadow-inner ${APP_THEMES.photo.lightBg}`}>
-                                <img src="/photo2 icon.svg" alt="Photo" className="w-8 h-8 sm:w-10 sm:h-10 object-contain drop-shadow-sm" />
+                                <Aperture className={`w-8 h-8 sm:w-10 sm:h-10 drop-shadow-sm ${APP_THEMES.photo.text}`} strokeWidth={1.5} />
                             </div>
                             <div className="text-left flex-1 min-w-0">
                                 <h3 className={`font-black text-[15px] sm:text-[18px] tracking-tight truncate ${isDarkMode ? 'text-white' : 'text-black'}`}>Pixel (Photo) / ភីកសែល (រូបថត)</h3>
@@ -533,7 +533,7 @@ function AppContent() {
                         <div className={`absolute inset-0 opacity-0 group-hover:opacity-10 transition-opacity duration-500 pointer-events-none bg-gradient-to-r ${APP_THEMES.designer.gradient}`}></div>
                         <div className="flex items-center gap-4 sm:gap-5 relative z-10 w-full">
                             <div className={`w-14 h-14 sm:w-16 sm:h-16 shrink-0 rounded-[18px] flex items-center justify-center shadow-inner ${APP_THEMES.designer.lightBg}`}>
-                                <img src="/designer2 icon.svg" alt="Designer" className="w-8 h-8 sm:w-10 sm:h-10 object-contain drop-shadow-sm" />
+                                <Triangle className={`w-8 h-8 sm:w-10 sm:h-10 drop-shadow-sm ${APP_THEMES.designer.text}`} strokeWidth={1.5} />
                             </div>
                             <div className="text-left flex-1 min-w-0">
                                 <h3 className={`font-black text-[15px] sm:text-[18px] tracking-tight truncate ${isDarkMode ? 'text-white' : 'text-black'}`}>Vector (Designer) / វ៉ិចទ័រ (ឌីហ្សាញ)</h3>
@@ -552,7 +552,7 @@ function AppContent() {
                         <div className={`absolute inset-0 opacity-0 group-hover:opacity-10 transition-opacity duration-500 pointer-events-none bg-gradient-to-r ${APP_THEMES.publisher.gradient}`}></div>
                         <div className="flex items-center gap-4 sm:gap-5 relative z-10 w-full">
                             <div className={`w-14 h-14 sm:w-16 sm:h-16 shrink-0 rounded-[18px] flex items-center justify-center shadow-inner ${APP_THEMES.publisher.lightBg}`}>
-                                <img src="/publisher2 icon.svg" alt="Publisher" className="w-8 h-8 sm:w-10 sm:h-10 object-contain drop-shadow-sm" />
+                                <Layout className={`w-8 h-8 sm:w-10 sm:h-10 drop-shadow-sm ${APP_THEMES.publisher.text}`} strokeWidth={1.5} />
                             </div>
                             <div className="text-left flex-1 min-w-0">
                                 <h3 className={`font-black text-[15px] sm:text-[18px] tracking-tight truncate ${isDarkMode ? 'text-white' : 'text-black'}`}>Layout (Publisher) / ប្លង់ (ផាប់លីស៊ឺ)</h3>
