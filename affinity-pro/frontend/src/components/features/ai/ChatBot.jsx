@@ -478,19 +478,18 @@ const ChatBot = ({ messages = [], setMessages, isDarkMode, liveAiData = [], setL
         const savedLevel = localStorage.getItem('affinityPro_user_level');
         const hour = new Date().getHours();
 
-        const timeKh = hour >= 5 && hour < 12 ? "អរុណសួស្តី! 🌅" : hour >= 12 && hour < 17 ? "ទិវាសួស្តី! ☀️" : hour >= 17 && hour < 22 ? "សាយន្តសួស្តី! 🌇" : "រាត្រីសួស្តី! 🌙";
-        const timeEn = hour >= 5 && hour < 12 ? "Good morning! 🌅" : hour >= 12 && hour < 17 ? "Good afternoon! ☀️" : hour >= 17 && hour < 22 ? "Good evening! 🌇" : "Working late? 🌙";
+        const timeKh = hour >= 5 && hour < 12 ? "អរុណសួស្តី! 🌅" : hour >= 12 && hour < 17 ? "សួស្តី! ☀️" : hour >= 17 && hour < 22 ? "សាយន្តសួស្តី! 🌇" : "រាត្រីសួស្តី! 🌙";
+        const timeEn = hour >= 5 && hour < 12 ? "Good morning! 🌅" : hour >= 12 && hour < 17 ? "Hello! ☀️" : hour >= 17 && hour < 22 ? "Good evening! 🌇" : "Hello there! 🌙";
 
         let greetingMsg, defaultChips;
 
-        // First-time visitor with no history
         if (interests.length === 0 && !savedLevel) {
             greetingMsg = lang === 'en'
-                ? `${timeEn} I'm **MY DESIGN AI** — your personal design coach! 🎨\n\nHow can I help you jumpstart your creative journey today? Choose a topic below or type your own question:`
-                : `${timeKh} ខ្ញុំគឺ **MY DESIGN AI** — គ្រូ Design ផ្ទាល់ខ្លួនរបស់អ្នក! 🎨\n\nតើថ្ងៃនេះបងចង់ឱ្យខ្ញុំជួយពន្យល់ពីផ្នែកមួយណា? សូមជ្រើសរើសប្រធានបទខាងក្រោម ឬសួរខ្ញុំផ្ទាល់មក៖`;
+                ? `${timeEn} I'm **MY DESIGN AI** — your personal design coach! 🎨\n\nHow can I help jumpstart your creative journey today?`
+                : `${timeKh} ខ្ញុំគឺ **MY DESIGN AI** ជាគ្រូ Design ផ្ទាល់ខ្លួនរបស់អ្នក! 🎨\n\nតើថ្ងៃនេះបងចង់ឱ្យខ្ញុំជួយពន្យល់ពីផ្នែកមួយណា?`;
             defaultChips = lang === 'en'
-                ? ["How to get started", "What is this app?", "How to use the Pen Tool?", "How to remove objects?", "Design Certificate 🏆", "Take a Quiz 🎯"]
-                : ["ចាប់ផ្តើមដោយរបៀបណា", "App នេះជាអ្វី", "Pen Tool", "Inpainting Brush Tool", "វិញ្ញាបនបត្ររចនា 🏆", "ចង់ធ្វើតេស្ត 🎯"];
+                ? ["How to get started", "Design Certificate 🏆", "Take a Quiz 🎯"]
+                : ["ចាប់ផ្តើមដោយរបៀបណា", "វិញ្ញាបនបត្ររចនា 🏆", "ចង់ធ្វើតេស្ត 🎯"];
             setMessages([{ role: 'model', text: greetingMsg, chips: defaultChips, isTrainable: false }]);
             return;
         }
@@ -508,11 +507,11 @@ const ChatBot = ({ messages = [], setMessages, isDarkMode, liveAiData = [], setL
 
         if (!greetingMsg) {
             greetingMsg = lang === 'en'
-                ? `${timeEn} I'm **MY DESIGN AI** — your personal design coach. 🎨\n\nI can **teach you Affinity**, **quiz your skills**, and guide you to an official **Design Certificate**. What's your goal today?`
-                : `${timeKh} ខ្ញុំគឺ **MY DESIGN AI** — គ្រូ Design ផ្ទាល់ខ្លួនរបស់អ្នក! 🎨\n\nខ្ញុំបង្រៀន **Affinity**, ធ្វើ **Quiz**, ហើយណែនាំអ្នកទៅ **វិញ្ញាបនបត្ររចនា** ផ្លូវការ។ ថ្ងៃនេះចង់ចាប់ផ្តើមពីណា?`;
+                ? `${timeEn} I'm **MY DESIGN AI** — your personal design coach. 🎨\n\nI can **teach you Affinity**, **quiz your skills**, and guide you to an official **Certificate**. What's your goal today?`
+                : `${timeKh} ខ្ញុំគឺ **MY DESIGN AI** ជាគ្រូ Design ផ្ទាល់ខ្លួនរបស់អ្នក! 🎨\n\nខ្ញុំបង្រៀន **Affinity**, ធ្វើ **Quiz**, ហើយណែនាំអ្នកទៅយក **Certificate**។ ចង់ចាប់ផ្តើមពីណា?`;
             defaultChips = lang === 'en'
-                ? ["What is this app?", "Take a Quiz 🎯", "Is the app free to use?"]
-                : ["App នេះជាអ្វី", "ចង់ធ្វើតេស្ត 🎯", "App ប្រើបានដោយឥតគិតថ្លៃទេ?"];
+                ? ["Take a Quiz 🎯", "Design Certificate 🏆", "How to get started"]
+                : ["ចង់ធ្វើតេស្ត 🎯", "វិញ្ញាបនបត្ររចនា 🏆", "ចាប់ផ្តើមដោយរបៀបណា"];
         }
 
         setMessages([{ role: 'model', text: greetingMsg, chips: defaultChips.slice(0, 3), isTrainable: false }]);
@@ -522,8 +521,13 @@ const ChatBot = ({ messages = [], setMessages, isDarkMode, liveAiData = [], setL
     useEffect(() => {
         try {
             const savedHistory = localStorage.getItem('affinityPro_chat_history');
-            if (savedHistory && JSON.parse(savedHistory).length > 0) {
-                setMessages(JSON.parse(savedHistory));
+            if (savedHistory) {
+                const parsed = JSON.parse(savedHistory);
+                if (parsed.length > 1) {
+                    setMessages(parsed);
+                } else {
+                    generateSmartGreeting();
+                }
             } else {
                 generateSmartGreeting();
             }
