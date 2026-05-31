@@ -14,8 +14,8 @@ import {
 // ─── Quiz Invitations now imported from ai_database.jsx ──────────────────────
 
 // ─── Marketing CTA chips (reused across all intent handlers) ─────────────────
-const MKTG_CHIPS_EN = ["Take a Quiz 🎯", "Design Certificate 🏆", "How to get started"];
-const MKTG_CHIPS_KH = ["ចង់ធ្វើតេស្ត 🎯", "វិញ្ញាបនបត្ររចនា 🏆", "ចាប់ផ្តើមដោយរបៀបណា"];
+const MKTG_CHIPS_EN = ["Vector", "Pixel", "Layout"];
+const MKTG_CHIPS_KH = ["Vector", "Pixel", "Layout"];
 
 // ─── Retry chips ──────────────────────────────────────────────────────────────
 const RETRY_CHIP_EN = "🔁 Try again";
@@ -488,8 +488,8 @@ const ChatBot = ({ messages = [], setMessages, isDarkMode, liveAiData = [], setL
                 ? `${timeEn} I'm **MY DESIGN AI** — your personal design coach! 🎨\n\nHow can I help jumpstart your creative journey today?`
                 : `${timeKh} ខ្ញុំគឺ **MY DESIGN AI** ជាគ្រូ Design ផ្ទាល់ខ្លួនរបស់អ្នក! 🎨\n\nតើថ្ងៃនេះបងចង់ឱ្យខ្ញុំជួយពន្យល់ពីផ្នែកមួយណា?`;
             defaultChips = lang === 'en'
-                ? ["How to get started", "Design Certificate 🏆", "Take a Quiz 🎯"]
-                : ["ចាប់ផ្តើមដោយរបៀបណា", "វិញ្ញាបនបត្ររចនា 🏆", "ចង់ធ្វើតេស្ត 🎯"];
+                ? ["Vector", "Pixel", "Layout"]
+                : ["Vector", "Pixel", "Layout"];
             setMessages([{ role: 'model', text: greetingMsg, chips: defaultChips, isTrainable: false }]);
             return;
         }
@@ -500,8 +500,8 @@ const ChatBot = ({ messages = [], setMessages, isDarkMode, liveAiData = [], setL
             if (template) {
                 greetingMsg = (typeof template === 'object' ? template.greeting || '' : template).replace('{topic}', interests[interests.length - 1]);
                 defaultChips = lang === 'en'
-                    ? [interests[interests.length - 1], "Design Certificate 🏆", "Take a Quiz 🎯"]
-                    : [interests[interests.length - 1], "វិញ្ញាបនបត្ររចនា 🏆", "ចង់ធ្វើតេស្ត 🎯"];
+                    ? [interests[interests.length - 1], "Vector", "Pixel"]
+                    : [interests[interests.length - 1], "Vector", "Pixel"];
             }
         }
 
@@ -510,8 +510,8 @@ const ChatBot = ({ messages = [], setMessages, isDarkMode, liveAiData = [], setL
                 ? `${timeEn} I'm **MY DESIGN AI** — your personal design coach. 🎨\n\nI can **teach you Affinity**, **quiz your skills**, and guide you to an official **Certificate**. What's your goal today?`
                 : `${timeKh} ខ្ញុំគឺ **MY DESIGN AI** ជាគ្រូ Design ផ្ទាល់ខ្លួនរបស់អ្នក! 🎨\n\nខ្ញុំបង្រៀន **Affinity**, ធ្វើ **Quiz**, ហើយណែនាំអ្នកទៅយក **Certificate**។ ចង់ចាប់ផ្តើមពីណា?`;
             defaultChips = lang === 'en'
-                ? ["Take a Quiz 🎯", "Design Certificate 🏆", "How to get started"]
-                : ["ចង់ធ្វើតេស្ត 🎯", "វិញ្ញាបនបត្ររចនា 🏆", "ចាប់ផ្តើមដោយរបៀបណា"];
+                ? ["Vector", "Pixel", "Layout"]
+                : ["Vector", "Pixel", "Layout"];
         }
 
         setMessages([{ role: 'model', text: greetingMsg, chips: defaultChips.slice(0, 3), isTrainable: false }]);
@@ -755,8 +755,8 @@ const ChatBot = ({ messages = [], setMessages, isDarkMode, liveAiData = [], setL
             return {
                 answer: lang === 'en' ? guidanceEN : guidanceKH,
                 chips: lang === 'en'
-                    ? ["How to get started", "What is Affinity Designer?", "Design Certificate 🏆"]
-                    : ["ចាប់ផ្តើមដោយរបៀបណា", "Affinity Designer ជាអ្វី?", "វិញ្ញាបនបត្ររចនា 🏆"],
+                    ? ["Vector", "Pixel", "Layout"]
+                    : ["Vector", "Pixel", "Layout"],
                 needsBackend: false
             };
         }
