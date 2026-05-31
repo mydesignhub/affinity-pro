@@ -1158,9 +1158,9 @@ const ChatBot = ({ messages = [], setMessages, isDarkMode, liveAiData = [], setL
     return (
         <div className={`fixed inset-0 overflow-hidden font-sans transition-colors z-[40] ${theme.bg}`} style={{ height: viewportHeight, touchAction: 'none' }}>
 
-            {/* HEADER */}
+            {/* MOBILE AI HEADER (Hidden on Desktop) */}
             <div
-                className={`absolute top-0 left-0 w-full z-[60] transition-all duration-700 ease-out backdrop-blur-xl shadow-sm ${isDarkMode ? 'bg-[#121212]/85 border-b border-white/5 shadow-black/20' : 'bg-[#FFFFFF]/85 border-b border-black/5 shadow-[#0277C5]/5'} ${showHeader ? 'translate-y-0' : '-translate-y-full'}`}
+                className={`md:hidden absolute top-0 left-0 w-full z-[60] transition-all duration-700 ease-out backdrop-blur-xl shadow-sm ${isDarkMode ? 'bg-[#121212]/85 border-b border-white/5 shadow-black/20' : 'bg-[#FFFFFF]/85 border-b border-black/5 shadow-[#0277C5]/5'} ${showHeader ? 'translate-y-0' : '-translate-y-full'}`}
                 style={{ paddingTop: 'calc(env(safe-area-inset-top) + 50px)', marginTop: '-46px' }}
             >
                 <div className="flex items-center justify-between px-4 pt-1.5 pb-2.5">
@@ -1188,6 +1188,16 @@ const ChatBot = ({ messages = [], setMessages, isDarkMode, liveAiData = [], setL
                     </button>
                 </div>
             </div>
+
+            {/* DESKTOP CLEAR CHAT BUTTON */}
+            <button
+                onClick={handleClearChat}
+                className={`hidden md:flex absolute top-[85px] right-6 lg:right-8 xl:right-12 z-[55] p-2.5 px-4 rounded-xl transition-all duration-300 ease-out active:scale-90 border backdrop-blur-md shadow-sm items-center gap-2 ${isDarkMode ? 'bg-[#1E1E1E]/80 border-[#2C2C2C] text-[#A0A0A0] hover:text-[#FF453A] hover:bg-[#FF453A]/10' : 'bg-[#FFFFFF]/80 border-[#E5E7EB] text-[#6B7280] hover:text-[#FF453A] hover:bg-[#FF453A]/10'}`}
+                title={t('clear_tooltip') || 'Clear Chat'}
+            >
+                <Trash2 size={16} />
+                <span className="text-[12px] font-bold font-khmer uppercase tracking-wider">{lang === 'en' ? 'Clear' : 'លុប'}</span>
+            </button>
 
             {/* SCROLL CONTAINER */}
             <div
