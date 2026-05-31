@@ -1,5 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { X, Clock, PlayCircle, Lock, Loader2, Minimize, Maximize, DownloadCloud, CheckCircle2, Circle } from 'lucide-react';
+import { X, Clock, PlayCircle, Lock, Loader2, Minimize, Maximize, DownloadCloud, CheckCircle2, Circle, Layout, Image as ImageIcon, Layers, Sparkles, Wand2, Box, Moon, PenTool, MonitorPlay, MousePointer2, Shapes, Palette, Type, Blend, Grid, Briefcase, Star, LayoutTemplate, Files, List, Table, Newspaper, FileText, Calendar, Printer, BookOpen } from 'lucide-react';
+
+const iconMap = {
+    ph1: <Layout />, ph2: <ImageIcon />, ph3: <Layers />, ph4: <Sparkles />, ph5: <Wand2 />, ph6: <Box />, ph7: <Briefcase />, ph8: <Moon />, ph9: <PenTool />, ph10: <MonitorPlay />,
+    ds1: <MousePointer2 />, ds2: <Shapes />, ds3: <PenTool />, ds4: <Palette />, ds5: <Type />, ds6: <Blend />, ds7: <Grid />, ds8: <Briefcase />, ds9: <Box />, ds10: <Star />,
+    pb1: <LayoutTemplate />, pb2: <Files />, pb3: <Type />, pb4: <List />, pb5: <Table />, pb6: <BookOpen />, pb7: <Newspaper />, pb8: <FileText />, pb9: <Calendar />, pb10: <Printer />
+};
 import { useLanguage } from '../../../contexts/LanguageContext';
 import { triggerHaptic } from '../../../utils/haptics';
 
@@ -209,7 +215,9 @@ const LessonModal = ({ lesson, onClose, isDarkMode, completedSteps, setCompleted
                 </div>
                 <div className="flex items-center justify-between p-4 sm:p-5">
                     <div className="flex items-center gap-3.5 pr-4">
-                        <div className="w-10 h-10 flex items-center justify-center bg-[#C65102]/10 rounded-[14px] text-[#C65102] border border-[#C65102]/20 shadow-[0_0_15px_rgba(198,81,2,0.15)] shrink-0 [&>svg]:w-5 [&>svg]:h-5">{lesson.icon}</div>
+                        <div className="w-10 h-10 flex items-center justify-center bg-[#C65102]/10 rounded-[14px] text-[#C65102] border border-[#C65102]/20 shadow-[0_0_15px_rgba(198,81,2,0.15)] shrink-0 [&>svg]:w-5 [&>svg]:h-5">
+                            {lesson.icon || (iconMap[lesson.id] ? React.cloneElement(iconMap[lesson.id], { className: 'w-5 h-5' }) : <BookOpen className="w-5 h-5" />)}
+                        </div>
                         <h2 className={`text-[19px] font-black font-khmer tracking-tight line-clamp-1 ${isDarkMode ? 'text-[#E3E3E3]' : 'text-[#1A1C1E]'}`}>{displayTitle}</h2>
                     </div>
                     <button onClick={handleClose} className={`p-2.5 shrink-0 rounded-full transition-colors active:scale-90 ${isDarkMode ? 'bg-[#2C2C2C] text-[#A0A0A0] hover:text-[#F1F1F1]' : 'bg-[#F8F9FA] text-[#6B7280] hover:text-[#1A1A1A]'}`}>
