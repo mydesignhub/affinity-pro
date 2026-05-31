@@ -22,13 +22,13 @@ export const basicsData = [
         chips_en: ["Tell me a joke 😆 (basics 1)","How to find inspiration 💡 (basics 0)"]
     },
     {
-        primaryKeys: ["កម្មវិធីគាំង / ខឹង 😤","Software crashed! 😤","របៀបរក្សារូបភាពកុំឱ្យបាត់ File (Missing Links)? 🔗 (basics 0)","របៀបដាក់ឈ្មោះ File និងរៀបចំ Folder សម្រាប់ Designer 📁 (basics 0)","តើការកាត់តរូបបែប Non-Destructive ជាអ្វី? 🔄 (basics 0)","How to prevent missing links in Illustrator? 🔗 (basics 0)","File naming conventions for designers? 📁 (basics 0)","What is Non-Destructive Editing? 🔄 (basics 0)"],
+        primaryKeys: ["កម្មវិធីគាំង / ខឹង 😤","Software crashed! 😤","របៀបរក្សារូបភាពកុំឱ្យបាត់ File (Missing Links)? 🔗 (basics 0)","របៀបដាក់ឈ្មោះ File និងរៀបចំ Folder សម្រាប់ Designer 📁 (basics 0)","តើការកាត់តរូបបែប Non-Destructive ជាអ្វី? 🔄 (basics 0)","How to prevent missing links in Designer (Vector Studio)? 🔗 (basics 0)","File naming conventions for designers? 📁 (basics 0)","What is Non-Destructive Editing? 🔄 (basics 0)"],
         keys: ["crash","angry","lost work","ខឹង","គាំង","បាត់ការងារ","error"],
         regex: ["crash","angry","ខឹង","គាំង","បាត់"],
         answer: "បាទ ខ្ញុំយល់អារម្មណ៍មួយនេះ! គ្មានអ្វីឈឺចាប់ជាងការរចនាជិតរួចរាល់ ស្រាប់តែកម្មវិធីលោតគាំង (Crash) ដោយមិនបាន Save នោះទេ។ 😤\n\nដកដង្ហើមវែងៗ ដើរចេញពីអេក្រង់មួយភ្លែតសិនទៅបង។ ពេលត្រឡប់មកវិញ កុំភ្លេចឆែកមើលមុខងារ Auto-Save / Recovery ក្រែងលោអាចស្រោចស្រង់បានខ្លះ។ ហើយមេរៀនថ្ងៃនេះគឺ៖ \"Ctrl + S (Save) គឺជាមិត្តដ៏ល្អបំផុតរបស់អ្នករចនា!\" 💙",
         answer_en: "I completely feel your pain! There is nothing more frustrating than a software crash right before you hit Save. 😤\n\nTake a deep breath and step away from the screen for a minute. When you come back, check your Auto-Save or Recovery folder. Let this be a painful but valuable reminder: \"Ctrl + S (Save) is a designer's best friend!\" 💙",
         chips: ["របៀបរក្សារូបភាពកុំឱ្យបាត់ File (Missing Links)? 🔗 (basics 0)","របៀបដាក់ឈ្មោះ File និងរៀបចំ Folder សម្រាប់ Designer 📁 (basics 0)","តើការកាត់តរូបបែប Non-Destructive ជាអ្វី? 🔄 (basics 0)"],
-        chips_en: ["How to prevent missing links in Illustrator? 🔗 (basics 0)","File naming conventions for designers? 📁 (basics 0)","What is Non-Destructive Editing? 🔄 (basics 0)"]
+        chips_en: ["How to prevent missing links in Designer (Vector Studio)? 🔗 (basics 0)","File naming conventions for designers? 📁 (basics 0)","What is Non-Destructive Editing? 🔄 (basics 0)"]
     },
     {
         primaryKeys: ["មានអារម្មណ៍ថាស្មុគស្មាញ រៀនមិនចេះចប់ 🤯","Feeling overwhelmed by design 🤯","តើក្បួនចាប់ផ្តើមរៀន Design មានប៉ុន្មានជំហាន? 🚀 (basics 0)","តើ Graphic Design ជាអ្វី? 🎨 (basics 0)","How to begin as a Graphic Designer? 🚀 (basics 0)","What is Graphic Design? 🎨 (basics 0)"],
