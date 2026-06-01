@@ -55,7 +55,7 @@ export const SUGGESTED_QUESTIONS = [
     "Grid Systems & Column Guides",
     "Reset Studio (បាត់ឧបករណ៍)",
     "Assets Panel (ឃ្លាំងផ្ទុករូប)",
-    "Stock Panel (ទាញរូបភាពព្រី)",
+    "StudioLink (ភ្ជាប់កម្មវិធី ៣ ចូលគ្នា)",
     "Export Persona (កាត់រូបរហ័ស)",
     "Macros (កត់ត្រាសកម្មភាព)"
 ];
@@ -106,7 +106,7 @@ export const SUGGESTED_QUESTIONS_EN = [
     "Grid Systems",
     "Resetting the Workspace",
     "Affinity Assets Panel",
-    "Stock Panel (Free Images)",
+    "StudioLink Workflow",
     "Export Persona Mastery",
     "Macros & Batch Processing"
 ];
