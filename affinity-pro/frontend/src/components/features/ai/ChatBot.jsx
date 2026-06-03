@@ -1161,7 +1161,7 @@ const ChatBot = ({ messages = [], setMessages, isDarkMode, liveAiData = [], setL
             {/* MOBILE AI HEADER (Hidden on Desktop) */}
             <div
                 className={`md:hidden absolute top-0 left-0 w-full z-[60] transition-all duration-700 ease-out backdrop-blur-xl shadow-sm ${isDarkMode ? 'bg-[#121212]/85 shadow-black/20' : 'bg-[#FFFFFF]/85 shadow-[#0277C5]/5'} ${showHeader ? 'translate-y-0' : '-translate-y-full'}`}
-                style={{ paddingTop: 'env(safe-area-inset-top)', marginTop: '-46px' }}
+                style={{ paddingTop: 'calc(env(safe-area-inset-top) + 40px)', marginTop: '-40px' }}
             >
                 <div className="flex items-center justify-between px-4 pt-1.5 pb-2.5">
                     <div className="flex items-center gap-3">
@@ -1192,7 +1192,7 @@ const ChatBot = ({ messages = [], setMessages, isDarkMode, liveAiData = [], setL
             {/* DESKTOP CLEAR CHAT BUTTON */}
             <button
                 onClick={handleClearChat}
-                className={`hidden md:flex absolute top-[85px] right-6 lg:right-8 xl:right-12 z-[55] p-2.5 px-4 rounded-xl transition-all duration-300 ease-out active:scale-90 border backdrop-blur-md shadow-sm items-center gap-2 ${isDarkMode ? 'bg-[#1E1E1E]/80 border-[#2C2C2C] text-[#A0A0A0] hover:text-[#FF453A] hover:bg-[#FF453A]/10' : 'bg-[#FFFFFF]/80 border-[#E5E7EB] text-[#6B7280] hover:text-[#FF453A] hover:bg-[#FF453A]/10'}`}
+                className={`hidden md:flex absolute top-[60px] right-6 lg:right-8 xl:right-12 z-[55] p-2.5 px-4 rounded-[14px] transition-all duration-300 ease-out active:scale-90 border backdrop-blur-md shadow-sm items-center gap-2 ${isDarkMode ? 'bg-[#1E1E1E]/80 border-[#2C2C2C] text-[#A0A0A0] hover:text-[#FF453A] hover:bg-[#FF453A]/10' : 'bg-[#FFFFFF]/80 border-[#E5E7EB] text-[#6B7280] hover:text-[#FF453A] hover:bg-[#FF453A]/10'}`}
                 title={t('clear_tooltip') || 'Clear Chat'}
             >
                 <Trash2 size={16} />
@@ -1235,7 +1235,10 @@ const ChatBot = ({ messages = [], setMessages, isDarkMode, liveAiData = [], setL
                                         ) : (
                                             <>
                                                 {m.text && (
-                                                    <div className={`px-3.5 py-2.5 sm:px-4 sm:py-3 text-[14.5px] sm:text-[15px] leading-relaxed break-words [word-break:break-word] overflow-hidden shadow-sm font-khmer ${isUser ? `${theme.userBubble} rounded-[20px] rounded-br-[4px]` : `${theme.botBubble} rounded-[20px] rounded-bl-[4px]`}`}>
+                                                    <div 
+                                                        className={`px-3.5 py-2.5 sm:px-4 sm:py-3 text-[14.5px] sm:text-[15px] leading-relaxed break-words [word-break:break-word] overflow-hidden shadow-sm font-khmer ${isUser ? `${theme.userBubble} rounded-[20px] rounded-br-[4px]` : `${theme.botBubble} rounded-[20px] rounded-bl-[4px]`}`}
+                                                        style={{ fontSize: 'calc(14.5px * var(--explain-font-scale, 1))' }}
+                                                    >
                                                         {typeof m.text === 'object' ? JSON.stringify(m.text) : formatMessage(m.text)}
                                                     </div>
                                                 )}
@@ -1369,6 +1372,7 @@ const ChatBot = ({ messages = [], setMessages, isDarkMode, liveAiData = [], setL
                                 onInput={handleInputInput}
                                 onKeyDown={(e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); if (input.trim() && !loading) { triggerHaptic(); handleSend(input); } } }}
                                 className={`w-full min-h-[40px] max-h-[100px] overflow-y-auto no-scrollbar pl-4 pr-10 pt-2.5 pb-2.5 text-[14.5px] leading-snug font-khmer outline-none transition-all whitespace-pre-wrap break-words ${theme.inputColor} ${loading && input.trim() === '' ? 'opacity-50' : ''}`}
+                                style={{ fontSize: 'calc(14.5px * var(--explain-font-scale, 1))' }}
                                 suppressHydrationWarning
                             />
                             <button

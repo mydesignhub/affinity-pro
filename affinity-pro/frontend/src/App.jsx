@@ -21,6 +21,7 @@ import LessonCard from './components/features/learn/LessonCard';
 import LessonModal from './components/features/learn/LessonModal';
 import TipsSection from './components/features/learn/TipsSection';
 import ContactSection from './components/layout/ContactSection';
+import AboutModal from './components/layout/AboutModal';
 import { triggerHaptic } from './utils/haptics';
 
 const ToolsView = React.lazy(() => import('./components/features/tools/ToolsView'));
@@ -69,8 +70,10 @@ function AppContent() {
   const [activeAppTab, setActiveAppTab] = useState(null);
   const [expandedLesson, setExpandedLesson] = useState(null);
   const [expandedSection, setExpandedSection] = useState(null);
-  const [isDarkMode, setIsDarkMode] = useState(true);
+  const [isDarkMode, setIsDarkMode] = useState(false);
   const [completedSteps, setCompletedSteps] = useState([]);
+  const [appFontScale, setAppFontScale] = useState(100);
+  const [isAboutModalOpen, setIsAboutModalOpen] = useState(false);
   
   const [user, setUser] = useState(null);
   const [showAdminPanel, setShowAdminPanel] = useState(false);
@@ -138,6 +141,7 @@ function AppContent() {
       if (typeof window !== 'undefined') {
           const savedTheme = localStorage.getItem('affinityPro_theme');
           if (savedTheme !== null) setIsDarkMode(savedTheme === 'dark');
+          else setIsDarkMode(false);
 
           const savedSteps = localStorage.getItem('affinityPro_completed_steps');
           if (savedSteps) setCompletedSteps(JSON.parse(savedSteps));
@@ -205,6 +209,7 @@ function AppContent() {
       document.documentElement.style.colorScheme = isDarkMode ? 'dark' : 'light';
       document.documentElement.style.backgroundColor = newBgColor;
       document.body.style.backgroundColor = newBgColor;
+      document.documentElement.style.setProperty('--explain-font-scale', `${appFontScale / 100}`);
 
       if (isDataLoaded) {
           localStorage.setItem('affinityPro_theme', isDarkMode ? 'dark' : 'light');
@@ -265,8 +270,11 @@ function AppContent() {
     };
     const handleFocusOut = () => setIsKeyboardOpen(false);
 
+    const handleOpenAbout = () => setIsAboutModalOpen(true);
+
     document.addEventListener('focusin', handleFocusIn);
     document.addEventListener('focusout', handleFocusOut);
+    window.addEventListener('openAboutModal', handleOpenAbout);
 
     return () => {
         window.removeEventListener('switchTab', handleSwitchTab);
@@ -274,6 +282,7 @@ function AppContent() {
         window.removeEventListener('toggleSuperAdminPanel', handleToggleAdminPanel);
         document.removeEventListener('focusin', handleFocusIn);
         document.removeEventListener('focusout', handleFocusOut);
+        window.removeEventListener('openAboutModal', handleOpenAbout);
     };
   }, []);
 
@@ -401,11 +410,20 @@ function AppContent() {
         className={`absolute top-0 left-0 right-0 z-50 w-full transition-all duration-500 ease-spring ${(isScrollingDown || activeAppTab) ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}
         style={{ transform: `translateY(${(isScrollingDown || activeAppTab) ? '-120%' : '0px'})`, touchAction: 'none' }}
       >
-          <Header activeTab={activeTab} setActiveTab={(tab) => {
-              setActiveTab(tab);
-              setIsScrollingDown(false);
-              window.history.pushState({ modalOpen: false, tab: tab, course: null }, '');
-          }} isDarkMode={isDarkMode} setIsDarkMode={setIsDarkMode} />
+          <Header 
+              activeTab={activeTab} 
+              setActiveTab={(tab) => {
+                  setActiveTab(tab);
+                  setIsScrollingDown(false);
+                  window.history.pushState({ modalOpen: false, tab: tab, course: null }, '');
+              }} 
+              isDarkMode={isDarkMode} 
+              setIsDarkMode={setIsDarkMode} 
+              appFontScale={appFontScale}
+              setAppFontScale={setAppFontScale}
+              isAdmin={false}
+              onOpenDashboard={() => setShowAdminPanel(true)}
+          />
       </div>
       
       {expandedLesson && (
@@ -621,6 +639,13 @@ function AppContent() {
           </nav>
           </div>
       </div>
+
+      {isAboutModalOpen && (
+          <AboutModal 
+              onClose={() => setIsAboutModalOpen(false)} 
+              isDarkMode={isDarkMode} 
+          />
+      )}
     </div>
   );
 }

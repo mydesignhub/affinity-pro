@@ -42,7 +42,11 @@ const TipsSection = ({ isExpanded, onToggle, isDarkMode }) => {
                    <button onClick={nextTip} className={`text-[11px] px-4 py-2 rounded-full font-khmer transition-all font-bold tracking-wide border active:scale-95 whitespace-nowrap ${isDarkMode ? 'bg-[#F1F1F1]/10 hover:bg-[#F1F1F1]/20 text-[#F1F1F1] border-[#F1F1F1]/5' : 'bg-[#1A1A1A]/5 hover:bg-[#1A1A1A]/10 text-[#1A1A1A] border-[#1A1A1A]/5'}`}>{t('tips_new')}</button>
                </div>
                <div className="relative z-10 flex-1 flex items-center">
-                   <p key={safeTipIndex} className={`text-[15px] sm:text-base leading-relaxed border-l-[3px] pl-5 sm:pl-6 py-2 animate-fade-in-up ${lang === 'km' ? 'font-khmer' : 'font-sans'} ${isDarkMode ? 'text-[#F1F1F1] border-[#41B6E6]' : 'text-[#1A1A1A] border-[#0277C5]'}`}>
+                   <p 
+                       key={safeTipIndex} 
+                       className={`text-[15px] sm:text-base leading-relaxed border-l-[3px] pl-5 sm:pl-6 py-2 animate-fade-in-up ${lang === 'km' ? 'font-khmer' : 'font-sans'} ${isDarkMode ? 'text-[#F1F1F1] border-[#41B6E6]' : 'text-[#1A1A1A] border-[#0277C5]'}`}
+                       style={{ fontSize: 'calc(15px * var(--explain-font-scale, 1))' }}
+                   >
                        {currentTipsList[safeTipIndex]}
                    </p>
                </div>
@@ -53,7 +57,19 @@ const TipsSection = ({ isExpanded, onToggle, isDarkMode }) => {
                 {[1, 2, 3, 4].map((num) => (
                     <li key={num} className={`flex items-start gap-4 p-4 rounded-[20px] border transition-colors ${isDarkMode ? 'bg-[#121212]/50 border-[#2C2C2C] hover:bg-[#2C2C2C]' : 'bg-[#F8F9FA] border-[#E5E7EB] hover:bg-[#E5E7EB]/50'}`}>
                         <span className={`font-bold w-10 h-10 flex items-center justify-center rounded-full text-sm shrink-0 shadow-inner ${isDarkMode ? 'bg-[#41B6E6]/10 text-[#41B6E6]' : 'bg-[#0277C5]/10 text-[#0277C5]'}`}>{num}</span>
-                        <span className="mt-0.5"><span className={`font-bold block mb-1 ${lang === 'km' ? 'font-khmer' : 'font-sans'} ${isDarkMode ? 'text-[#F1F1F1]' : 'text-[#1A1A1A]'}`}>{t(`tip_${num}_title`)}</span> <span className={`${lang === 'km' ? 'font-khmer' : 'font-sans'} leading-relaxed`} dangerouslySetInnerHTML={{ __html: t(`tip_${num}_desc`) }} /></span>
+                        <span className="mt-0.5">
+                            <span 
+                                className={`font-bold block mb-1 ${lang === 'km' ? 'font-khmer' : 'font-sans'} ${isDarkMode ? 'text-[#F1F1F1]' : 'text-[#1A1A1A]'}`}
+                                style={{ fontSize: 'calc(14px * var(--explain-font-scale, 1))' }}
+                            >
+                                {t(`tip_${num}_title`)}
+                            </span> 
+                            <span 
+                                className={`${lang === 'km' ? 'font-khmer' : 'font-sans'} leading-relaxed`} 
+                                style={{ fontSize: 'calc(14px * var(--explain-font-scale, 1))' }}
+                                dangerouslySetInnerHTML={{ __html: t(`tip_${num}_desc`) }} 
+                            />
+                        </span>
                     </li>
                 ))}
               </ul>

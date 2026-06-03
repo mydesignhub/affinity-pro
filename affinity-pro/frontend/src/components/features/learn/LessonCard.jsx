@@ -33,7 +33,10 @@ export default function LessonCard({ lesson, onClick, isDarkMode }) {
         </h3>
       </div>
       
-      <p className={`text-[13px] sm:text-sm font-khmer line-clamp-2 leading-relaxed ${isDarkMode ? 'text-[#A0A0A0]' : 'text-[#6B7280]'}`}>
+      <p 
+          className={`text-[13px] sm:text-sm font-khmer line-clamp-2 leading-relaxed ${isDarkMode ? 'text-[#A0A0A0]' : 'text-[#6B7280]'}`}
+          style={{ fontSize: 'calc(13px * var(--explain-font-scale, 1))' }}
+      >
         {displayDescription}
       </p>
 

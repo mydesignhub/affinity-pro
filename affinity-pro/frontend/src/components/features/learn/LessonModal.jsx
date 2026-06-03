@@ -230,7 +230,10 @@ const LessonModal = ({ lesson, onClose, isDarkMode, completedSteps, setCompleted
         <div className={`flex-1 overflow-y-auto no-scrollbar flex flex-col ${isCssFullscreen ? 'p-0' : 'p-4 sm:p-6 scroll-content'}`} style={isCssFullscreen ? {} : { paddingBottom: 'max(env(safe-area-inset-bottom), 24px)' }}>
             
             {!isCssFullscreen && (
-                <p className={`text-[15px] font-khmer leading-relaxed mb-6 px-1 ${isDarkMode ? 'text-[#A0A0A0]' : 'text-[#6B7280]'}`}>
+                <p 
+                    className={`text-[15px] font-khmer leading-relaxed mb-6 px-1 ${isDarkMode ? 'text-[#A0A0A0]' : 'text-[#6B7280]'}`}
+                    style={{ fontSize: 'calc(15px * var(--explain-font-scale, 1))' }}
+                >
                     {lang === 'en' ? lesson.desc_en : lesson.desc}
                 </p>
             )}
@@ -392,7 +395,10 @@ const LessonModal = ({ lesson, onClose, isDarkMode, completedSteps, setCompleted
                             <DownloadCloud size={16} />
                             {lang === 'en' ? 'Practice Resources' : 'ឯកសារអនុវត្ត'}
                         </h4>
-                        <p className={`text-[13px] font-khmer leading-relaxed ${isDarkMode ? 'text-[#A0A0A0]' : 'text-[#6B7280]'}`}>
+                        <p 
+                            className={`text-[13px] font-khmer leading-relaxed ${isDarkMode ? 'text-[#A0A0A0]' : 'text-[#6B7280]'}`}
+                            style={{ fontSize: 'calc(13px * var(--explain-font-scale, 1))' }}
+                        >
                             {lang === 'en' ? lesson.instruction_en : lesson.instruction}
                         </p>
                     </div>
@@ -454,12 +460,15 @@ const LessonModal = ({ lesson, onClose, isDarkMode, completedSteps, setCompleted
                                     </div>
 
                                     <div className="flex-1 min-w-0 pr-2">
-                                        <p className={`text-[14px] sm:text-[15px] font-khmer leading-relaxed truncate
+                                        <p 
+                                            className={`text-[14px] sm:text-[15px] font-khmer leading-relaxed truncate
                                             ${isActive 
                                                 ? (isDarkMode ? 'text-[#F1F1F1] font-bold' : 'text-[#1A1A1A] font-bold') 
                                                 : (isDarkMode ? 'text-[#A0A0A0] font-medium' : 'text-[#4B5563] font-medium')
                                             }
-                                        `}>
+                                        `}
+                                            style={{ fontSize: 'calc(14.5px * var(--explain-font-scale, 1))' }}
+                                        >
                                             {lang === 'en' ? step.english : step.khmer}
                                         </p>
                                     </div>

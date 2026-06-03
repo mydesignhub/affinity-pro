@@ -1,6 +1,6 @@
 /* eslint-disable */
-import React, { useState, useRef } from 'react';
-import { Moon, Sun, BookOpen, Award, Zap, ShieldAlert, Lock, Mail, KeyRound, X, AlertCircle, CheckCircle2, Crown, Triangle } from 'lucide-react';
+import React, { useState, useRef, useEffect } from 'react';
+import { Moon, Sun, BookOpen, Award, Zap, ShieldAlert, Lock, Mail, KeyRound, X, AlertCircle, CheckCircle2, Crown, Triangle, Menu, Globe, Type, Minus, Plus, Info } from 'lucide-react';
 import { useLanguage } from '../../contexts/LanguageContext';
 
 // ─── Custom Bot Avatar (My Design logo SVG) ───────────────────────────────────
@@ -39,8 +39,8 @@ import { auth } from '../../firebase';
 
 const ADMIN_EMAIL = 'koymy.mlk@gmail.com';
 
-export default function Header({ activeTab, setActiveTab, isDarkMode, setIsDarkMode }) {
-    const { lang, toggleLanguage, t } = useLanguage();
+export default function Header({ activeTab, setActiveTab, isDarkMode, setIsDarkMode, appFontScale, setAppFontScale, onOpenDashboard }) {
+    const { lang, setLang, toggleLanguage, t } = useLanguage();
     
     // Admin States
     const [showAdminModal, setShowAdminModal] = useState(false);
@@ -52,10 +52,28 @@ export default function Header({ activeTab, setActiveTab, isDarkMode, setIsDarkM
     
     const [isSuperAdminActive, setIsSuperAdminActive] = useState(false);
 
+    const [isOptionsOpen, setIsOptionsOpen] = useState(false);
+    const optionsRef = useRef(null);
     const clickCount = useRef(0);
     const clickTimer = useRef(null);
 
     const isHiddenOnMobile = activeTab === 'ai' || activeTab === 'tools';
+
+    useEffect(() => {
+        const handleClickOutside = (e) => {
+            if (optionsRef.current && !optionsRef.current.contains(e.target)) {
+                setIsOptionsOpen(false);
+            }
+        };
+        if (isOptionsOpen) {
+            document.addEventListener('mousedown', handleClickOutside);
+            document.addEventListener('touchstart', handleClickOutside);
+        }
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+            document.removeEventListener('touchstart', handleClickOutside);
+        };
+    }, [isOptionsOpen]);
 
     const triggerHaptic = (type = 'light') => {
         if (typeof navigator !== 'undefined' && navigator.vibrate) {
@@ -160,37 +178,37 @@ export default function Header({ activeTab, setActiveTab, isDarkMode, setIsDarkM
     return (
         <>
             <header 
-                className={`${isHiddenOnMobile ? 'hidden md:block' : 'block'} w-full relative z-[60] transition-colors duration-500 ease-in-out backdrop-blur-xl shadow-sm ${isDarkMode ? 'bg-[#121212]/85 border-b border-white/5 shadow-black/20' : 'bg-[#FFFFFF]/85 border-b border-black/5 shadow-[#0277C5]/5'}`}
+                className={`${isHiddenOnMobile ? 'hidden md:block' : 'block'} w-full relative z-[60] transition-colors duration-500 ease-in-out backdrop-blur-xl shadow-sm ${isDarkMode ? 'bg-[#121212]/85 shadow-black/20' : 'bg-[#FFFFFF]/85 shadow-[#0277C5]/5'}`}
                 style={{ 
-                    paddingTop: 'env(safe-area-inset-top)', 
-                    marginTop: '-46px',
+                    paddingTop: 'calc(env(safe-area-inset-top) + 40px)',
+                    marginTop: '-40px',
                     touchAction: 'none' 
                 }} 
             >
-                <div className="max-w-7xl mx-auto px-4 pt-1.5 pb-2.5 flex justify-between items-center relative z-10">
+                <div className={`max-w-7xl mx-auto px-4 py-2 md:py-3 flex justify-between md:grid md:grid-cols-[1fr_auto_1fr] items-center gap-4 relative z-10`}>
                     
                     <div 
                         className="flex items-center gap-3 cursor-pointer group active:scale-95 transition-transform duration-300 ease-spring outline-none" 
                         onPointerDown={handleLogoClick}
                         style={{ touchAction: 'manipulation', WebkitTapHighlightColor: 'transparent' }}
                     >
-                        <div className={`w-8 h-8 sm:w-10 sm:h-10 relative flex items-center justify-center rounded-xl overflow-hidden shadow-sm group-hover:shadow-md transition-all duration-500 ease-spring group-hover:scale-105 border ${isDarkMode ? 'bg-[#1E1E1E] border-[#3A3A3C] group-hover:border-[#41B6E6]/50' : 'bg-[#FFFFFF] border-[#E5E7EB] group-hover:border-[#0277C5]/40'}`}>
+                        <div className={`w-[36px] h-[36px] sm:w-[40px] sm:h-[40px] relative rounded-[12px] sm:rounded-[14px] overflow-hidden shadow-sm group-hover:shadow-md transition-all duration-500 ease-spring group-hover:scale-105 border flex items-center justify-center ${isDarkMode ? 'bg-[#1E1E1E] border-[#3A3A3C] group-hover:border-[#41B6E6]/50' : 'bg-[#FFFFFF] border-[#E5E7EB] group-hover:border-[#0277C5]/40'}`}>
                             <img src="/logo.svg" alt="App Logo" className="w-6 h-6 object-contain" />
                         </div>
                         
                         <div className="flex flex-col justify-center pt-0.5">
-                            <h1 className={`text-[15px] sm:text-[17px] font-black leading-normal group-hover:text-[#0277C5] transition-colors duration-300 ${isDarkMode ? 'text-[#F1F1F1]' : 'text-[#1A1A1A]'}`}>
+                            <h1 className={`text-[15px] sm:text-[17px] font-black leading-none group-hover:text-[#0277C5] transition-colors duration-300 ${isDarkMode ? 'text-[#F1F1F1]' : 'text-[#1A1A1A]'}`}>
                                 Affinity<span className={isDarkMode ? 'text-[#41B6E6]' : 'text-[#0277C5]'}>Pro</span>
                             </h1>
-                            <div className="relative flex items-center -mt-0.5">
-                                <span className={`text-[10px] font-bold uppercase tracking-widest whitespace-nowrap block transition-colors ${isDarkMode ? 'text-[#A0A0A0] group-hover:text-[#41B6E6]' : 'text-[#6B7280] group-hover:text-[#0277C5]'}`}>
+                            <div className="relative flex items-center h-[16px] overflow-hidden mt-0.5">
+                                <span className={`text-[9px] font-bold uppercase tracking-widest whitespace-nowrap block transition-colors ${isDarkMode ? 'text-[#A0A0A0] group-hover:text-[#41B6E6]' : 'text-[#6B7280] group-hover:text-[#0277C5]'}`}>
                                     {lang === 'en' ? 'Masterclass' : 'ថ្នាក់រៀនកម្រិតខ្ពស់'}
                                 </span>
                             </div>
                         </div>
                     </div>
 
-                    <nav className={`hidden md:flex absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 space-x-1 p-1 rounded-full border shadow-sm transition-colors duration-500 z-10 ${isDarkMode ? 'bg-[#000000]/20 border-[#2C2C2C]' : 'bg-[#F4F5F7] border-[#E5E7EB]'}`}>
+                    <nav className={`hidden md:flex justify-center space-x-1 p-1 rounded-full border shadow-sm transition-colors duration-500 z-10 ${isDarkMode ? 'bg-[#000000]/20 border-[#2C2C2C]' : 'bg-[#F4F5F7] border-[#E5E7EB]'}`}>
                         {['learn', 'quiz', 'tools', 'ai'].map(t_id => (
                             <button 
                                 key={t_id} 
@@ -210,11 +228,11 @@ export default function Header({ activeTab, setActiveTab, isDarkMode, setIsDarkM
                         ))}
                     </nav>
 
-                    <div className="flex items-center gap-2 sm:gap-3 z-10">
+                    <div className="flex items-center justify-end gap-2 sm:gap-3 z-10" ref={optionsRef}>
                         {isSuperAdminActive && (
                             <button 
                                 onClick={(e) => { e.preventDefault(); triggerHaptic(); window.dispatchEvent(new CustomEvent('toggleSuperAdminPanel')); }} 
-                                className={`hidden sm:flex items-center justify-center gap-1 px-3 py-1.5 rounded-xl border text-[11px] font-bold font-sans transition-all duration-300 ease-out active:scale-90 shadow-lg bg-gradient-to-r from-[#41B6E6] to-[#0277C5] text-white animate-fade-in-up border-[#41B6E6]/50`}
+                                className={`hidden sm:flex items-center justify-center gap-1 h-[36px] sm:h-[40px] px-3 sm:px-4 rounded-[12px] sm:rounded-[14px] border text-[11px] font-bold font-sans transition-all duration-300 ease-out active:scale-90 shadow-lg bg-gradient-to-r from-[#41B6E6] to-[#0277C5] text-white animate-fade-in-up border-[#41B6E6]/50`}
                                 title="Open Super Admin Panel"
                             >
                                 <Crown size={14} /> <span className="uppercase tracking-wider mt-[1px]">Admin</span>
@@ -222,22 +240,105 @@ export default function Header({ activeTab, setActiveTab, isDarkMode, setIsDarkM
                         )}
 
                         <button 
-                            onClick={(e) => { e.preventDefault(); triggerHaptic(); toggleLanguage(); }} 
+                            onClick={(e) => { e.preventDefault(); triggerHaptic(); setIsOptionsOpen(!isOptionsOpen); }} 
                             onTouchStart={() => triggerHaptic()}
-                            className={`flex items-center justify-center gap-1 px-3 py-1.5 rounded-xl border text-[11px] font-bold font-sans transition-all duration-300 ease-out active:scale-90 ${isDarkMode ? 'bg-[#1E1E1E]/50 border-[#2C2C2C] text-[#A0A0A0] hover:text-[#F1F1F1] hover:bg-[#2C2C2C]' : 'bg-[#FFFFFF]/80 border-[#E5E7EB] text-[#6B7280] hover:text-[#1A1A1A] hover:bg-[#F8F9FA]'}`}
-                            title="Switch Language"
+                            className={`w-[36px] h-[36px] sm:w-[40px] sm:h-[40px] flex items-center justify-center rounded-[12px] sm:rounded-[14px] transition-all duration-300 ease-out active:scale-90 border ${isDarkMode ? 'bg-[#1E1E1E]/50 border-[#2C2C2C] text-[#A0A0A0] hover:text-[#F1F1F1] hover:bg-[#2C2C2C]' : 'bg-[#FFFFFF]/80 border-[#E5E7EB] text-[#6B7280] hover:text-[#1A1A1A] hover:bg-[#F8F9FA]'}`}
+                            title="Options"
                         >
-                            <span className="font-khmer tracking-wider mt-[1px]">{lang === 'en' ? 'ខ្មែរ' : 'EN'}</span>
+                            <div className={`transition-transform duration-300 ${isOptionsOpen ? 'rotate-90 scale-0 opacity-0 hidden' : 'rotate-0 scale-100 opacity-100 block'}`}>
+                                <Menu size={18} />
+                            </div>
+                            <div className={`transition-transform duration-300 ${isOptionsOpen ? 'rotate-0 scale-100 opacity-100 block' : '-rotate-90 scale-0 opacity-0 hidden'}`}>
+                                <X size={18} />
+                            </div>
                         </button>
-                        
-                        <button 
-                            onClick={(e) => { e.preventDefault(); triggerHaptic(); setIsDarkMode(!isDarkMode); }} 
-                            onTouchStart={() => triggerHaptic()}
-                            className={`p-2 rounded-xl transition-all duration-300 ease-out active:scale-90 hover:rotate-[15deg] border ${isDarkMode ? 'bg-[#1E1E1E]/50 border-[#2C2C2C] text-[#A0A0A0] hover:text-[#FFD700] hover:bg-[#2C2C2C]' : 'bg-[#FFFFFF]/80 border-[#E5E7EB] text-[#6B7280] hover:text-[#0277C5] hover:bg-[#F8F9FA]'}`}
-                            title="Toggle Theme"
-                        >
-                            {isDarkMode ? <Sun size={16} /> : <Moon size={16} />}
-                        </button>
+
+                        {/* Dropdown Menu */}
+                        <div className={`absolute top-[calc(100%+10px)] right-4 w-64 rounded-2xl shadow-2xl border backdrop-blur-xl transition-all duration-300 transform origin-top-right overflow-hidden ${isOptionsOpen ? 'scale-100 opacity-100 pointer-events-auto' : 'scale-95 opacity-0 pointer-events-none'} ${isDarkMode ? 'bg-[#121212]/95 border-[#2C2C2C]' : 'bg-[#FFFFFF]/95 border-[#E5E7EB]'}`}>
+                            <div className="p-2 space-y-1">
+                                {/* Language Segmented Control */}
+                                <div className={`w-full flex flex-col px-4 py-3 rounded-xl ${isDarkMode ? 'hover:bg-[#1E1E1E]' : 'hover:bg-[#F8F9FA]'}`}>
+                                    <div className="flex items-center justify-between mb-3">
+                                        <div className="flex items-center gap-3">
+                                            <Globe size={18} className={isDarkMode ? 'text-[#41B6E6]' : 'text-[#0277C5]'} />
+                                            <span className={`text-sm font-medium ${isDarkMode ? 'text-[#F1F1F1]' : 'text-[#1A1A1A]'}`}>{lang === 'en' ? 'Language' : 'ភាសា'}</span>
+                                        </div>
+                                    </div>
+                                    <div className={`flex items-center p-1 rounded-lg border ${isDarkMode ? 'bg-[#121212] border-[#2C2C2C]' : 'bg-[#F4F5F7] border-[#E5E7EB]'}`}>
+                                        <button 
+                                            onClick={(e) => { e.preventDefault(); triggerHaptic(); setLang('en'); }}
+                                            className={`flex-1 py-2 text-xs font-bold font-sans rounded-md transition-all duration-300 ${lang === 'en' ? (isDarkMode ? 'bg-[#2C2C2C] text-[#41B6E6] shadow-sm' : 'bg-white text-[#0277C5] shadow-sm') : (isDarkMode ? 'text-[#A0A0A0] hover:text-[#F1F1F1]' : 'text-[#6B7280] hover:text-[#1A1A1A]')}`}
+                                        >
+                                            English
+                                        </button>
+                                        <button 
+                                            onClick={(e) => { e.preventDefault(); triggerHaptic(); setLang('km'); }}
+                                            className={`flex-1 py-2 text-xs font-bold font-khmer rounded-md transition-all duration-300 ${lang === 'km' ? (isDarkMode ? 'bg-[#2C2C2C] text-[#41B6E6] shadow-sm' : 'bg-white text-[#0277C5] shadow-sm') : (isDarkMode ? 'text-[#A0A0A0] hover:text-[#F1F1F1]' : 'text-[#6B7280] hover:text-[#1A1A1A]')}`}
+                                        >
+                                            ខ្មែរ
+                                        </button>
+                                    </div>
+                                </div>
+
+                                {/* Theme */}
+                                <button 
+                                    onClick={(e) => { e.preventDefault(); triggerHaptic(); setIsDarkMode(!isDarkMode); }}
+                                    className={`w-full flex items-center justify-between px-4 py-3 rounded-xl transition-colors ${isDarkMode ? 'hover:bg-[#1E1E1E]' : 'hover:bg-[#F8F9FA]'}`}
+                                >
+                                    <div className="flex items-center gap-3">
+                                        {isDarkMode ? <Moon size={18} className="text-[#41B6E6]" /> : <Sun size={18} className="text-[#0277C5]" />}
+                                        <span className={`text-sm font-medium ${isDarkMode ? 'text-[#F1F1F1]' : 'text-[#1A1A1A]'}`}>{lang === 'en' ? 'Theme' : 'រូបរាង'}</span>
+                                    </div>
+                                    <span className={`text-xs font-bold px-2 py-1 rounded border ${isDarkMode ? 'bg-[#2C2C2C] border-[#3A3A3C] text-[#F1F1F1]' : 'bg-[#F4F5F7] border-[#E5E7EB] text-[#1A1A1A]'}`}>
+                                        {isDarkMode ? (lang === 'en' ? 'Dark' : 'ងងឹត') : (lang === 'en' ? 'Light' : 'ភ្លឺ')}
+                                    </span>
+                                </button>
+
+                                <div className={`h-[1px] w-full my-1 ${isDarkMode ? 'bg-[#2C2C2C]' : 'bg-[#E5E7EB]'}`} />
+
+                                {/* Font Size */}
+                                <div className={`w-full flex flex-col px-4 py-3 rounded-xl ${isDarkMode ? 'hover:bg-[#1E1E1E]' : 'hover:bg-[#F8F9FA]'}`}>
+                                    <div className="flex items-center gap-3 mb-3">
+                                        <Type size={18} className={isDarkMode ? 'text-[#41B6E6]' : 'text-[#0277C5]'} />
+                                        <span className={`text-sm font-medium ${isDarkMode ? 'text-[#F1F1F1]' : 'text-[#1A1A1A]'}`}>{lang === 'en' ? 'Text Size' : 'ទំហំអក្សរ'}</span>
+                                    </div>
+                                    <div className="flex items-center gap-3">
+                                        <button 
+                                            onClick={() => { triggerHaptic(); setAppFontScale(Math.max(80, appFontScale - 10)); }}
+                                            className={`p-1.5 rounded-lg border active:scale-90 transition-transform ${isDarkMode ? 'border-[#3A3A3C] text-[#A0A0A0] hover:text-[#F1F1F1]' : 'border-[#E5E7EB] text-[#6B7280] hover:text-[#1A1A1A]'}`}
+                                        >
+                                            <Minus size={14} />
+                                        </button>
+                                        <div className="flex-1 h-1.5 bg-[#E5E7EB] dark:bg-[#2C2C2C] rounded-full overflow-hidden relative">
+                                            <div 
+                                                className="absolute top-0 left-0 h-full bg-gradient-to-r from-[#0277C5] to-[#41B6E6] transition-all duration-300"
+                                                style={{ width: `${((appFontScale - 80) / 50) * 100}%` }}
+                                            />
+                                        </div>
+                                        <button 
+                                            onClick={() => { triggerHaptic(); setAppFontScale(Math.min(130, appFontScale + 10)); }}
+                                            className={`p-1.5 rounded-lg border active:scale-90 transition-transform ${isDarkMode ? 'border-[#3A3A3C] text-[#A0A0A0] hover:text-[#F1F1F1]' : 'border-[#E5E7EB] text-[#6B7280] hover:text-[#1A1A1A]'}`}
+                                        >
+                                            <Plus size={14} />
+                                        </button>
+                                    </div>
+                                    <div className="flex justify-center mt-2">
+                                        <span className={`text-[10px] font-mono font-bold ${isDarkMode ? 'text-[#A0A0A0]' : 'text-[#6B7280]'}`}>{appFontScale}%</span>
+                                    </div>
+                                </div>
+
+                                <div className={`h-[1px] w-full my-1 ${isDarkMode ? 'bg-[#2C2C2C]' : 'bg-[#E5E7EB]'}`} />
+
+                                {/* About / Terms */}
+                                <button 
+                                    onClick={(e) => { e.preventDefault(); triggerHaptic(); setIsOptionsOpen(false); window.dispatchEvent(new CustomEvent('openAboutModal')); }}
+                                    className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-colors ${isDarkMode ? 'hover:bg-[#1E1E1E] text-[#A0A0A0] hover:text-[#F1F1F1]' : 'hover:bg-[#F8F9FA] text-[#6B7280] hover:text-[#1A1A1A]'}`}
+                                >
+                                    <Info size={18} />
+                                    <span className="text-sm font-medium font-khmer">{lang === 'en' ? 'About & Terms' : 'អំពី និង លក្ខខណ្ឌ'}</span>
+                                </button>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </header>
