@@ -193,7 +193,7 @@ export default function Header({ activeTab, setActiveTab, isDarkMode, setIsDarkM
                         style={{ touchAction: 'manipulation', WebkitTapHighlightColor: 'transparent' }}
                     >
                         <div className={`w-[36px] h-[36px] sm:w-[40px] sm:h-[40px] relative rounded-[12px] sm:rounded-[14px] overflow-hidden shadow-sm group-hover:shadow-md transition-all duration-500 ease-spring group-hover:scale-105 border flex items-center justify-center ${isDarkMode ? 'bg-[#1E1E1E] border-[#3A3A3C] group-hover:border-[#41B6E6]/50' : 'bg-[#FFFFFF] border-[#E5E7EB] group-hover:border-[#0277C5]/40'}`}>
-                            <img src="/logo.svg" alt="App Logo" className="w-6 h-6 object-contain" />
+                            <img src="/logo.svg" alt="App Logo" className="w-[36px] h-[36px] sm:w-[40px] sm:h-[40px] object-contain scale-[1.15]" />
                         </div>
                         
                         <div className="flex flex-col justify-center pt-0.5">
