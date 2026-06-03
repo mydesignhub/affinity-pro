@@ -162,7 +162,7 @@ export default function Header({ activeTab, setActiveTab, isDarkMode, setIsDarkM
             <header 
                 className={`${isHiddenOnMobile ? 'hidden md:block' : 'block'} w-full relative z-[60] transition-colors duration-500 ease-in-out backdrop-blur-xl shadow-sm ${isDarkMode ? 'bg-[#121212]/85 border-b border-white/5 shadow-black/20' : 'bg-[#FFFFFF]/85 border-b border-black/5 shadow-[#0277C5]/5'}`}
                 style={{ 
-                    paddingTop: 'calc(env(safe-area-inset-top) + 50px)', 
+                    paddingTop: 'env(safe-area-inset-top)', 
                     marginTop: '-46px',
                     touchAction: 'none' 
                 }} 
@@ -312,7 +312,7 @@ export default function Header({ activeTab, setActiveTab, isDarkMode, setIsDarkM
                             </button>
                         </form>
 
-                        <div className="mt-6 pt-4 border-t text-center relative z-10 flex flex-col gap-3" style={{ borderColor: isDarkMode ? '#2C2C2C' : '#E5E7EB' }}>
+                        <div className="mt-6 pt-4 text-center relative z-10 flex flex-col gap-3" style={{ borderColor: isDarkMode ? '#2C2C2C' : '#E5E7EB' }}>
                             <button 
                                 type="button"
                                 onClick={() => { setIsSignUpMode(!isSignUpMode); setAdminError(''); setAdminSuccess(''); }}

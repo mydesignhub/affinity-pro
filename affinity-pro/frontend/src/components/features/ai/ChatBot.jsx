@@ -1160,8 +1160,8 @@ const ChatBot = ({ messages = [], setMessages, isDarkMode, liveAiData = [], setL
 
             {/* MOBILE AI HEADER (Hidden on Desktop) */}
             <div
-                className={`md:hidden absolute top-0 left-0 w-full z-[60] transition-all duration-700 ease-out backdrop-blur-xl shadow-sm ${isDarkMode ? 'bg-[#121212]/85 border-b border-white/5 shadow-black/20' : 'bg-[#FFFFFF]/85 border-b border-black/5 shadow-[#0277C5]/5'} ${showHeader ? 'translate-y-0' : '-translate-y-full'}`}
-                style={{ paddingTop: 'calc(env(safe-area-inset-top) + 50px)', marginTop: '-46px' }}
+                className={`md:hidden absolute top-0 left-0 w-full z-[60] transition-all duration-700 ease-out backdrop-blur-xl shadow-sm ${isDarkMode ? 'bg-[#121212]/85 shadow-black/20' : 'bg-[#FFFFFF]/85 shadow-[#0277C5]/5'} ${showHeader ? 'translate-y-0' : '-translate-y-full'}`}
+                style={{ paddingTop: 'env(safe-area-inset-top)', marginTop: '-46px' }}
             >
                 <div className="flex items-center justify-between px-4 pt-1.5 pb-2.5">
                     <div className="flex items-center gap-3">
