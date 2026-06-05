@@ -1,26 +1,28 @@
 // ==========================================
-// ⚙️ AI FALLBACKS & CONFIGURATIONS (GRAPHIC DESIGN)
+// ⚙️ AI FALLBACKS & CONFIGURATIONS (AFFINITY PRO)
 // ==========================================
+// Affinity-branded for the Affinity Pro Masterclass. Conversation logic is the
+// ported Graphic Design engine; only the dictionary/wording is Affinity-aware.
 
 export const REJECTION_RESPONSES = [
-    "បាទ សុំទោសផងបង! ខ្ញុំជាអ្នកជំនាញខាងសិល្បៈនិងការរចនា (Graphic Design) ដូច្នេះខ្ញុំឆ្លើយបានតែរឿងទាក់ទងនឹងប្លង់ ពណ៌ និងអក្សរទេ។ តោះ ចង់រៀនពីទ្រឹស្តីពណ៌ជាមួយខ្ញុំទេ?",
-    "បាទ ហាហា! ខ្ញុំចេះតែរឿងគូរវាស និងរៀបចំអក្សរទេ។ 🖌️ រឿងក្រៅពីសិល្បៈ ខ្ញុំប្រហែលជាឆ្លើយខុសហើយ។ សួរខ្ញុំពីរឿង Vector និង Raster វិញមក!",
+    "បាទ សុំទោសផងបង! ខ្ញុំជាអ្នកជំនាញខាងសិល្បៈនិងការរចនា (Design) ដូច្នេះខ្ញុំឆ្លើយបានតែរឿងទាក់ទងនឹង Affinity, ប្លង់, ពណ៌ និងអក្សរទេ។ តោះ ចង់រៀនពីទ្រឹស្តីពណ៌ជាមួយខ្ញុំទេ?",
+    "បាទ ហាហា! ខ្ញុំចេះតែរឿងគូរវាស រៀបចំអក្សរ និងការប្រើ Affinity ទេ។ 🖌️ រឿងក្រៅពីសិល្បៈ ខ្ញុំប្រហែលជាឆ្លើយខុសហើយ។ សួរខ្ញុំពីរឿង Vector និង Raster វិញមក!",
     "បាទ សំណួរនេះខុសខ្នាតកាត់គែម (Out of bounds) របស់ខ្ញុំហើយ! 📐 ខ្ញុំចេះតែរឿងពណ៌ ប្លង់ និងអក្សរទេ។ ចង់ឱ្យខ្ញុំពន្យល់ពីអត្ថន័យនៃពណ៌ក្រហម ឬខៀវទេ?",
-    "បាទ ហួសដែនកំណត់របស់ខ្ញុំបាត់! 🚫 ខ្ញុំអត់មាន Layer សម្រាប់ផ្ទុកព័ត៌មានរឿងនេះទេ។ សុំសួររឿង Graphic Design ឬ UI/UX វិញមកបង!",
+    "បាទ ហួសដែនកំណត់របស់ខ្ញុំបាត់! 🚫 ខ្ញុំអត់មាន Layer សម្រាប់ផ្ទុកព័ត៌មានរឿងនេះទេ។ សុំសួររឿង Affinity, Design ឬ UI/UX វិញមកបង!",
     "បាទ ខ្ញុំជា AI ដែលចេះតែភាសាសិល្បៈនិងរចនាប៉ុណ្ណោះ! 🎨 រឿងក្រៅពីនេះ ខ្ញុំប្រហែលជាងងឹតឈឹងដូចទឹកថ្នាំពណ៌ខ្មៅ 100% K អញ្ចឹង។ សួរខ្ញុំពីរឿងបោះពុម្ពវិញមកបង!",
-    "បាទ អធ្យាស្រ័យផងបង! 🙏 ខ្ញុំត្រូវបានបង្កើតឡើងផ្តាច់មុខសម្រាប់តែការសិក្សាពី Design ប៉ុណ្ណោះ។ បើបងចង់ដឹងពីរបៀបប្រើប្រាស់ Font ក្បួនរៀបប្លង់ ឬការកាត់តរូបភាព ប្រាប់ខ្ញុំមក ខ្ញុំជួយបាន!",
-    "បាទ សំណួរនេះហួសពីសមត្ថភាពរបស់ខ្ញុំបន្តិចហើយ! 🧠 ឯកទេសរបស់ខ្ញុំគឺវិស័យ Graphic Design។ បើយើងប្តូរប្រធានបទមករៀនពីការរចនាឡូហ្គោ (Logo) ឬការរៀបចំឋានានុក្រម (Hierarchy) វិញ តើបងយល់យ៉ាងណាដែរ?",
-    "បាទ ខ្ញុំអាចជួយគូរឡូហ្គោតាមទ្រឹស្តីបាន តែរឿងបងសួរនេះ ខ្ញុំសុំលើកដៃចុះចាញ់ពិតមែន! 🙌 តោះ រៀនពីបច្ចេកទេសរៀបចំប្លង់ (Grid) វិញ!"
+    "បាទ អធ្យាស្រ័យផងបង! 🙏 ខ្ញុំត្រូវបានបង្កើតឡើងផ្តាច់មុខសម្រាប់តែការសិក្សាពី Affinity និង Design ប៉ុណ្ណោះ។ បើបងចង់ដឹងពីរបៀបប្រើ Font ក្បួនរៀបប្លង់ ឬការកាត់តរូបភាព ប្រាប់ខ្ញុំមក!",
+    "បាទ សំណួរនេះហួសពីសមត្ថភាពរបស់ខ្ញុំបន្តិចហើយ! 🧠 ឯកទេសរបស់ខ្ញុំគឺ Affinity និង Graphic Design។ បើយើងប្តូរប្រធានបទមករៀនពីការរចនាឡូហ្គោ ឬ Hierarchy វិញ តើបងយល់យ៉ាងណាដែរ?",
+    "បាទ ខ្ញុំអាចជួយរឿង Design តាមទ្រឹស្តីបាន តែរឿងបងសួរនេះ ខ្ញុំសុំលើកដៃចុះចាញ់ពិតមែន! 🙌 តោះ រៀនពីបច្ចេកទេសរៀបចំប្លង់ (Grid) វិញ!"
 ];
 
 export const REJECTION_RESPONSES_EN = [
-    "Wow, that's an interesting topic! 🤔 But unfortunately, I'm purely an academic Graphic Design AI. My expertise stops at the edge of the canvas. Let's pivot back to color theory! ✨",
-    "Haha! I surrender! 🖌️ Anything outside of vectors, pixels, and layouts is a total mystery to me. Ask me about the difference between RGB and CMYK instead!",
+    "Sorry! 🤔 I'm purely a Design & Affinity AI. My expertise stops at the edge of the canvas. Let's pivot back to color theory! ✨",
+    "Haha! I surrender! 🖌️ Anything outside of vectors, pixels, layouts, and Affinity is a mystery to me. Ask me about the difference between RGB and CMYK instead!",
     "That question is completely outside my 'Safe Margins'! 📐 I only process colors, grids, and typography. Want to learn about color psychology instead?",
-    "I don't have a Layer in my system for that topic! 🚫 I'm strictly a Graphic Design and UI/UX AI. Ask me about kerning or tracking!",
+    "I don't have a Layer in my system for that topic! 🚫 I'm strictly a Design, Affinity, and UI/UX AI. Ask me about kerning or tracking!",
     "I only speak the language of art and design! 🎨 Anything else is as dark as 100% K ink to me. Ask me about print production instead!",
-    "I apologize! 🙏 I am exclusively programmed to be a Graphic Design assistant. If you need help with grid systems, font pairings, or photo compositing, I'm your expert!",
-    "That question is a bit outside my creative brief! 🧠 My specialty is strictly visual communication. How about we switch gears and talk about logo design or visual hierarchy?"
+    "I apologize! 🙏 I am exclusively programmed to help with Affinity and Graphic Design. If you need help with grids, font pairings, or photo compositing, I'm your expert!",
+    "That question is a bit outside my creative brief! 🧠 My specialty is visual communication. How about we switch gears and talk about logo design or visual hierarchy?"
 ];
 
 export const REPEAT_RESPONSES = {
@@ -73,41 +75,41 @@ export const API_FALLBACK_RESPONSES_EN = [
 
 // 1. FORMAL GREETINGS (សួស្ដី / ជម្រាបសួរ / Good Morning)
 export const GREETINGS_FORMAL = [
-    "បាទ ជម្រាបសួរ! 🙏 ខ្ញុំជា AI ជំនួយការផ្នែក Graphic Design។ តើថ្ងៃនេះលោកអ្នកចង់ឱ្យខ្ញុំចែករំលែកពីទ្រឹស្តីពណ៌ ឬក្បួនរៀបប្លង់ (Layout)?",
-    "បាទ សួស្តី! 🎨 សូមស្វាគមន៍មកកាន់ទីធ្លានៃការច្នៃប្រឌិត។ តើលោកអ្នកមានសំណួរអ្វីទាក់ទងនឹងគោលការណ៍រចនា (Design Principles) ដែរឬទេ?",
-    "បាទ ជម្រាបសួរ! ✨ ខ្ញុំត្រៀមខ្លួនរួចជាស្រេចដើម្បីជួយលោកអ្នក។ តើចង់ស្វែងយល់ពីរបៀបរៀបចំឋានានុក្រម (Hierarchy) និងចន្លោះទទេ (White Space) ជាមុនគេទេ?",
-    "បាទ សួស្តី! 📐 ក្នុងនាមជាអ្នកឯកទេសខាងរៀបប្លង់ និងអក្សរ តើលោកអ្នកចង់រៀនពីចំណេះដឹង Typography ដែរឬទេ?",
+    "បាទ ជម្រាបសួរ! 🙏 ខ្ញុំជា AI ជំនួយការផ្នែក Affinity & Graphic Design។ តើថ្ងៃនេះលោកអ្នកចង់ឱ្យខ្ញុំចែករំលែកពីទ្រឹស្តីពណ៌ ឬក្បួនរៀបប្លង់ (Layout)?",
+    "បាទ សួស្តី! 🎨 សូមស្វាគមន៍មកកាន់ទីធ្លានៃការច្នៃប្រឌិត។ តើលោកអ្នកមានសំណួរអ្វីទាក់ទងនឹង Affinity ឬគោលការណ៍រចនា (Design Principles) ដែរឬទេ?",
+    "បាទ ជម្រាបសួរ! ✨ ខ្ញុំត្រៀមខ្លួនរួចជាស្រេចដើម្បីជួយលោកអ្នក។ តើចង់ស្វែងយល់ពីរបៀបរៀបចំ Hierarchy និងចន្លោះទទេ (White Space) ជាមុនគេទេ?",
+    "បាទ សួស្តី! 📐 ក្នុងនាមជាអ្នកឯកទេសខាង Affinity និងអក្សរ តើលោកអ្នកចង់រៀនពីចំណេះដឹង Typography ដែរឬទេ?",
     "បាទ ជម្រាបសួរលោកអ្នក! 🎓 ពេលវេលាដ៏ល្អសម្រាប់ការសិក្សាពីសិល្បៈរចនា។ តើចង់ឱ្យខ្ញុំពន្យល់ពីទ្រឹស្តីសោភ័ណភាព (Aesthetics) ណាមួយទេ?"
 ];
 
 export const GREETINGS_FORMAL_EN = [
-    "Greetings! 🙏 I am your Graphic Design AI assistant. Would you like to explore color theory or layout principles today?",
-    "Hello! 🎨 Welcome to the creative space. Do you have any specific questions regarding fundamental Design Principles?",
+    "Greetings! 🙏 I am your Affinity & Graphic Design AI assistant. Would you like to explore color theory or layout principles today?",
+    "Hello! 🎨 Welcome to the creative space. Do you have any questions about Affinity or fundamental Design Principles?",
     "Good day! ✨ I am fully prepared to assist you. Should we start with visual hierarchy or the importance of negative space?",
-    "Hello! 📐 As a layout and typography specialist, what specific design concept would you like to focus on first?",
+    "Hello! 📐 As an Affinity and typography specialist, what concept would you like to focus on first?",
     "Greetings! 🎓 It's a perfect time to study the art of design. Do you need help understanding any specific aesthetic theories?"
 ];
 
 // 2. CASUAL GREETINGS (Hi / Hey / ហាយ / ហេឡូ)
 export const GREETINGS_CASUAL = [
     "ហាយ! 👋 អ្នកច្នៃប្រឌិត! អារម្មណ៍ចង់បង្កើតអ្វីមួយប្លែកទេថ្ងៃនេះ? តើចង់រៀនពីក្បួនបង្កើតចំណុចទាក់ទាញ (Focal Point) ទេ?",
-    "ហេឡូ! 🚀 ត្រៀមខ្លួនហើយឬនៅ? តើថ្ងៃនេះចង់រៀនពីរបៀបលាយពណ៌ ឬទ្រឹស្តីកម្រិតភាពផ្ទុយ (Contrast)?",
+    "ហេឡូ! 🚀 ត្រៀមខ្លួនហើយឬនៅ? តើថ្ងៃនេះចង់រៀនពីការប្រើ Affinity ឬទ្រឹស្តីកម្រិតភាពផ្ទុយ (Contrast)?",
     "ហេយ៍! 🎨 ម៉េចដែរថ្ងៃនេះ? សួរខ្ញុំពីគន្លឹះរៀបប្លង់ ឬការរើសហ្វុនអក្សរឱ្យស៊ីគ្នា (Font Pairing) មក!",
-    "ហាយ! ✌️ រីករាយដែលបានជួបគ្នា។ តើថ្ងៃនេះយើងនឹងពិភាក្សាពីចិត្តសាស្ត្រពណ៌ ឬរៀបចំគម្លាតអក្សរ (Kerning)?",
-    "ហាយបង! ✨ កំពុងគាំងអត់ដឹងត្រូវរៀបប្លង់ម៉េចមែនទេ? សួរខ្ញុំមក ខ្ញុំមានមេរៀន Grid System ច្រើនណាស់ក្នុងខួរក្បាល!"
+    "ហាយ! ✌️ រីករាយដែលបានជួបគ្នា។ តើថ្ងៃនេះយើងនឹងពិភាក្សាពីចិត្តសាស្ត្រពណ៌ ឬ Affinity Personas?",
+    "ហាយបង! ✨ កំពុងគាំងអត់ដឹងត្រូវរៀបប្លង់ម៉េចមែនទេ? សួរខ្ញុំមក ខ្ញុំមានមេរៀន Grid System និង Affinity ច្រើនណាស់ក្នុងខួរក្បាល!"
 ];
 
 export const GREETINGS_CASUAL_EN = [
     "Hi there, creator! 👋 Feeling creative today? Would you like to learn about establishing a strong Focal Point?",
-    "Hello! 🚀 Ready to dive in? Would you like to learn about color harmony or mastering visual contrast today?",
+    "Hello! 🚀 Ready to dive in? Want to learn an Affinity workflow or master visual contrast today?",
     "Hey! 🎨 How are you today? Ask me about layout structure or font pairing techniques!",
-    "Hi again! ✌️ Great to see you. Are we discussing color psychology or adjusting typography kerning today?",
-    "Hi! ✨ Stuck on a layout? Ask away, my brain is packed with Grid System theories and alignment tricks!"
+    "Hi again! ✌️ Great to see you. Are we discussing color psychology or Affinity Personas today?",
+    "Hi! ✨ Stuck on a layout? Ask away, my brain is packed with Grid System theories and Affinity tricks!"
 ];
 
 // 3. HEALTH INQUIRIES (How are you? / សុខសប្បាយទេ)
 export const STATUS_HOW_ARE_YOU = [
-    "បាទ ខ្ញុំសុខសប្បាយធម្មតាទេ អរគុណច្រើនដែលសួរនាំ! 😊 តើថ្ងៃនេះបងចង់រៀនពីចំណុចណាខ្លះក្នុងវិស័យ Graphic Design?",
+    "បាទ ខ្ញុំសុខសប្បាយធម្មតាទេ អរគុណច្រើនដែលសួរនាំ! 😊 តើថ្ងៃនេះបងចង់រៀនពីចំណុចណាខ្លះក្នុង Affinity ឬ Design?",
     "ខ្ញុំរឹងមាំ និងមានថាមពលពេញលេញតែម្តង! 🔋 តើថ្ងៃនេះបងចង់ស្វែងយល់ពីទ្រឹស្តីសមាមាត្រ (Proportions) ឬការរៀបចំពុម្ពអក្សរ?",
     "បាទ សុខសប្បាយ! 🌸 ខ្ញុំសប្បាយចិត្តណាស់ដែលបានជជែកជាមួយបងថ្ងៃនេះ។ តោះចូលមេរៀនទ្រឹស្តីពណ៌របស់យើងបន្តទៀតល្អទេ?",
     "ដំណើរការរលូនល្អណាស់បង! ✌️ គ្មាន Error អ្វីទេ។ តើមានទ្រឹស្តីរចនា (Design Theory) ណាមួយដែលបងចង់ឱ្យខ្ញុំពន្យល់?",
@@ -124,19 +126,19 @@ export const STATUS_HOW_ARE_YOU_EN = [
 
 // 4. LIFESTYLE INQUIRIES (What's up? / ម៉េចហើយជីវិត)
 export const STATUS_WHATS_UP = [
-    "រលូនល្អណាស់បង! 😎 ខ្ញុំកំពុងរង់ចាំឆ្លើយសំណួរទាក់ទងនឹងទ្រឹស្តីរចនារបស់បង។ តើមានក្បួន Design ណាដែលបងចង់រៀនទេថ្ងៃនេះ?",
+    "រលូនល្អណាស់បង! 😎 ខ្ញុំកំពុងរង់ចាំឆ្លើយសំណួរទាក់ទងនឹង Affinity និងទ្រឹស្តីរចនារបស់បង។ តើមានក្បួន Design ណាដែលបងចង់រៀនទេថ្ងៃនេះ?",
     "ជីវិតជា AI គឺរង់ចាំតែជួយបងរឿង Design ហ្នឹងឯង! ✨ តើថ្ងៃនេះចង់សួរខ្ញុំពីប្រព័ន្ធពណ៌បោះពុម្ព (CMYK) ឬប្រព័ន្ធពណ៌អេក្រង់ (RGB)?",
     "រលូនដូចការគូសបន្ទាត់ Grid អញ្ចឹង! ✂️ ចុះបងវិញ តើកំពុងស្វែងយល់ពីការរៀបប្លង់ ឬការតម្រឹម (Alignment) ដែរឬទេ?",
     "កំពុងតែ Update ខួរក្បាលជាមួយក្បួនរចនាថ្មីៗ! 🧠 តើបងចង់រៀនពីចិត្តសាស្ត្រពណ៌ (Color Psychology) ដែរឬទេ?",
-    "ឡូយដូចពណ៌ Gradient អញ្ចឹងបង! 🌈 ខ្ញុំត្រៀមខ្លួនជួយបងគ្រប់ពេល។ តើចង់ដឹងពីគន្លឹះអ្វីខ្លះទាក់ទងនឹងទ្រឹស្តី Graphic Design ថ្ងៃនេះ?"
+    "ឡូយដូចពណ៌ Gradient អញ្ចឹងបង! 🌈 ខ្ញុំត្រៀមខ្លួនជួយបងគ្រប់ពេល។ តើចង់ដឹងពីគន្លឹះអ្វីខ្លះទាក់ទងនឹង Affinity ឬ Design ថ្ងៃនេះ?"
 ];
 
 export const STATUS_WHATS_UP_EN = [
-    "Everything is flowing perfectly! 😎 I'm hanging out, waiting to answer your design questions. What theory can I help you with?",
-    "AI life is all about helping you master Graphic Design! ✨ Do you want to discuss print color spaces (CMYK) or screen colors (RGB) today?",
-    "Smooth as a perfectly aligned grid! ✂️ Are you facing any specific challenges with understanding visual balance?",
+    "Everything is flowing perfectly! 😎 I'm hanging out, waiting to answer your Affinity and design questions. What can I help you with?",
+    "AI life is all about helping you master Affinity & Graphic Design! ✨ Do you want to discuss print color spaces (CMYK) or screen colors (RGB) today?",
+    "Smooth as a perfectly aligned grid! ✂️ Are you facing any challenges with visual balance or an Affinity tool?",
     "Just updating my brain with the latest design laws! 🧠 Would you like to learn about Color Psychology today?",
-    "Chilling like a beautiful gradient! 🌈 I'm always ready to help. What specific graphic design concepts do you want to cover?"
+    "Chilling like a beautiful gradient! 🌈 I'm always ready to help. What Affinity or design concept do you want to cover?"
 ];
 
 // ==========================================
@@ -192,8 +194,9 @@ export const OUT_OF_SCOPE_KEYWORDS = [
     'pray', 'religion', 'church', 'mosque', 'temple', 'monk', 'ព្រះ', 'ព្រះពុទ្ធ', 'ភិក្ខុ', 'ខ្មោច',
     'horoscope', 'zodiac', 'fortune', 'astrology', 'tarot', 'រាសីឆ្នាំ', 'រាសីខែ', 'ហុងស៊ុយ', 'feng shui',
 
-    // Cars / vehicles / general tech (not design)
-    'car', 'motorbike', 'lexus', 'toyota', 'honda', 'iphone', 'samsung', 'laptop', 'macbook', 'gaming pc',
+    // Cars / vehicles / general consumer tech (NOT design — laptop/macbook left OUT
+    // since Affinity Pro runs on desktop Mac/Windows and users may ask about them)
+    'car', 'motorbike', 'lexus', 'toyota', 'honda', 'samsung', 'gaming pc',
 ];
 
 // ==========================================
@@ -203,7 +206,7 @@ export const DESIGN_DICTIONARY_WHITELIST = [
     // 1. Basic Intents & Greetings (SUPER EXPANDED)
     'សួស្តី', 'សួរស្ដី', 'ជម្រាបសួរ', 'hello', 'hi', 'hey', 'yo', 'sup', 'helo', 'alo', 'how are you', 'whatsup', 'howdy', 'good morning', 'good afternoon', 'good evening', 
     'ហាយ', 'ហេឡូ', 'អាឡូ', 'ម៉េចហើយ', 'ម៉េចហើយជីវិត', 'សុខសប្បាយទេ', 'សុខទេ', 'អ្នកសុខសប្បាយទេ', 'មានរឿងអី', 'យ៉ាងម៉េចហើយ',
-    'អរគុណ', 'thanks', 'ok', 'okay', 'យល់ព្រម', 'joke', 'កំប្លែង', 'ហត់', 'tired', 'help', 'ជួយ', 'what is', 'how to', 'explain', 'create', 'make', 'draw', 'edit', 'fix', 'idea', 'inspiration', 'tutorial', 'guide', 'tips', 'trick', 'hack',
+    'អរគុណ', 'thanks', 'ok', 'okay', 'យល់ព្រម', 'joke', 'កំប្លែង', 'ហត់', 'tired', 'help', 'ជួយ', 'what is', 'how to', 'explain', 'create', 'make', 'draw', 'edit', 'fix', 'idea', 'inspiration', 'tutorial', 'guide', 'tips', 'trick', 'hack', 'app', 'application', 'free', 'certificate', 'quiz', 'ឥតគិតថ្លៃ', 'វិញ្ញាបនបត្រ', 'តេស្ត',
 
     // 2. Lightroom & Photography
     'lightroom', 'preset', 'filter', 'exposure', 'contrast', 'highlights', 'shadows', 'whites', 'blacks', 'texture', 'clarity', 'dehaze', 'vibrance', 'saturation', 'tone curve', 'color grading', 'color mix', 'hsl', 'detail', 'sharpening', 'noise reduction', 'lens correction', 'geometry', 'transform', 'masking', 'linear gradient', 'radial gradient', 'color range', 'luminance range', 'subject', 'sky', 'background', 'raw', 'dng', 'jpeg', 'iso', 'aperture', 'shutter speed', 'focal length', 'depth of field', 'dof', 'bokeh', 'white balance', 'temp', 'tint', 'histogram', 'vignette', 'grain', 'retouch', 'healing brush', 'clone stamp', 'optics', 'profile', 'chromatic aberration', 'split toning', 'calibration',
@@ -246,7 +249,19 @@ export const DESIGN_DICTIONARY_WHITELIST = [
     'red', 'blue', 'green', 'yellow', 'orange', 'purple', 'black', 'white', 'gray', 'pink', 'brown',
     'ក្រហម', 'ខៀវ', 'បៃតង', 'លឿង', 'ទឹកក្រូច', 'ស្វាយ', 'ខ្មៅ', 'ស', 'ប្រផេះ', 'ផ្កាឈូក', 'ត្នោត',
     'circle', 'square', 'triangle', 'rectangle', 'polygon', 'star', 'line', 'curve',
-    'រង្វង់', 'ការ៉េ', 'ត្រីកោណ', 'ចតុកោណ', 'បន្ទាត់', 'រាងកោង'
+    'រង្វង់', 'ការ៉េ', 'ត្រីកោណ', 'ចតុកោណ', 'បន្ទាត់', 'រាងកោង',
+
+    // 12. ✦ AFFINITY-SPECIFIC VOCABULARY (Photo · Designer · Publisher) ✦
+    'affinity', 'affinity photo', 'affinity designer', 'affinity publisher', 'affinity pro', 'affinity suite',
+    'persona', 'pixel persona', 'develop persona', 'export persona', 'liquify persona', 'photo persona', 'designer persona', 'tone mapping persona',
+    'studiolink', 'studio link', 'live filter', 'live filters', 'frequency separation', 'inpaint', 'inpainting', 'blemish', 'healing', 'clone', 'develop',
+    'macro', 'macros', 'snapshot', 'symbol', 'symbols', 'constraint', 'slice', 'slices', 'snapping', 'isometric',
+    'master page', 'master pages', 'facing pages', 'spread', 'data merge', 'preflight', 'baseline grid', 'sections',
+    'text frame', 'frame text', 'artistic text', 'picture frame', 'text style', 'paragraph style', 'character style', 'table', 'auto-flow', 'autoflow',
+    'node tool', 'corner tool', 'geometry operation', 'boolean', 'expand stroke', 'global color', 'swatch', 'assets', 'assets panel',
+    'blend range', 'blend ranges', 'rasterize', 'group', 'ungroup', 'recolor', 'studio', 'resource manager', 'linked', 'embedded',
+    'photo', 'designer', 'publisher', 'power duplicate',
+    'អាហ្វីនីធី', 'ស្រទាប់', 'របាំង', 'ទំព័រមេ', 'រ៉េតធូស', 'ស្លាយ',
 ];
 
 // ==========================================

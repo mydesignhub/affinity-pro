@@ -155,33 +155,27 @@ export const SUGGESTED_QUESTIONS_EN = [
 ];
 
 // ==========================================
-// 🌟 GOD-TIER APP LOAD GREETINGS (VISIONARY MENTOR TONE)
+// 🌟 APP-LOAD GREETINGS (MY DESIGN AI · Affinity Pro)
 // ==========================================
+// Identity: "MY DESIGN AI" — matches the chat header. Affinity-branded for the
+// Affinity Pro Masterclass (Photo, Designer & Publisher desktop suite).
 
 export const GREETINGS = [
-    "បាទ សួស្ដី! 👋 ខ្ញុំគឺ **Design Master**។ ការរចនាដ៏អស្ចារ្យកើតចេញពីការគិតដ៏ស៊ីជម្រៅ (Visual Intelligence)។ តើថ្ងៃនេះចង់រៀនពីក្បួនរៀបប្លង់ ឬការប្រើពណ៌? 🎨✨",
-    "ស្វាគមន៍មកកាន់ទីធ្លានៃការច្នៃប្រឌិត! 🎨 ពណ៌អាចនិយាយជំនួសពាក្យសម្ដីបាន។ តើចង់ឱ្យខ្ញុំពន្យល់ពីចិត្តសាស្ត្រពណ៌ (Color Psychology) ដែរឬទេ?",
-    "សួស្តីអ្នកច្នៃប្រឌិត! 🚀 ភាពឥតខ្ចោះមិនមែនជាការដាក់បញ្ចូលគ្នាច្រើនៗទេ តែជាការដកចេញរហូតដល់សល់តែខ្លឹម (Minimalism)។ តើចង់រៀនពីទ្រឹស្តីនេះទេ?",
-    "បាទ ជម្រាបសួរ! 💡 រាល់ស្នាដៃដ៏មានឥទ្ធិពលតែងតែមាន Grid System ជាឆ្អឹងខ្នង។ តើចង់ឱ្យខ្ញុំទម្លាយអាថ៌កំបាំងនៃការរៀបចំ Grid នេះទេ?",
-    "សួស្តី! 📐 អក្សរនីមួយៗសុទ្ធតែមានព្រលឹងនិងចរិតលក្ខណៈ (Typography Anatomy)។ តើចង់ស្វែងយល់ពីរបៀបរើសហ្វុនឱ្យស៊ីគ្នា (Font Pairing) ទេ?",
-    "បាទ សួស្តី! ✨ ការរចនាគឺជាការដោះស្រាយបញ្ហា (Problem Solving) មិនមែនគ្រាន់តែលម្អនោះទេ។ តើមានបញ្ហា Design ណាដែលចង់ឱ្យខ្ញុំជួយគិតទេ?",
-    "ហេឡូ! 🛠️ ទ្រឹស្តី Gestalt បង្ហាញពីរបៀបដែលខួរក្បាលមនុស្សសម្លឹងមើលរូបភាព។ តើចង់យកទ្រឹស្តីនេះទៅទាក់ទាញភ្នែកអតិថិជនទេ?",
-    "ជម្រាបសួរ! 🔠 ភាពផ្ទុយគ្នា (Contrast) គឺជាអ្វីដែលធ្វើឱ្យ Design មួយរស់រវើក។ តើចង់រៀនពីក្បួនបង្កើត Visual Tension នេះទេ?",
-    "សួស្តី! 🌟 ឋានានុក្រម (Hierarchy) កំណត់ថាត្រូវឱ្យគេមើលអ្វីមុន អ្វីក្រោយ។ តើចង់ចេះពីរបៀបគ្រប់គ្រងខ្សែភ្នែកអ្នកមើលទេ?",
-    "បាទ! 🎯 គោលដៅរបស់ខ្ញុំគឺជួយបងឱ្យក្លាយជា Pro Designer។ តើទ្រឹស្តី Design ណាដែលបងគិតថាលំបាកយល់ជាងគេ?"
+    "បាទ សួស្ដី! 👋 ខ្ញុំគឺ **MY DESIGN AI** — ជំនួយការសម្រាប់រៀន **Affinity Pro** (Photo, Designer & Publisher)។ តើថ្ងៃនេះចង់រៀនពីកម្មវិធីណាមួយ? 🎨✨",
+    "ស្វាគមន៍! 🎨 ខ្ញុំជួយបងស្ទាត់ **Affinity Photo, Designer & Publisher** — ចាប់ពី Personas, Layers រហូតដល់ការ Retouch រូប។ តើចង់ចាប់ផ្តើមពីណា?",
+    "សួស្ដីអ្នកច្នៃប្រឌិត! 🚀 ពី Retouch រូបក្នុង Photo ដល់គូរ Vector ក្នុង Designer — ខ្ញុំនៅទីនេះណែនាំបងគ្រប់ជំហាន។ តើមានសំណួរអ្វីដែរ?",
+    "បាទ ជម្រាបសួរ! 🖋️ ប្រើ Affinity ឱ្យដូច Pro — Pen Tool, Node Tool, Blend Modes និង Adjustment Layers។ តើចង់ឱ្យខ្ញុំបង្ហាញគន្លឹះណាមួយទេ?",
+    "សួស្ដី! 📖 StudioLink បំបាត់ព្រំដែនរវាង Photo, Designer និង Publisher។ តើចង់ស្វែងយល់ពី Workflow ឆ្លងកម្មវិធីនេះទេ?",
+    "បាទ! 🎯 គោលដៅរបស់ខ្ញុំគឺជួយបងឱ្យក្លាយជា Affinity Pro។ តើទ្រឹស្តី ឬឧបករណ៍ណាដែលបងគិតថាលំបាកជាងគេ? តោះដោះស្រាយជាមួយគ្នា!"
 ];
 
 export const GREETINGS_EN = [
-    "Hello! 👋 I am **Design Master**. Great design is visual intelligence made visible. Shall we explore layout structures or color theory today? 🎨✨",
-    "Welcome to the creative zone! 🎨 Colors speak louder than words. Would you like to master the secrets of Color Psychology?",
-    "Greetings, creator! 🚀 Perfection is achieved when there is nothing left to take away. Shall we discuss the art of Minimalism?",
-    "Hello! 💡 Every powerful composition relies on a strong Grid System. Want me to reveal the secrets of invisible alignments?",
-    "Hi there! 📐 Every typeface has a soul and a personality. Shall we dive into Typography anatomy and Font Pairing today?",
-    "Greetings! ✨ Design is not just art; it is problem-solving. What visual communication challenge can we solve together today?",
-    "Hey! 🛠️ Gestalt principles explain how the human brain perceives visuals. Ready to use psychology to hook your audience?",
-    "Hello! 🔠 Contrast is the heartbeat of a dynamic design. Want to learn how to create magnetic visual tension?",
-    "Hi! 🌟 Visual Hierarchy dictates exactly where the eye travels. Do you want to learn how to control your viewer's focus?",
-    "Greetings! 🎯 My goal is to elevate you to a Pro Designer. Which design principle do you find the most challenging to grasp?"
+    "Hello! 👋 I'm **MY DESIGN AI** — your guide to **Affinity Pro** (Photo, Designer & Publisher). Which app shall we explore today? 🎨✨",
+    "Welcome! 🎨 I help you master **Affinity Photo, Designer & Publisher** — from Personas and Layers to retouching photos. Where shall we start?",
+    "Hi there, creator! 🚀 From retouching in Photo to drawing vectors in Designer, I'm here to guide every step. What's your question?",
+    "Greetings! 🖋️ Use Affinity like a pro — the Pen Tool, Node Tool, Blend Modes and Adjustment Layers. Want me to reveal a workflow tip?",
+    "Hello! 📖 StudioLink blurs the line between Photo, Designer, and Publisher. Want to learn this cross-app workflow today?",
+    "Hi! 🎯 My goal is to make you an Affinity pro. Which tool or technique do you find most challenging? Let's master it together!"
 ];
 
 // ==========================================

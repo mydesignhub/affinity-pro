@@ -47,11 +47,31 @@ const getRandomItems = (arr, count) => {
 };
 
 // ============================================================================
-// 🌟 REAL AI BACKEND INTEGRATION (GROQ)
+// 🌟 REAL AI BACKEND INTEGRATION — "MY DESIGN AI" marketing-coach persona
 // ============================================================================
-const callRealAI = async (userPrompt, language, history = []) => {
+const MARKETING_SYSTEM_EN = `[SYSTEM: You are "MY DESIGN AI" — the official smart assistant & marketing coach for the Affinity Pro Masterclass learning platform. Your mission:
+1. EDUCATE: Teach Affinity Photo (Pixel), Designer (Vector) & Publisher (Layout) with clear, practical answers
+2. ENGAGE: Be warm, expert, and encouraging — make design feel achievable
+3. CONVERT: Naturally guide users toward taking Quizzes, earning Design Certificates, and exploring app features
+4. Brand voice: Confident, friendly, concise. Max 3 short paragraphs. Always end with a next step or CTA.
+Relevant app features to mention when appropriate: Skill Quizzes (Beginner/Intermediate/Advanced), Final Certification Exam (90% pass), downloadable PDF Certificates, Color Generator, Layout Tools, AI Assistant.]\n`;
+
+const MARKETING_SYSTEM_KH = `[ប្រព័ន្ធ: អ្នកគឺ "MY DESIGN AI" — ជំនួយការ AI ផ្លូវការ និង Marketing Coach សម្រាប់ Affinity Pro Masterclass។ ភារកិច្ច:
+1. EDUCATE: បង្រៀន Affinity Photo (Pixel), Designer (Vector) & Publisher (Layout) ដោយច្បាស់លាស់
+2. ENGAGE: ស្រលាញ់ ជំនាញ ហ្មមត់ — ធ្វើឱ្យ Design ហាក់ងាយស្រួល
+3. CONVERT: ណែនាំ Quiz, Certificate, Tools ដោយធម្មជាតិ
+4. ភាសា: ខ្លី, ច្បាស់, ចប់ដោយ CTA ។ ៣ កថាខណ្ឌ ត្រឹម។
+Features App: Skill Quiz (Beginner/Intermediate/Advanced), Final Exam (90%), Certificate PDF, Color Generator, Layout Tools.]\n`;
+
+const callRealAI = async (userPrompt, language, history = [], level = null, useSystemPrompt = true) => {
     try {
-        const recentHistoryText = history.slice(-10).map((msg) =>
+        const systemContext = useSystemPrompt ? (language === 'en' ? MARKETING_SYSTEM_EN : MARKETING_SYSTEM_KH) : '';
+        const levelHint = (useSystemPrompt && level)
+            ? (language === 'en'
+                ? `\n[User skill level: ${level}. Tailor your explanations — simpler for beginner, deeper for advanced.]\n`
+                : `\n[កម្រិតអ្នករៀន: ${level}. សូមលៃតម្រូវការពន្យល់ទៅតាមកម្រិតនេះ។]\n`)
+            : '';
+        const recentHistoryText = systemContext + levelHint + history.slice(-10).map((msg) =>
             `${msg.role === 'user' ? 'User' : 'AI Assistant'}: ${msg.text}`
         ).join('\n');
 
@@ -175,12 +195,33 @@ const ChatBot = ({ messages, setMessages, isDarkMode, isAdmin, liveAiData = [], 
         };
     }, []);
 
+    const saveUserLevel = (level) => {
+        try { localStorage.setItem('affinityPro_user_level', level); } catch { /* storage best-effort */ }
+    };
+
     const generateSmartGreeting = () => {
-        const savedTopic = localStorage.getItem('affinityPro_current_topic'); 
+        const savedTopic = localStorage.getItem('affinityPro_current_topic');
+        const savedLevel = localStorage.getItem('affinityPro_user_level');
         const greetList = lang === 'en' ? GREETINGS_EN : GREETINGS;
         const smartList = lang === 'en' ? SMART_GREETINGS_EN : SMART_GREETINGS;
         const suggestList = getSuggestList();
-        
+
+        const hour = new Date().getHours();
+        const timeKh = hour >= 5 && hour < 12 ? "អរុណសួស្តី! 🌅" : hour >= 12 && hour < 17 ? "ទិវាសួស្តី! ☀️" : hour >= 17 && hour < 22 ? "សាយន្តសួស្តី! 🌇" : "រាត្រីសួស្តី! 🌙";
+        const timeEn = hour >= 5 && hour < 12 ? "Good morning! 🌅" : hour >= 12 && hour < 17 ? "Good afternoon! ☀️" : hour >= 17 && hour < 22 ? "Good evening! 🌇" : "Working late? 🌙";
+
+        // 🌟 First-time visitor — greet as a coach and ask skill level to personalise.
+        if (!savedLevel && (!savedTopic || savedTopic.trim() === "")) {
+            const greetingMsg = lang === 'en'
+                ? `${timeEn} I'm **MY DESIGN AI** — your personal Affinity & design coach. 🎨\n\nBefore we start, **what's your current skill level?** I'll tailor everything just for you!`
+                : `${timeKh} ខ្ញុំគឺ **MY DESIGN AI** — គ្រូ Affinity & Design ផ្ទាល់ខ្លួនរបស់អ្នក! 🎨\n\nមុននឹងចាប់ផ្តើម **តើបងមានកម្រិតប៉ុន្មាន?** ខ្ញុំនឹងលៃតម្រូវការបង្រៀនសម្រាប់បងផ្ទាល់!`;
+            const levelChips = lang === 'en'
+                ? ["🟢 Beginner", "🟡 Intermediate", "🔵 Advanced"]
+                : ["🟢 ចាប់ផ្តើម", "🟡 មធ្យម", "🔵 ស្ទាត់ជំនាញ"];
+            setMessages([{ role: 'model', text: greetingMsg, chips: levelChips, source: 'local' }]);
+            return;
+        }
+
         let greetingMsg = getRandomItems(greetList, 1)[0] || GREETINGS[0];
         let defaultChips = getRandomItems(suggestList, 3);
 
@@ -283,7 +324,9 @@ const ChatBot = ({ messages, setMessages, isDarkMode, isAdmin, liveAiData = [], 
 
     // 🌟 HEADER TEXT ANIMATION 🌟
     useEffect(() => {
-        const texts = lang === 'en' ? ['Welcome', 'to', 'My Design'] : ['សូមស្វាគមន៍', 'មកកាន់', 'ម៉ាយឌីហ្សាញ'];
+        const texts = lang === 'en'
+            ? ['Online · AI Coach', 'Quiz Available 🎯', 'Earn Certificates 🏆', 'Design Expert Ready', 'Free to Start ✨']
+            : ['Online · AI Coach', 'Quiz រង់ចាំ 🎯', 'ទទួល Certificate 🏆', 'ជំនួយការ Design', 'ឥតគិតថ្លៃ ✨'];
         setHeaderStatusText(texts[0]);
         let currentIndex = 0;
         const textInterval = setInterval(() => {
@@ -344,7 +387,7 @@ const ChatBot = ({ messages, setMessages, isDarkMode, isAdmin, liveAiData = [], 
     const runSecretBackgroundTraining = async (userQ, botA) => {
         try {
             const prompt = `Analyze this interaction:\nUser Question: "${userQ}"\nBot Answer: "${botA}"\n\nTask:\n1. Check if this is related to Graphic Design, Affinity software, Photo Editing, Layouts, or Typography. If it is UNRELATED, reply ONLY with the exact word: REJECT\n2. If it IS related, format as JSON:\n{"primaryKeys": ["key1", "key2"], "keys": ["k1", "k2", "k3"], "regex": ["reg1"], "answer": "Corrected Khmer", "answer_en": "English translation"}`;
-            const res = await callRealAI(prompt, 'en', []);
+            const res = await callRealAI(prompt, 'en', [], null, false);
             if (res.includes('REJECT')) return;
             const match = res.match(/\{[\s\S]*\}/);
             if (!match) return;
@@ -446,6 +489,46 @@ const ChatBot = ({ messages, setMessages, isDarkMode, isAdmin, liveAiData = [], 
         if (RETRY_CHIP_LABELS.includes(rawInput)) {
             const lastQuery = [...history].reverse().find(m => m.role === 'user' && !RETRY_CHIP_LABELS.includes((m.text || '').trim()));
             return { needsBackend: true, backendPrompt: lastQuery?.text || rawInput };
+        }
+
+        // 🎚️ SKILL LEVEL selection — checked early (before the design gate) so the
+        // onboarding chips are never rejected as "off-topic".
+        {
+            const levelMap = {
+                '🟢 beginner': 'beginner', '🟢 ចាប់ផ្តើម': 'beginner',
+                '🟡 intermediate': 'intermediate', '🟡 មធ្យម': 'intermediate',
+                '🔵 advanced': 'advanced', '🔵 ស្ទាត់ជំនាញ': 'advanced',
+            };
+            const detectedLevel = levelMap[rawLower.trim()] || levelMap[rawInput.trim()];
+            if (detectedLevel) {
+                saveUserLevel(detectedLevel);
+                const levelResponses = {
+                    beginner: {
+                        en: "🟢 **Beginner mode activated!** I'll explain everything step-by-step, no jargon. Let's start from the very beginning — what would you like to learn first?",
+                        kh: "🟢 **ចាប់ផ្តើម!** ខ្ញុំនឹងពន្យល់ជំហានម្តងៗ ច្បាស់ ងាយស្រួល។ តោះចាប់ផ្តើម — ចង់រៀនអ្វីជាមុន?",
+                        chips_en: ["What is Affinity Designer?", "Gradient Tool", "Group & Ungroup Objects"],
+                        chips_kh: ["Affinity Designer ជាអ្វី?", "Gradient Tool", "Group & Ungroup Objects"],
+                    },
+                    intermediate: {
+                        en: "🟡 **Intermediate mode!** I'll skip the basics and go deeper into workflow, techniques, and smart shortcuts. What do you want to explore?",
+                        kh: "🟡 **កម្រិតមធ្យម!** ខ្ញុំនឹងរំលងផ្នែកដំបូង ហើយពន្យល់ Workflow ស៊ីជម្រៅ។ ចង់ស្វែងយល់ផ្នែកណា?",
+                        chips_en: ["Clipping vs Masking", "Blend Modes", "Power Duplicate ⚡"],
+                        chips_kh: ["Clipping និង Masking ក្នុង Affinity", "ពន្យល់ពី Blend Modes ទាំងអស់ 🌈", "តិចនិក Power Duplicate"],
+                    },
+                    advanced: {
+                        en: "🔵 **Advanced mode!** We'll go pro-level — complex techniques, non-destructive workflows, performance optimisation. What's your challenge?",
+                        kh: "🔵 **កម្រិតខ្ពស់!** ចូលស្វែងយល់ Technique ស្ទើរ Pro — Non-Destructive Workflow, Optimisation។ ចង់ challenge អ្វី?",
+                        chips_en: ["Affinity Personas Explained", "Blend Ranges", "Non-Destructive Workflow"],
+                        chips_kh: ["តិចនិកប្រើ Affinity Personas", "Blend Ranges (លាក់ពណ៌លឿនបំផុត)", "Non-Destructive Workflow"],
+                    },
+                };
+                const r = levelResponses[detectedLevel];
+                return {
+                    answer: lang === 'en' ? r.en : r.kh,
+                    chips: lang === 'en' ? r.chips_en : r.chips_kh,
+                    needsBackend: false,
+                };
+            }
         }
 
         // Shared response shaper — anti-repetition acknowledgment + low-confidence
@@ -796,8 +879,9 @@ const ChatBot = ({ messages, setMessages, isDarkMode, isAdmin, liveAiData = [], 
                     const profileContext = buildProfileContext(lang);
                     const basePrompt = responseData.backendPrompt || msg;
                     const backendPrompt = profileContext ? basePrompt + profileContext : basePrompt;
+                    const userLevel = localStorage.getItem('affinityPro_user_level');
                     const [rawAiAnswer] = await Promise.all([
-                        callRealAI(backendPrompt, lang, historyDiet),
+                        callRealAI(backendPrompt, lang, historyDiet, userLevel),
                         new Promise(resolve => setTimeout(resolve, 500))
                     ]);
 
