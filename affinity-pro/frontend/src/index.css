@@ -33,3 +33,14 @@ html, body {
     scrollbar-width: none;
   }
 }
+
+/* AI chat header — rotating status text (ported from Graphic Design) */
+@keyframes text-slide-blur {
+  0% { transform: translateY(8px); opacity: 0; filter: blur(2px); }
+  15% { transform: translateY(0); opacity: 1; filter: blur(0); }
+  85% { transform: translateY(0); opacity: 1; filter: blur(0); }
+  100% { transform: translateY(-8px); opacity: 0; filter: blur(2px); }
+}
+.animate-text-slide {
+  animation: text-slide-blur 3s cubic-bezier(0.4, 0, 0.2, 1) both;
+}
